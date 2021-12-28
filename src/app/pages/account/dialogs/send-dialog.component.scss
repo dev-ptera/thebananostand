@@ -1,0 +1,10 @@
+.send-dialog {
+    max-width: 340px;
+    width: 340px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    .mat-form-field-wrapper {
+        padding-bottom: 0 !important;
+    }
+}

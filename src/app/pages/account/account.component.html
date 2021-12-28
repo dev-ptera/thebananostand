@@ -4,7 +4,7 @@
             <mat-icon>arrow_back</mat-icon>
         </button>
 
-        <div [style.marginLeft.px]="isSmall() ? 8 : 24">{{ address }}</div>
+        <div [style.marginLeft.px]="8">{{ address }}</div>
     </mat-toolbar>
     <div class="app-body">
         <div class="app-body-content">
@@ -18,7 +18,7 @@
                             <mat-icon>attach_money</mat-icon>
                             <span>Receive Incoming</span>
                         </button>
-                        <button mat-stroked-button color="primary" class="action-button">
+                        <button mat-stroked-button color="primary" class="action-button" (click)="send()">
                             <mat-icon>reply</mat-icon>
                             <span>Send</span>
                         </button>
@@ -54,7 +54,12 @@
                         <div blui-right-content>
                             <span *ngIf="item.type === 'receive'">from </span>
                             <span *ngIf="item.type === 'send' || item.type === 'change'">to </span>
-                            <span class="link" [style.marginLeft.px]="8" [style.color]="colors.blue[500]" (click)="openLink(item.hash)">
+                            <span
+                                class="link"
+                                [style.marginLeft.px]="8"
+                                [style.color]="colors.blue[500]"
+                                (click)="openLink(item.hash)"
+                            >
                                 <ng-container *ngIf="item.type === 'receive' || item.type === 'send'">
                                     {{ formatAddress(item.address) }}
                                 </ng-container>

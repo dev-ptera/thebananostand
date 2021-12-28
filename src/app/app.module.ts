@@ -20,30 +20,59 @@ import { HomeComponent } from './pages/home/home.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { InfoListItemModule, ListItemTagModule } from '@brightlayer-ui/angular-components';
+import {
+    EmptyStateModule,
+    InfoListItemModule,
+    ListItemTagModule,
+    MobileStepperModule,
+    SpacerModule,
+} from '@brightlayer-ui/angular-components';
 import { MatCardModule } from '@angular/material/card';
 import { AccountsComponent } from './pages/accounts/accounts.component';
 import { AccountComponent } from './pages/account/account.component';
 import { AppRoutingModule } from './app-routing.module';
 import { QrDialogComponent } from './components/qr.component';
+import { SendDialogComponent } from './pages/account/dialogs/send-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
-    declarations: [AppComponent, HomeComponent, AccountsComponent, AccountComponent, QrDialogComponent],
+    declarations: [
+        AppComponent,
+        HomeComponent,
+        AccountsComponent,
+        AccountComponent,
+        QrDialogComponent,
+        SendDialogComponent,
+    ],
     imports: [
+        AppRoutingModule,
+        BrowserAnimationsModule,
         BrowserModule,
         CommonModule,
         FlexLayoutModule,
+        FormsModule,
         HttpClientModule,
         MatButtonModule,
+        MatCardModule,
+        MatDialogModule,
         MatDividerModule,
+        MatFormFieldModule,
+        MatInputModule,
         MatToolbarModule,
         MatIconModule,
         ScrollingModule,
-        FormsModule,
+
+        // brightlayer-ui
         InfoListItemModule,
-        MatCardModule,
         ListItemTagModule,
-        AppRoutingModule,
+        MobileStepperModule,
+        SpacerModule,
+        MatProgressSpinnerModule,
+        EmptyStateModule,
     ],
     providers: [],
     bootstrap: [AppComponent],

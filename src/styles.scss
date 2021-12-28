@@ -48,11 +48,25 @@ body {
     }
 }
 
+
+
+.link {
+    cursor: pointer;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+
 #qr-code {
     width: 120px !important;
     height: 120px !important;
     border-radius: 4px;
     border: 1px solid #cbcbcb78;
+}
+
+.mat-dialog-container {
+    padding-bottom: 0 !important;
 }
 
 //HACK

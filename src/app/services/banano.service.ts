@@ -17,7 +17,7 @@ export type AccountOverview = {
 })
 // This will be home to functions that interact with ledger.
 export class BananoService {
-    constructor(private util: UtilService) {}
+    constructor(private readonly _util: UtilService) {}
 
     async withdraw(withdrawAccount: string, amountWhole: number, accountIndex: number): Promise<string> {
         const accountSigner = await window.bananocoin.bananojsHw.getLedgerAccountSigner(accountIndex);
@@ -117,7 +117,7 @@ export class BananoService {
             if (accountInfo.error === 'Account not found') {
                 return {
                     index,
-                    shortAddress: this.util.shortenAddress(account),
+                    shortAddress: this._util.shortenAddress(account),
                     fullAddress: account,
                     formattedBalance: 0,
                     balance: 0,
@@ -136,9 +136,9 @@ export class BananoService {
 
         return {
             index,
-            shortAddress: this.util.shortenAddress(account),
+            shortAddress: this._util.shortenAddress(account),
             fullAddress: account,
-            formattedBalance: this.util.numberWithCommas(bananoDecimal, 6),
+            formattedBalance: this._util.numberWithCommas(bananoDecimal, 6),
             balance: Number(bananoDecimal),
             representative: accountInfo.representative,
         };

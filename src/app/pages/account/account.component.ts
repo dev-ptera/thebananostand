@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
 import { ViewportService } from '../../services/viewport.service';
 import { ApiService } from '../../services/api.service';
@@ -9,6 +9,8 @@ import { AccountService } from '../../services/account.service';
 import { UtilService } from '../../services/util.service';
 import { Router } from '@angular/router';
 import { AccountOverview } from '../../services/banano.service';
+import { MatDialog } from '@angular/material/dialog';
+import { SendDialogComponent } from './dialogs/send-dialog.component';
 
 export type ConfirmedTx = {
     address?: string;
@@ -36,7 +38,7 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
         blockCount: number,
         private readonly _apiService: ApiService,
         private readonly _ref: ChangeDetectorRef,
-        private readonly _util: UtilService,
+        private readonly _util: UtilService
     ) {
         super();
         this._address = address;
@@ -75,7 +77,9 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
         this._fetchedPages.add(page);
         console.log('fetching page');
         void this._apiService.getConfirmedTransactions(this._address, page).then((data: ConfirmedTx[]) => {
-            data.map((tx) => { tx.amount = this._util.numberWithCommas(tx.amount, 6) });
+            data.map((tx) => {
+                tx.amount = this._util.numberWithCommas(tx.amount, 6);
+            });
             this._cachedData.splice(page * this._pageSize, this._pageSize, ...Array.from(data));
             this._dataStream.next(this._cachedData);
             this._ref.detectChanges();
@@ -102,7 +106,8 @@ export class AccountComponent implements OnInit, OnDestroy {
         private readonly _viewportService: ViewportService,
         private readonly _apiService: ApiService,
         private readonly _util: UtilService,
-        private readonly _accountService: AccountService
+        private readonly _accountService: AccountService,
+        private readonly _dialog: MatDialog
     ) {}
 
     ngOnInit(): void {
@@ -117,6 +122,16 @@ export class AccountComponent implements OnInit, OnDestroy {
         if (this.ds) {
             this.ds.disconnect();
         }
+    }
+
+    send(): void {
+        this._dialog.open(SendDialogComponent, {
+            data: {
+                address: this.address,
+                maxSendAmount: this.overview.balance,
+                index: this.overview.index,
+            },
+        });
     }
 
     findAccount(): void {
@@ -136,10 +151,6 @@ export class AccountComponent implements OnInit, OnDestroy {
         void this._router.navigate(['/']);
     }
 
-    isSmall(): boolean {
-        return this._viewportService.isSmall();
-    }
-
     search(): void {
         this.loading = true;
         if (this.ds) {
@@ -156,8 +167,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     openLink(hash: string): void {
-        const explorerBlockPage = 'https://www.yellowspyglass.com/hash';
-        window.open(`${explorerBlockPage}/${hash}`);
+        this._accountService.openLink(hash);
     }
 
     formatAddress(address: string): string {

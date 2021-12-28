@@ -117,4 +117,9 @@ export class AccountService {
         });
         this.totalBalance = this._util.numberWithCommas(balance, 6);
     }
+
+    openLink(hash: string): void {
+        const explorerBlockPage = 'https://www.yellowspyglass.com/hash';
+        window.open(`${explorerBlockPage}/${hash}`);
+    }
 }
