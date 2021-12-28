@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "public": "dist/hardware-wallet",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+<div class="app-root">
+    <mat-toolbar color="primary" class="mat-elevation-z2 app-toolbar">
+        <div [style.marginLeft.px]="isSmall() ? 8 : 24">Banano Ledger Wallet</div>
+    </mat-toolbar>
+    <div class="app-body">
+        <div class="app-body-content">
+            <button
+                *ngIf="!isLedgerLoaded"
+                [disabled]="loading"
+                mat-flat-button
+                color="primary"
+                (click)="connectLedger()"
+                style="width: 400px; margin-left: 32px"
+            >
+                Import from Ledger
+            </button>
+            {{ err }}
+            <app-accounts *ngIf="isLedgerLoaded"></app-accounts>
+        </div>
+    </div>
+</div>

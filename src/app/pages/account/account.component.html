@@ -1,0 +1,82 @@
+<div class="app-root">
+    <mat-toolbar color="accent" class="mat-elevation-z2 app-toolbar">
+        <button mat-icon-button (click)="back()">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+
+        <div [style.marginLeft.px]="isSmall() ? 8 : 24">{{ address }}</div>
+    </mat-toolbar>
+    <div class="app-body">
+        <div class="app-body-content">
+            <div style="display: flex; align-items: center; justify-content: space-between">
+                <div style="margin: 16px 0">
+                    <div class="mat-headline" style="margin-bottom: 16px">
+                        <strong>{{ overview.formattedBalance }}</strong> BAN Confirmed, 0 BAN Pending
+                    </div>
+                    <div style="display: flex">
+                        <button mat-stroked-button color="primary" class="action-button">
+                            <mat-icon>attach_money</mat-icon>
+                            <span>Receive Incoming</span>
+                        </button>
+                        <button mat-stroked-button color="primary" class="action-button">
+                            <mat-icon>reply</mat-icon>
+                            <span>Send</span>
+                        </button>
+                        <button mat-stroked-button color="primary" class="action-button">
+                            <mat-icon>how_to_vote</mat-icon>
+                            <span>Change Representative</span>
+                        </button>
+                    </div>
+                </div>
+                <app-qr [address]="address"></app-qr>
+            </div>
+            <div class="mat-headline" style="margin: 16px 0">Account History</div>
+            <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport" [style.maxHeight.px]="blockCount * 50">
+                <div *cdkVirtualFor="let item of ds; let i = index; let even = even" class="example-item">
+                    <blui-info-list-item
+                        *ngIf="item"
+                        style="height: 50px"
+                        [style.backgroundColor]="even ? colors.white[100] : colors.white[50]"
+                    >
+                        <div blui-icon>
+                            <mat-icon *ngIf="item.type === 'receive'" [style.color]="colors.green[500]"
+                                >add_circle_outline</mat-icon
+                            >
+                            <mat-icon *ngIf="item.type === 'send'" [style.color]="colors.red[500]"
+                                >remove_circle_outline</mat-icon
+                            >
+                            <mat-icon *ngIf="item.type === 'change'" [style.color]="colors.blue[500]"
+                                >change_history</mat-icon
+                            >
+                        </div>
+                        <div blui-title>{{ item.type }}</div>
+                        <div blui-subtitle>{{ item.amount }}</div>
+                        <div blui-right-content>
+                            <span *ngIf="item.type === 'receive'">from </span>
+                            <span *ngIf="item.type === 'send' || item.type === 'change'">to </span>
+                            <span [style.marginLeft.px]="8" [style.color]="colors.green[500]">
+                                <ng-container *ngIf="item.type === 'receive' || item.type === 'send'">
+                                    {{ formatAddress(item.address) }}
+                                </ng-container>
+                                <ng-container *ngIf="item.type === 'change'">
+                                    {{ formatAddress(item.newRepresentative) }}
+                                </ng-container>
+                            </span>
+                            <span [style.marginLeft.px]="32">tx #{{ numberWithCommas(blockCount - i) }}</span>
+                        </div>
+                    </blui-info-list-item>
+
+                    <blui-info-list-item *ngIf="!item" style="height: 50px">
+                        <div blui-icon>
+                            <mat-icon>sync</mat-icon>
+                        </div>
+                        <div blui-title>Loading</div>
+                        <div blui-right-content>
+                            <span [style.marginLeft.px]="32">tx #{{ numberWithCommas(blockCount - i) }}</span>
+                        </div>
+                    </blui-info-list-item>
+                </div>
+            </cdk-virtual-scroll-viewport>
+        </div>
+    </div>
+</div>

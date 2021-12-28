@@ -1,0 +1,56 @@
+<ng-container *ngIf="getAccounts().length == 0">
+    <div class="mat-display-2">Loading...</div>
+</ng-container>
+
+<ng-container *ngIf="getAccounts().length > 0">
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 16px">
+        <button mat-flat-button color="primary" (click)="addAccount()" [disabled]="loadingAccount">
+            <mat-icon style="margin-right: 8px; margin-left: -4px">add</mat-icon>
+            <span>Add Account</span>
+        </button>
+    </div>
+    <mat-card>
+        <div style="margin-left: 16px; margin-bottom: 16px">
+            <span class="mat-subheading-1" style="margin-right: 8px">Accounts Balance: </span>{{ getBalance() }}
+        </div>
+        <mat-divider></mat-divider>
+        <mat-nav-list style="max-height: 60vh; overflow: auto">
+            <blui-info-list-item
+                *ngFor="let account of getAccounts()"
+                divider="partial"
+                [statusColor]="showRepresentativeOffline(account.representative) ? colors.red[500] : undefined"
+                [hidePadding]="true"
+                (click)="openAccount(account.fullAddress)"
+            >
+                <div blui-left-content style="min-width: 100px">
+                    <blui-list-item-tag [label]="'Account #' + account.index"></blui-list-item-tag>
+                </div>
+                <div blui-title>{{ account.shortAddress }}</div>
+                <div blui-subtitle>
+                    <ng-container *ngIf="account.representative">
+                        represented by {{ formatRepresentative(account.representative) }}
+                    </ng-container>
+                    <ng-container *ngIf="!account.representative"> unopened account </ng-container>
+                </div>
+                <div blui-right-content>
+                    <blui-list-item-tag
+                        *ngIf="!account.representative"
+                        label="Unopened Account"
+                        [backgroundColor]="colors.gold[500]"
+                    >
+                    </blui-list-item-tag>
+                    <blui-list-item-tag
+                        *ngIf="showRepresentativeOffline(account.representative)"
+                        label="Rep Offline"
+                        [backgroundColor]="colors.red[500]"
+                        style="margin-right: 16px"
+                    ></blui-list-item-tag>
+
+                    <ng-container *ngIf="account.representative">
+                        {{ account.formattedBalance }}
+                    </ng-container>
+                </div>
+            </blui-info-list-item>
+        </mat-nav-list>
+    </mat-card>
+</ng-container>
