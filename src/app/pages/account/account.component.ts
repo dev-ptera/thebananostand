@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
 import { ViewportService } from '../../services/viewport.service';
 import { ApiService } from '../../services/api.service';
@@ -10,14 +10,9 @@ import { UtilService } from '../../services/util.service';
 import { Router } from '@angular/router';
 import { AccountOverview } from '../../services/banano.service';
 
-export type KnownAccount = {
-    address: string;
-    alias: string;
-};
-
 export type ConfirmedTx = {
     address?: string;
-    amount?: number;
+    amount?: string;
     amountRaw?: string;
     date: string;
     hash: string;
@@ -37,10 +32,11 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
     _subscription: Subscription;
 
     constructor(
+        address: string,
         blockCount: number,
         private readonly _apiService: ApiService,
-        address: string,
-        private ref: ChangeDetectorRef
+        private readonly _ref: ChangeDetectorRef,
+        private readonly _util: UtilService,
     ) {
         super();
         this._address = address;
@@ -79,9 +75,10 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
         this._fetchedPages.add(page);
         console.log('fetching page');
         void this._apiService.getConfirmedTransactions(this._address, page).then((data: ConfirmedTx[]) => {
+            data.map((tx) => { tx.amount = this._util.numberWithCommas(tx.amount, 6) });
             this._cachedData.splice(page * this._pageSize, this._pageSize, ...Array.from(data));
             this._dataStream.next(this._cachedData);
-            this.ref.detectChanges();
+            this._ref.detectChanges();
         });
     }
 }
@@ -91,7 +88,7 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
     templateUrl: './account.component.html',
     styleUrls: ['./account.component.scss'],
 })
-export class AccountComponent implements OnInit {
+export class AccountComponent implements OnInit, OnDestroy {
     colors = Colors;
     address: string;
     blockCount: number;
@@ -154,8 +151,13 @@ export class AccountComponent implements OnInit {
             setTimeout(() => {});
             this._ref.detectChanges();
             this.loading = false;
-            this.ds = new MyDataSource(data.blockCount, this._apiService, this.address, this._ref);
+            this.ds = new MyDataSource(this.address, data.blockCount, this._apiService, this._ref, this._util);
         });
+    }
+
+    openLink(hash: string): void {
+        const explorerBlockPage = 'https://www.yellowspyglass.com/hash';
+        window.open(`${explorerBlockPage}/${hash}`);
     }
 
     formatAddress(address: string): string {

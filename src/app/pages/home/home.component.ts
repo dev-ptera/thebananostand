@@ -9,18 +9,6 @@ export type KnownAccount = {
     alias: string;
 };
 
-export type ConfirmedTx = {
-    address?: string;
-    amount?: number;
-    amountRaw?: string;
-    date: string;
-    hash: string;
-    height: number;
-    newRepresentative?: string;
-    timestamp: number;
-    type: string;
-};
-
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',

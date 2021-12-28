@@ -11,7 +11,7 @@
             <div style="display: flex; align-items: center; justify-content: space-between">
                 <div style="margin: 16px 0">
                     <div class="mat-headline" style="margin-bottom: 16px">
-                        <strong>{{ overview.formattedBalance }}</strong> BAN Confirmed, 0 BAN Pending
+                        <strong>{{ overview?.formattedBalance }} BAN </strong>Confirmed
                     </div>
                     <div style="display: flex">
                         <button mat-stroked-button color="primary" class="action-button">
@@ -54,7 +54,7 @@
                         <div blui-right-content>
                             <span *ngIf="item.type === 'receive'">from </span>
                             <span *ngIf="item.type === 'send' || item.type === 'change'">to </span>
-                            <span [style.marginLeft.px]="8" [style.color]="colors.green[500]">
+                            <span class="link" [style.marginLeft.px]="8" [style.color]="colors.blue[500]" (click)="openLink(item.hash)">
                                 <ng-container *ngIf="item.type === 'receive' || item.type === 'send'">
                                     {{ formatAddress(item.address) }}
                                 </ng-container>

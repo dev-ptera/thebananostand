@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ConfirmedTx, KnownAccount } from '../pages/home/home.component';
+import { KnownAccount } from '../pages/home/home.component';
+import {ConfirmedTx} from "../pages/account/account.component";
 
 @Injectable({
     providedIn: 'root',
