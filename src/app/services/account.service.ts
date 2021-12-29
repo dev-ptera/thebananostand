@@ -67,6 +67,7 @@ export class AccountService {
     }
 
     fetchAccount(index: number): Promise<void> {
+        this.removeAccount(index);
         return this._bananoService
             .getAccountInfo(index)
             .then((overview) => {
@@ -78,6 +79,17 @@ export class AccountService {
             .catch((err) => {
                 console.error(err);
             });
+    }
+
+    /** Call this function to remove a specified index from the list of accounts. */
+    removeAccount(index: number): void {
+        const nonPrunedAccounts = [];
+        this.accounts.map((account) => {
+            if (account.index !== index) {
+                nonPrunedAccounts.push(account);
+            }
+        });
+        this.accounts = nonPrunedAccounts;
     }
 
     findNextUnloadedIndex(): number {

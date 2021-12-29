@@ -73,7 +73,7 @@
                                     {{ formatAddress(item.newRepresentative) }}
                                 </ng-container>
                             </span>
-                            <span [style.marginLeft.px]="32">tx #{{ numberWithCommas(blockCount - i) }}</span>
+                            <span [style.marginLeft.px]="32">tx #{{ util.numberWithCommas(blockCount - i) }}</span>
                         </div>
                     </blui-info-list-item>
 
@@ -83,7 +83,7 @@
                         </div>
                         <div blui-title>Loading</div>
                         <div blui-right-content>
-                            <span [style.marginLeft.px]="32">tx #{{ numberWithCommas(blockCount - i) }}</span>
+                            <span [style.marginLeft.px]="32">tx #{{ util.numberWithCommas(blockCount - i) }}</span>
                         </div>
                     </blui-info-list-item>
                 </div>

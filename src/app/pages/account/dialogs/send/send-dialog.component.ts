@@ -182,7 +182,7 @@ export class SendDialogComponent {
     }
 
     closeDialog(): void {
-        this.dialogRef.close();
+        this.dialogRef.close(this.txHash);
     }
 
     withdraw(): void {

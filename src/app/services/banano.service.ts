@@ -47,12 +47,7 @@ export class BananoService {
         const bananoUtil = window.bananocoinBananojs.bananoUtil;
         const config = window.bananocoinBananojsHw.bananoConfig;
         try {
-            const response = await bananoUtil.change(
-                bananodeApi,
-                accountSigner,
-                newRep,
-                config.prefix
-            );
+            const response = await bananoUtil.change(bananodeApi, accountSigner, newRep, config.prefix);
             console.log('change', 'response', response);
             return Promise.resolve(response);
         } catch (error) {

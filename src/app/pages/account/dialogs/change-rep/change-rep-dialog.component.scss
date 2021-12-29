@@ -1,4 +1,4 @@
-.send-dialog {
+.change-rep-dialog {
     max-width: 340px;
     width: 340px;
     height: 350px;
@@ -6,5 +6,35 @@
     flex-direction: column;
     .mat-form-field-wrapper {
         padding-bottom: 0 !important;
+    }
+
+    .change-button {
+        display: flex;
+        height: 36px;
+        justify-content: center;
+        align-items: center;
+        $duration: 200ms;
+        $animationTimingFunction: ease-out;
+        .button-text-container {
+            animation: fadeInAnimation $duration $animationTimingFunction;
+            &.isLoading {
+                display: none;
+            }
+        }
+        .spinner-container {
+            animation: fadeInAnimation $duration $animationTimingFunction;
+            display: none;
+            margin: 0 auto;
+            &.isLoading {
+                display: block;
+            }
+
+            ::ng-deep .mat-progress-spinner,
+            .mat-spinner {
+                circle {
+                    stroke: white;
+                }
+            }
+        }
     }
 }

@@ -25,9 +25,7 @@ export type ChangeRepDialogData = {
     selector: 'app-change-rep-dialog',
     styleUrls: ['change-rep-dialog.component.scss'],
     template: `
-        <div class="send-dialog">
-            <h1 mat-dialog-title>Change Representative</h1>
-
+        <div class="change-rep-dialog">
             <ng-container *ngIf="success === true">
                 <div
                     mat-dialog-content
@@ -70,6 +68,7 @@ export type ChangeRepDialogData = {
             </ng-container>
 
             <ng-container *ngIf="success === undefined">
+                <h1 mat-dialog-title>Change Representative</h1>
                 <div mat-dialog-content style="margin-bottom: 32px;">
                     <ng-container *ngIf="activeStep === 0">
                         <div style="margin-bottom: 8px">Your current representative is:</div>
@@ -94,6 +93,33 @@ export type ChangeRepDialogData = {
                             style="word-break: break-all; font-family: monospace"
                             [innerHTML]="util.formatHtmlAddress(newRepresentative)"
                         ></div>
+                        <ng-container *ngIf="newRepresentativeMetaData">
+                            <ng-container *ngIf="newRepresentativeMetaData.alias">
+                                <div style="font-weight: 600; margin-top: 24px">Alias</div>
+                                <div>{{ newRepresentativeMetaData.alias }}</div>
+                            </ng-container>
+                            <ng-container *ngIf="newRepresentativeMetaData.score">
+                                <div style="font-weight: 600; margin-top: 24px">Score</div>
+                                <div style="display: flex; align-items: center">
+                                    <strong>{{ newRepresentativeMetaData.score }}</strong
+                                    >/100
+                                    <blui-list-item-tag
+                                        *ngIf="newRepresentativeMetaData.score > 80"
+                                        [label]="newRepresentativeMetaData.score < 90 ? 'Good' : 'Excellent'"
+                                        [backgroundColor]="colors.green[500]"
+                                        style="margin-left: 16px"
+                                    >
+                                    </blui-list-item-tag>
+                                    <blui-list-item-tag
+                                        *ngIf="newRepresentativeMetaData.score < 60"
+                                        [label]="'Not Recommended'"
+                                        [backgroundColor]="colors.red[500]"
+                                        style="margin-left: 16px"
+                                    >
+                                    </blui-list-item-tag>
+                                </div>
+                            </ng-container>
+                        </ng-container>
                     </ng-container>
                 </div>
 
@@ -104,9 +130,21 @@ export type ChangeRepDialogData = {
                         <ng-container *ngIf="activeStep === 0">Close</ng-container>
                         <ng-container *ngIf="activeStep > 0">Back</ng-container>
                     </button>
-                    <button mat-flat-button blui-next-button color="primary" (click)="next()">
+                    <button
+                        class="change-button"
+                        mat-flat-button
+                        blui-next-button
+                        color="primary"
+                        (click)="next()"
+                        [disabled]="!canContinue()"
+                    >
                         <ng-container *ngIf="activeStep < lastStep">Next</ng-container>
-                        <ng-container *ngIf="activeStep === lastStep">Change</ng-container>
+                        <ng-container *ngIf="activeStep === lastStep">
+                            <div class="spinner-container" [class.isLoading]="loading">
+                                <mat-spinner class="primary-spinner" diameter="20"></mat-spinner>
+                            </div>
+                            <span *ngIf="!loading"> Change </span>
+                        </ng-container>
                     </button>
                 </blui-mobile-stepper>
             </ng-container>
@@ -126,6 +164,7 @@ export class ChangeRepDialogComponent implements OnInit {
     colors = Colors;
     repScores: RepScore[];
     errorMessage: string;
+    newRepresentativeMetaData: RepScore;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: ChangeRepDialogData,
@@ -165,6 +204,14 @@ export class ChangeRepDialogComponent implements OnInit {
         if (this.activeStep === this.lastStep) {
             return this.changeRepresentative();
         }
+        if (this.activeStep === 1) {
+            this.newRepresentativeMetaData = undefined;
+            this.repScores.map((rep) => {
+                if (rep.address === this.newRepresentative) {
+                    this.newRepresentativeMetaData = rep;
+                }
+            });
+        }
         this.activeStep++;
     }
 
@@ -173,7 +220,7 @@ export class ChangeRepDialogComponent implements OnInit {
     }
 
     closeDialog(): void {
-        this.dialogRef.close();
+        this.dialogRef.close(this.txHash);
     }
 
     changeRepresentative(): void {

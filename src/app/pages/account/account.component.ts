@@ -25,6 +25,27 @@ export type ConfirmedTx = {
     type: string;
 };
 
+export type BlockTx = {
+    amount: number;
+    amountRaw: string;
+    balance: string;
+    blockAccount: string;
+    confirmed: boolean;
+    link: string;
+    linkAsAccount: string;
+    previous: string;
+    contents: {
+        representative: string;
+    }
+    signature: string;
+    type: string;
+    work: string;
+    height: number;
+    sourceAccount: string;
+    subtype: string;
+    timestamp: number;
+}
+
 export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
     _length: number;
     _address: string;
@@ -106,7 +127,7 @@ export class AccountComponent implements OnInit, OnDestroy {
         private readonly _router: Router,
         private readonly _viewportService: ViewportService,
         private readonly _apiService: ApiService,
-        private readonly _util: UtilService,
+        public util: UtilService,
         private readonly _accountService: AccountService,
         private readonly _dialog: MatDialog
     ) {}
@@ -120,29 +141,53 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this._disconnectDatasource();
+    }
+
+    private _disconnectDatasource(): void {
         if (this.ds) {
             this.ds.disconnect();
         }
     }
 
     send(): void {
-        this._dialog.open(SendDialogComponent, {
+        const ref = this._dialog.open(SendDialogComponent, {
             data: {
                 address: this.address,
                 maxSendAmount: this.overview.balance,
                 index: this.overview.index,
             },
         });
+        ref.afterClosed().subscribe((hash) => {
+            if (!hash) {
+                return;
+            }
+            this.search();
+            this._accountService.fetchAccount(this.overview.index).then(() => {
+                this.findAccount();
+            })
+        })
     }
 
     changeRep(): void {
-        this._dialog.open(ChangeRepDialogComponent, {
+        const ref = this._dialog.open(ChangeRepDialogComponent, {
             data: {
                 address: this.address,
                 currentRep: this.overview.representative,
                 index: this.overview.index,
             },
         });
+        ref.afterClosed().subscribe((hash) => {
+            if (!hash) {
+                return;
+            }
+            this._apiService.getBlock(hash).then((tx) => {
+                this.search();
+                this.overview.representative = tx.newRepresentative;
+            }).catch((err) => {
+                console.error(err);
+            })
+        })
     }
 
     /** Using the current URL (contains address), sets the correct account details. */
@@ -150,7 +195,11 @@ export class AccountComponent implements OnInit, OnDestroy {
         this.address = window.location.pathname.replace('/', '');
         this._accountService.accounts.map((account) => {
             if (this.address === account.fullAddress) {
+                console.log('HELLLOO!?');
+                console.log(account);
+                console.log('set new account');
                 this.overview = account;
+                this._ref.detectChanges();
             }
         });
 
@@ -174,7 +223,7 @@ export class AccountComponent implements OnInit, OnDestroy {
             setTimeout(() => {});
             this._ref.detectChanges();
             this.loading = false;
-            this.ds = new MyDataSource(this.address, data.blockCount, this._apiService, this._ref, this._util);
+            this.ds = new MyDataSource(this.address, data.blockCount, this._apiService, this._ref, this.util);
         });
     }
 
@@ -183,15 +232,6 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     formatAddress(address: string): string {
-        return this._accountService.knownAccounts.get(address) || this._util.shortenAddress(address);
-    }
-
-    numberWithCommas(x: number | string): string {
-        if (!x && x !== 0) {
-            return '';
-        }
-        const parts = x.toString().split('.');
-        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        return parts.join('.');
+        return this._accountService.knownAccounts.get(address) || this.util.shortenAddress(address);
     }
 }
