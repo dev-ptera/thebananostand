@@ -36,7 +36,7 @@ export type BlockTx = {
     previous: string;
     contents: {
         representative: string;
-    }
+    };
     signature: string;
     type: string;
     work: string;
@@ -44,7 +44,7 @@ export type BlockTx = {
     sourceAccount: string;
     subtype: string;
     timestamp: number;
-}
+};
 
 export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
     _length: number;
@@ -165,8 +165,8 @@ export class AccountComponent implements OnInit, OnDestroy {
             this.search();
             this._accountService.fetchAccount(this.overview.index).then(() => {
                 this.findAccount();
-            })
-        })
+            });
+        });
     }
 
     changeRep(): void {
@@ -181,13 +181,16 @@ export class AccountComponent implements OnInit, OnDestroy {
             if (!hash) {
                 return;
             }
-            this._apiService.getBlock(hash).then((tx) => {
-                this.search();
-                this.overview.representative = tx.newRepresentative;
-            }).catch((err) => {
-                console.error(err);
-            })
-        })
+            this._apiService
+                .getBlock(hash)
+                .then((tx) => {
+                    this.search();
+                    this.overview.representative = tx.newRepresentative;
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        });
     }
 
     /** Using the current URL (contains address), sets the correct account details. */

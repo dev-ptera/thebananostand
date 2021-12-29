@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { KnownAccount } from '../pages/home/home.component';
-import {BlockTx, ConfirmedTx} from '../pages/account/account.component';
+import { BlockTx, ConfirmedTx } from '../pages/account/account.component';
 import { RepScore } from '../pages/account/dialogs/change-rep/change-rep-dialog.component';
-import {UtilService} from "./util.service";
+import { UtilService } from './util.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ApiService {
-    constructor(private readonly _http: HttpClient, private readonly _util: UtilService,) {}
+    constructor(private readonly _http: HttpClient, private readonly _util: UtilService) {}
 
     getConfirmedTransactions(address: string, page: number): Promise<ConfirmedTx[]> {
         const url = 'https://api.spyglass.pw/banano/v1/account/confirmed-transactions';
@@ -45,19 +45,23 @@ export class ApiService {
     getBlock(hash: string): Promise<ConfirmedTx> {
         const url = `https://api.spyglass.pw/banano/v1/block/${hash}`;
         return new Promise((resolve, reject) => {
-            this._http.get<BlockTx>(url).toPromise().then((data) => {
-                resolve({
-                    address: data.sourceAccount,
-                    amount: this._util.numberWithCommas(data.amount, 6),
-                    amountRaw: data.amountRaw,
-                    date: new Date(data.timestamp).toLocaleDateString(),
-                    hash,
-                    height: data.height,
-                    newRepresentative: data.contents.representative,
-                    timestamp: data.timestamp,
-                    type: data.type
+            this._http
+                .get<BlockTx>(url)
+                .toPromise()
+                .then((data) => {
+                    resolve({
+                        address: data.sourceAccount,
+                        amount: this._util.numberWithCommas(data.amount, 6),
+                        amountRaw: data.amountRaw,
+                        date: new Date(data.timestamp).toLocaleDateString(),
+                        hash,
+                        height: data.height,
+                        newRepresentative: data.contents.representative,
+                        timestamp: data.timestamp,
+                        type: data.type,
+                    });
                 })
-            }).catch((reject));
-        })
+                .catch(reject);
+        });
     }
 }
