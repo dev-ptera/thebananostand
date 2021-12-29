@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/hardware-wallet",
+    "public": "dist/thebananostand",
     "ignore": [
       "firebase.json",
       "**/.*",

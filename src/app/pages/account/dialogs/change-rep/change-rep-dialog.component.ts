@@ -216,7 +216,7 @@ export class ChangeRepDialogComponent implements OnInit {
     }
 
     openLink(): void {
-        this._accountService.openLink(this.txHash);
+        this._accountService.showBlockInExplorer(this.txHash);
     }
 
     closeDialog(): void {

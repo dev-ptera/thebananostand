@@ -133,24 +133,27 @@ export type SendDialogData = {
     `,
 })
 export class SendDialogComponent {
+
     activeStep = 0;
-    sendAmount: number;
-    recipient: string;
     maxSteps = 4;
     lastStep = this.maxSteps - 1;
+    sendAmount: number;
+
+    txHash: string;
+    recipient: string;
+    errorMessage: string;
+
+    success: boolean;
     loading: boolean;
 
-    errorMessage: string;
-    success: boolean;
-    txHash: string;
     colors = Colors;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: SendDialogData,
+        public util: UtilService,
         private readonly _bananoService: BananoService,
         private readonly _accountService: AccountService,
         public dialogRef: MatDialogRef<SendDialogComponent>,
-        public util: UtilService
     ) {}
 
     back(): void {
@@ -158,6 +161,13 @@ export class SendDialogComponent {
             return this.closeDialog();
         }
         this.activeStep--;
+    }
+
+    next(): void {
+        if (this.activeStep === this.lastStep) {
+            return this.withdraw();
+        }
+        this.activeStep++;
     }
 
     canContinue(): boolean {
@@ -170,15 +180,8 @@ export class SendDialogComponent {
         return true;
     }
 
-    next(): void {
-        if (this.activeStep === this.lastStep) {
-            return this.withdraw();
-        }
-        this.activeStep++;
-    }
-
     openLink(): void {
-        this._accountService.openLink(this.txHash);
+        this._accountService.showBlockInExplorer(this.txHash);
     }
 
     closeDialog(): void {
@@ -189,8 +192,8 @@ export class SendDialogComponent {
         this.loading = true;
         this._bananoService
             .withdraw(this.recipient, this.sendAmount, this.data.index)
-            .then((response) => {
-                this.txHash = response;
+            .then((hash) => {
+                this.txHash = hash;
                 this.success = true;
             })
             .catch((err) => {

@@ -231,7 +231,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     openLink(hash: string): void {
-        this._accountService.openLink(hash);
+        this._accountService.showBlockInExplorer(hash);
     }
 
     formatAddress(address: string): string {
