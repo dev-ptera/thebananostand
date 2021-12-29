@@ -27,6 +27,7 @@ export class HomeComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        console.log(window);
         if (this._accountService.accounts.length > 0) {
             this.isLedgerLoaded = true;
         }

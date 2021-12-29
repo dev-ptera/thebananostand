@@ -1,0 +1,53 @@
+.send-dialog {
+    max-width: 340px;
+    width: 340px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+
+    .dialog {
+        display: flex;
+        justify-content: center;
+        flex: 1 1 0px;
+        padding-bottom: 16px;
+    }
+    .mat-form-field-wrapper {
+        padding-bottom: 0 !important;
+    }
+
+    .close-button {
+        width: 100px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .send-button {
+        display: flex;
+        height: 36px;
+        justify-content: center;
+        align-items: center;
+        $duration: 200ms;
+        $animationTimingFunction: ease-out;
+        .button-text-container {
+            animation: fadeInAnimation $duration $animationTimingFunction;
+            &.isLoading {
+                display: none;
+            }
+        }
+        .spinner-container {
+            animation: fadeInAnimation $duration $animationTimingFunction;
+            display: none;
+            margin: 0 auto;
+            &.isLoading {
+                display: block;
+            }
+
+            ::ng-deep .mat-progress-spinner,
+            .mat-spinner {
+                circle {
+                    stroke: white;
+                }
+            }
+        }
+    }
+}

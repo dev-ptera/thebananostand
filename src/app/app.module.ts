@@ -32,12 +32,13 @@ import { AccountsComponent } from './pages/accounts/accounts.component';
 import { AccountComponent } from './pages/account/account.component';
 import { AppRoutingModule } from './app-routing.module';
 import { QrDialogComponent } from './components/qr.component';
-import { SendDialogComponent } from './pages/account/dialogs/send-dialog.component';
+import { SendDialogComponent } from './pages/account/dialogs/send/send-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ChangeRepDialogComponent } from './pages/account/dialogs/change-rep/change-rep-dialog.component';
 
 @NgModule({
     declarations: [
@@ -47,6 +48,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
         AccountComponent,
         QrDialogComponent,
         SendDialogComponent,
+        ChangeRepDialogComponent,
     ],
     imports: [
         AppRoutingModule,

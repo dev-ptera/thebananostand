@@ -29,4 +29,8 @@ export class UtilService {
         const last6 = addr.substring(addr.length - 7, addr.length);
         return `${ban}<strong>${first7}</strong>${middle}<strong>${last6}</strong>`;
     }
+
+    isValidAddress(address: string): boolean {
+        return address && address.length === 64 && address.startsWith('ban_');
+    }
 }

@@ -48,15 +48,12 @@ body {
     }
 }
 
-
-
 .link {
     cursor: pointer;
     &:hover {
         text-decoration: underline;
     }
 }
-
 
 #qr-code {
     width: 120px !important;

@@ -11,18 +11,24 @@
             <div style="display: flex; align-items: center; justify-content: space-between">
                 <div style="margin: 16px 0">
                     <div class="mat-headline" style="margin-bottom: 16px">
-                        <strong>{{ overview?.formattedBalance }} BAN </strong>Confirmed
+                        <strong>{{ overview?.formattedBalance }} BAN </strong>Balance
                     </div>
                     <div style="display: flex">
                         <button mat-stroked-button color="primary" class="action-button">
                             <mat-icon>attach_money</mat-icon>
                             <span>Receive Incoming</span>
                         </button>
-                        <button mat-stroked-button color="primary" class="action-button" (click)="send()">
+                        <button
+                            mat-stroked-button
+                            color="primary"
+                            class="action-button"
+                            (click)="send()"
+                            [disabled]="overview.balance === 0"
+                        >
                             <mat-icon>reply</mat-icon>
                             <span>Send</span>
                         </button>
-                        <button mat-stroked-button color="primary" class="action-button">
+                        <button mat-stroked-button color="primary" class="action-button" (click)="changeRep()">
                             <mat-icon>how_to_vote</mat-icon>
                             <span>Change Representative</span>
                         </button>

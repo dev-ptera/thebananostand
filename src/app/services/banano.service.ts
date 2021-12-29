@@ -19,17 +19,17 @@ export type AccountOverview = {
 export class BananoService {
     constructor(private readonly _util: UtilService) {}
 
-    async withdraw(withdrawAccount: string, amountWhole: number, accountIndex: number): Promise<string> {
+    async withdraw(recipient: string, withdrawAmount: number, accountIndex: number): Promise<string> {
         const accountSigner = await window.bananocoin.bananojsHw.getLedgerAccountSigner(accountIndex);
         const bananodeApi = window.bananocoinBananojs.bananodeApi;
         const bananoUtil = window.bananocoinBananojs.bananoUtil;
         const config = window.bananocoinBananojsHw.bananoConfig;
         try {
-            const amountRaw = window.bananocoinBananojs.getBananoDecimalAmountAsRaw(amountWhole);
+            const amountRaw = window.bananocoinBananojs.getBananoDecimalAmountAsRaw(withdrawAmount);
             const response = await bananoUtil.sendFromPrivateKey(
                 bananodeApi,
                 accountSigner,
-                withdrawAccount,
+                recipient,
                 amountRaw,
                 config.prefix
             );
@@ -37,6 +37,26 @@ export class BananoService {
             return Promise.resolve(response);
         } catch (error) {
             console.log('withdraw', 'error', error);
+            return Promise.reject(error);
+        }
+    }
+
+    async changeRepresentative(newRep: string, address: string, accountIndex: number): Promise<string> {
+        const accountSigner = await window.bananocoin.bananojsHw.getLedgerAccountSigner(accountIndex);
+        const bananodeApi = window.bananocoinBananojs.bananodeApi;
+        const bananoUtil = window.bananocoinBananojs.bananoUtil;
+        const config = window.bananocoinBananojsHw.bananoConfig;
+        try {
+            const response = await bananoUtil.change(
+                bananodeApi,
+                accountSigner,
+                newRep,
+                config.prefix
+            );
+            console.log('change', 'response', response);
+            return Promise.resolve(response);
+        } catch (error) {
+            console.log('change', 'error', error);
             return Promise.reject(error);
         }
     }

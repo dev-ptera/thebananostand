@@ -1,8 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { UtilService } from '../../../services/util.service';
-import { BananoService } from '../../../services/banano.service';
-import { AccountService } from '../../../services/account.service';
+import { UtilService } from '../../../../services/util.service';
+import { BananoService } from '../../../../services/banano.service';
+import { AccountService } from '../../../../services/account.service';
 import * as Colors from '@brightlayer-ui/colors';
 
 export type SendDialogData = {
@@ -16,27 +16,48 @@ export type SendDialogData = {
     styleUrls: ['send-dialog.component.scss'],
     template: `
         <div class="send-dialog">
-            <ng-container *ngIf="sent">
-                <div mat-dialog-content style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;">
+            <ng-container *ngIf="success === true">
+                <div
+                    mat-dialog-content
+                    style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
+                >
                     <blui-empty-state>
-                        <mat-icon blui-empty-icon>
-                            check_circle
-                        </mat-icon>
-                        <div blui-title>
-                            Transaction Sent
-                        </div>
+                        <mat-icon blui-empty-icon> check_circle </mat-icon>
+                        <div blui-title>Transaction Sent</div>
                         <div blui-description>
                             Your transaction has been successfully sent and can be viewed
                             <span class="link" [style.color]="colors.blue[500]" (click)="openLink()">here.</span>
                             You can now close this window.
                         </div>
                         <div blui-actions>
-                            <button mat-flat-button color="primary" style="width: 100px; display: flex; justify-content: center" (click)="closeDialog();">Close</button>
+                            <button mat-flat-button color="primary" class="close-button" (click)="closeDialog()">
+                                Close
+                            </button>
                         </div>
                     </blui-empty-state>
                 </div>
             </ng-container>
-            <ng-container *ngIf="!sent">
+
+            <ng-container *ngIf="success === false">
+                <div
+                    mat-dialog-content
+                    class="dialog-content"
+                    style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
+                >
+                    <blui-empty-state>
+                        <mat-icon blui-empty-icon> error </mat-icon>
+                        <div blui-title>Transaction Failed</div>
+                        <div blui-description>Your transaction could not be completed. {{ errorMessage }}</div>
+                        <div blui-actions>
+                            <button mat-flat-button color="primary" class="close-button" (click)="closeDialog()">
+                                Close
+                            </button>
+                        </div>
+                    </blui-empty-state>
+                </div>
+            </ng-container>
+
+            <ng-container *ngIf="success === undefined">
                 <h1 mat-dialog-title>Send Amount</h1>
                 <div mat-dialog-content style="margin-bottom: 32px;">
                     <ng-container *ngIf="activeStep === 0">
@@ -90,9 +111,21 @@ export type SendDialogData = {
                         <ng-container *ngIf="activeStep === 0">Close</ng-container>
                         <ng-container *ngIf="activeStep > 0">Back</ng-container>
                     </button>
-                    <button mat-flat-button blui-next-button color="primary" (click)="next()">
+                    <button
+                        mat-flat-button
+                        blui-next-button
+                        color="primary"
+                        (click)="next()"
+                        class="send-button"
+                        [disabled]="!canContinue()"
+                    >
                         <ng-container *ngIf="activeStep < lastStep">Next</ng-container>
-                        <ng-container *ngIf="activeStep === lastStep">Send</ng-container>
+                        <ng-container *ngIf="activeStep === lastStep">
+                            <div class="spinner-container" [class.isLoading]="loading">
+                                <mat-spinner class="primary-spinner" diameter="20"></mat-spinner>
+                            </div>
+                            <span *ngIf="!loading"> Send </span>
+                        </ng-container>
                     </button>
                 </blui-mobile-stepper>
             </ng-container>
@@ -105,7 +138,10 @@ export class SendDialogComponent {
     recipient: string;
     maxSteps = 4;
     lastStep = this.maxSteps - 1;
-    sent: boolean;
+    loading: boolean;
+
+    errorMessage: string;
+    success: boolean;
     txHash: string;
     colors = Colors;
 
@@ -124,6 +160,16 @@ export class SendDialogComponent {
         this.activeStep--;
     }
 
+    canContinue(): boolean {
+        if (this.activeStep === 1) {
+            return Boolean(this.sendAmount && this.sendAmount > 0);
+        }
+        if (this.activeStep === 2) {
+            return this.util.isValidAddress(this.recipient);
+        }
+        return true;
+    }
+
     next(): void {
         if (this.activeStep === this.lastStep) {
             return this.withdraw();
@@ -140,14 +186,17 @@ export class SendDialogComponent {
     }
 
     withdraw(): void {
+        this.loading = true;
         this._bananoService
             .withdraw(this.recipient, this.sendAmount, this.data.index)
             .then((response) => {
                 this.txHash = response;
-                this.sent = true;
+                this.success = true;
             })
             .catch((err) => {
                 console.error(err);
+                this.errorMessage = err;
+                this.success = false;
             });
     }
 }

@@ -10,7 +10,8 @@ import { UtilService } from '../../services/util.service';
 import { Router } from '@angular/router';
 import { AccountOverview } from '../../services/banano.service';
 import { MatDialog } from '@angular/material/dialog';
-import { SendDialogComponent } from './dialogs/send-dialog.component';
+import { SendDialogComponent } from './dialogs/send/send-dialog.component';
+import { ChangeRepDialogComponent } from './dialogs/change-rep/change-rep-dialog.component';
 
 export type ConfirmedTx = {
     address?: string;
@@ -134,6 +135,17 @@ export class AccountComponent implements OnInit, OnDestroy {
         });
     }
 
+    changeRep(): void {
+        this._dialog.open(ChangeRepDialogComponent, {
+            data: {
+                address: this.address,
+                currentRep: this.overview.representative,
+                index: this.overview.index,
+            },
+        });
+    }
+
+    /** Using the current URL (contains address), sets the correct account details. */
     findAccount(): void {
         this.address = window.location.pathname.replace('/', '');
         this._accountService.accounts.map((account) => {

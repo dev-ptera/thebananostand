@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { KnownAccount } from '../pages/home/home.component';
 import { ConfirmedTx } from '../pages/account/account.component';
+import { RepScore } from '../pages/account/dialogs/change-rep/change-rep-dialog.component';
 
 @Injectable({
     providedIn: 'root',
@@ -33,5 +34,10 @@ export class ApiService {
     getOnlineReps(): Promise<string[]> {
         const url = `https://api.spyglass.pw/banano/v1/representatives/online`;
         return this._http.get<string[]>(url).toPromise();
+    }
+
+    getRepresentativeScores(): Promise<RepScore[]> {
+        const url = `https://api.spyglass.pw/banano/v1/representatives/scores`;
+        return this._http.get<RepScore[]>(url).toPromise();
     }
 }
