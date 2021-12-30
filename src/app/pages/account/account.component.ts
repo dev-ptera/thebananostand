@@ -19,8 +19,8 @@ import {AccountOverview} from "@app/types/AccountOverview";
 export class AccountComponent implements OnInit, OnDestroy {
 
     address: string;
-    loading = false;
     blockCount: number;
+    loading = false;
 
     colors = Colors;
     ds: MyDataSource;

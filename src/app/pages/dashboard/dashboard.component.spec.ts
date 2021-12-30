@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { AccountsComponent } from './account.component';
 import { AppModule } from '../../app.module';
+import {DashboardComponent} from "@app/pages/dashboard/accounts.component";
 
-describe('AccountComponent', () => {
+describe('AccountsComponent', () => {
     beforeEach(() => {
         void TestBed.configureTestingModule({
             imports: [AppModule],
@@ -10,7 +10,7 @@ describe('AccountComponent', () => {
     });
 
     it('should create the app', () => {
-        const fixture = TestBed.createComponent(AccountsComponent);
+        const fixture = TestBed.createComponent(DashboardComponent);
         const app = fixture.debugElement.componentInstance;
         void expect(app).toBeTruthy();
     });

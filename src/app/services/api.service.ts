@@ -12,6 +12,8 @@ import {KnownAccount} from "@app/types/KnownAccount";
 export class ApiService {
     constructor(private readonly _http: HttpClient, private readonly _util: UtilService) {}
 
+        // TODO: All RPC-supported api calls should use RPC, not spyglass-api.   Split SpyglassAPI into own service?
+
     getConfirmedTransactions(address: string, page: number): Promise<ConfirmedTx[]> {
         const url = 'https://api.spyglass.pw/banano/v1/account/confirmed-transactions';
         const pageSize = 200;

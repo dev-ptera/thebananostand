@@ -3,7 +3,7 @@ import * as Colors from '@brightlayer-ui/colors';
 import {AccountService} from "@app/services/account.service";
 import {ViewportService} from "@app/services/viewport.service";
 import {ApiService} from "@app/services/api.service";
-import {BananoService} from "@app/services/banano.service";
+import {LedgerService} from "@app/services/ledger.service";
 
 @Component({
     selector: 'app-home',
@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
 
     constructor(
         private readonly _apiService: ApiService,
-        private readonly _bananoService: BananoService,
+        private readonly _bananoService: LedgerService,
         private readonly _accountService: AccountService,
         private readonly _viewportService: ViewportService,
     ) {}

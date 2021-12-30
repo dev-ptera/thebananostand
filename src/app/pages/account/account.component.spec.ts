@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { AccountComponent } from './home.component';
 import { AppModule } from '../../app.module';
+import {AccountComponent} from "@app/pages/account/account.component";
 
-describe('HomeComponent', () => {
+describe('AccountComponent', () => {
     beforeEach(() => {
         void TestBed.configureTestingModule({
             imports: [AppModule],

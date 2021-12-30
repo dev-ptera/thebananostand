@@ -28,7 +28,6 @@ import {
     SpacerModule,
 } from '@brightlayer-ui/angular-components';
 import { MatCardModule } from '@angular/material/card';
-import { AccountsComponent } from './pages/accounts/accounts.component';
 import { AccountComponent } from './pages/account/account.component';
 import { AppRoutingModule } from './app-routing.module';
 import { QrDialogComponent } from './components/qr.component';
@@ -41,12 +40,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ChangeRepDialogComponent } from './pages/account/dialogs/change-rep/change-rep-dialog.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
+import {DashboardComponent} from "@app/pages/dashboard/dashboard.component";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
     declarations: [
         AppComponent,
         HomeComponent,
-        AccountsComponent,
+        DashboardComponent,
         AccountComponent,
         QrDialogComponent,
         SendDialogComponent,
@@ -80,6 +81,7 @@ import { MatSelectModule } from '@angular/material/select';
         MatSlideToggleModule,
         MatSelectModule,
         ReactiveFormsModule,
+        MatCheckboxModule,
     ],
     providers: [],
     bootstrap: [AppComponent],

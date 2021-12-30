@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as Colors from '@brightlayer-ui/colors';
 import {UtilService} from "@app/services/util.service";
 import {AccountService} from "@app/services/account.service";
-import {BananoService} from "@app/services/banano.service";
+import {LedgerService} from "@app/services/ledger.service";
 
 export type SendDialogData = {
     address: string;
@@ -148,7 +148,7 @@ export class SendDialogComponent {
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: SendDialogData,
         public util: UtilService,
-        private readonly _bananoService: BananoService,
+        private readonly _bananoService: LedgerService,
         private readonly _accountService: AccountService,
         public dialogRef: MatDialogRef<SendDialogComponent>
     ) {}

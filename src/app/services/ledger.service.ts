@@ -7,7 +7,7 @@ import  { AccountOverview } from '@app/types/AccountOverview';
     providedIn: 'root',
 })
 // This will be home to functions that interact with ledger.
-export class BananoService {
+export class LedgerService {
     constructor(private readonly _util: UtilService) {}
 
     /** Attempts a withdraw.  On success, returns transaction hash. */

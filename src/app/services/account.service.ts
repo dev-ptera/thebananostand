@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BananoService } from './banano.service';
+import { LedgerService } from './ledger.service';
 import { ApiService } from './api.service';
 import { UtilService } from './util.service';
 import {AccountOverview} from "@app/types/AccountOverview";
@@ -27,7 +27,7 @@ export class AccountService {
     constructor(
         private readonly _api: ApiService,
         private readonly _util: UtilService,
-        private readonly _bananoService: BananoService
+        private readonly _ledgerService: LedgerService
     ) {}
 
     fetchOnlineRepresentatives(): void {
@@ -69,12 +69,12 @@ export class AccountService {
 
     fetchAccount(index: number): Promise<void> {
         this.removeAccount(index);
-        return this._bananoService
+        return this._ledgerService
             .getAccountInfo(index)
             .then((overview) => {
                 this.accounts.push(overview);
                 this.saveAccountsInLocalStorage();
-                this._updateTotalBalance();
+                this.updateTotalBalance();
                 return Promise.resolve();
             })
             .catch((err) => {
@@ -123,7 +123,7 @@ export class AccountService {
         }
     }
 
-    private _updateTotalBalance(): void {
+    updateTotalBalance(): void {
         let balance = 0;
         this.accounts.map((account) => {
             balance += account.balance;

@@ -3,24 +3,28 @@ import * as Colors from '@brightlayer-ui/colors';
 import { Router } from '@angular/router';
 import {ApiService} from "@app/services/api.service";
 import {UtilService} from "@app/services/util.service";
-import {BananoService} from "@app/services/banano.service";
+import {LedgerService} from "@app/services/ledger.service";
 import {AccountService} from "@app/services/account.service";
 import {AccountOverview} from "@app/types/AccountOverview";
+import {MatCheckboxChange} from "@angular/material/checkbox";
+import {MatSlideToggleChange} from "@angular/material/slide-toggle";
 
 @Component({
-    selector: 'app-accounts',
-    templateUrl: './accounts.component.html',
-    styleUrls: ['./accounts.component.scss'],
+    selector: 'app-dashboard',
+    templateUrl: './dashboard.component.html',
+    styleUrls: ['./dashboard.component.scss'],
 })
-export class AccountsComponent implements OnInit {
+export class DashboardComponent implements OnInit {
     loadingAccount: boolean;
     colors = Colors;
+    isEditing: boolean;
+    selectedItems: Set<number> = new Set();
 
     constructor(
         private readonly _router: Router,
         private readonly _api: ApiService,
         private readonly _util: UtilService,
-        private readonly _bananoService: BananoService,
+        private readonly _ledgerService: LedgerService,
         private readonly _accountService: AccountService
     ) {}
 
@@ -58,6 +62,10 @@ export class AccountsComponent implements OnInit {
     }
 
     openAccount(address: string): void {
+        if (this.isEditing) {
+            return;
+        }
+
         void this._router.navigate([`/${address}`]);
     }
 
@@ -69,7 +77,36 @@ export class AccountsComponent implements OnInit {
         return this._accountService.accounts;
     }
 
-    enableEditing(): void {
+    hideSelected(): void {
+        for (const index of Array.from(this.selectedItems.values())) {
+            this._accountService.removeAccount(index);
+        }
+        this._accountService.saveAccountsInLocalStorage();
+        this._accountService.updateTotalBalance();
+        this.selectedItems.clear();
+    }
 
+    exitEdit(e: MatSlideToggleChange): void {
+        if (!e.checked) {
+            this.selectedItems.clear();
+        }
+    }
+
+    toggleAll(e: MatCheckboxChange): void {
+        if (e.checked) {
+            this.getAccounts().map((account) => {
+                this.selectedItems.add(account.index);
+            })
+        } else {
+            this.selectedItems.clear();
+        }
+    }
+
+    toggleCheck(e: MatCheckboxChange, account: AccountOverview): void {
+        if (e.checked) {
+            this.selectedItems.add(account.index);
+        } else {
+            this.selectedItems.delete(account.index);
+        }
     }
 }

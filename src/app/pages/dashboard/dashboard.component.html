@@ -1,26 +1,51 @@
 <div style="display: flex; justify-content: space-between; margin-bottom: 16px">
-    <button mat-stroked-button color="warn" (click)="enableEditing()">
-        <mat-icon style="margin-right: 8px; margin-left: -4px">edit</mat-icon>
-        <span>Manage</span>
-    </button>
-    <button mat-flat-button color="primary" (click)="addAccount()" [disabled]="loadingAccount">
-        <mat-icon style="margin-right: 8px; margin-left: -4px">add</mat-icon>
-        <span>Add Account</span>
-    </button>
+
+
+    <mat-slide-toggle color="accent" [(ngModel)]="isEditing" (change)="exitEdit($event)">Manage Dashboard</mat-slide-toggle>
+    <div>
+        <button *ngIf="isEditing" style="margin-right: 16px" mat-stroked-button color="warn" (click)="hideSelected()" [disabled]="selectedItems.size === 0">
+            <mat-icon style="margin-right: 8px; margin-left: -4px">remove_circle</mat-icon>
+            <span>Hide Selected</span>
+        </button>
+        <button mat-flat-button color="primary" (click)="addAccount()" [disabled]="loadingAccount">
+            <mat-icon style="margin-right: 8px; margin-left: -4px">add</mat-icon>
+            <span>Add Account</span>
+        </button>
+    </div>
 </div>
 <mat-card>
     <div style="margin-left: 16px; margin-bottom: 16px">
+        <mat-checkbox *ngIf="isEditing" style="margin-right: 40px"
+                      (change)="toggleAll($event)"
+                      [indeterminate]="selectedItems.size < getAccounts().length && selectedItems.size > 0"
+                      [checked]="selectedItems.size === getAccounts().length
+"> </mat-checkbox>
         <span class="mat-subheading-1" style="margin-right: 8px">Accounts Balance: </span>{{ getBalance() }}
     </div>
     <mat-divider></mat-divider>
-    <mat-nav-list style="max-height: 60vh; overflow: auto" *ngIf="getAccounts().length > 0">
+
+    <!--
+    <blui-empty-state *ngIf="getAccounts().length === 0" title="No Accounts" description="You can manually add accounts.">
+        <mat-icon blui-empty-icon>error</mat-icon>
+    </blui-empty-state>
+    -->
+
+    <mat-nav-list style="max-height: 60vh; overflow: auto" *ngIf="getAccounts().length > 0"
+                  [disableRipple]="isEditing">
         <blui-info-list-item
             *ngFor="let account of getAccounts()"
             divider="partial"
             [statusColor]="showRepresentativeOffline(account.representative) ? colors.red[500] : undefined"
             [hidePadding]="true"
+            [disabled]="isEditing"
             (click)="openAccount(account.fullAddress)"
         >
+            <mat-checkbox *ngIf="isEditing"  blui-icon color="accent"
+                          (click)="$event.stopPropagation()"
+                          [checked]="selectedItems.has(account.index)"
+                          (change)="toggleCheck($event, account)">
+
+            </mat-checkbox>
             <div blui-left-content style="min-width: 100px">
                 <blui-list-item-tag [label]="'Account #' + account.index"></blui-list-item-tag>
             </div>

@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as Colors from '@brightlayer-ui/colors';
 import { FormControl } from '@angular/forms';
-import {BananoService} from "@app/services/banano.service";
+import {LedgerService} from "@app/services/ledger.service";
 import {AccountService} from "@app/services/account.service";
 import {ApiService} from "@app/services/api.service";
 import {UtilService} from "@app/services/util.service";
@@ -204,7 +204,7 @@ export class ChangeRepDialogComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: ChangeRepDialogData,
         public util: UtilService,
         private readonly _apiService: ApiService,
-        private readonly _bananoService: BananoService,
+        private readonly _bananoService: LedgerService,
         private readonly _accountService: AccountService,
         public dialogRef: MatDialogRef<ChangeRepDialogComponent>,
     ) {}
