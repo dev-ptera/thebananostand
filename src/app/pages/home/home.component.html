@@ -7,19 +7,14 @@
     </mat-toolbar>
     <div class="app-body">
         <div class="app-body-content">
-
-            <blui-empty-state style="margin-top: 64px"
-                *ngIf="!isLedgerLoaded">
+            <blui-empty-state style="margin-top: 64px" *ngIf="!isLedgerLoaded">
                 <mat-icon blui-empty-icon>usb</mat-icon>
                 <div blui-title>Please Connect Your Ledger</div>
-                <div blui-description>The Banano Stand is a desktop wallet that only supports <span class="link" (click)="openLedgerHomePage()">Ledger</span> devices for now.</div>
-                <button
-                    mat-flat-button
-                    blui-actions
-                    color="primary"
-                    [disabled]="loading"
-                    (click)="connectLedger()"
-                >
+                <div blui-description>
+                    The Banano Stand is a desktop wallet that only supports
+                    <span class="link" (click)="openLedgerHomePage()">Ledger</span> devices for now.
+                </div>
+                <button mat-flat-button blui-actions color="primary" [disabled]="loading" (click)="connectLedger()">
                     Import from Ledger
                 </button>
             </blui-empty-state>
