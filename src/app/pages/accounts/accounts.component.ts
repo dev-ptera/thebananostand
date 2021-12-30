@@ -61,7 +61,7 @@ export class AccountsComponent implements OnInit {
     }
 
     getBalance(): string {
-        return this._accountService.totalBalance;
+        return this._accountService.totalBalance || '--';
     }
 
     getAccounts(): AccountOverview[] {

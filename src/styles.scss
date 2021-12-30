@@ -1,8 +1,11 @@
+@import '~@brightlayer-ui/colors/palette.scss';
+
 html,
 body {
     height: 100%;
     margin: 0;
-    padding: 0;background-color: #00BB31;
+    padding: 0;
+    background: #f8f8f8;
 }
 
 .app-root {
@@ -49,10 +52,9 @@ body {
 }
 
 .link {
+    color: map-get($blui-blue, 500);
+    text-decoration: underline;
     cursor: pointer;
-    &:hover {
-        text-decoration: underline;
-    }
 }
 
 #qr-code {

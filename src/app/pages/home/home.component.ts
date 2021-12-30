@@ -3,6 +3,7 @@ import { ViewportService } from '../../services/viewport.service';
 import { ApiService } from '../../services/api.service';
 import { BananoService } from '../../services/banano.service';
 import { AccountService } from '../../services/account.service';
+import * as Colors from '@brightlayer-ui/colors';
 
 export type KnownAccount = {
     address: string;
@@ -12,12 +13,12 @@ export type KnownAccount = {
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
-    styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
     isLedgerLoaded: boolean;
     loading = false;
     err: string;
+    colors = Colors;
 
     constructor(
         private readonly _accountService: AccountService,
@@ -35,6 +36,10 @@ export class HomeComponent implements OnInit {
 
     isSmall(): boolean {
         return this._viewportService.isSmall();
+    }
+
+    openLedgerHomePage(): void {
+        window.open('https://www.ledger.com/');
     }
 
     connectLedger(): void {

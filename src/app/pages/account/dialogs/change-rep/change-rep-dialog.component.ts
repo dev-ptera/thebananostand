@@ -5,7 +5,7 @@ import { BananoService } from '../../../../services/banano.service';
 import { AccountService } from '../../../../services/account.service';
 import * as Colors from '@brightlayer-ui/colors';
 import { ApiService } from '../../../../services/api.service';
-import {FormControl} from "@angular/forms";
+import { FormControl } from '@angular/forms';
 
 export type RepScore = {
     address: string;
@@ -76,7 +76,8 @@ export type ChangeRepDialogData = {
                             [innerHTML]="util.formatHtmlAddress(data.currentRep)"
                         ></div>
                         <ng-container
-                            *ngTemplateOutlet="metadata; context: { metadata: currentRepresentativeMetaData }">
+                            *ngTemplateOutlet="metadata; context: { metadata: currentRepresentativeMetaData }"
+                        >
                         </ng-container>
                     </ng-container>
 
@@ -92,9 +93,13 @@ export type ChangeRepDialogData = {
                             <mat-select [formControl]="representativesListForm">
                                 <mat-option *ngFor="let rep of getRepsWithMinScore(70)" [value]="rep.address">
                                     <div style="display: flex; justify-content: space-between">
-                                        <div
-                                            style="text-overflow: ellipsis; overflow:hidden">{{rep.alias || util.shortenAddress(rep.address)}}</div>
-                                        <div><strong style="margin-left: 8px">{{rep.score}}</strong>/100</div>
+                                        <div style="text-overflow: ellipsis; overflow:hidden">
+                                            {{ rep.alias || util.shortenAddress(rep.address) }}
+                                        </div>
+                                        <div>
+                                            <strong style="margin-left: 8px">{{ rep.score }}</strong
+                                            >/100
+                                        </div>
                                     </div>
                                 </mat-option>
                             </mat-select>
@@ -102,7 +107,7 @@ export type ChangeRepDialogData = {
 
                         <mat-form-field style="width: 100%;" appearance="fill" *ngIf="!selectFromList">
                             <mat-label>Representative Address</mat-label>
-                            <input matInput type="value" [(ngModel)]="manualEnteredNewRepresentative"/>
+                            <input matInput type="value" [(ngModel)]="manualEnteredNewRepresentative" />
                         </mat-form-field>
                     </ng-container>
 
@@ -195,7 +200,6 @@ export class ChangeRepDialogComponent implements OnInit {
     currentRepresentativeMetaData: RepScore;
     newRepresentativeMetaData: RepScore;
 
-
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: ChangeRepDialogData,
         private readonly _bananoService: BananoService,
@@ -264,7 +268,7 @@ export class ChangeRepDialogComponent implements OnInit {
             if (rep.score > minScore) {
                 reps.push(rep);
             }
-        })
+        });
         return reps;
     }
 
