@@ -1,15 +1,15 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
-import {Router} from '@angular/router';
-import {MatDialog} from '@angular/material/dialog';
-import {MyDataSource} from "@app/pages/account/datasource";
-import {ViewportService} from "@app/services/viewport.service";
-import {UtilService} from "@app/services/util.service";
-import {ApiService} from "@app/services/api.service";
-import {AccountService} from "@app/services/account.service";
-import {SendDialogComponent} from './dialogs/send/send-dialog.component';
-import {ChangeRepDialogComponent} from './dialogs/change-rep/change-rep-dialog.component';
-import {AccountOverview} from "@app/types/AccountOverview";
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { MyDataSource } from '@app/pages/account/datasource';
+import { ViewportService } from '@app/services/viewport.service';
+import { UtilService } from '@app/services/util.service';
+import { ApiService } from '@app/services/api.service';
+import { AccountService } from '@app/services/account.service';
+import { SendDialogComponent } from './dialogs/send/send-dialog.component';
+import { ChangeRepDialogComponent } from './dialogs/change-rep/change-rep-dialog.component';
+import { AccountOverview } from '@app/types/AccountOverview';
 
 @Component({
     selector: 'app-account',
@@ -17,7 +17,6 @@ import {AccountOverview} from "@app/types/AccountOverview";
     styleUrls: ['./account.component.scss'],
 })
 export class AccountComponent implements OnInit, OnDestroy {
-
     address: string;
     blockCount: number;
     loading = false;
@@ -33,7 +32,7 @@ export class AccountComponent implements OnInit, OnDestroy {
         private readonly _ref: ChangeDetectorRef,
         private readonly _apiService: ApiService,
         private readonly _accountService: AccountService,
-        private readonly _viewportService: ViewportService,
+        private readonly _viewportService: ViewportService
     ) {}
 
     ngOnInit(): void {
@@ -67,11 +66,14 @@ export class AccountComponent implements OnInit, OnDestroy {
                 return;
             }
             this.search();
-            this._accountService.fetchAccount(this.overview.index).then(() => {
-                this.findAccount();
-            }).catch((err) => {
-                console.error(err);
-            })
+            this._accountService
+                .fetchAccount(this.overview.index)
+                .then(() => {
+                    this.findAccount();
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
         });
     }
 

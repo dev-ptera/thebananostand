@@ -1,4 +1,3 @@
-
 export type AccountOverview = {
     index: number;
     fullAddress: string;

@@ -2,10 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as Colors from '@brightlayer-ui/colors';
 import { FormControl } from '@angular/forms';
-import {LedgerService} from "@app/services/ledger.service";
-import {AccountService} from "@app/services/account.service";
-import {ApiService} from "@app/services/api.service";
-import {UtilService} from "@app/services/util.service";
+import { LedgerService } from '@app/services/ledger.service';
+import { AccountService } from '@app/services/account.service';
+import { ApiService } from '@app/services/api.service';
+import { UtilService } from '@app/services/util.service';
 
 export type RepScore = {
     address: string;
@@ -206,7 +206,7 @@ export class ChangeRepDialogComponent implements OnInit {
         private readonly _apiService: ApiService,
         private readonly _bananoService: LedgerService,
         private readonly _accountService: AccountService,
-        public dialogRef: MatDialogRef<ChangeRepDialogComponent>,
+        public dialogRef: MatDialogRef<ChangeRepDialogComponent>
     ) {}
 
     ngOnInit(): void {

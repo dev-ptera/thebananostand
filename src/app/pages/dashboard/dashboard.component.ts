@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
 import { Router } from '@angular/router';
-import {ApiService} from "@app/services/api.service";
-import {UtilService} from "@app/services/util.service";
-import {LedgerService} from "@app/services/ledger.service";
-import {AccountService} from "@app/services/account.service";
-import {AccountOverview} from "@app/types/AccountOverview";
-import {MatCheckboxChange} from "@angular/material/checkbox";
-import {MatSlideToggleChange} from "@angular/material/slide-toggle";
+import { ApiService } from '@app/services/api.service';
+import { UtilService } from '@app/services/util.service';
+import { LedgerService } from '@app/services/ledger.service';
+import { AccountService } from '@app/services/account.service';
+import { AccountOverview } from '@app/types/AccountOverview';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
     selector: 'app-dashboard',
@@ -100,7 +100,7 @@ export class DashboardComponent implements OnInit {
         if (e.checked) {
             this.getAccounts().map((account) => {
                 this.selectedItems.add(account.index);
-            })
+            });
         } else {
             this.selectedItems.clear();
         }

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { Injectable } from '@angular/core';
 import { UtilService } from './util.service';
-import  { AccountOverview } from '@app/types/AccountOverview';
+import { AccountOverview } from '@app/types/AccountOverview';
 
 @Injectable({
     providedIn: 'root',

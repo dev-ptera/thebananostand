@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {ConfirmedTx} from "@app/types/ConfirmedTx";
+import { ConfirmedTx } from '@app/types/ConfirmedTx';
 import { RepScore } from '../pages/account/dialogs/change-rep/change-rep-dialog.component';
 import { UtilService } from './util.service';
-import {BlockTx} from "@app/types/BlockTx";
-import {KnownAccount} from "@app/types/KnownAccount";
+import { BlockTx } from '@app/types/BlockTx';
+import { KnownAccount } from '@app/types/KnownAccount';
 
 @Injectable({
     providedIn: 'root',
@@ -12,7 +12,7 @@ import {KnownAccount} from "@app/types/KnownAccount";
 export class ApiService {
     constructor(private readonly _http: HttpClient, private readonly _util: UtilService) {}
 
-        // TODO: All RPC-supported api calls should use RPC, not spyglass-api.   Split SpyglassAPI into own service?
+    // TODO: All RPC-supported api calls should use RPC, not spyglass-api.   Split SpyglassAPI into own service?
 
     getConfirmedTransactions(address: string, page: number): Promise<ConfirmedTx[]> {
         const url = 'https://api.spyglass.pw/banano/v1/account/confirmed-transactions';

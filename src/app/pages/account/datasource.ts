@@ -1,11 +1,10 @@
-import {CollectionViewer, DataSource} from "@angular/cdk/collections";
-import {ConfirmedTx} from "@app/types/ConfirmedTx";
-import {BehaviorSubject, Observable, Subscription} from "rxjs";
-import {ApiService} from "@app/services/api.service";
-import {ChangeDetectorRef} from "@angular/core";
-import {UtilService} from "@app/services/util.service";
-import {debounceTime} from "rxjs/operators";
-
+import { CollectionViewer, DataSource } from '@angular/cdk/collections';
+import { ConfirmedTx } from '@app/types/ConfirmedTx';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { ApiService } from '@app/services/api.service';
+import { ChangeDetectorRef } from '@angular/core';
+import { UtilService } from '@app/services/util.service';
+import { debounceTime } from 'rxjs/operators';
 
 export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
     _length: number;

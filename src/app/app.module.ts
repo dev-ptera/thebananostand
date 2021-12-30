@@ -40,8 +40,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ChangeRepDialogComponent } from './pages/account/dialogs/change-rep/change-rep-dialog.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
-import {DashboardComponent} from "@app/pages/dashboard/dashboard.component";
-import {MatCheckboxModule} from "@angular/material/checkbox";
+import { DashboardComponent } from '@app/pages/dashboard/dashboard.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
     declarations: [
