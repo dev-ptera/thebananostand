@@ -1,17 +1,27 @@
-<div style="display: flex; justify-content: space-between; margin-bottom: 16px">
-
-
-    <mat-slide-toggle color="accent" [(ngModel)]="isEditing" (change)="exitEdit($event)">Manage Dashboard</mat-slide-toggle>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; height: 40px;">
     <div>
+
         <button *ngIf="isEditing" style="margin-right: 16px" mat-stroked-button color="warn" (click)="hideSelected()" [disabled]="selectedItems.size === 0">
             <mat-icon style="margin-right: 8px; margin-left: -4px">remove_circle</mat-icon>
             <span>Hide Selected</span>
         </button>
+
+        <!--
+            <mat-form-field appearance="outline" style="width: 150px">
+                <mat-label>Add Account</mat-label>
+                <input matInput type="text" [(ngModel)]="manualAddIndex">
+                <button *ngIf="manualAddIndex" matSuffix mat-icon-button color="primary" aria-label="Clear" (click)="addAccountFromIndex(manualAddIndex)">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </mat-form-field>
+            -->
         <button mat-flat-button color="primary" (click)="addAccount()" [disabled]="loadingAccount">
             <mat-icon style="margin-right: 8px; margin-left: -4px">add</mat-icon>
             <span>Add Account</span>
         </button>
     </div>
+
+    <mat-slide-toggle color="accent" [(ngModel)]="isEditing" (change)="exitEdit($event)">Manage Dashboard</mat-slide-toggle>
 </div>
 <mat-card>
     <div style="margin-left: 16px; margin-bottom: 16px">
@@ -37,7 +47,6 @@
             divider="partial"
             [statusColor]="showRepresentativeOffline(account.representative) ? colors.red[500] : undefined"
             [hidePadding]="true"
-            [disabled]="isEditing"
             (click)="openAccount(account.fullAddress)"
         >
             <mat-checkbox *ngIf="isEditing"  blui-icon color="accent"

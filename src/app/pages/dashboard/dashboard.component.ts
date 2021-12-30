@@ -19,6 +19,7 @@ export class DashboardComponent implements OnInit {
     colors = Colors;
     isEditing: boolean;
     selectedItems: Set<number> = new Set();
+    manualAddIndex: number;
 
     constructor(
         private readonly _router: Router,
@@ -37,12 +38,19 @@ export class DashboardComponent implements OnInit {
     async loadAccounts(): Promise<void> {
         this.loadingAccount = true;
         await this._accountService.populateAccountsFromLocalStorage();
+        this.manualAddIndex = this._accountService.findNextUnloadedIndex();
         this.loadingAccount = false;
     }
 
     async addAccount(): Promise<void> {
         this.loadingAccount = true;
         await this._accountService.fetchAccount(this._accountService.findNextUnloadedIndex());
+        this.loadingAccount = false;
+    }
+
+    async addAccountFromIndex(index: number): Promise<void> {
+        this.loadingAccount = true;
+        await this._accountService.fetchAccount(index);
         this.loadingAccount = false;
     }
 
@@ -62,10 +70,6 @@ export class DashboardComponent implements OnInit {
     }
 
     openAccount(address: string): void {
-        if (this.isEditing) {
-            return;
-        }
-
         void this._router.navigate([`/${address}`]);
     }
 
