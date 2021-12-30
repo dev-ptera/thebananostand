@@ -16,46 +16,44 @@ export type SendDialogData = {
     styleUrls: ['send-dialog.component.scss'],
     template: `
         <div class="send-dialog">
-            <ng-container *ngIf="success === true">
-                <div
-                    mat-dialog-content
-                    style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
-                >
-                    <blui-empty-state>
-                        <mat-icon blui-empty-icon> check_circle </mat-icon>
-                        <div blui-title>Transaction Sent</div>
-                        <div blui-description>
-                            Your transaction has been successfully sent and can be viewed
-                            <span class="link" [style.color]="colors.blue[500]" (click)="openLink()">here.</span>
-                            You can now close this window.
-                        </div>
-                        <div blui-actions>
-                            <button mat-flat-button color="primary" class="close-button" (click)="closeDialog()">
-                                Close
-                            </button>
-                        </div>
-                    </blui-empty-state>
-                </div>
-            </ng-container>
+            <div
+                *ngIf="success === true"
+                mat-dialog-content
+                style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
+            >
+                <blui-empty-state>
+                    <mat-icon blui-empty-icon> check_circle </mat-icon>
+                    <div blui-title>Transaction Sent</div>
+                    <div blui-description>
+                        Your transaction has been successfully sent and can be viewed
+                        <span class="link" [style.color]="colors.blue[500]" (click)="openLink()">here.</span>
+                        You can now close this window.
+                    </div>
+                    <div blui-actions>
+                        <button mat-flat-button color="primary" class="close-button" (click)="closeDialog()">
+                            Close
+                        </button>
+                    </div>
+                </blui-empty-state>
+            </div>
 
-            <ng-container *ngIf="success === false">
-                <div
-                    mat-dialog-content
-                    class="dialog-content"
-                    style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
-                >
-                    <blui-empty-state>
-                        <mat-icon blui-empty-icon> error </mat-icon>
-                        <div blui-title>Transaction Failed</div>
-                        <div blui-description>Your transaction could not be completed. {{ errorMessage }}</div>
-                        <div blui-actions>
-                            <button mat-flat-button color="primary" class="close-button" (click)="closeDialog()">
-                                Close
-                            </button>
-                        </div>
-                    </blui-empty-state>
-                </div>
-            </ng-container>
+            <div
+                *ngIf="success === false"
+                mat-dialog-content
+                class="dialog-content"
+                style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
+            >
+                <blui-empty-state>
+                    <mat-icon blui-empty-icon> error </mat-icon>
+                    <div blui-title>Transaction Failed</div>
+                    <div blui-description>Your transaction could not be completed. {{ errorMessage }}</div>
+                    <div blui-actions>
+                        <button mat-flat-button color="primary" class="close-button" (click)="closeDialog()">
+                            Close
+                        </button>
+                    </div>
+                </blui-empty-state>
+            </div>
 
             <ng-container *ngIf="success === undefined">
                 <h1 mat-dialog-title>Send Amount</h1>
@@ -72,7 +70,7 @@ export type SendDialogData = {
                         <div style="margin-bottom: 24px">Please enter the amount to transfer.</div>
                         <mat-form-field style="width: 100%;" appearance="fill">
                             <mat-label>Amount</mat-label>
-                            <input matInput type="number" [(ngModel)]="sendAmount" />
+                            <input matInput type="number" [max]="data.maxSendAmount" [(ngModel)]="sendAmount" />
                             <button
                                 matSuffix
                                 mat-icon-button
@@ -133,7 +131,6 @@ export type SendDialogData = {
     `,
 })
 export class SendDialogComponent {
-
     activeStep = 0;
     maxSteps = 4;
     lastStep = this.maxSteps - 1;
@@ -153,7 +150,7 @@ export class SendDialogComponent {
         public util: UtilService,
         private readonly _bananoService: BananoService,
         private readonly _accountService: AccountService,
-        public dialogRef: MatDialogRef<SendDialogComponent>,
+        public dialogRef: MatDialogRef<SendDialogComponent>
     ) {}
 
     back(): void {
@@ -172,7 +169,7 @@ export class SendDialogComponent {
 
     canContinue(): boolean {
         if (this.activeStep === 1) {
-            return Boolean(this.sendAmount && this.sendAmount > 0);
+            return Boolean(this.sendAmount && this.sendAmount > 0 && this.sendAmount <= this.data.maxSendAmount);
         }
         if (this.activeStep === 2) {
             return this.util.isValidAddress(this.recipient);
@@ -180,12 +177,12 @@ export class SendDialogComponent {
         return true;
     }
 
-    openLink(): void {
-        this._accountService.showBlockInExplorer(this.txHash);
-    }
-
     closeDialog(): void {
         this.dialogRef.close(this.txHash);
+    }
+
+    openLink(): void {
+        this._accountService.showBlockInExplorer(this.txHash);
     }
 
     withdraw(): void {

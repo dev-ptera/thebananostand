@@ -1,13 +1,20 @@
 .change-rep-dialog {
     max-width: 340px;
     width: 340px;
-    height: 350px;
+    height: 424px;
     display: flex;
     flex-direction: column;
     .mat-form-field-wrapper {
         padding-bottom: 0 !important;
     }
 
+    .close-button {
+        width: 100px;
+        display: flex;
+        justify-content: center;
+    }
+
+    // todo: this could be part of a component one day; load button component.
     .change-button {
         display: flex;
         height: 36px;

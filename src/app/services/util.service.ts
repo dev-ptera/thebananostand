@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
     providedIn: 'root',
 })
 export class UtilService {
-    numberWithCommas(x: number | string, precision: number): string {
+    numberWithCommas(x: number | string, precision = 6): string {
         if (!x && x !== 0) {
             return '';
         }

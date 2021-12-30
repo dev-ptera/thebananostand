@@ -19,6 +19,7 @@ export type AccountOverview = {
 export class BananoService {
     constructor(private readonly _util: UtilService) {}
 
+    /** Attempts a withdraw.  On success, returns transaction hash. */
     async withdraw(recipient: string, withdrawAmount: number, accountIndex: number): Promise<string> {
         const accountSigner = await window.bananocoin.bananojsHw.getLedgerAccountSigner(accountIndex);
         const bananodeApi = window.bananocoinBananojs.bananodeApi;
@@ -41,6 +42,7 @@ export class BananoService {
         }
     }
 
+    /** Attempts a change block.  On success, returns transaction hash. */
     async changeRepresentative(newRep: string, address: string, accountIndex: number): Promise<string> {
         const accountSigner = await window.bananocoin.bananojsHw.getLedgerAccountSigner(accountIndex);
         const bananodeApi = window.bananocoinBananojs.bananodeApi;

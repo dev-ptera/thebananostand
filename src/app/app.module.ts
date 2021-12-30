@@ -18,7 +18,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import {
     EmptyStateModule,
@@ -39,6 +39,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ChangeRepDialogComponent } from './pages/account/dialogs/change-rep/change-rep-dialog.component';
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
     declarations: [
@@ -75,6 +77,9 @@ import { ChangeRepDialogComponent } from './pages/account/dialogs/change-rep/cha
         SpacerModule,
         MatProgressSpinnerModule,
         EmptyStateModule,
+        MatSlideToggleModule,
+        MatSelectModule,
+        ReactiveFormsModule,
     ],
     providers: [],
     bootstrap: [AppComponent],
