@@ -1,4 +1,8 @@
-<div style="display: flex; justify-content: flex-end; margin-bottom: 16px">
+<div style="display: flex; justify-content: space-between; margin-bottom: 16px">
+    <button mat-stroked-button color="warn" (click)="enableEditing()">
+        <mat-icon style="margin-right: 8px; margin-left: -4px">edit</mat-icon>
+        <span>Manage</span>
+    </button>
     <button mat-flat-button color="primary" (click)="addAccount()" [disabled]="loadingAccount">
         <mat-icon style="margin-right: 8px; margin-left: -4px">add</mat-icon>
         <span>Add Account</span>

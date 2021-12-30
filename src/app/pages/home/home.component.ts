@@ -1,14 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ViewportService } from '../../services/viewport.service';
-import { ApiService } from '../../services/api.service';
-import { BananoService } from '../../services/banano.service';
-import { AccountService } from '../../services/account.service';
 import * as Colors from '@brightlayer-ui/colors';
-
-export type KnownAccount = {
-    address: string;
-    alias: string;
-};
+import {AccountService} from "@app/services/account.service";
+import {ViewportService} from "@app/services/viewport.service";
+import {ApiService} from "@app/services/api.service";
+import {BananoService} from "@app/services/banano.service";
 
 @Component({
     selector: 'app-home',
@@ -21,14 +16,13 @@ export class HomeComponent implements OnInit {
     colors = Colors;
 
     constructor(
+        private readonly _apiService: ApiService,
+        private readonly _bananoService: BananoService,
         private readonly _accountService: AccountService,
         private readonly _viewportService: ViewportService,
-        private readonly _apiService: ApiService,
-        private readonly _bananoService: BananoService
     ) {}
 
     ngOnInit(): void {
-        console.log(window);
         if (this._accountService.accounts.length > 0) {
             this.isLedgerLoaded = true;
         }

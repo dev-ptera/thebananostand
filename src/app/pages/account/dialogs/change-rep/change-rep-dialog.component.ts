@@ -1,11 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { UtilService } from '../../../../services/util.service';
-import { BananoService } from '../../../../services/banano.service';
-import { AccountService } from '../../../../services/account.service';
 import * as Colors from '@brightlayer-ui/colors';
-import { ApiService } from '../../../../services/api.service';
 import { FormControl } from '@angular/forms';
+import {BananoService} from "@app/services/banano.service";
+import {AccountService} from "@app/services/account.service";
+import {ApiService} from "@app/services/api.service";
+import {UtilService} from "@app/services/util.service";
 
 export type RepScore = {
     address: string;
@@ -70,7 +70,7 @@ export type ChangeRepDialogData = {
                 <h1 mat-dialog-title>Change Representative</h1>
                 <div mat-dialog-content style="margin-bottom: 32px;">
                     <ng-container *ngIf="activeStep === 0">
-                        <div style="margin-bottom: 8px">Your current representative is:</div>
+                        <div>Your current representative is:</div>
                         <div
                             style="word-break: break-all; font-family: monospace"
                             [innerHTML]="util.formatHtmlAddress(data.currentRep)"
@@ -82,7 +82,7 @@ export type ChangeRepDialogData = {
                     </ng-container>
 
                     <ng-container *ngIf="activeStep === 1">
-                        <div style="margin-bottom: 24px">Please enter the new representative address.</div>
+                        <div style="margin-bottom: 16px">Please enter the new representative address.</div>
 
                         <mat-slide-toggle *ngIf="repScores" [(ngModel)]="selectFromList" style="margin-bottom: 24px;">
                             Choose from List
@@ -113,7 +113,7 @@ export type ChangeRepDialogData = {
 
                     <ng-container *ngIf="activeStep === 2">
                         <div style="margin-bottom: 24px">Please confirm the transaction details below:</div>
-                        <div style="font-weight: 600">Change Representative to</div>
+                        <div style="font-weight: 600">Change Rep To</div>
                         <div
                             style="word-break: break-all; font-family: monospace"
                             [innerHTML]="util.formatHtmlAddress(getUseSelectedRepresentative())"
@@ -202,11 +202,11 @@ export class ChangeRepDialogComponent implements OnInit {
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: ChangeRepDialogData,
+        public util: UtilService,
+        private readonly _apiService: ApiService,
         private readonly _bananoService: BananoService,
         private readonly _accountService: AccountService,
-        private readonly _apiService: ApiService,
         public dialogRef: MatDialogRef<ChangeRepDialogComponent>,
-        public util: UtilService
     ) {}
 
     ngOnInit(): void {

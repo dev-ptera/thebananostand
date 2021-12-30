@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { AccountOverview, BananoService } from '../../services/banano.service';
-import { ApiService } from '../../services/api.service';
-import { AccountService } from '../../services/account.service';
-import { UtilService } from '../../services/util.service';
 import * as Colors from '@brightlayer-ui/colors';
 import { Router } from '@angular/router';
+import {ApiService} from "@app/services/api.service";
+import {UtilService} from "@app/services/util.service";
+import {BananoService} from "@app/services/banano.service";
+import {AccountService} from "@app/services/account.service";
+import {AccountOverview} from "@app/types/AccountOverview";
 
 @Component({
     selector: 'app-accounts',
@@ -66,5 +67,9 @@ export class AccountsComponent implements OnInit {
 
     getAccounts(): AccountOverview[] {
         return this._accountService.accounts;
+    }
+
+    enableEditing(): void {
+
     }
 }

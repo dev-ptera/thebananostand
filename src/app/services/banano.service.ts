@@ -1,16 +1,7 @@
 // @ts-nocheck
-
 import { Injectable } from '@angular/core';
 import { UtilService } from './util.service';
-
-export type AccountOverview = {
-    index: number;
-    fullAddress: string;
-    shortAddress: string;
-    balance: number;
-    formattedBalance: string;
-    representative: string;
-};
+import  { AccountOverview } from '@app/types/AccountOverview';
 
 @Injectable({
     providedIn: 'root',

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { AccountOverview, BananoService } from './banano.service';
+import { BananoService } from './banano.service';
 import { ApiService } from './api.service';
 import { UtilService } from './util.service';
+import {AccountOverview} from "@app/types/AccountOverview";
 
 @Injectable({
     providedIn: 'root',

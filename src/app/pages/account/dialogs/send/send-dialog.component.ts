@@ -1,9 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { UtilService } from '../../../../services/util.service';
-import { BananoService } from '../../../../services/banano.service';
-import { AccountService } from '../../../../services/account.service';
 import * as Colors from '@brightlayer-ui/colors';
+import {UtilService} from "@app/services/util.service";
+import {AccountService} from "@app/services/account.service";
+import {BananoService} from "@app/services/banano.service";
 
 export type SendDialogData = {
     address: string;

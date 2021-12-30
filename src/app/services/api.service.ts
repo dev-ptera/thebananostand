@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { KnownAccount } from '../pages/home/home.component';
-import { BlockTx, ConfirmedTx } from '../pages/account/account.component';
+import {ConfirmedTx} from "@app/types/ConfirmedTx";
 import { RepScore } from '../pages/account/dialogs/change-rep/change-rep-dialog.component';
 import { UtilService } from './util.service';
+import {BlockTx} from "@app/types/BlockTx";
+import {KnownAccount} from "@app/types/KnownAccount";
 
 @Injectable({
     providedIn: 'root',
