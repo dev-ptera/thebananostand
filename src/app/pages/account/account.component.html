@@ -28,7 +28,7 @@
                             <mat-icon>reply</mat-icon>
                             <span>Send</span>
                         </button>
-                        <button mat-stroked-button color="primary" class="action-button" (click)="changeRep()">
+                        <button mat-stroked-button color="primary" class="action-button" (click)="changeRep()" [disabled]="!overview.representative">
                             <mat-icon>how_to_vote</mat-icon>
                             <span>Change Representative</span>
                         </button>

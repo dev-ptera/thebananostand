@@ -24,6 +24,8 @@ export class AccountService {
     totalBalance: string;
 
     localStorageAccountIndexesKey = 'HW_WALLET_POC_ACCOUNT_INDEXES';
+    localStorageAdvancedViewKey = 'HW_WALLET_POC_ADVANCED_VIEW';
+
     constructor(
         private readonly _api: ApiService,
         private readonly _util: UtilService,
@@ -108,7 +110,17 @@ export class AccountService {
         this.accounts.map((account) => {
             loadedIndexes.push(account.index);
         });
+        loadedIndexes.sort((a, b) => {return a-b});
         window.localStorage.setItem(this.localStorageAccountIndexesKey, loadedIndexes.toString());
+    }
+
+
+    saveAdvancedViewInLocalStorage(isAdvancedView: boolean): void {
+        window.localStorage.setItem(this.localStorageAdvancedViewKey, String(isAdvancedView));
+    }
+
+    isAdvancedView(): boolean {
+        return window.localStorage.getItem(this.localStorageAdvancedViewKey) === 'true';
     }
 
     async populateAccountsFromLocalStorage(): Promise<void> {

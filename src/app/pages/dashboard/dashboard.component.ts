@@ -8,6 +8,8 @@ import { AccountService } from '@app/services/account.service';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import {MatDialog} from "@angular/material/dialog";
+import {AddIndexDialogComponent} from "@app/pages/dashboard/add-index/add-index.component";
 
 @Component({
     selector: 'app-dashboard',
@@ -17,19 +19,21 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 export class DashboardComponent implements OnInit {
     loadingAccount: boolean;
     colors = Colors;
-    isEditing: boolean;
+    isAdvancedView: boolean;
     selectedItems: Set<number> = new Set();
     manualAddIndex: number;
 
     constructor(
         private readonly _router: Router,
         private readonly _api: ApiService,
+        private readonly _dialog: MatDialog,
         private readonly _util: UtilService,
         private readonly _ledgerService: LedgerService,
         private readonly _accountService: AccountService
     ) {}
 
     ngOnInit(): void {
+        this.isAdvancedView = this._accountService.isAdvancedView();
         if (this._accountService.accounts.length === 0) {
             void this.loadAccounts();
         }
@@ -48,10 +52,8 @@ export class DashboardComponent implements OnInit {
         this.loadingAccount = false;
     }
 
-    async addAccountFromIndex(index: number): Promise<void> {
-        this.loadingAccount = true;
-        await this._accountService.fetchAccount(index);
-        this.loadingAccount = false;
+    addAccountFromIndex(): void {
+        this._dialog.open(AddIndexDialogComponent);
     }
 
     showRepresentativeOffline(address: string): boolean {
@@ -94,6 +96,7 @@ export class DashboardComponent implements OnInit {
         if (!e.checked) {
             this.selectedItems.clear();
         }
+        this._accountService.saveAdvancedViewInLocalStorage(e.checked);
     }
 
     toggleAll(e: MatCheckboxChange): void {

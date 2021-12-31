@@ -18,7 +18,7 @@
                     Import from Ledger
                 </button>
             </blui-empty-state>
-            <div style="color: red; margin-top: 32px">
+            <div style="color: red; margin-top: 32px" *ngIf="err">
                 {{ err }}
             </div>
             <app-dashboard *ngIf="isLedgerLoaded"></app-dashboard>
