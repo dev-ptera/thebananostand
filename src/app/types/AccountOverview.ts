@@ -7,4 +7,3 @@ export type AccountOverview = {
     representative: string;
     pending: string[];
 };
-

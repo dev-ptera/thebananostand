@@ -14,11 +14,16 @@
                         <strong>{{ overview.formattedBalance }} BAN </strong>Balance
                     </div>
                     <div style="display: flex">
-                        <button mat-stroked-button color="primary" class="action-button" (click)="receive()"
-                            [disabled]="overview.pending.length === 0">
+                        <button
+                            mat-stroked-button
+                            color="primary"
+                            class="action-button"
+                            (click)="receive()"
+                            [disabled]="overview.pending.length === 0"
+                        >
                             <mat-icon>attach_money</mat-icon>
                             <span>Receive Incoming</span>
-                            <span *ngIf="overview.pending.length > 0"> ({{overview.pending.length}})</span>
+                            <span *ngIf="overview.pending.length > 0"> ({{ overview.pending.length }})</span>
                         </button>
 
                         <button

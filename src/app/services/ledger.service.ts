@@ -121,7 +121,7 @@ export class LedgerService {
                     formattedBalance: 0,
                     balance: 0,
                     representative: undefined,
-                    pending: []
+                    pending: [],
                 };
             } else {
                 return Promise.reject(accountInfo.error);
@@ -141,7 +141,7 @@ export class LedgerService {
             formattedBalance: this._util.numberWithCommas(bananoDecimal, 6),
             balance: Number(bananoDecimal),
             representative: accountInfo.representative,
-            pending
+            pending,
         };
     }
 }
