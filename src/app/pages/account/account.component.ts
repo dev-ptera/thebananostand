@@ -10,6 +10,7 @@ import { AccountService } from '@app/services/account.service';
 import { SendDialogComponent } from './dialogs/send/send-dialog.component';
 import { ChangeRepDialogComponent } from './dialogs/change-rep/change-rep-dialog.component';
 import { AccountOverview } from '@app/types/AccountOverview';
+import { LedgerService } from '@app/services/ledger.service';
 
 @Component({
     selector: 'app-account',
@@ -17,9 +18,9 @@ import { AccountOverview } from '@app/types/AccountOverview';
     styleUrls: ['./account.component.scss'],
 })
 export class AccountComponent implements OnInit, OnDestroy {
-    address: string;
     blockCount: number;
     loading = false;
+    receiving = true;
 
     colors = Colors;
     ds: MyDataSource;
@@ -31,13 +32,14 @@ export class AccountComponent implements OnInit, OnDestroy {
         private readonly _dialog: MatDialog,
         private readonly _ref: ChangeDetectorRef,
         private readonly _apiService: ApiService,
+        private readonly _ledgerService: LedgerService,
         private readonly _accountService: AccountService,
         private readonly _viewportService: ViewportService
     ) {}
 
     ngOnInit(): void {
-        this.findAccount();
-        this.search();
+        this._findAccount();
+        this._searchAccountHistory();
         if (this._accountService.knownAccounts.size === 0) {
             this._accountService.fetchKnownAccounts();
         }
@@ -47,16 +49,36 @@ export class AccountComponent implements OnInit, OnDestroy {
         this._disconnectDatasource();
     }
 
-    private _disconnectDatasource(): void {
-        if (this.ds) {
-            this.ds.disconnect();
-        }
+    /** Go back to dashboard. */
+    goHome(): void {
+        void this._router.navigate(['/']);
     }
 
+    /** Open link in an explorer, defaults to YellowSpyglass. */
+    openLink(hash: string): void {
+        this._accountService.showBlockInExplorer(hash);
+    }
+
+    /** Shows alias (if exists) or shortened address. */
+    formatAddress(address: string): string {
+        return this._accountService.knownAccounts.get(address) || this.util.shortenAddress(address);
+    }
+
+    /** Iterates through each pending transaction block and receives them. */
+    async receive(): Promise<void> {
+        this.receiving = true;
+        for await (const hash of this.overview.pending) {
+            await this._ledgerService.receive(this.overview.fullAddress, this.overview.index, hash);
+            this._updateCurrentAccountInfo();
+        }
+        this.receiving = false;
+    }
+
+    /** Opens dialog to send funds. */
     send(): void {
         const ref = this._dialog.open(SendDialogComponent, {
             data: {
-                address: this.address,
+                address: this.overview.fullAddress,
                 maxSendAmount: this.overview.balance,
                 index: this.overview.index,
             },
@@ -65,22 +87,15 @@ export class AccountComponent implements OnInit, OnDestroy {
             if (!hash) {
                 return;
             }
-            this.search();
-            this._accountService
-                .fetchAccount(this.overview.index)
-                .then(() => {
-                    this.findAccount();
-                })
-                .catch((err) => {
-                    console.error(err);
-                });
+            this._updateCurrentAccountInfo();
         });
     }
 
+    /** Opens dialog to change account representative. */
     changeRep(): void {
         const ref = this._dialog.open(ChangeRepDialogComponent, {
             data: {
-                address: this.address,
+                address: this.overview.fullAddress,
                 currentRep: this.overview.representative,
                 index: this.overview.index,
             },
@@ -89,23 +104,28 @@ export class AccountComponent implements OnInit, OnDestroy {
             if (!hash) {
                 return;
             }
-            this._apiService
-                .getBlock(hash)
-                .then((tx) => {
-                    this.search();
-                    this.overview.representative = tx.newRepresentative;
-                })
-                .catch((err) => {
-                    console.error(err);
-                });
+            this._updateCurrentAccountInfo();
         });
     }
 
+    /** For the current account, updates Transaction History & Account Overview. */
+    private _updateCurrentAccountInfo(): void {
+        this._searchAccountHistory();
+        this._accountService
+            .fetchAccount(this.overview.index)
+            .then(() => {
+                this._findAccount();
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    }
+
     /** Using the current URL (contains address), sets the correct account details. */
-    findAccount(): void {
-        this.address = window.location.pathname.replace('/', '');
+    private _findAccount(): void {
+        const address = window.location.pathname.replace('/', '');
         this._accountService.accounts.map((account) => {
-            if (this.address === account.fullAddress) {
+            if (address === account.fullAddress) {
                 this.overview = account;
                 this._ref.detectChanges();
             }
@@ -116,30 +136,25 @@ export class AccountComponent implements OnInit, OnDestroy {
         }
     }
 
-    goHome(): void {
-        void this._router.navigate(['/']);
-    }
-
-    search(): void {
+    /** Recreates angular datasource and pulls down the latest transaction history for current account. */
+    private _searchAccountHistory(): void {
         this.loading = true;
-        if (this.ds) {
-            this.ds.disconnect();
-            this.ds = undefined;
-        }
-        void this._apiService.getBlockCount(this.address).then((data) => {
+        this._disconnectDatasource();
+        const address = this.overview.fullAddress;
+        void this._apiService.getBlockCount(address).then((data) => {
             this.blockCount = data.blockCount;
             setTimeout(() => {});
             this._ref.detectChanges();
             this.loading = false;
-            this.ds = new MyDataSource(this.address, data.blockCount, this._apiService, this._ref, this.util);
+            this.ds = new MyDataSource(address, data.blockCount, this._apiService, this._ref, this.util);
         });
     }
 
-    openLink(hash: string): void {
-        this._accountService.showBlockInExplorer(hash);
-    }
-
-    formatAddress(address: string): string {
-        return this._accountService.knownAccounts.get(address) || this.util.shortenAddress(address);
+    /** Disconnects datasource if it exists. */
+    private _disconnectDatasource(): void {
+        if (this.ds) {
+            this.ds.disconnect();
+            this.ds = undefined;
+        }
     }
 }

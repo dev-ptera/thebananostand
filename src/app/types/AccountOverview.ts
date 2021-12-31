@@ -5,4 +5,6 @@ export type AccountOverview = {
     balance: number;
     formattedBalance: string;
     representative: string;
+    pending: string[];
 };
+

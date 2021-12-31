@@ -8,8 +8,8 @@ import { AccountService } from '@app/services/account.service';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import {MatDialog} from "@angular/material/dialog";
-import {AddIndexDialogComponent} from "@app/pages/dashboard/add-index/add-index.component";
+import { MatDialog } from '@angular/material/dialog';
+import { AddIndexDialogComponent } from '@app/pages/dashboard/add-index/add-index.component';
 
 @Component({
     selector: 'app-dashboard',
@@ -25,7 +25,6 @@ export class DashboardComponent implements OnInit {
     disableRipple = false;
     initLoadComplete: boolean;
 
-
     constructor(
         private readonly _router: Router,
         private readonly _api: ApiService,
@@ -40,7 +39,7 @@ export class DashboardComponent implements OnInit {
         if (this._accountService.accounts.length === 0) {
             void this.loadAccounts().then(() => {
                 this.initLoadComplete = true;
-            })
+            });
         }
     }
 

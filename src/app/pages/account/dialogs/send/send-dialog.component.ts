@@ -114,7 +114,7 @@ export type SendDialogData = {
                         blui-next-button
                         color="primary"
                         (click)="next()"
-                        class="send-button"
+                        class="loading-button"
                         [disabled]="!canContinue()"
                     >
                         <ng-container *ngIf="activeStep < lastStep">Next</ng-container>

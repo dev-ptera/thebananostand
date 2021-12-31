@@ -42,7 +42,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { DashboardComponent } from '@app/pages/dashboard/dashboard.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import {AddIndexDialogComponent} from "@app/pages/dashboard/add-index/add-index.component";
+import { AddIndexDialogComponent } from '@app/pages/dashboard/add-index/add-index.component';
 
 @NgModule({
     declarations: [

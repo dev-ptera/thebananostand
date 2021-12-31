@@ -1,20 +1,26 @@
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; height: 40px">
     <div>
-        <button mat-mini-fab
-            color="primary" (click)="addAccount()" [disabled]="loadingAccount">
+        <button mat-mini-fab color="primary" (click)="addAccount()" [disabled]="loadingAccount">
             <mat-icon>add</mat-icon>
         </button>
-        <button *ngIf="isAdvancedView" mat-mini-fab
-                color="accent"
-                style="margin-left: 16px"
-                (click)="addAccountFromIndex()" [disabled]="loadingAccount">
+        <button
+            *ngIf="isAdvancedView"
+            mat-mini-fab
+            color="accent"
+            style="margin-left: 16px"
+            (click)="addAccountFromIndex()"
+            [disabled]="loadingAccount"
+        >
             <mat-icon>manage_search</mat-icon>
         </button>
-        <button *ngIf="isAdvancedView" mat-mini-fab
-                color="warn"
-                style="margin-left: 16px"
-                (click)="hideSelected()"
-                [disabled]="selectedItems.size === 0">
+        <button
+            *ngIf="isAdvancedView"
+            mat-mini-fab
+            color="warn"
+            style="margin-left: 16px"
+            (click)="hideSelected()"
+            [disabled]="selectedItems.size === 0"
+        >
             <mat-icon>delete</mat-icon>
         </button>
     </div>
@@ -39,13 +45,20 @@
     </div>
     <mat-divider></mat-divider>
 
-    <blui-empty-state *ngIf="getAccounts().length === 0 && initLoadComplete" style="margin: 64px 0 48px 0"
-                      title="No Accounts Displayed"
-                      description="Connect your Ledger device and use the buttons above to add an account.">
+    <blui-empty-state
+        *ngIf="getAccounts().length === 0 && initLoadComplete"
+        style="margin: 64px 0 48px 0"
+        title="No Accounts Displayed"
+        description="Connect your Ledger device and use the buttons above to add an account."
+    >
         <mat-icon blui-empty-icon>search</mat-icon>
     </blui-empty-state>
 
-    <mat-nav-list style="max-height: 60vh; overflow: auto" *ngIf="getAccounts().length > 0" [disableRipple]="disableRipple">
+    <mat-nav-list
+        style="max-height: 60vh; overflow: auto"
+        *ngIf="getAccounts().length > 0"
+        [disableRipple]="disableRipple"
+    >
         <blui-info-list-item
             *ngFor="let account of getAccounts()"
             divider="partial"
@@ -57,10 +70,10 @@
                 *ngIf="isAdvancedView"
                 blui-icon
                 color="warn"
-                style="margin-bottom: 6px;"
+                style="margin-bottom: 6px"
                 (click)="$event.stopPropagation()"
-                (mouseenter)="disableRipple=true"
-                (mouseleave)="disableRipple=false"
+                (mouseenter)="disableRipple = true"
+                (mouseleave)="disableRipple = false"
                 [checked]="selectedItems.has(account.index)"
                 (change)="toggleCheck($event, account)"
             >
@@ -80,6 +93,13 @@
                     *ngIf="!account.representative"
                     label="Unopened Account"
                     [backgroundColor]="colors.gold[500]"
+                >
+                </blui-list-item-tag>
+                <blui-list-item-tag
+                    *ngIf="account.pending.length > 0"
+                    label="Has Receivable"
+                    style="margin-right: 16px"
+                    [backgroundColor]="colors.orange[500]"
                 >
                 </blui-list-item-tag>
                 <blui-list-item-tag

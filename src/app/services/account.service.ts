@@ -110,10 +110,11 @@ export class AccountService {
         this.accounts.map((account) => {
             loadedIndexes.push(account.index);
         });
-        loadedIndexes.sort((a, b) => {return a-b});
+        loadedIndexes.sort((a, b) => {
+            return a - b;
+        });
         window.localStorage.setItem(this.localStorageAccountIndexesKey, loadedIndexes.toString());
     }
-
 
     saveAdvancedViewInLocalStorage(isAdvancedView: boolean): void {
         window.localStorage.setItem(this.localStorageAdvancedViewKey, String(isAdvancedView));

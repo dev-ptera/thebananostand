@@ -4,20 +4,23 @@
             <mat-icon>arrow_back</mat-icon>
         </button>
 
-        <div [style.marginLeft.px]="8">{{ address }}</div>
+        <div [style.marginLeft.px]="8">{{ overview?.fullAddress }}</div>
     </mat-toolbar>
-    <div class="app-body">
+    <div class="app-body" *ngIf="overview">
         <div class="app-body-content">
             <div style="display: flex; align-items: center; justify-content: space-between">
                 <div style="margin: 16px 0">
                     <div class="mat-headline" style="margin-bottom: 16px">
-                        <strong>{{ overview?.formattedBalance }} BAN </strong>Balance
+                        <strong>{{ overview.formattedBalance }} BAN </strong>Balance
                     </div>
                     <div style="display: flex">
-                        <button mat-stroked-button color="primary" class="action-button">
+                        <button mat-stroked-button color="primary" class="action-button" (click)="receive()"
+                            [disabled]="overview.pending.length === 0">
                             <mat-icon>attach_money</mat-icon>
                             <span>Receive Incoming</span>
+                            <span *ngIf="overview.pending.length > 0"> ({{overview.pending.length}})</span>
                         </button>
+
                         <button
                             mat-stroked-button
                             color="primary"
@@ -28,13 +31,19 @@
                             <mat-icon>reply</mat-icon>
                             <span>Send</span>
                         </button>
-                        <button mat-stroked-button color="primary" class="action-button" (click)="changeRep()" [disabled]="!overview.representative">
+                        <button
+                            mat-stroked-button
+                            color="primary"
+                            class="action-button"
+                            (click)="changeRep()"
+                            [disabled]="!overview.representative"
+                        >
                             <mat-icon>how_to_vote</mat-icon>
                             <span>Change Representative</span>
                         </button>
                     </div>
                 </div>
-                <app-qr [address]="address"></app-qr>
+                <app-qr [address]="overview.fullAddress"></app-qr>
             </div>
             <div class="mat-headline" style="margin: 16px 0">Account History</div>
             <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport" [style.maxHeight.px]="blockCount * 50">

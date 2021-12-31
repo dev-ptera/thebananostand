@@ -131,7 +131,7 @@ export type ChangeRepDialogData = {
                         <ng-container *ngIf="activeStep > 0">Back</ng-container>
                     </button>
                     <button
-                        class="change-button"
+                        class="loading-button"
                         mat-flat-button
                         blui-next-button
                         color="primary"

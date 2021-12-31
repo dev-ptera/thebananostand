@@ -73,52 +73,43 @@ export class LedgerService {
         return account;
     }
 
-    async getPending(account: string): any {
-        console.log('banano checkpending accountData', account);
+    async receive(account: string, index: number, hash: string): Promise<string> {
+        const config = window.bananocoinBananojsHw.bananoConfig;
+        const accountSigner = await window.bananocoin.bananojsHw.getLedgerAccountSigner(index);
+        const bananodeApi = window.bananocoinBananojs.bananodeApi;
+        let representative = await bananodeApi.getAccountRepresentative(account);
+        if (!representative) {
+            representative = account;
+        }
+        console.log('banano checkpending config', config);
+        const loggingUtil = window.bananocoinBananojs.loggingUtil;
+        const depositUtil = window.bananocoinBananojs.depositUtil;
+        const receiveResponse = await depositUtil.receive(
+            loggingUtil,
+            bananodeApi,
+            account,
+            accountSigner,
+            representative,
+            hash,
+            config.prefix
+        );
+        return receiveResponse;
+    }
 
+    async getPending(account: string): Promsie<string[]> {
+        console.log('banano checkpending accountData', account);
+        const MAX_PENDING = 10;
         const pendingResponse = await window.bananocoinBananojs.getAccountsPending([account], MAX_PENDING, true);
         console.log('banano checkpending pendingResponse', pendingResponse);
-        accountInfoElt.innerText += '\n';
-        accountInfoElt.innerText += JSON.stringify(pendingResponse);
         const pendingBlocks = pendingResponse.blocks[account];
-
         const hashes = [...Object.keys(pendingBlocks)];
-        if (hashes.length !== 0) {
-            const specificPendingBlockHash = hashes[0];
-
-            const accountSigner = await window.bananocoin.bananojsHw.getLedgerAccountSigner(accountIndex);
-
-            const bananodeApi = window.bananocoinBananojs.bananodeApi;
-            let representative = await bananodeApi.getAccountRepresentative(account);
-            if (!representative) {
-                representative = account;
-            }
-            console.log('banano checkpending config', config);
-
-            const loggingUtil = window.bananocoinBananojs.loggingUtil;
-            const depositUtil = window.bananocoinBananojs.depositUtil;
-
-            accountInfoElt.innerText += '\n';
-            accountInfoElt.innerText += 'CHECK LEDGER FOR BLOCK ' + specificPendingBlockHash;
-
-            const receiveResponse = await depositUtil.receive(
-                loggingUtil,
-                bananodeApi,
-                account,
-                accountSigner,
-                representative,
-                specificPendingBlockHash,
-                config.prefix
-            );
-
-            accountInfoElt.innerText += '\n';
-            accountInfoElt.innerText += JSON.stringify(receiveResponse);
-        }
+        return hashes;
     }
 
     async getAccountInfo(index: number): Promise<AccountOverview> {
         const account = await this.getLedgerAccount(index);
         const accountInfo = await window.bananocoinBananojs.getAccountInfo(account, true);
+        const pending = await this.getPending(account);
 
         if (accountInfo.error) {
             console.log(accountInfo.error);
@@ -130,6 +121,7 @@ export class LedgerService {
                     formattedBalance: 0,
                     balance: 0,
                     representative: undefined,
+                    pending: []
                 };
             } else {
                 return Promise.reject(accountInfo.error);
@@ -149,6 +141,7 @@ export class LedgerService {
             formattedBalance: this._util.numberWithCommas(bananoDecimal, 6),
             balance: Number(bananoDecimal),
             representative: accountInfo.representative,
+            pending
         };
     }
 }
