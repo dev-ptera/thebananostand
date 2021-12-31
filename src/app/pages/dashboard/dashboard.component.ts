@@ -23,7 +23,7 @@ export class DashboardComponent implements OnInit {
     selectedItems: Set<number> = new Set();
     manualAddIndex: number;
     disableRipple = false;
-    initLoadComplete: boolean;
+    loadingAllAccounts: boolean;
 
     constructor(
         private readonly _router: Router,
@@ -37,17 +37,22 @@ export class DashboardComponent implements OnInit {
     ngOnInit(): void {
         this.isAdvancedView = this._accountService.isAdvancedView();
         if (this._accountService.accounts.length === 0) {
-            void this.loadAccounts().then(() => {
-                this.initLoadComplete = true;
-            });
+            void this.loadAccounts();
         }
     }
 
     async loadAccounts(): Promise<void> {
+        this.loadingAllAccounts = true;
         this.loadingAccount = true;
         await this._accountService.populateAccountsFromLocalStorage();
         this.manualAddIndex = this._accountService.findNextUnloadedIndex();
         this.loadingAccount = false;
+        this.loadingAllAccounts = false;
+    }
+
+    refresh(): void {
+        this._accountService.accounts = [];
+        void this.loadAccounts();
     }
 
     async addAccount(): Promise<void> {
