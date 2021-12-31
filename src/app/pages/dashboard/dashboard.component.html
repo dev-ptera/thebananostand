@@ -1,28 +1,5 @@
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; height: 40px">
     <div>
-        <!--
-        <button
-            *ngIf="isEditing"
-            style="margin-right: 16px"
-            mat-stroked-button
-            color="warn"
-            (click)="hideSelected()"
-            [disabled]="selectedItems.size === 0"
-        >
-            <mat-icon style="margin-right: 8px; margin-left: -4px">remove_circle</mat-icon>
-            <span>Hide Selected</span>
-        </button>
-        -->
-
-        <!--
-            <mat-form-field appearance="outline" style="width: 150px">
-                <mat-label>Add Account</mat-label>
-                <input matInput type="text" [(ngModel)]="manualAddIndex">
-                <button *ngIf="manualAddIndex" matSuffix mat-icon-button color="primary" aria-label="Clear" (click)="addAccountFromIndex(manualAddIndex)">
-                    <mat-icon>add</mat-icon>
-                </button>
-            </mat-form-field>
-            -->
         <button mat-mini-fab
             color="primary" (click)="addAccount()" [disabled]="loadingAccount">
             <mat-icon>add</mat-icon>
@@ -51,7 +28,8 @@
         <mat-checkbox
             color="warn"
             *ngIf="isAdvancedView"
-            style="margin-right: 40px"
+            [disabled]="getAccounts().length === 0"
+            style="margin-right: 32px"
             (change)="toggleAll($event)"
             [indeterminate]="selectedItems.size < getAccounts().length && selectedItems.size > 0"
             [checked]="selectedItems.size === getAccounts().length && selectedItems.size > 0"
@@ -61,11 +39,11 @@
     </div>
     <mat-divider></mat-divider>
 
-    <!--
-    <blui-empty-state *ngIf="getAccounts().length === 0" title="No Accounts" description="You can manually add accounts.">
-        <mat-icon blui-empty-icon>error</mat-icon>
+    <blui-empty-state *ngIf="getAccounts().length === 0 && initLoadComplete" style="margin: 64px 0 48px 0"
+                      title="No Accounts Displayed"
+                      description="Connect your Ledger device and use the buttons above to add an account.">
+        <mat-icon blui-empty-icon>search</mat-icon>
     </blui-empty-state>
-    -->
 
     <mat-nav-list style="max-height: 60vh; overflow: auto" *ngIf="getAccounts().length > 0" [disableRipple]="disableRipple">
         <blui-info-list-item
@@ -79,7 +57,7 @@
                 *ngIf="isAdvancedView"
                 blui-icon
                 color="warn"
-                style="margin-bottom: 6px"
+                style="margin-bottom: 6px;"
                 (click)="$event.stopPropagation()"
                 (mouseenter)="disableRipple=true"
                 (mouseleave)="disableRipple=false"

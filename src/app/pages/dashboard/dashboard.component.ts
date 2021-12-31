@@ -23,6 +23,8 @@ export class DashboardComponent implements OnInit {
     selectedItems: Set<number> = new Set();
     manualAddIndex: number;
     disableRipple = false;
+    initLoadComplete: boolean;
+
 
     constructor(
         private readonly _router: Router,
@@ -36,7 +38,9 @@ export class DashboardComponent implements OnInit {
     ngOnInit(): void {
         this.isAdvancedView = this._accountService.isAdvancedView();
         if (this._accountService.accounts.length === 0) {
-            void this.loadAccounts();
+            void this.loadAccounts().then(() => {
+                this.initLoadComplete = true;
+            })
         }
     }
 
