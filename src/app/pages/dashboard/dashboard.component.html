@@ -67,7 +67,7 @@
     </blui-empty-state>
     -->
 
-    <mat-nav-list style="max-height: 60vh; overflow: auto" *ngIf="getAccounts().length > 0" [disableRipple]="isAdvancedView">
+    <mat-nav-list style="max-height: 60vh; overflow: auto" *ngIf="getAccounts().length > 0" [disableRipple]="disableRipple">
         <blui-info-list-item
             *ngFor="let account of getAccounts()"
             divider="partial"
@@ -81,6 +81,8 @@
                 color="warn"
                 style="margin-bottom: 6px"
                 (click)="$event.stopPropagation()"
+                (mouseenter)="disableRipple=true"
+                (mouseleave)="disableRipple=false"
                 [checked]="selectedItems.has(account.index)"
                 (change)="toggleCheck($event, account)"
             >

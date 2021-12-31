@@ -22,6 +22,7 @@ export class DashboardComponent implements OnInit {
     isAdvancedView: boolean;
     selectedItems: Set<number> = new Set();
     manualAddIndex: number;
+    disableRipple = false;
 
     constructor(
         private readonly _router: Router,
