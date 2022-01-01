@@ -14,7 +14,12 @@ This is a wallet that allows users to self-manage funds via a Ledger hardware wa
 
 ## How to Use
 
-Connect your ledger device to your computer via USB, download & open the banano app on your ledger device (v1.2.6), and click the button to connect your device.  Ledger-managed accounts can be managed after the ledger is connected successfully.
+1.  Download the Banano Ledger app (>=1.2.6) onto your hardware wallet.
+2.  Connect your ledger device to your computer via USB.
+3.  Open the Banano app on your ledger.
+4.  Click the initial button to connect your device.  
+
+You can send/receive from all your accounts after the ledger is connected successfully.
 
 ## Issues, Requests ?
 
