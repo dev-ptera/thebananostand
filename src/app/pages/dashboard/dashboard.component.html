@@ -6,7 +6,7 @@
         <button
             *ngIf="isAdvancedView"
             mat-mini-fab
-            color="accent"
+            color="primary"
             style="margin-left: 16px"
             (click)="addAccountFromIndex()"
             [disabled]="loadingAccount"
@@ -35,7 +35,7 @@
         </button>
     </div>
 
-    <mat-slide-toggle color="accent" [(ngModel)]="isAdvancedView" (change)="exitEdit($event)"
+    <mat-slide-toggle color="primary" [(ngModel)]="isAdvancedView" (change)="exitEdit($event)"
         >Advanced</mat-slide-toggle
     >
 </div>
