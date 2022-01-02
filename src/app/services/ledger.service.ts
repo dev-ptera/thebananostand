@@ -121,7 +121,7 @@ export class LedgerService {
                     formattedBalance: 0,
                     balance: 0,
                     representative: undefined,
-                    pending: [],
+                    pending: pending,
                 };
             } else {
                 return Promise.reject(accountInfo.error);
