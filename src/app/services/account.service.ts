@@ -75,6 +75,7 @@ export class AccountService {
             .getAccountInfo(index)
             .then((overview) => {
                 this.accounts.push(overview);
+                this.accounts.sort((a, b) => (a.index > b.index) ? 1 : -1)
                 this.saveAccountsInLocalStorage();
                 this.updateTotalBalance();
                 return Promise.resolve();
