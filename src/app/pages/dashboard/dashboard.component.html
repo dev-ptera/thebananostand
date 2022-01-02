@@ -89,7 +89,7 @@
             >
             </mat-checkbox>
             <div blui-left-content style="min-width: 120px">
-                <blui-list-item-tag [label]="'Account #' + account.index"></blui-list-item-tag>
+                <blui-list-item-tag [label]="(account.index > 100000 ? '#' : 'Account #') + _util.numberWithCommas(account.index)"></blui-list-item-tag>
             </div>
             <div blui-title>{{ account.shortAddress }}</div>
             <div blui-subtitle>
@@ -99,13 +99,6 @@
                 <ng-container *ngIf="!account.representative"> unopened account </ng-container>
             </div>
             <div blui-right-content>
-                <blui-list-item-tag
-                    *ngIf="!account.representative"
-                    label="Unopened Account"
-                    style="margin-right: 16px"
-                    [backgroundColor]="colors.gold[500]"
-                >
-                </blui-list-item-tag>
                 <blui-list-item-tag
                     *ngIf="account.pending.length > 0"
                     label="Has Receivable"
@@ -119,6 +112,13 @@
                     [backgroundColor]="colors.red[500]"
                     style="margin-right: 16px"
                 ></blui-list-item-tag>
+
+                <blui-list-item-tag
+                    *ngIf="!account.representative"
+                    label="Unopened Account"
+                    [backgroundColor]="colors.gold[500]"
+                >
+                </blui-list-item-tag>
 
                 <ng-container *ngIf="account.representative">
                     {{ account.formattedBalance }}
