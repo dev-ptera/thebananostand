@@ -2,8 +2,8 @@
 @import '~@angular/material/_theming.scss';
 
 $material-theme-primary: mat-palette($blui-blue, 500);
-$material-theme-accent: mat-palette($blui-blue, 300);
-$material-theme-warn: mat-palette($blui-red, 300);
+$material-theme-accent: mat-palette($blui-blue, 800);
+$material-theme-warn: mat-palette($blui-red, 500);
 $nano-blue: map-merge(
     mat-light-theme($material-theme-primary, $material-theme-accent, $material-theme-warn),
     (

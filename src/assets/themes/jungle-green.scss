@@ -2,8 +2,8 @@
 @import '~@angular/material/_theming.scss';
 
 $material-theme-primary: mat-palette($blui-green, 700);
-$material-theme-accent: mat-palette($blui-green, 700);
-$material-theme-warn: mat-palette($blui-red, 300);
+$material-theme-accent: mat-palette($blui-green, 900);
+$material-theme-warn: mat-palette($blui-red, 500);
 $jungle-green-theme: map-merge(
     mat-light-theme($material-theme-primary, $material-theme-accent, $material-theme-warn),
     (

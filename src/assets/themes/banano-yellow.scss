@@ -3,7 +3,7 @@
 
 $material-theme-primary: mat-palette($blui-yellow, 900);
 $material-theme-accent: mat-palette($blui-yellow, 900);
-$material-theme-warn: mat-palette($blui-red, 300);
+$material-theme-warn: mat-palette($blui-red, 500);
 $banano-yellow: map-merge(
     mat-dark-theme($material-theme-primary, $material-theme-warn, $material-theme-warn),
     (
