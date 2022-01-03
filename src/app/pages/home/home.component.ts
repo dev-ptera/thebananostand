@@ -12,6 +12,7 @@ import { LedgerService } from '@app/services/ledger.service';
 export class HomeComponent implements OnInit {
     isLedgerLoaded: boolean;
     loading = false;
+    showHelperText = false;
     err: string;
     colors = Colors;
 
@@ -42,12 +43,13 @@ export class HomeComponent implements OnInit {
             .checkLedgerOrError()
             .then(() => {
                 this.isLedgerLoaded = true;
+                this.showHelperText = false;
                 this._accountService.fetchOnlineRepresentatives();
                 this._accountService.fetchRepresentativeAliases();
             })
             .catch((err) => {
                 console.error(err);
-                this.err = `ERROR: ${err.message}`;
+                this.err = err.message;
             });
     }
 }

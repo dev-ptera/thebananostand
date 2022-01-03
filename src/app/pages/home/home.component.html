@@ -19,8 +19,23 @@
                     Load Accounts
                 </button>
             </blui-empty-state>
-            <div style="color: red; margin-top: 32px" *ngIf="err">
-                {{ err }}
+            <div style="margin-top: 32px; min-width: 584px" *ngIf="err">
+                <mat-divider></mat-divider>
+                <div style="color: red; margin-top: 32px">
+                   <strong>ERROR:</strong> {{ err }}
+                </div>
+                <span style="text-decoration: underline; cursor: pointer" (click)="showHelperText = true">
+                    Trouble Connecting?
+                </span>
+                <div *ngIf="showHelperText" style="margin-top: 32px">
+                    <div style="margin-bottom: 16px">Follow this list for help connecting your Ledger device:</div>
+                    <div><strong>#1</strong>: Connect your Ledger Device via USB</div>
+                    <div><strong>#2</strong>: Ensure the BANANO app is installed and the version is up-to-date (>v1.2.6).</div>
+                    <div><strong>#3</strong>: Ensure no other wallet software is attempting to access your ledger device.</div>
+                    <div><strong>#4</strong>: Open this web page in Chrome or Brave Browser.</div>
+                    <div><strong>#5</strong>: Open the BANANO app on your Ledger.</div>
+                    <div><strong>#6</strong>: Click the Load Accounts button above.</div>
+                </div>
             </div>
             <app-dashboard *ngIf="isLedgerLoaded"></app-dashboard>
         </div>
