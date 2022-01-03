@@ -46,10 +46,15 @@ $banano-yellow: map-merge(
 .mat-mini-fab.mat-primary,
 .mat-raised-button.mat-primary,
 .mat-flat-button.mat-primary,
-.blui-info-list-item-left-content-wrapper .blui-list-item-tag-label {
+.blui-info-list-item .blui-list-item-tag-label {
     color: map-get($blui-black, 700) !important;
 }
 
 .mat-toolbar.mat-primary {
     color: map-get($blui-white, 500) !important;
 }
+
+.link {
+    color: map-get($blui-yellow, 500);
+}
+

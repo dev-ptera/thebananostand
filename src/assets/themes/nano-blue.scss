@@ -1,0 +1,44 @@
+@import '~@brightlayer-ui/colors/palette';
+@import '~@angular/material/_theming.scss';
+
+$material-theme-primary: mat-palette($blui-blue, 500);
+$material-theme-accent: mat-palette($blui-blue, 300);
+$material-theme-warn: mat-palette($blui-red, 300);
+$nano-blue: map-merge(
+        mat-light-theme($material-theme-primary, $material-theme-accent, $material-theme-warn),
+        (
+            foreground: (
+                text: map-get($blui-black, 500),
+                secondary-text: map-get($blui-gray, 500),
+                hint-text: map-get($blui-black, 400),
+                base: map-get($blui-darkBlack, 900),
+                divider: rgba(66, 78, 84, 0.12),
+                dividers: $dark-dividers,
+                disabled: rgba(66, 78, 84, 0.3),
+                disabled-button: rgba(black, 0.26),
+                disabled-text: rgba(66, 78, 84, 0.3),
+                elevation: map-get($blui-darkBlack, 900),
+                icon: rgba(black, 0.54),
+                icons: rgba(black, 0.54),
+                slider-min: rgba(black, 0.87),
+                slider-off: rgba(black, 0.26),
+                slider-off-active: rgba(black, 0.38),
+            ),
+            background: (
+                status-bar: map_get($mat-grey, 300),
+                app-bar: map-get($blui-gray, 50),
+                background: map-get($blui-white, 200),
+                hover: rgba(black, 0.04),
+                card: map-get($blui-white, 50),
+                dialog: map-get($blui-white, 50),
+                disabled-button: rgba(114, 126, 132, 0.12),
+                raised-button: map-get($blui-white, 50),
+                focused-button: $dark-focused,
+                selected-button: map-get($blui-gray, 300),
+                selected-disabled-button: map-get($blui-gray, 400),
+                disabled-button-toggle: map-get($blui-gray, 200),
+                unselected-chip: map-get($blui-gray, 300),
+                disabled-list-option: map-get($blui-gray, 200),
+            ),
+        )
+);

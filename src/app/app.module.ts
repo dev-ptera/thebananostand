@@ -25,7 +25,7 @@ import {
     InfoListItemModule,
     ListItemTagModule,
     MobileStepperModule,
-    SpacerModule,
+    SpacerModule, UserMenuModule,
 } from '@brightlayer-ui/angular-components';
 import { MatCardModule } from '@angular/material/card';
 import { AccountComponent } from './pages/account/account.component';
@@ -44,10 +44,12 @@ import { DashboardComponent } from '@app/pages/dashboard/dashboard.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AddIndexDialogComponent } from '@app/pages/dashboard/add-index/add-index.component';
 import { ReceiveDialogComponent } from '@app/pages/account/dialogs/receive/receive-dialog.component';
+import {AppUserMenuComponent} from "@app/components/user-menu.component";
 
 @NgModule({
     declarations: [
         AppComponent,
+        AppUserMenuComponent,
         HomeComponent,
         DashboardComponent,
         AccountComponent,
@@ -77,6 +79,7 @@ import { ReceiveDialogComponent } from '@app/pages/account/dialogs/receive/recei
 
         // brightlayer-ui
         InfoListItemModule,
+        UserMenuModule,
         ListItemTagModule,
         MobileStepperModule,
         SpacerModule,

@@ -1,0 +1,21 @@
+.app-user-menu {
+    margin-right: -8px;
+    .blui-user-menu-header-icon-wrapper {
+        display: none !important;
+    }
+}
+.cdk-overlay-pane {
+    .blui-user-menu-header-title-wrapper {
+        width: 100% !important;
+    }
+    .blui-user-menu-header-icon-wrapper {
+        display: none !important;
+    }
+    .mat-toolbar.mat-toolbar-single-row {
+        background-color: unset !important;
+    }
+}
+
+.blui-user-menu-header-content {
+    height: 56px!important;
+}

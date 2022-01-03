@@ -1,10 +1,12 @@
 <div class="app-root">
     <mat-toolbar color="accent" class="mat-elevation-z2 app-toolbar">
-        <button mat-icon-button (click)="goHome()">
-            <mat-icon>arrow_back</mat-icon>
-        </button>
-
-        <div [style.marginLeft.px]="8">{{ overview?.fullAddress }}</div>
+        <div style="display: flex; align-items: center">
+            <button mat-icon-button (click)="goHome()">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+            <div [style.marginLeft.px]="8">{{ overview?.fullAddress }}</div>
+        </div>
+        <app-user-menu></app-user-menu>
     </mat-toolbar>
     <mat-toolbar
         color="warn"
@@ -71,7 +73,10 @@
                     <blui-info-list-item
                         *ngIf="item"
                         style="height: 50px"
-                        [style.backgroundColor]="even ? colors.white[100] : colors.white[50]"
+                        [style.backgroundColor]="
+                            even ?
+                            (isDark() ? colors.darkBlack[500] : colors.white[100]) :
+                            (isDark() ? colors.darkBlack[200] : colors.white[50])"
                     >
                         <div blui-icon>
                             <mat-icon *ngIf="item.type === 'receive'" [style.color]="colors.green[500]"
@@ -92,7 +97,6 @@
                             <span
                                 class="link"
                                 [style.marginLeft.px]="8"
-                                [style.color]="colors.blue[500]"
                                 (click)="openLink(item.hash)"
                             >
                                 <ng-container *ngIf="item.type === 'receive' || item.type === 'send'">

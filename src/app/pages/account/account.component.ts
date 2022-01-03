@@ -12,6 +12,7 @@ import { ChangeRepDialogComponent } from './dialogs/change-rep/change-rep-dialog
 import { AccountOverview } from '@app/types/AccountOverview';
 import { LedgerService } from '@app/services/ledger.service';
 import { ReceiveDialogComponent } from '@app/pages/account/dialogs/receive/receive-dialog.component';
+import {ThemeService} from "@app/services/theme.service";
 
 @Component({
     selector: 'app-account',
@@ -34,6 +35,7 @@ export class AccountComponent implements OnInit, OnDestroy {
         private readonly _dialog: MatDialog,
         private readonly _ref: ChangeDetectorRef,
         private readonly _apiService: ApiService,
+        private readonly _themeService: ThemeService,
         private readonly _ledgerService: LedgerService,
         private readonly _accountService: AccountService,
         private readonly _viewportService: ViewportService
@@ -173,5 +175,9 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     openChangeRepDocs(): void {
         window.open('https://nanotools.github.io/Change-Nano-Representative/');
+    }
+
+    isDark(): boolean {
+        return this._themeService.isDark();
     }
 }
