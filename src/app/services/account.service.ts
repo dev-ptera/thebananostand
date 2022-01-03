@@ -69,6 +69,16 @@ export class AccountService {
             });
     }
 
+    isRepOnline(address: string): boolean {
+        if (!address) {
+            return true;
+        }
+        if (this.onlineRepresentatives.size === 0) {
+            return true;
+        }
+        return this.onlineRepresentatives.has(address);
+    }
+
     fetchAccount(index: number): Promise<void> {
         this.removeAccount(index);
         return this._ledgerService

@@ -21,6 +21,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     blockCount: number;
     loading = false;
     receiving = true;
+    warnBannerDismissed = false;
 
     colors = Colors;
     ds: MyDataSource;
@@ -156,5 +157,9 @@ export class AccountComponent implements OnInit, OnDestroy {
             this.ds.disconnect();
             this.ds = undefined;
         }
+    }
+
+    isRepOffline(address: string): boolean {
+        return !this._accountService.isRepOnline(address);
     }
 }

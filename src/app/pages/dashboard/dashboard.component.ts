@@ -66,14 +66,7 @@ export class DashboardComponent implements OnInit {
     }
 
     showRepresentativeOffline(address: string): boolean {
-        return address && !this.isOnline(address);
-    }
-
-    isOnline(address: string): boolean {
-        if (this._accountService.onlineRepresentatives.size === 0) {
-            return true;
-        }
-        return this._accountService.onlineRepresentatives.has(address);
+        return !this._accountService.isRepOnline(address);
     }
 
     formatRepresentative(rep: string): string {
