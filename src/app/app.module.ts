@@ -43,7 +43,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { DashboardComponent } from '@app/pages/dashboard/dashboard.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AddIndexDialogComponent } from '@app/pages/dashboard/add-index/add-index.component';
-import {ReceiveDialogComponent} from "@app/pages/account/dialogs/receive/receive-dialog.component";
+import { ReceiveDialogComponent } from '@app/pages/account/dialogs/receive/receive-dialog.component';
 
 @NgModule({
     declarations: [

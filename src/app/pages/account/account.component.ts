@@ -11,7 +11,7 @@ import { SendDialogComponent } from './dialogs/send/send-dialog.component';
 import { ChangeRepDialogComponent } from './dialogs/change-rep/change-rep-dialog.component';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { LedgerService } from '@app/services/ledger.service';
-import {ReceiveDialogComponent} from "@app/pages/account/dialogs/receive/receive-dialog.component";
+import { ReceiveDialogComponent } from '@app/pages/account/dialogs/receive/receive-dialog.component';
 
 @Component({
     selector: 'app-account',

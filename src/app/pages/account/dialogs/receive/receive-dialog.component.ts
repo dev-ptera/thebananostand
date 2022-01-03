@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as Colors from '@brightlayer-ui/colors';
 import { UtilService } from '@app/services/util.service';
@@ -25,8 +25,7 @@ export type ReceiveDialogData = {
                     <mat-icon blui-empty-icon> check_circle </mat-icon>
                     <div blui-title>Received Successfully</div>
                     <div blui-description>
-                        All transactions have been successfully received.
-                        You can now close this window.
+                        All transactions have been successfully received. You can now close this window.
                     </div>
                     <div blui-actions>
                         <button mat-flat-button color="primary" class="close-button" (click)="closeDialog()">
@@ -59,20 +58,23 @@ export type ReceiveDialogData = {
                 <div mat-dialog-content style="margin-bottom: 32px;">
                     <ng-container>
                         <div style="margin-bottom: 8px">
-                            You are attempting to receive incoming transaction(s).
-                            Use the button below and your ledger device to manually receive each block.
+                            You are attempting to receive incoming transaction(s). Use the button below and your ledger
+                            device to manually receive each block.
                         </div>
-                        <div *ngIf="activeStep === 0" style="margin-bottom: 8px">There are <strong>{{data.blocks.length}}</strong> total transaction(s) to receive.</div>
-                        <div *ngIf="activeStep > 0">Transaction #{{activeStep}} received. <span class="link" (click)="openLink()">View Hash</span></div>
+                        <div *ngIf="activeStep === 0" style="margin-bottom: 8px">
+                            There are <strong>{{ data.blocks.length }}</strong> total transaction(s) to receive.
+                        </div>
+                        <div *ngIf="activeStep > 0">
+                            Transaction #{{ activeStep }} received.
+                            <span class="link" (click)="openLink()">View Hash</span>
+                        </div>
                     </ng-container>
                 </div>
 
                 <blui-spacer></blui-spacer>
                 <mat-divider></mat-divider>
                 <blui-mobile-stepper [activeStep]="activeStep" [steps]="maxSteps" variant="text">
-                    <button mat-stroked-button blui-back-button color="primary" (click)="closeDialog()">
-                        Close
-                    </button>
+                    <button mat-stroked-button blui-back-button color="primary" (click)="closeDialog()">Close</button>
                     <button
                         mat-flat-button
                         blui-next-button
@@ -128,14 +130,17 @@ export class ReceiveDialogComponent implements OnInit {
     receiveTransaction(): void {
         this.loading = true;
         const hash = this.data.blocks[this.activeStep];
-        this._ledgerService.receive(this.data.address, this.data.index, hash).then((hash) => {
-            this.loading = false;
-            this.txHash = hash;
-            console.log('Transaction received, hash: ' + hash);
-            this.activeStep++;
-            this.success = (this.maxSteps === this.activeStep);
-        }).catch((err) => {
-            this.errorMessage = err;
-        })
+        this._ledgerService
+            .receive(this.data.address, this.data.index, hash)
+            .then((hash) => {
+                this.loading = false;
+                this.txHash = hash;
+                console.log('Transaction received, hash: ' + hash);
+                this.activeStep++;
+                this.success = this.maxSteps === this.activeStep;
+            })
+            .catch((err) => {
+                this.errorMessage = err;
+            });
     }
 }
