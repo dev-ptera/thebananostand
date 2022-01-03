@@ -204,7 +204,7 @@ export class ChangeRepDialogComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: ChangeRepDialogData,
         public util: UtilService,
         private readonly _apiService: ApiService,
-        private readonly _bananoService: LedgerService,
+        private readonly _ledgerService: LedgerService,
         private readonly _accountService: AccountService,
         public dialogRef: MatDialogRef<ChangeRepDialogComponent>
     ) {}
@@ -281,7 +281,7 @@ export class ChangeRepDialogComponent implements OnInit {
 
     changeRepresentative(): void {
         this.loading = true;
-        this._bananoService
+        this._ledgerService
             .changeRepresentative(this.getUseSelectedRepresentative(), this.data.address, this.data.index)
             .then((response) => {
                 this.txHash = response;

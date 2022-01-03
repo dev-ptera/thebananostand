@@ -148,7 +148,7 @@ export class SendDialogComponent {
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: SendDialogData,
         public util: UtilService,
-        private readonly _bananoService: LedgerService,
+        private readonly _ledgerService: LedgerService,
         private readonly _accountService: AccountService,
         public dialogRef: MatDialogRef<SendDialogComponent>
     ) {}
@@ -187,7 +187,7 @@ export class SendDialogComponent {
 
     withdraw(): void {
         this.loading = true;
-        this._bananoService
+        this._ledgerService
             .withdraw(this.recipient, this.sendAmount, this.data.index)
             .then((hash) => {
                 this.txHash = hash;

@@ -11,6 +11,7 @@ import { SendDialogComponent } from './dialogs/send/send-dialog.component';
 import { ChangeRepDialogComponent } from './dialogs/change-rep/change-rep-dialog.component';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { LedgerService } from '@app/services/ledger.service';
+import {ReceiveDialogComponent} from "@app/pages/account/dialogs/receive/receive-dialog.component";
 
 @Component({
     selector: 'app-account',
@@ -67,12 +68,19 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     /** Iterates through each pending transaction block and receives them. */
     async receive(): Promise<void> {
-        this.receiving = true;
-        for await (const hash of this.overview.pending) {
-            await this._ledgerService.receive(this.overview.fullAddress, this.overview.index, hash);
+        const ref = this._dialog.open(ReceiveDialogComponent, {
+            data: {
+                address: this.overview.fullAddress,
+                blocks: this.overview.pending,
+                index: this.overview.index,
+            },
+        });
+        ref.afterClosed().subscribe((hash) => {
+            if (!hash) {
+                return;
+            }
             this._updateCurrentAccountInfo();
-        }
-        this.receiving = false;
+        });
     }
 
     /** Opens dialog to send funds. */
