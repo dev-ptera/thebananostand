@@ -12,7 +12,7 @@ import { ChangeRepDialogComponent } from './dialogs/change-rep/change-rep-dialog
 import { AccountOverview } from '@app/types/AccountOverview';
 import { LedgerService } from '@app/services/ledger.service';
 import { ReceiveDialogComponent } from '@app/pages/account/dialogs/receive/receive-dialog.component';
-import {ThemeService} from "@app/services/theme.service";
+import { ThemeService } from '@app/services/theme.service';
 
 @Component({
     selector: 'app-account',
