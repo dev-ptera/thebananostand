@@ -162,4 +162,8 @@ export class AccountComponent implements OnInit, OnDestroy {
     isRepOffline(address: string): boolean {
         return !this._accountService.isRepOnline(address);
     }
+
+    openChangeRepDocs(): void {
+        window.open('https://nanotools.github.io/Change-Nano-Representative/');
+    }
 }

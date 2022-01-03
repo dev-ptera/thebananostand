@@ -89,7 +89,9 @@
             >
             </mat-checkbox>
             <div blui-left-content style="min-width: 120px">
-                <blui-list-item-tag [label]="(account.index > 100000 ? '#' : 'Account #') + _util.numberWithCommas(account.index)"></blui-list-item-tag>
+                <blui-list-item-tag
+                    [label]="(account.index > 100000 ? '#' : 'Account #') + _util.numberWithCommas(account.index)"
+                ></blui-list-item-tag>
             </div>
             <div blui-title>{{ account.shortAddress }}</div>
             <div blui-subtitle>

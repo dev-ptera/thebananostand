@@ -10,10 +10,16 @@
 }
 
 .rep-offline-banner {
-    min-height: 40px;  white-space: pre-wrap !important; display: flex; justify-content: space-between; height: unset; padding: 8px 62px;
+    min-height: 64px;
+    white-space: pre-wrap !important;
+    display: flex;
+    justify-content: space-between;
+    height: unset;
+    padding: 12px 62px;
     div {
-
-        margin: 0; line-height: 22px; white-space: pre-wrap !important;
+        margin: 0;
+        line-height: 22px;
+        white-space: pre-wrap !important;
     }
 }
 

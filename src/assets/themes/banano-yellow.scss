@@ -5,51 +5,51 @@ $material-theme-primary: mat-palette($blui-yellow, 900);
 $material-theme-accent: mat-palette($blui-yellow, 900);
 $material-theme-warn: mat-palette($blui-red, 300);
 $banano-yellow: map-merge(
-        mat-dark-theme($material-theme-primary, $material-theme-warn, $material-theme-warn),
-        (
-            foreground: (
-                text: map-get($blui-black, 50),
-                secondary-text: map-get($blui-black, 200),
-                hint-text: map-get($blui-gray, 300),
-                base: map-get($blui-white, 50),
-                divider: rgba(map-get($blui-black, 200), 0.36),
-                dividers: rgba(map-get($blui-black, 200), 0.36),
-                disabled: rgba(map-get($blui-black, 300), 0.36),
-                disabled-button: rgba(black, 0.3),
-                disabled-text: rgba(map-get($blui-black, 300), 0.36),
-                elevation: map-get($blui-darkBlack, 900),
-                icon: map-get($blui-black, 50),
-                icons: map-get($blui-black, 50),
-                slider-min: map-get($blui-black, 50),
-                slider-off: rgba(white, 0.3),
-                slider-off-active: rgba(white, 0.3),
-            ),
-            background: (
-                status-bar: map-get($blui-darkBlack, 900),
-                app-bar: map-get($blui-darkBlack, 700),
-                background: map-get($blui-darkBlack,700),
-                hover: rgba(white, 0.04),
-                card: map-get($blui-black, 900),
-                dialog: map-get($blui-black, 900),
-                disabled-button: rgba(white, 0.12),
-                raised-button: map-get($blui-black, 500),
-                focused-button: $light-focused,
-                selected-button: map_get($mat-grey, 900),
-                selected-disabled-button: map_get($mat-grey, 800),
-                disabled-button-toggle: black,
-                unselected-chip: map_get($mat-grey, 700),
-                disabled-list-option: black,
-            ),
-        )
+    mat-dark-theme($material-theme-primary, $material-theme-warn, $material-theme-warn),
+    (
+        foreground: (
+            text: map-get($blui-black, 50),
+            secondary-text: map-get($blui-black, 200),
+            hint-text: map-get($blui-gray, 300),
+            base: map-get($blui-white, 50),
+            divider: rgba(map-get($blui-black, 200), 0.36),
+            dividers: rgba(map-get($blui-black, 200), 0.36),
+            disabled: rgba(map-get($blui-black, 300), 0.36),
+            disabled-button: rgba(black, 0.3),
+            disabled-text: rgba(map-get($blui-black, 300), 0.36),
+            elevation: map-get($blui-darkBlack, 900),
+            icon: map-get($blui-black, 50),
+            icons: map-get($blui-black, 50),
+            slider-min: map-get($blui-black, 50),
+            slider-off: rgba(white, 0.3),
+            slider-off-active: rgba(white, 0.3),
+        ),
+        background: (
+            status-bar: map-get($blui-darkBlack, 900),
+            app-bar: map-get($blui-darkBlack, 700),
+            background: map-get($blui-darkBlack, 700),
+            hover: rgba(white, 0.04),
+            card: map-get($blui-black, 900),
+            dialog: map-get($blui-black, 900),
+            disabled-button: rgba(white, 0.12),
+            raised-button: map-get($blui-black, 500),
+            focused-button: $light-focused,
+            selected-button: map_get($mat-grey, 900),
+            selected-disabled-button: map_get($mat-grey, 800),
+            disabled-button-toggle: black,
+            unselected-chip: map_get($mat-grey, 700),
+            disabled-list-option: black,
+        ),
+    )
 );
 
 .mat-mini-fab.mat-primary,
 .mat-raised-button.mat-primary,
 .mat-flat-button.mat-primary,
-.blui-info-list-item-left-content-wrapper .blui-list-item-tag-label{
-    color: map-get($blui-black, 700)!important;
+.blui-info-list-item-left-content-wrapper .blui-list-item-tag-label {
+    color: map-get($blui-black, 700) !important;
 }
 
 .mat-toolbar.mat-primary {
-    color: map-get($blui-white, 500)!important;
+    color: map-get($blui-white, 500) !important;
 }

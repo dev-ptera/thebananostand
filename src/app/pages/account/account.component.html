@@ -6,18 +6,20 @@
 
         <div [style.marginLeft.px]="8">{{ overview?.fullAddress }}</div>
     </mat-toolbar>
-    <mat-toolbar color="warn" class="mat-elevation-z2 app-toolbar rep-offline-banner"
-                 *ngIf="isRepOffline(overview?.representative) && !warnBannerDismissed">
+    <mat-toolbar
+        color="warn"
+        class="mat-elevation-z2 app-toolbar rep-offline-banner"
+        *ngIf="isRepOffline(overview?.representative) && !warnBannerDismissed"
+    >
         <div class="mat-subheading-2">
-            Your current representative is <strong>offline</strong>. If this happens often,
-            it is suggested that you use the "Change Representative" button below to select a recommended rep.
-            <span class="link" style="color: black">Why is this important?</span>
+            Your current representative is <strong>offline</strong>. If this happens often, it is suggested that you use
+            the "Change Representative" button below to select a recommended rep.
+            <span class="link" style="color: black" (click)="openChangeRepDocs()">Why is this important?</span>
         </div>
         <button mat-icon-button (click)="warnBannerDismissed = true">
             <mat-icon>close</mat-icon>
         </button>
     </mat-toolbar>
-
 
     <div class="app-body" *ngIf="overview">
         <div class="app-body-content">
