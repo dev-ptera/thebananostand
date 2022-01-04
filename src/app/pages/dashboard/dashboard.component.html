@@ -104,6 +104,7 @@
                 <blui-list-item-tag
                     *ngIf="account.pending.length > 0"
                     label="Has Receivable"
+                    class="receivable-tag"
                     style="margin-right: 16px"
                     [backgroundColor]="colors.orange[500]"
                 >
@@ -111,6 +112,7 @@
                 <blui-list-item-tag
                     *ngIf="showRepresentativeOffline(account.representative)"
                     label="Rep Offline"
+                    class="rep-offline-tag"
                     [backgroundColor]="colors.red[500]"
                     style="margin-right: 16px"
                 ></blui-list-item-tag>
@@ -118,6 +120,7 @@
                 <blui-list-item-tag
                     *ngIf="!account.representative"
                     label="Unopened Account"
+                    class="unopened-account-tag"
                     [backgroundColor]="colors.gold[500]"
                 >
                 </blui-list-item-tag>

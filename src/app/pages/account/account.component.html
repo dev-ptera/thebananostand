@@ -76,7 +76,7 @@
                         [style.backgroundColor]="
                             even
                                 ? isDark()
-                                    ? colors.darkBlack[500]
+                                    ? colors.darkBlack[300]
                                     : colors.white[100]
                                 : isDark()
                                 ? colors.darkBlack[200]
@@ -99,7 +99,7 @@
                         <div blui-right-content>
                             <span *ngIf="item.type === 'receive'">from </span>
                             <span *ngIf="item.type === 'send' || item.type === 'change'">to </span>
-                            <span class="link" [style.marginLeft.px]="8" (click)="openLink(item.hash)">
+                            <span class="link accounts-hash-link" [style.marginLeft.px]="8" (click)="openLink(item.hash)">
                                 <ng-container *ngIf="item.type === 'receive' || item.type === 'send'">
                                     {{ formatAddress(item.address) }}
                                 </ng-container>

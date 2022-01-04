@@ -42,3 +42,7 @@ $nano-blue: map-merge(
         ),
     )
 );
+
+.blui-user-menu-avatar {
+    color: map-get($blui-white, 500) !important;
+}

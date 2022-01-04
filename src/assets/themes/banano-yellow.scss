@@ -57,3 +57,21 @@ $banano-yellow: map-merge(
 .link {
     color: map-get($blui-yellow, 500);
 }
+
+.accounts-hash-link {
+    color: map-get($blui-black, 200);
+}
+
+.rep-offline-banner {
+    background-color: map-get($blui-red, 300) !important;
+    color: black!important;
+}
+
+.mat-stroked-button.mat-primary:not(.mat-button-disabled) {
+    color: map-get($blui-yellow, 500) !important;
+    border-color: map-get($blui-yellow, 500) !important;
+}
+
+.blui-list-item-tag.rep-offline-tag .blui-list-item-tag-label {
+    color: map-get($blui-black, 50) !important;
+}
