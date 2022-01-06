@@ -187,6 +187,10 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     copy(item: ConfirmedTx): void {
-        navigator.clipboard.writeText(item.address || item.newRepresentative);
+        void navigator.clipboard.writeText(item.address || item.newRepresentative);
+        item.showCopiedIcon = true;
+        setTimeout(() => {
+            item.showCopiedIcon = false;
+        }, 700);
     }
 }

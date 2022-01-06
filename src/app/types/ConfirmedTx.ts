@@ -9,4 +9,5 @@ export type ConfirmedTx = {
     timestamp: number;
     type: string;
     hover: boolean;
+    showCopiedIcon: boolean;
 };
