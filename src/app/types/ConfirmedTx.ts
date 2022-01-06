@@ -8,4 +8,5 @@ export type ConfirmedTx = {
     newRepresentative?: string;
     timestamp: number;
     type: string;
+    hover: boolean;
 };

@@ -71,7 +71,7 @@
                     Account History
                 </span>
                 <mat-icon
-                    style="margin-left: 16px"
+                    style="margin-left: 16px; cursor: pointer"
                     (click)="refreshCurrentAccountInfo()">
                     refresh
                 </mat-icon>
@@ -105,19 +105,28 @@
                         <div blui-title>{{ item.type }}</div>
                         <div blui-subtitle>{{ item.amount }}</div>
                         <div blui-right-content>
-                            <span *ngIf="item.type === 'receive'">from </span>
-                            <span *ngIf="item.type === 'send' || item.type === 'change'">to </span>
-                            <span
-                                class="link accounts-hash-link"
-                                [style.marginLeft.px]="8"
-                                (click)="openLink(item.hash)"
-                            >
-                                <ng-container *ngIf="item.type === 'receive' || item.type === 'send'">
-                                    {{ formatAddress(item.address) }}
-                                </ng-container>
-                                <ng-container *ngIf="item.type === 'change'">
-                                    {{ formatAddress(item.newRepresentative) }}
-                                </ng-container>
+                            <span (mouseenter)="item.hover=true" (mouseleave)="item.hover=false">
+                                <span *ngIf="item.type === 'receive'">from </span>
+                                <span *ngIf="item.type === 'send' || item.type === 'change'">to </span>
+                                <span
+                                    class="link accounts-hash-link"
+                                    [style.marginLeft.px]="8"
+                                    (click)="openLink(item.hash)"
+                                >
+                                    <ng-container *ngIf="item.type === 'receive' || item.type === 'send'">
+                                        {{ formatAddress(item.address) }}
+                                    </ng-container>
+                                    <ng-container *ngIf="item.type === 'change'">
+                                        {{ formatAddress(item.newRepresentative) }}
+                                    </ng-container>
+                                </span>
+                                <button mat-icon-button *ngIf="item.hover"  (click)="copy(item)"
+                                        style="cursor: pointer;
+                                        margin-left: 8px;
+                                        height: 24px;
+                                        width: 24px; line-height: 24px" >
+                                <mat-icon  style="font-size:16px;" >copy_all</mat-icon>
+                                </button>
                             </span>
                             <span [style.marginLeft.px]="32">tx #{{ util.numberWithCommas(blockCount - i) }}</span>
                         </div>

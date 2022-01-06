@@ -13,6 +13,8 @@ import { AccountOverview } from '@app/types/AccountOverview';
 import { LedgerService } from '@app/services/ledger.service';
 import { ReceiveDialogComponent } from '@app/pages/account/dialogs/receive/receive-dialog.component';
 import { ThemeService } from '@app/services/theme.service';
+import { ConfirmedTx } from '@app/types/ConfirmedTx';
+
 
 @Component({
     selector: 'app-account',
@@ -182,5 +184,9 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     isDark(): boolean {
         return this._themeService.isDark();
+    }
+
+    copy(item: ConfirmedTx): void {
+        navigator.clipboard.writeText(item.address || item.newRepresentative);
     }
 }
