@@ -76,12 +76,13 @@ export class AccountComponent implements OnInit, OnDestroy {
                 blocks: this.overview.pending,
                 index: this.overview.index,
             },
+            disableClose: true
         });
         ref.afterClosed().subscribe((hash) => {
             if (!hash) {
                 return;
             }
-            this._updateCurrentAccountInfo();
+            this.refreshCurrentAccountInfo();
         });
     }
 
@@ -93,12 +94,13 @@ export class AccountComponent implements OnInit, OnDestroy {
                 maxSendAmount: this.overview.balance,
                 index: this.overview.index,
             },
+            disableClose: true
         });
         ref.afterClosed().subscribe((hash) => {
             if (!hash) {
                 return;
             }
-            this._updateCurrentAccountInfo();
+            this.refreshCurrentAccountInfo();
         });
     }
 
@@ -110,17 +112,18 @@ export class AccountComponent implements OnInit, OnDestroy {
                 currentRep: this.overview.representative,
                 index: this.overview.index,
             },
+            disableClose: true
         });
         ref.afterClosed().subscribe((hash) => {
             if (!hash) {
                 return;
             }
-            this._updateCurrentAccountInfo();
+            this.refreshCurrentAccountInfo();
         });
     }
 
     /** For the current account, updates Transaction History & Account Overview. */
-    private _updateCurrentAccountInfo(): void {
+    refreshCurrentAccountInfo(): void {
         this._searchAccountHistory();
         this._accountService
             .fetchAccount(this.overview.index)

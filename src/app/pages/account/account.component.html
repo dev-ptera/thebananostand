@@ -13,12 +13,11 @@
         class="mat-elevation-z2 app-toolbar rep-offline-banner"
         *ngIf="isRepOffline(overview?.representative) && !warnBannerDismissed"
     >
-        <div class="mat-subheading-2">
-            Your current representative is <strong>offline</strong>. If this happens often, it is suggested that you use
+        <div class="mat-subheading-2">Your current representative is <strong>offline</strong>. If this happens often, it is suggested that you use
             the Change Representative button below to select a recommended rep.
             <span class="link" style="color: unset" (click)="openChangeRepDocs()">Why is this important?</span>
         </div>
-        <button mat-icon-button (click)="warnBannerDismissed = true">
+        <button mat-icon-button (click)="warnBannerDismissed = true" style="margin-left: 16px">
             <mat-icon>close</mat-icon>
         </button>
     </mat-toolbar>
@@ -67,7 +66,16 @@
                 </div>
                 <app-qr [address]="overview.fullAddress"></app-qr>
             </div>
-            <div class="mat-headline" style="margin: 16px 0">Account History</div>
+            <div class="mat-headline" style="margin: 16px 0; display: flex; align-items: center">
+                <span>
+                    Account History
+                </span>
+                <mat-icon
+                    style="margin-left: 16px"
+                    (click)="refreshCurrentAccountInfo()">
+                    refresh
+                </mat-icon>
+            </div>
             <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport" [style.maxHeight.px]="blockCount * 50">
                 <div *cdkVirtualFor="let item of ds; let i = index; let even = even" class="example-item">
                     <blui-info-list-item
@@ -79,8 +87,8 @@
                                     ? colors.darkBlack[300]
                                     : colors.white[100]
                                 : isDark()
-                                ? colors.darkBlack[200]
-                                : colors.white[50]
+                                    ? colors.darkBlack[200]
+                                    : colors.white[50]
                         "
                     >
                         <div blui-icon>
