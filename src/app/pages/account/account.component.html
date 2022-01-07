@@ -4,14 +4,14 @@
             <button mat-icon-button (click)="goHome()">
                 <mat-icon>arrow_back</mat-icon>
             </button>
-            <div [style.marginLeft.px]="8">{{ overview?.fullAddress }}</div>
+            <div [style.marginLeft.px]="8">{{ account?.fullAddress }}</div>
         </div>
         <app-user-menu></app-user-menu>
     </mat-toolbar>
     <mat-toolbar
         color="warn"
         class="mat-elevation-z2 app-toolbar rep-offline-banner"
-        *ngIf="isRepOffline(overview?.representative) && !warnBannerDismissed"
+        *ngIf="isRepOffline(account?.representative) && !warnBannerDismissed"
     >
         <div class="mat-subheading-2">Your current representative is <strong>offline</strong>. If this happens often, it is suggested that you use
             the Change Representative button below to select a recommended rep.
@@ -22,61 +22,75 @@
         </button>
     </mat-toolbar>
 
-    <div class="app-body" *ngIf="overview">
+    <div class="app-body" *ngIf="account">
         <div class="app-body-content">
             <div style="display: flex; align-items: center; justify-content: space-between">
                 <div style="margin: 16px 0">
                     <div class="mat-headline" style="margin-bottom: 16px">
-                        <strong>{{ overview.formattedBalance }} BAN </strong>Balance
+                        <strong>{{ account.formattedBalance }} BAN </strong>Balance
                     </div>
                     <div style="display: flex">
                         <button
-                            mat-stroked-button
+                            mat-flat-button
                             color="primary"
                             class="action-button"
                             (click)="receive()"
-                            [disabled]="overview.pending.length === 0"
+                            [disabled]="account.pending.length === 0"
                         >
                             <mat-icon>attach_money</mat-icon>
                             <span>Receive Incoming</span>
-                            <span *ngIf="overview.pending.length > 0"> ({{ overview.pending.length }})</span>
+                            <span *ngIf="account.pending.length > 0"> ({{ account.pending.length }})</span>
                         </button>
 
                         <button
-                            mat-stroked-button
+                            mat-flat-button
                             color="primary"
                             class="action-button"
                             (click)="send()"
-                            [disabled]="overview.balance === 0"
+                            [disabled]="account.balance === 0"
                         >
                             <mat-icon>reply</mat-icon>
                             <span>Send</span>
                         </button>
                         <button
-                            mat-stroked-button
+                            mat-flat-button
                             color="primary"
                             class="action-button"
                             (click)="changeRep()"
-                            [disabled]="!overview.representative"
+                            [disabled]="!account.representative"
                         >
                             <mat-icon>how_to_vote</mat-icon>
                             <span>Change Representative</span>
                         </button>
                     </div>
                 </div>
-                <app-qr [address]="overview.fullAddress"></app-qr>
+                <app-qr [address]="account.fullAddress"></app-qr>
             </div>
-            <div class="mat-headline" style="margin: 16px 0; display: flex; align-items: center">
-                <span>
-                    Account History
-                </span>
-                <mat-icon
-                    style="margin-left: 16px; cursor: pointer"
-                    (click)="refreshCurrentAccountInfo()">
-                    refresh
-                </mat-icon>
+            <div class="mat-headline" style="margin: 16px 0; display: flex; align-items: center; justify-content: space-between">
+                <div style="display: flex; align-items: center">
+                    <span>Account History</span>
+                    <mat-icon
+                        style="margin-left: 16px; cursor: pointer"
+                        (click)="refreshCurrentAccountInfo()">
+                        refresh
+                    </mat-icon>
+                </div>
+                <div style="display: flex; align-items: center" *ngIf="insights">
+                    <div class="mat-body-1" style="margin-right: 12px">Showing</div>
+                    <mat-chip-list multiple>
+                        <mat-chip variant="outline" color="primary"
+                                  (click)="includeReceive=!includeReceive; createNewDataSource()"
+                                  [selected]="includeReceive">Received Tx</mat-chip>
+                        <mat-chip variant="outline" color="primary"
+                                  (click)="includeSend=!includeSend; createNewDataSource()"
+                                  [selected]="includeSend">Sent Tx</mat-chip>
+                        <mat-chip variant="outline" color="primary"
+                                  (click)="includeChange=!includeChange; createNewDataSource()"
+                                  [selected]="includeChange">Change Tx</mat-chip>
+                    </mat-chip-list>
+                </div>
             </div>
-            <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport" [style.maxHeight.px]="blockCount * 50">
+            <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport" [style.maxHeight.px]="countTotalDisplayableTxCount() * 50">
                 <div *cdkVirtualFor="let item of ds; let i = index; let even = even" class="example-item">
                     <blui-info-list-item
                         *ngIf="item"
@@ -128,7 +142,7 @@
                                 <mat-icon  style="font-size:16px;" >{{ item.showCopiedIcon ? 'check_circle' : 'copy_all'}}</mat-icon>
                                 </button>
                             </span>
-                            <span [style.marginLeft.px]="32">tx #{{ util.numberWithCommas(blockCount - i) }}</span>
+                            <span [style.marginLeft.px]="32">tx #{{ util.numberWithCommas(item.height) }}</span>
                         </div>
                     </blui-info-list-item>
 

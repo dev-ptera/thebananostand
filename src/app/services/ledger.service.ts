@@ -96,6 +96,7 @@ export class LedgerService {
         return receiveResponse;
     }
 
+    /** Fetches accounts_pending RPC data. */
     async getPending(account: string): Promsie<string[]> {
         console.log('banano checkpending accountData', account);
         const MAX_PENDING = 10;
@@ -106,6 +107,7 @@ export class LedgerService {
         return hashes;
     }
 
+    /** Fetches account_info RPC data. */
     async getAccountInfo(index: number): Promise<AccountOverview> {
         const account = await this.getLedgerAccount(index);
         const accountInfo = await window.bananocoinBananojs.getAccountInfo(account, true);

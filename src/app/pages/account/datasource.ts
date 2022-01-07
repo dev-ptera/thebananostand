@@ -20,7 +20,8 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
         blockCount: number,
         private readonly _apiService: ApiService,
         private readonly _ref: ChangeDetectorRef,
-        private readonly _util: UtilService
+        private readonly _util: UtilService,
+        private readonly _filters: { includeChange?: boolean, includeReceive?: boolean, includeSend?: boolean}
     ) {
         super();
         this._address = address;
@@ -58,7 +59,7 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
         }
         this._fetchedPages.add(page);
         console.log('fetching page');
-        void this._apiService.getConfirmedTransactions(this._address, page).then((data: ConfirmedTx[]) => {
+        void this._apiService.getConfirmedTransactions(this._address, page, this._filters).then((data: ConfirmedTx[]) => {
             data.map((tx) => {
                 tx.amount = this._util.numberWithCommas(tx.amount, 6);
             });

@@ -79,6 +79,8 @@ export class AccountService {
         return this.onlineRepresentatives.has(address);
     }
 
+
+    /** Fetches RPC account_info and stores response in a list sorted by account number. */
     fetchAccount(index: number): Promise<void> {
         this.removeAccount(index);
         return this._ledgerService
