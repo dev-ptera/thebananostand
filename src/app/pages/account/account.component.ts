@@ -167,9 +167,9 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     /** Creates a new datasource, taking into account any transaction filters. */
     createNewDataSource(): void {
-        const txCount = this.countTotalDisplayableTxCount();
+        const length = this.countTotalDisplayableTxCount();
         this._disconnectDatasource();
-        this.ds = new MyDataSource(this.address, txCount, this._apiService, this._ref, this.util, {
+        this.ds = new MyDataSource(this.address, length, this.blockCount, this._apiService, this._ref, this.util, {
             includeReceive: this.includeReceive,
             includeChange: this.includeChange,
             includeSend: this.includeSend

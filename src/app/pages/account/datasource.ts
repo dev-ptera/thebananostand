@@ -7,7 +7,9 @@ import { UtilService } from '@app/services/util.service';
 import { debounceTime } from 'rxjs/operators';
 
 export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
+    _lowestHLoadedHeight: number;
     _length: number;
+    _blockCount: number;
     _address: string;
     _pageSize = 200;
     _cachedData;
@@ -17,6 +19,7 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
 
     constructor(
         address: string,
+        length: number,
         blockCount: number,
         private readonly _apiService: ApiService,
         private readonly _ref: ChangeDetectorRef,
@@ -24,9 +27,11 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
         private readonly _filters: { includeChange?: boolean, includeReceive?: boolean, includeSend?: boolean}
     ) {
         super();
+        this._lowestHLoadedHeight;
         this._address = address;
-        this._length = blockCount;
-        this._cachedData = new Array(blockCount);
+        this._length = length;
+        this._blockCount = blockCount;
+        this._cachedData = new Array(length);
         this._fetchedPages = new Set<number>();
         this._dataStream = new BehaviorSubject<(ConfirmedTx | undefined)[]>(this._cachedData);
         this._subscription = new Subscription();
@@ -59,9 +64,17 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
         }
         this._fetchedPages.add(page);
         console.log('fetching page');
-        void this._apiService.getConfirmedTransactions(this._address, page, this._filters).then((data: ConfirmedTx[]) => {
+
+        const offset = (this._filters.includeChange && this._filters.includeReceive && this._filters.includeSend)
+            ? page * this._pageSize :
+            this._lowestHLoadedHeight ? this._blockCount - (this._lowestHLoadedHeight - 1) : 0;
+        void this._apiService.getConfirmedTransactions(this._address, this._pageSize, offset, this._filters).then((data: ConfirmedTx[]) => {
             data.map((tx) => {
+                if (!this._lowestHLoadedHeight) {
+                    this._lowestHLoadedHeight = tx.height;
+                }
                 tx.amount = this._util.numberWithCommas(tx.amount, 6);
+                this._lowestHLoadedHeight = Math.min(this._lowestHLoadedHeight, tx.height);
             });
             this._cachedData.splice(page * this._pageSize, this._pageSize, ...Array.from(data));
             this._dataStream.next(this._cachedData);

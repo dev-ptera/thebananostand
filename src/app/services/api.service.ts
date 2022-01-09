@@ -14,10 +14,9 @@ export class ApiService {
 
     // TODO: All RPC-supported api calls should use RPC, not spyglass-api.   Split SpyglassAPI into own service?
 
-    getConfirmedTransactions(address: string, page: number, filters: { includeChange?: boolean, includeReceive?: boolean, includeSend?: boolean}): Promise<ConfirmedTx[]> {
+    getConfirmedTransactions(address: string, size: number, offset: number, filters: { includeChange?: boolean, includeReceive?: boolean, includeSend?: boolean}): Promise<ConfirmedTx[]> {
         const url = 'https://api.spyglass.pw/banano/v1/account/confirmed-transactions';
-        const pageSize = 200;
-        return this._http.post<ConfirmedTx[]>(url, { address, size: pageSize, offset: page * pageSize, ...filters }).toPromise();
+        return this._http.post<ConfirmedTx[]>(url, { address, size, offset, ...filters }).toPromise();
     }
 
     getBlockCount(address: string): Promise<any> {

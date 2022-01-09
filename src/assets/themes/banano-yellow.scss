@@ -1,8 +1,8 @@
 @import '~@brightlayer-ui/colors/palette';
 @import '~@angular/material/_theming.scss';
 
-$material-theme-primary: mat-palette($blui-yellow, 900);
-$material-theme-accent: mat-palette($blui-yellow, 900);
+$material-theme-primary: mat-palette($blui-yellow, 500);
+$material-theme-accent: mat-palette($blui-yellow, 500);
 $material-theme-warn: mat-palette($blui-red, 500);
 $banano-yellow: map-merge(
     mat-dark-theme($material-theme-primary, $material-theme-warn, $material-theme-warn),
@@ -27,7 +27,7 @@ $banano-yellow: map-merge(
         background: (
             status-bar: map-get($blui-darkBlack, 900),
             app-bar: map-get($blui-darkBlack, 700),
-            background: map-get($blui-darkBlack, 700),
+            background: map-get($blui-darkBlack, 300),
             hover: rgba(white, 0.04),
             card: map-get($blui-black, 900),
             dialog: map-get($blui-black, 900),
@@ -51,7 +51,15 @@ $banano-yellow: map-merge(
 }
 
 .mat-toolbar.mat-primary {
-    color: map-get($blui-white, 500) !important;
+    color: map-get($blui-black, 50) !important;
+    background: #0c0c0c!important;
+    * {
+        color: map-get($blui-black, 50) !important;
+    }
+
+    .blui-user-menu-header-title {
+        color: map-get($blui-black, 50)!important;
+    }
 }
 
 .link {
@@ -74,4 +82,7 @@ $banano-yellow: map-merge(
 
 .blui-list-item-tag.rep-offline-tag .blui-list-item-tag-label {
     color: map-get($blui-black, 50) !important;
+}
+.mat-flat-button.mat-primary.mat-button-disabled {
+    color: #808588 !important
 }
