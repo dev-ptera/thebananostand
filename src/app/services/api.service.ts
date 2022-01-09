@@ -4,7 +4,7 @@ import { ConfirmedTx } from '@app/types/ConfirmedTx';
 import { RepScore } from '../pages/account/dialogs/change-rep/change-rep-dialog.component';
 import { UtilService } from './util.service';
 import { KnownAccount } from '@app/types/KnownAccount';
-import {AccountInsights} from "@app/types/AccountInsights";
+import { AccountInsights } from '@app/types/AccountInsights';
 
 @Injectable({
     providedIn: 'root',
@@ -14,7 +14,12 @@ export class ApiService {
 
     // TODO: All RPC-supported api calls should use RPC, not spyglass-api.   Split SpyglassAPI into own service?
 
-    getConfirmedTransactions(address: string, size: number, offset: number, filters: { includeChange?: boolean, includeReceive?: boolean, includeSend?: boolean}): Promise<ConfirmedTx[]> {
+    getConfirmedTransactions(
+        address: string,
+        size: number,
+        offset: number,
+        filters: { includeChange?: boolean; includeReceive?: boolean; includeSend?: boolean }
+    ): Promise<ConfirmedTx[]> {
         const url = 'https://api.spyglass.pw/banano/v1/account/confirmed-transactions';
         return this._http.post<ConfirmedTx[]>(url, { address, size, offset, ...filters }).toPromise();
     }

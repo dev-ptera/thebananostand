@@ -46,7 +46,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AddIndexDialogComponent } from '@app/pages/dashboard/add-index/add-index.component';
 import { ReceiveDialogComponent } from '@app/pages/account/dialogs/receive/receive-dialog.component';
 import { AppUserMenuComponent } from '@app/components/user-menu.component';
-import {MatChipsModule} from "@angular/material/chips";
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
     declarations: [

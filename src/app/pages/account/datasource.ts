@@ -24,7 +24,7 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
         private readonly _apiService: ApiService,
         private readonly _ref: ChangeDetectorRef,
         private readonly _util: UtilService,
-        private readonly _filters: { includeChange?: boolean, includeReceive?: boolean, includeSend?: boolean}
+        private readonly _filters: { includeChange?: boolean; includeReceive?: boolean; includeSend?: boolean }
     ) {
         super();
         this._lowestHLoadedHeight;
@@ -66,21 +66,26 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
         console.info(`INFO: Fetching page #${page}`);
 
         // TODO make this readable.
-        const offset = (this._filters.includeChange && this._filters.includeReceive && this._filters.includeSend)
-            ? page * this._pageSize :
-            this._lowestHLoadedHeight ? this._blockCount - (this._lowestHLoadedHeight - 1) : 0;
+        const offset =
+            this._filters.includeChange && this._filters.includeReceive && this._filters.includeSend
+                ? page * this._pageSize
+                : this._lowestHLoadedHeight
+                ? this._blockCount - (this._lowestHLoadedHeight - 1)
+                : 0;
 
-        void this._apiService.getConfirmedTransactions(this._address, this._pageSize, offset, this._filters).then((data: ConfirmedTx[]) => {
-            data.map((tx) => {
-                if (!this._lowestHLoadedHeight) {
-                    this._lowestHLoadedHeight = tx.height;
-                }
-                tx.amount = this._util.numberWithCommas(tx.amount, 6);
-                this._lowestHLoadedHeight = Math.min(this._lowestHLoadedHeight, tx.height);
+        void this._apiService
+            .getConfirmedTransactions(this._address, this._pageSize, offset, this._filters)
+            .then((data: ConfirmedTx[]) => {
+                data.map((tx) => {
+                    if (!this._lowestHLoadedHeight) {
+                        this._lowestHLoadedHeight = tx.height;
+                    }
+                    tx.amount = this._util.numberWithCommas(tx.amount, 6);
+                    this._lowestHLoadedHeight = Math.min(this._lowestHLoadedHeight, tx.height);
+                });
+                this._cachedData.splice(page * this._pageSize, this._pageSize, ...Array.from(data));
+                this._dataStream.next(this._cachedData);
+                this._ref.detectChanges();
             });
-            this._cachedData.splice(page * this._pageSize, this._pageSize, ...Array.from(data));
-            this._dataStream.next(this._cachedData);
-            this._ref.detectChanges();
-        });
     }
 }

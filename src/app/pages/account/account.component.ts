@@ -14,8 +14,7 @@ import { LedgerService } from '@app/services/ledger.service';
 import { ReceiveDialogComponent } from '@app/pages/account/dialogs/receive/receive-dialog.component';
 import { ThemeService } from '@app/services/theme.service';
 import { ConfirmedTx } from '@app/types/ConfirmedTx';
-import {AccountInsights} from "@app/types/AccountInsights";
-
+import { AccountInsights } from '@app/types/AccountInsights';
 
 @Component({
     selector: 'app-account',
@@ -23,7 +22,6 @@ import {AccountInsights} from "@app/types/AccountInsights";
     styleUrls: ['./account.component.scss'],
 })
 export class AccountComponent implements OnInit, OnDestroy {
-
     // This is set on page load using route.
     address: string;
 
@@ -89,7 +87,7 @@ export class AccountComponent implements OnInit, OnDestroy {
                 blocks: this.account.pending,
                 index: this.account.index,
             },
-            disableClose: true
+            disableClose: true,
         });
         ref.afterClosed().subscribe((hash) => {
             if (!hash) {
@@ -107,7 +105,7 @@ export class AccountComponent implements OnInit, OnDestroy {
                 maxSendAmount: this.account.balance,
                 index: this.account.index,
             },
-            disableClose: true
+            disableClose: true,
         });
         ref.afterClosed().subscribe((hash) => {
             if (!hash) {
@@ -125,7 +123,7 @@ export class AccountComponent implements OnInit, OnDestroy {
                 currentRep: this.account.representative,
                 index: this.account.index,
             },
-            disableClose: true
+            disableClose: true,
         });
         ref.afterClosed().subscribe((hash) => {
             if (!hash) {
@@ -156,18 +154,21 @@ export class AccountComponent implements OnInit, OnDestroy {
      * */
     private _searchAccountTxHistory(): void {
         this.loading = true;
-        void this._apiService.getBlockCount(this.address).then((data) => {
-            this.blockCount = data.blockCount;
-            this.hideTransactionFilters = data.blockCount >= 100_000 || data.blockCount === 0;
-            this.loading = false;
-            if (this.blockCount > 0) {
-                this._searchAccountInsights();
-            }
-            this.createNewDataSource();
-        }).catch((err) => {
-            console.error(err);
-            this.loading = false;
-        })
+        void this._apiService
+            .getBlockCount(this.address)
+            .then((data) => {
+                this.blockCount = data.blockCount;
+                this.hideTransactionFilters = data.blockCount >= 100_000 || data.blockCount === 0;
+                this.loading = false;
+                if (this.blockCount > 0) {
+                    this._searchAccountInsights();
+                }
+                this.createNewDataSource();
+            })
+            .catch((err) => {
+                console.error(err);
+                this.loading = false;
+            });
     }
 
     /** Creates a new datasource, taking into account any transaction filters. */
@@ -177,7 +178,7 @@ export class AccountComponent implements OnInit, OnDestroy {
         this.ds = new MyDataSource(this.address, length, this.blockCount, this._apiService, this._ref, this.util, {
             includeReceive: this.includeReceive,
             includeChange: this.includeChange,
-            includeSend: this.includeSend
+            includeSend: this.includeSend,
         });
     }
 
@@ -189,13 +190,13 @@ export class AccountComponent implements OnInit, OnDestroy {
             txCount = this.blockCount;
         } else {
             if (this.includeReceive) {
-                txCount+=this.insights.totalTxReceived;
+                txCount += this.insights.totalTxReceived;
             }
             if (this.includeSend) {
-                txCount+=this.insights.totalTxSent;
+                txCount += this.insights.totalTxSent;
             }
             if (this.includeChange) {
-                txCount+=this.insights.totalTxChange;
+                txCount += this.insights.totalTxChange;
             }
         }
         return txCount;
@@ -216,11 +217,14 @@ export class AccountComponent implements OnInit, OnDestroy {
             return;
         }
 
-        this._apiService.getAccountInsights(this.address).then((data) => {
-            this.insights = data;
-        }).catch((err) => {
-            console.error(err);
-        })
+        this._apiService
+            .getAccountInsights(this.address)
+            .then((data) => {
+                this.insights = data;
+            })
+            .catch((err) => {
+                console.error(err);
+            });
     }
 
     isRepOffline(address: string): boolean {

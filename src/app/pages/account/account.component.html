@@ -13,7 +13,8 @@
         class="mat-elevation-z2 app-toolbar rep-offline-banner"
         *ngIf="isRepOffline(account?.representative) && !warnBannerDismissed"
     >
-        <div class="mat-subheading-2">Your current representative is <strong>offline</strong>. If this happens often, it is suggested that you use
+        <div class="mat-subheading-2">
+            Your current representative is <strong>offline</strong>. If this happens often, it is suggested that you use
             the Change Representative button below to select a recommended rep.
             <span class="link" style="color: unset" (click)="openChangeRepDocs()">Why is this important?</span>
         </div>
@@ -24,7 +25,7 @@
 
     <div class="app-body" *ngIf="account">
         <div class="app-body-content">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px">
                 <div>
                     <div class="mat-headline" style="margin-bottom: 16px">
                         <strong>{{ account.formattedBalance }} BAN </strong>Balance
@@ -66,31 +67,48 @@
                 </div>
                 <app-qr [address]="account.fullAddress"></app-qr>
             </div>
-            <div class="mat-headline" style="margin: 16px 0; display: flex; align-items: center; justify-content: space-between">
+            <div
+                class="mat-headline"
+                style="margin: 16px 0; display: flex; align-items: center; justify-content: space-between"
+            >
                 <div style="display: flex; align-items: center">
                     <span>Account History</span>
-                    <mat-icon
-                        style="margin-left: 16px; cursor: pointer"
-                        (click)="refreshCurrentAccountInfo()">
+                    <mat-icon style="margin-left: 16px; cursor: pointer" (click)="refreshCurrentAccountInfo()">
                         refresh
                     </mat-icon>
                 </div>
                 <div style="display: flex; align-items: center" *ngIf="insights">
                     <div class="mat-body-1" style="margin-right: 12px">Showing</div>
                     <mat-chip-list multiple>
-                        <mat-chip variant="outline" color="primary"
-                                  (click)="includeReceive=!includeReceive; createNewDataSource()"
-                                  [selected]="includeReceive">Received Tx</mat-chip>
-                        <mat-chip variant="outline" color="primary"
-                                  (click)="includeSend=!includeSend; createNewDataSource()"
-                                  [selected]="includeSend">Sent Tx</mat-chip>
-                        <mat-chip variant="outline" color="primary"
-                                  (click)="includeChange=!includeChange; createNewDataSource()"
-                                  [selected]="includeChange">Change Tx</mat-chip>
+                        <mat-chip
+                            variant="outline"
+                            color="primary"
+                            (click)="includeReceive = !includeReceive; createNewDataSource()"
+                            [selected]="includeReceive"
+                            >Received Tx</mat-chip
+                        >
+                        <mat-chip
+                            variant="outline"
+                            color="primary"
+                            (click)="includeSend = !includeSend; createNewDataSource()"
+                            [selected]="includeSend"
+                            >Sent Tx</mat-chip
+                        >
+                        <mat-chip
+                            variant="outline"
+                            color="primary"
+                            (click)="includeChange = !includeChange; createNewDataSource()"
+                            [selected]="includeChange"
+                            >Change Tx</mat-chip
+                        >
                     </mat-chip-list>
                 </div>
             </div>
-            <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport" [style.maxHeight.px]="countTotalDisplayableTxCount() * 50">
+            <cdk-virtual-scroll-viewport
+                itemSize="50"
+                class="example-viewport"
+                [style.maxHeight.px]="countTotalDisplayableTxCount() * 50"
+            >
                 <div *cdkVirtualFor="let item of ds; let i = index; let even = even" class="example-item">
                     <blui-info-list-item
                         *ngIf="item"
@@ -101,25 +119,19 @@
                                     ? colors.darkBlack[300]
                                     : colors.white[100]
                                 : isDark()
-                                    ? colors.darkBlack[200]
-                                    : colors.white[50]
+                                ? colors.darkBlack[200]
+                                : colors.white[50]
                         "
                     >
                         <div blui-icon class="tx-state-icon">
-                            <mat-icon *ngIf="item.type === 'receive'" class="receive"
-                                >add_circle_outline</mat-icon
-                            >
-                            <mat-icon *ngIf="item.type === 'send'"  class="send"
-                                >remove_circle_outline</mat-icon
-                            >
-                            <mat-icon *ngIf="item.type === 'change'" class="change"
-                                >change_history</mat-icon
-                            >
+                            <mat-icon *ngIf="item.type === 'receive'" class="receive">add_circle_outline</mat-icon>
+                            <mat-icon *ngIf="item.type === 'send'" class="send">remove_circle_outline</mat-icon>
+                            <mat-icon *ngIf="item.type === 'change'" class="change">change_history</mat-icon>
                         </div>
                         <div blui-title>{{ item.type }}</div>
                         <div blui-subtitle>{{ item.amount }}</div>
                         <div blui-right-content>
-                            <span (mouseenter)="item.hover=true" (mouseleave)="item.hover=false">
+                            <span (mouseenter)="item.hover = true" (mouseleave)="item.hover = false">
                                 <span *ngIf="item.type === 'receive'">from </span>
                                 <span *ngIf="item.type === 'send' || item.type === 'change'">to </span>
                                 <span
@@ -134,12 +146,21 @@
                                         {{ formatAddress(item.newRepresentative) }}
                                     </ng-container>
                                 </span>
-                                <button mat-icon-button *ngIf="item.hover"  (click)="copy(item)"
-                                        style="cursor: pointer;
+                                <button
+                                    mat-icon-button
+                                    *ngIf="item.hover"
+                                    (click)="copy(item)"
+                                    style="
+                                        cursor: pointer;
                                         margin-left: 8px;
                                         height: 24px;
-                                        width: 24px; line-height: 24px" >
-                                <mat-icon  style="font-size:16px;" >{{ item.showCopiedIcon ? 'check_circle' : 'copy_all'}}</mat-icon>
+                                        width: 24px;
+                                        line-height: 24px;
+                                    "
+                                >
+                                    <mat-icon style="font-size: 16px">{{
+                                        item.showCopiedIcon ? 'check_circle' : 'copy_all'
+                                    }}</mat-icon>
                                 </button>
                             </span>
                             <span [style.marginLeft.px]="32">tx #{{ util.numberWithCommas(item.height) }}</span>

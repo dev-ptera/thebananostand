@@ -52,18 +52,18 @@ $banano-yellow: map-merge(
 
 .mat-toolbar.mat-primary {
     color: map-get($blui-black, 50) !important;
-    background: #0c0c0c!important;
+    background: #0c0c0c !important;
     * {
         color: map-get($blui-black, 50) !important;
     }
 
     .blui-user-menu-header-title {
-        color: map-get($blui-black, 50)!important;
+        color: map-get($blui-black, 50) !important;
     }
 }
 
 .tx-state-icon .mat-icon {
-    color: map-get($blui-yellow, 500)!important;
+    color: map-get($blui-yellow, 500) !important;
 }
 
 #qr-code {
@@ -92,5 +92,5 @@ $banano-yellow: map-merge(
     color: map-get($blui-black, 50) !important;
 }
 .mat-flat-button.mat-primary.mat-button-disabled {
-    color: #808588 !important
+    color: #808588 !important;
 }
