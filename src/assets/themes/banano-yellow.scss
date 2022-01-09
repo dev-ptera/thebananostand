@@ -62,6 +62,14 @@ $banano-yellow: map-merge(
     }
 }
 
+.tx-state-icon .mat-icon {
+    color: map-get($blui-yellow, 500)!important;
+}
+
+#qr-code {
+    border: solid 1px map-get($blui-yellow, 500);
+}
+
 .link {
     color: map-get($blui-yellow, 500);
 }

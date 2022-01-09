@@ -63,11 +63,13 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
             return;
         }
         this._fetchedPages.add(page);
-        console.log('fetching page');
+        console.info(`INFO: Fetching page #${page}`);
 
+        // TODO make this readable.
         const offset = (this._filters.includeChange && this._filters.includeReceive && this._filters.includeSend)
             ? page * this._pageSize :
             this._lowestHLoadedHeight ? this._blockCount - (this._lowestHLoadedHeight - 1) : 0;
+
         void this._apiService.getConfirmedTransactions(this._address, this._pageSize, offset, this._filters).then((data: ConfirmedTx[]) => {
             data.map((tx) => {
                 if (!this._lowestHLoadedHeight) {

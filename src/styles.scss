@@ -145,3 +145,15 @@ body {
 .mat-chip {
     cursor: pointer!important;
 }
+
+.tx-state-icon {
+    .receive {
+        color: map-get($blui-green, 500);
+    }
+    .change {
+        color: map-get($blui-blue, 500);
+    }
+    .send {
+        color: map-get($blui-red, 500);
+    }
+}

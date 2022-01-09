@@ -105,14 +105,14 @@
                                     : colors.white[50]
                         "
                     >
-                        <div blui-icon>
-                            <mat-icon *ngIf="item.type === 'receive'" [style.color]="colors.green[500]"
+                        <div blui-icon class="tx-state-icon">
+                            <mat-icon *ngIf="item.type === 'receive'" class="receive"
                                 >add_circle_outline</mat-icon
                             >
-                            <mat-icon *ngIf="item.type === 'send'" [style.color]="colors.red[500]"
+                            <mat-icon *ngIf="item.type === 'send'"  class="send"
                                 >remove_circle_outline</mat-icon
                             >
-                            <mat-icon *ngIf="item.type === 'change'" [style.color]="colors.blue[500]"
+                            <mat-icon *ngIf="item.type === 'change'" class="change"
                                 >change_history</mat-icon
                             >
                         </div>

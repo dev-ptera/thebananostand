@@ -28,7 +28,6 @@ export class AccountComponent implements OnInit, OnDestroy {
     address: string;
 
     blockCount: number;
-    loading = false;
     warnBannerDismissed = false;
 
     colors = Colors;
@@ -40,6 +39,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     includeReceive = true;
     includeSend = true;
     includeChange = true;
+    loading = false;
 
     constructor(
         public util: UtilService,
@@ -158,11 +158,16 @@ export class AccountComponent implements OnInit, OnDestroy {
         this.loading = true;
         void this._apiService.getBlockCount(this.address).then((data) => {
             this.blockCount = data.blockCount;
-            this.hideTransactionFilters = data.blockCount >= 100_000;
+            this.hideTransactionFilters = data.blockCount >= 100_000 || data.blockCount === 0;
             this.loading = false;
-            this._searchAccountInsights();
+            if (this.blockCount > 0) {
+                this._searchAccountInsights();
+            }
             this.createNewDataSource();
-        });
+        }).catch((err) => {
+            console.error(err);
+            this.loading = false;
+        })
     }
 
     /** Creates a new datasource, taking into account any transaction filters. */
@@ -242,6 +247,9 @@ export class AccountComponent implements OnInit, OnDestroy {
     /** Hard Refresh for all information known about this account.
      *  Fetches blockcount, account info, pending blocks, insights & then confirmed tx. */
     refreshCurrentAccountInfo(): void {
+        if (this.loading) {
+            return;
+        }
         this._searchAccountTxHistory();
         this._reloadDashboardAccountInfo();
     }
