@@ -9,10 +9,13 @@ import { AccountInsights } from '@app/types/AccountInsights';
 @Injectable({
     providedIn: 'root',
 })
-export class ApiService {
-    constructor(private readonly _http: HttpClient, private readonly _util: UtilService) {}
 
-    // TODO: All RPC-supported api calls should use RPC, not spyglass-api.   Split SpyglassAPI into own service?
+/** SpyglassService is a supplemental service that provides a filtered transaction history, online representatives, aliases, known accounts, scores, etc.
+ *  Basically any functionality that a RPC call cannot provide will be provided by this service.
+ *  Documentation for interacting with Spyglass API can be found here: https://spyglass-api.web.app/
+ * */
+export class SpyglassService {
+    constructor(private readonly _http: HttpClient, private readonly _util: UtilService) {}
 
     getConfirmedTransactions(
         address: string,
@@ -22,11 +25,6 @@ export class ApiService {
     ): Promise<ConfirmedTx[]> {
         const url = 'https://api.spyglass.pw/banano/v1/account/confirmed-transactions';
         return this._http.post<ConfirmedTx[]>(url, { address, size, offset, ...filters }).toPromise();
-    }
-
-    getBlockCount(address: string): Promise<any> {
-        const url = `https://api.spyglass.pw/banano/v1/account/overview/${address}`;
-        return this._http.get<void>(url).toPromise();
     }
 
     getAccountInsights(address: string): Promise<AccountInsights> {

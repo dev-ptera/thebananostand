@@ -4,7 +4,7 @@ import * as Colors from '@brightlayer-ui/colors';
 import { FormControl } from '@angular/forms';
 import { LedgerService } from '@app/services/ledger.service';
 import { AccountService } from '@app/services/account.service';
-import { ApiService } from '@app/services/api.service';
+import { SpyglassService } from '@app/services/spyglass.service';
 import { UtilService } from '@app/services/util.service';
 
 export type RepScore = {
@@ -203,7 +203,7 @@ export class ChangeRepDialogComponent implements OnInit {
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: ChangeRepDialogData,
         public util: UtilService,
-        private readonly _apiService: ApiService,
+        private readonly _apiService: SpyglassService,
         private readonly _ledgerService: LedgerService,
         private readonly _accountService: AccountService,
         public dialogRef: MatDialogRef<ChangeRepDialogComponent>

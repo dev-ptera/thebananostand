@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
 import { Router } from '@angular/router';
-import { ApiService } from '@app/services/api.service';
+import { SpyglassService } from '@app/services/spyglass.service';
 import { UtilService } from '@app/services/util.service';
 import { LedgerService } from '@app/services/ledger.service';
 import { AccountService } from '@app/services/account.service';
@@ -27,7 +27,7 @@ export class DashboardComponent implements OnInit {
 
     constructor(
         private readonly _router: Router,
-        private readonly _api: ApiService,
+        private readonly _api: SpyglassService,
         private readonly _dialog: MatDialog,
         private readonly _util: UtilService,
         private readonly _ledgerService: LedgerService,

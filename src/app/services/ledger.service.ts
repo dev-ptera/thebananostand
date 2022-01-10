@@ -1,7 +1,6 @@
 // @ts-nocheck
 import { Injectable } from '@angular/core';
 import { UtilService } from './util.service';
-import { AccountOverview } from '@app/types/AccountOverview';
 
 @Injectable({
     providedIn: 'root',
@@ -94,56 +93,5 @@ export class LedgerService {
             config.prefix
         );
         return receiveResponse;
-    }
-
-    /** Fetches accounts_pending RPC data. */
-    async getPending(account: string): Promsie<string[]> {
-        console.log('banano checkpending accountData', account);
-        const MAX_PENDING = 10;
-        const pendingResponse = await window.bananocoinBananojs.getAccountsPending([account], MAX_PENDING, true);
-        console.log('banano checkpending pendingResponse', pendingResponse);
-        const pendingBlocks = pendingResponse.blocks[account];
-        const hashes = [...Object.keys(pendingBlocks)];
-        return hashes;
-    }
-
-    /** Fetches account_info RPC data. */
-    async getAccountInfo(index: number): Promise<AccountOverview> {
-        const account = await this.getLedgerAccount(index);
-        const accountInfo = await window.bananocoinBananojs.getAccountInfo(account, true);
-        const pending = await this.getPending(account);
-
-        if (accountInfo.error) {
-            console.log(accountInfo.error);
-            if (accountInfo.error === 'Account not found') {
-                return {
-                    index,
-                    shortAddress: this._util.shortenAddress(account),
-                    fullAddress: account,
-                    formattedBalance: 0,
-                    balance: 0,
-                    representative: undefined,
-                    pending: pending,
-                };
-            } else {
-                return Promise.reject(accountInfo.error);
-            }
-        }
-
-        const balanceParts = await window.bananocoinBananojs.getBananoPartsFromRaw(accountInfo.balance);
-        if (balanceParts.raw === '0') {
-            delete balanceParts.raw;
-        }
-        const bananoDecimal: number = await window.bananocoinBananojs.getBananoPartsAsDecimal(balanceParts);
-
-        return {
-            index,
-            shortAddress: this._util.shortenAddress(account),
-            fullAddress: account,
-            formattedBalance: this._util.numberWithCommas(bananoDecimal, 6),
-            balance: Number(bananoDecimal),
-            representative: accountInfo.representative,
-            pending,
-        };
     }
 }

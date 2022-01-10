@@ -29,6 +29,7 @@
         "@brightlayer-ui/angular-components": "^6.0.1",
         "@brightlayer-ui/angular-themes": "^6.3.0",
         "@brightlayer-ui/colors": "^3.0.1",
+        "@dev-ptera/nano-node-rpc": "^2.0.2",
         "qrcode": "^1.5.0",
         "rxjs": "~6.6.0",
         "tslib": "^2.1.0",

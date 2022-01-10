@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { LedgerService } from './ledger.service';
-import { ApiService } from './api.service';
+import { SpyglassService } from './spyglass.service';
 import { UtilService } from './util.service';
 import { AccountOverview } from '@app/types/AccountOverview';
+import { RpcService } from '@app/services/rpc.service';
 
 @Injectable({
     providedIn: 'root',
@@ -27,8 +28,9 @@ export class AccountService {
     localStorageAdvancedViewKey = 'HW_WALLET_POC_ADVANCED_VIEW';
 
     constructor(
-        private readonly _api: ApiService,
+        private readonly _api: SpyglassService,
         private readonly _util: UtilService,
+        private readonly _rpcService: RpcService,
         private readonly _ledgerService: LedgerService
     ) {}
 
@@ -82,9 +84,10 @@ export class AccountService {
     /** Fetches RPC account_info and stores response in a list sorted by account number. */
     fetchAccount(index: number): Promise<void> {
         this.removeAccount(index);
-        return this._ledgerService
+        return this._rpcService
             .getAccountInfo(index)
             .then((overview) => {
+                console.log(overview);
                 this.accounts.push(overview);
                 this.accounts.sort((a, b) => (a.index > b.index ? 1 : -1));
                 this.saveAccountsInLocalStorage();
@@ -122,9 +125,7 @@ export class AccountService {
         this.accounts.map((account) => {
             loadedIndexes.push(account.index);
         });
-        loadedIndexes.sort((a, b) => {
-            return a - b;
-        });
+        loadedIndexes.sort((a, b) => a - b);
         window.localStorage.setItem(this.localStorageAccountIndexesKey, loadedIndexes.toString());
     }
 
@@ -136,6 +137,8 @@ export class AccountService {
         return window.localStorage.getItem(this.localStorageAdvancedViewKey) === 'true';
     }
 
+    /** Reading local storage, fetches account information for each managed account.
+     *  If there are no accounts found in local storage, fetches account #0.  */
     async populateAccountsFromLocalStorage(): Promise<void> {
         const indexesString = window.localStorage.getItem(this.localStorageAccountIndexesKey);
         if (!indexesString) {
@@ -148,6 +151,7 @@ export class AccountService {
         }
     }
 
+    /** Iterates through each loaded account and aggregates the total confirmed balance. */
     updateTotalBalance(): void {
         let balance = 0;
         this.accounts.map((account) => {
@@ -156,6 +160,7 @@ export class AccountService {
         this.totalBalance = this._util.numberWithCommas(balance, 6);
     }
 
+    /** Opens a hash in an explorer. */
     showBlockInExplorer(hash: string): void {
         const explorerBlockPage = 'https://www.yellowspyglass.com/hash';
         window.open(`${explorerBlockPage}/${hash}`);

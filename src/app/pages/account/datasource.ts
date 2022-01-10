@@ -1,7 +1,7 @@
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { ConfirmedTx } from '@app/types/ConfirmedTx';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { ApiService } from '@app/services/api.service';
+import { SpyglassService } from '@app/services/spyglass.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { UtilService } from '@app/services/util.service';
 import { debounceTime } from 'rxjs/operators';
@@ -21,7 +21,7 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
         address: string,
         length: number,
         blockCount: number,
-        private readonly _apiService: ApiService,
+        private readonly _apiService: SpyglassService,
         private readonly _ref: ChangeDetectorRef,
         private readonly _util: UtilService,
         private readonly _filters: { includeChange?: boolean; includeReceive?: boolean; includeSend?: boolean }

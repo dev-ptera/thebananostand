@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MyDataSource } from '@app/pages/account/datasource';
 import { ViewportService } from '@app/services/viewport.service';
 import { UtilService } from '@app/services/util.service';
-import { ApiService } from '@app/services/api.service';
+import { SpyglassService } from '@app/services/spyglass.service';
 import { AccountService } from '@app/services/account.service';
 import { SendDialogComponent } from './dialogs/send/send-dialog.component';
 import { ChangeRepDialogComponent } from './dialogs/change-rep/change-rep-dialog.component';
@@ -15,6 +15,7 @@ import { ReceiveDialogComponent } from '@app/pages/account/dialogs/receive/recei
 import { ThemeService } from '@app/services/theme.service';
 import { ConfirmedTx } from '@app/types/ConfirmedTx';
 import { AccountInsights } from '@app/types/AccountInsights';
+import { RpcService } from '@app/services/rpc.service';
 
 @Component({
     selector: 'app-account',
@@ -25,7 +26,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     // This is set on page load using route.
     address: string;
 
-    blockCount: number;
+    accountHeight: number;
     warnBannerDismissed = false;
 
     colors = Colors;
@@ -44,11 +45,12 @@ export class AccountComponent implements OnInit, OnDestroy {
         private readonly _router: Router,
         private readonly _dialog: MatDialog,
         private readonly _ref: ChangeDetectorRef,
-        private readonly _apiService: ApiService,
+        private readonly _rpcService: RpcService,
         private readonly _themeService: ThemeService,
         private readonly _ledgerService: LedgerService,
         private readonly _accountService: AccountService,
-        private readonly _viewportService: ViewportService
+        private readonly _viewportService: ViewportService,
+        private readonly _spyglassService: SpyglassService
     ) {}
 
     ngOnInit(): void {
@@ -154,13 +156,13 @@ export class AccountComponent implements OnInit, OnDestroy {
      * */
     private _searchAccountTxHistory(): void {
         this.loading = true;
-        void this._apiService
-            .getBlockCount(this.address)
-            .then((data) => {
-                this.blockCount = data.blockCount;
-                this.hideTransactionFilters = data.blockCount >= 100_000 || data.blockCount === 0;
+        void this._rpcService
+            .getAccountHeight(this.address)
+            .then((height) => {
+                this.accountHeight = height;
+                this.hideTransactionFilters = height >= 100_000 || height === 0;
                 this.loading = false;
-                if (this.blockCount > 0) {
+                if (this.accountHeight > 0) {
                     this._searchAccountInsights();
                 }
                 this.createNewDataSource();
@@ -175,11 +177,19 @@ export class AccountComponent implements OnInit, OnDestroy {
     createNewDataSource(): void {
         const length = this.countTotalDisplayableTxCount();
         this._disconnectDatasource();
-        this.ds = new MyDataSource(this.address, length, this.blockCount, this._apiService, this._ref, this.util, {
-            includeReceive: this.includeReceive,
-            includeChange: this.includeChange,
-            includeSend: this.includeSend,
-        });
+        this.ds = new MyDataSource(
+            this.address,
+            length,
+            this.accountHeight,
+            this._spyglassService,
+            this._ref,
+            this.util,
+            {
+                includeReceive: this.includeReceive,
+                includeChange: this.includeChange,
+                includeSend: this.includeSend,
+            }
+        );
     }
 
     /** Considering filters, returns the max number of transactions that can appear.
@@ -187,7 +197,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     countTotalDisplayableTxCount(): number {
         let txCount = 0;
         if (this.hideTransactionFilters || !this.insights) {
-            txCount = this.blockCount;
+            txCount = this.accountHeight;
         } else {
             if (this.includeReceive) {
                 txCount += this.insights.totalTxReceived;
@@ -217,7 +227,7 @@ export class AccountComponent implements OnInit, OnDestroy {
             return;
         }
 
-        this._apiService
+        this._spyglassService
             .getAccountInsights(this.address)
             .then((data) => {
                 this.insights = data;
