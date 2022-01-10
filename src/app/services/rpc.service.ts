@@ -3,17 +3,20 @@ import { UtilService } from './util.service';
 import { AccountInfoResponse, NanoClient } from '@dev-ptera/nano-node-rpc';
 import { LedgerService } from '@app/services/ledger.service';
 import { AccountOverview } from '@app/types/AccountOverview';
+import {apiToken} from "../../environments/api-token";
 
 const MAX_PENDING = 100;
 // @ts-ignore
 const bananoJs = window.bananocoinBananojs;
 
 // https://banano-api.mynano.ninja/rpc
-const RPC_URL = 'https://banano-api.mynano.ninja/rpc';
-// @ts-ignore
-window.bananocoinBananojs.bananodeApi.setUrl(RPC_URL); // TODO this isnt working for send/change/receive.  Maybe files not loaded yet?
+// //https://kaliumapi.appditto.com/api
+export const RPC_URL = 'https://node.dev-ptera.com/banano-rpc'
 
-export const Node = new NanoClient({ url: RPC_URL });
+export const Node = new NanoClient({ url: RPC_URL,
+requestHeaders: {
+    authorization: apiToken
+}});
 
 const LOG_ERR = (err: any): any => {
     console.error(`ERROR: Issue fetching RPC data.  ${err}`);
