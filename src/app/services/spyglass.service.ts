@@ -10,8 +10,11 @@ import { AccountInsights } from '@app/types/AccountInsights';
     providedIn: 'root',
 })
 
-/** SpyglassService is a supplemental service that provides a filtered transaction history, online representatives, aliases, known accounts, scores, etc.
+/**
+ * SpyglassService is a supplemental service that provides a filtered transaction history, online representatives, aliases, known accounts, scores, etc.
+ *
  *  Basically any functionality that a RPC call cannot provide will be provided by this service.
+ *
  *  Documentation for interacting with Spyglass API can be found here: https://spyglass-api.web.app/
  * */
 export class SpyglassService {

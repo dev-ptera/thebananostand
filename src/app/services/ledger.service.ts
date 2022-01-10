@@ -5,13 +5,13 @@ import { UtilService } from './util.service';
 @Injectable({
     providedIn: 'root',
 })
-// This will be home to functions that interact with ledger.
+/** Services that use the ledger device. */
 export class LedgerService {
     constructor(private readonly _util: UtilService) {}
 
     /** Attempts a withdraw.  On success, returns transaction hash. */
     async withdraw(recipient: string, withdrawAmount: number, accountIndex: number): Promise<string> {
-        const accountSigner = await window.bananocoin.bananojsHw.getLedgerAccountSigner(accountIndex);
+        const accountSigner = await this.getAccountSigner(accountIndex);
         const bananodeApi = window.bananocoinBananojs.bananodeApi;
         const bananoUtil = window.bananocoinBananojs.bananoUtil;
         const config = window.bananocoinBananojsHw.bananoConfig;
@@ -32,9 +32,33 @@ export class LedgerService {
         }
     }
 
+    /** Attempts to receive funds. */
+    async receive(account: string, index: number, hash: string): Promise<string> {
+        const config = window.bananocoinBananojsHw.bananoConfig;
+        const accountSigner = await this.getAccountSigner(index);
+        const bananodeApi = window.bananocoinBananojs.bananodeApi;
+        let representative = await bananodeApi.getAccountRepresentative(account);
+        if (!representative) {
+            representative = account;
+        }
+        console.log('banano checkpending config', config);
+        const loggingUtil = window.bananocoinBananojs.loggingUtil;
+        const depositUtil = window.bananocoinBananojs.depositUtil;
+        const receiveResponse = await depositUtil.receive(
+            loggingUtil,
+            bananodeApi,
+            account,
+            accountSigner,
+            representative,
+            hash,
+            config.prefix
+        );
+        return receiveResponse;
+    }
+
     /** Attempts a change block.  On success, returns transaction hash. */
     async changeRepresentative(newRep: string, address: string, accountIndex: number): Promise<string> {
-        const accountSigner = await window.bananocoin.bananojsHw.getLedgerAccountSigner(accountIndex);
+        const accountSigner = await this.getAccountSigner(accountIndex);
         const bananodeApi = window.bananocoinBananojs.bananodeApi;
         const bananoUtil = window.bananocoinBananojs.bananoUtil;
         const config = window.bananocoinBananojsHw.bananoConfig;
@@ -72,26 +96,8 @@ export class LedgerService {
         return account;
     }
 
-    async receive(account: string, index: number, hash: string): Promise<string> {
-        const config = window.bananocoinBananojsHw.bananoConfig;
+    async getAccountSigner(index: number): any {
         const accountSigner = await window.bananocoin.bananojsHw.getLedgerAccountSigner(index);
-        const bananodeApi = window.bananocoinBananojs.bananodeApi;
-        let representative = await bananodeApi.getAccountRepresentative(account);
-        if (!representative) {
-            representative = account;
-        }
-        console.log('banano checkpending config', config);
-        const loggingUtil = window.bananocoinBananojs.loggingUtil;
-        const depositUtil = window.bananocoinBananojs.depositUtil;
-        const receiveResponse = await depositUtil.receive(
-            loggingUtil,
-            bananodeApi,
-            account,
-            accountSigner,
-            representative,
-            hash,
-            config.prefix
-        );
-        return receiveResponse;
+        return accountSigner;
     }
 }

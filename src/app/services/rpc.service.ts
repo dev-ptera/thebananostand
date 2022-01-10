@@ -7,7 +7,14 @@ import { AccountOverview } from '@app/types/AccountOverview';
 const MAX_PENDING = 100;
 // @ts-ignore
 const bananoJs = window.bananocoinBananojs;
-const Node = new NanoClient({ url: 'https://kaliumapi.appditto.com/api' });
+
+// https://banano-api.mynano.ninja/rpc
+const RPC_URL = 'https://banano-api.mynano.ninja/rpc';
+// @ts-ignore
+window.bananocoinBananojs.bananodeApi.setUrl(RPC_URL); // TODO this isnt working for send/change/receive.  Maybe files not loaded yet?
+
+export const Node = new NanoClient({ url: RPC_URL });
+
 const LOG_ERR = (err: any): any => {
     console.error(`ERROR: Issue fetching RPC data.  ${err}`);
     return err;
@@ -16,7 +23,8 @@ const LOG_ERR = (err: any): any => {
 @Injectable({
     providedIn: 'root',
 })
-/** RPC calls using the nano RPC documentation and the @dev-ptera/nano-node-rpc client.
+/** RPC calls using the nano RPC and the @dev-ptera/nano-node-rpc client.
+ *
  *  All functions in this service can have its NanoClient datasource switched without any issues.
  * */
 export class RpcService {
@@ -42,6 +50,9 @@ export class RpcService {
             Promise.reject(LOG_ERR(err))
         );
         const pendingBlocks = pendingRpcData.blocks[address];
+        if (!pendingBlocks) {
+            return [];
+        }
         const hashes = [...Object.keys(pendingBlocks)];
         return hashes;
     }
@@ -68,7 +79,6 @@ export class RpcService {
         pending: string[],
         rpcData: AccountInfoResponse | UnopenedAccountResponse
     ): Promise<AccountOverview> {
-
         // If account is not opened, return a placeholder account.
         if ((rpcData as UnopenedAccountResponse).unopenedAccount) {
             return {
