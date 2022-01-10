@@ -1,8 +1,8 @@
 // @ts-nocheck
 import { Injectable } from '@angular/core';
 import { UtilService } from './util.service';
-import { RPC_URL } from './rpc.service';
-import {apiToken} from "../../environments/api-token";
+import {environment} from "../../environments/environment";
+import {RpcNode} from "@app/services/nano-client.service";
 
 @Injectable({
     providedIn: 'root',
@@ -11,12 +11,16 @@ import {apiToken} from "../../environments/api-token";
 export class LedgerService {
     constructor(private readonly _util: UtilService) {}
 
+    private readonly _configApi(api): void {
+        api.setUrl(RpcNode.nodeAddress);
+        api.setAuth(environment.token);
+    }
+
     /** Attempts a withdraw.  On success, returns transaction hash. */
     async withdraw(recipient: string, withdrawAmount: number, accountIndex: number): Promise<string> {
         const accountSigner = await this.getAccountSigner(accountIndex);
         const bananodeApi = window.bananocoinBananojs.bananodeApi;
-        bananodeApi.setUrl(RPC_URL);
-        bananodeApi.setAuth(apiToken);
+        this._configApi(bananodeApi);
         const bananoUtil = window.bananocoinBananojs.bananoUtil;
         const config = window.bananocoinBananojsHw.bananoConfig;
         try {
@@ -41,8 +45,7 @@ export class LedgerService {
         const config = window.bananocoinBananojsHw.bananoConfig;
         const accountSigner = await this.getAccountSigner(index);
         const bananodeApi = window.bananocoinBananojs.bananodeApi;
-        bananodeApi.setUrl(RPC_URL);
-        bananodeApi.setAuth(apiToken);
+        this._configApi(bananodeApi);
         let representative = await bananodeApi.getAccountRepresentative(account);
         if (!representative) {
             representative = account;
@@ -66,8 +69,7 @@ export class LedgerService {
     async changeRepresentative(newRep: string, address: string, accountIndex: number): Promise<string> {
         const accountSigner = await this.getAccountSigner(accountIndex);
         const bananodeApi = window.bananocoinBananojs.bananodeApi;
-        bananodeApi.setUrl(RPC_URL);
-        bananodeApi.setAuth(apiToken);
+        this._configApi(bananodeApi);
         const bananoUtil = window.bananocoinBananojs.bananoUtil;
         const config = window.bananocoinBananojsHw.bananoConfig;
         try {

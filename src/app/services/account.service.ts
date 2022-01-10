@@ -87,7 +87,6 @@ export class AccountService {
         return this._rpcService
             .getAccountInfo(index)
             .then((overview) => {
-                console.log(overview);
                 this.accounts.push(overview);
                 this.accounts.sort((a, b) => (a.index > b.index ? 1 : -1));
                 this.saveAccountsInLocalStorage();
@@ -145,7 +144,6 @@ export class AccountService {
             return this.fetchAccount(0);
         }
         const indexes = indexesString.split(',');
-        console.log(indexes);
         for await (const index of indexes) {
             await this.fetchAccount(Number(index));
         }

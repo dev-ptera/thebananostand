@@ -1,27 +1,9 @@
 import { Injectable } from '@angular/core';
 import { UtilService } from './util.service';
-import { AccountInfoResponse, NanoClient } from '@dev-ptera/nano-node-rpc';
+import { AccountInfoResponse } from '@dev-ptera/nano-node-rpc';
 import { LedgerService } from '@app/services/ledger.service';
 import { AccountOverview } from '@app/types/AccountOverview';
-import {apiToken} from "../../environments/api-token";
-
-const MAX_PENDING = 100;
-// @ts-ignore
-const bananoJs = window.bananocoinBananojs;
-
-// https://banano-api.mynano.ninja/rpc
-// //https://kaliumapi.appditto.com/api
-export const RPC_URL = 'https://node.dev-ptera.com/banano-rpc'
-
-export const Node = new NanoClient({ url: RPC_URL,
-requestHeaders: {
-    authorization: apiToken
-}});
-
-const LOG_ERR = (err: any): any => {
-    console.error(`ERROR: Issue fetching RPC data.  ${err}`);
-    return err;
-};
+import {NanoClientService, RpcNode} from "@app/services/nano-client.service";
 
 @Injectable({
     providedIn: 'root',
@@ -31,9 +13,16 @@ const LOG_ERR = (err: any): any => {
  *  All functions in this service can have its NanoClient datasource switched without any issues.
  * */
 export class RpcService {
-    constructor(private readonly _ledgerService: LedgerService, private readonly _util: UtilService) {}
 
+    constructor(private readonly _ledgerService: LedgerService,
+                private readonly _nanoClientService: NanoClientService,
+                private readonly _util: UtilService) {
+    }
+
+    /** Given raw, converts BAN to a decimal. */
     private async _convertRawToBan(raw: string): Promise<number> {
+        // @ts-ignore
+        const bananoJs = window.bananocoinBananojs;
         const balanceParts = await bananoJs.getBananoPartsFromRaw(raw);
         if (balanceParts.raw === '0') {
             delete balanceParts.raw;
@@ -43,14 +32,19 @@ export class RpcService {
 
     /** Returns number of confirmed transactions an account has. */
     async getAccountHeight(address: string): Promise<number> {
-        const accountInfo = await Node.account_info(address).catch((err) => Promise.reject(LOG_ERR(err)));
+        const accountInfo = await RpcNode.account_info(address).catch((err) => Promise.reject(LOG_ERR(err)));
         return Number(accountInfo.confirmation_height);
     }
 
     /** Returns array of receivable transactions, sorted by balance descending. */
     async getReceivable(address: string): Promise<string[]> {
-        const pendingRpcData = await Node.accounts_pending([address], MAX_PENDING, { sorting: true }).catch((err) =>
-            Promise.reject(LOG_ERR(err))
+        const MAX_PENDING = 100;
+        const pendingRpcData = await RpcNode.accounts_pending([address], MAX_PENDING, { sorting: true }).catch((err) => {
+                LOG_ERR(err);
+                return Promise.resolve({
+                    blocks: ""
+                });
+            }
         );
         const pendingBlocks = pendingRpcData.blocks[address];
         if (!pendingBlocks) {
@@ -63,19 +57,22 @@ export class RpcService {
     /** Returns a modified account info object, given an index. */
     async getAccountInfo(index: number): Promise<AccountOverview> {
         const address = await this._ledgerService.getLedgerAccount(index);
-        const pending = await this.getReceivable(address);
-        const accountInfoRpc = await Node.account_info(address, { representative: true }).catch((err) => {
-            if (err.error === 'Account not found') {
-                return Promise.resolve({
-                    unopenedAccount: true,
-                } as UnopenedAccountResponse);
-            }
-            LOG_ERR(err);
-        });
+        const [pending, accountInfoRpc] = await Promise.all([
+            this.getReceivable(address),
+            RpcNode.account_info(address, { representative: true }).catch((err) => {
+                if (err.error === 'Account not found') {
+                    return Promise.resolve({
+                        unopenedAccount: true,
+                    } as UnopenedAccountResponse);
+                }
+                LOG_ERR(err);
+            })
+        ]);
         const accountOverview = await this._formatAccountInfoResponse(index, address, pending, accountInfoRpc);
         return accountOverview;
     }
 
+    /** Handles some data formatting; transforms account_info rpc data into some formatted dashboard data. */
     private async _formatAccountInfoResponse(
         index: number,
         address: string,
@@ -108,6 +105,11 @@ export class RpcService {
         };
     }
 }
+
+const LOG_ERR = (err: any): any => {
+    console.error(`ERROR: Issue fetching RPC data.  ${err}`);
+    return err;
+};
 
 type UnopenedAccountResponse = {
     unopenedAccount: true;
