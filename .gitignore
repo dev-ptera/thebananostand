@@ -45,3 +45,4 @@ testem.log
 Thumbs.db
 
 .firebase
+src/environments/apiToken.ts
