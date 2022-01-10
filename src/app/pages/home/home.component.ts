@@ -4,7 +4,6 @@ import { AccountService } from '@app/services/account.service';
 import { ViewportService } from '@app/services/viewport.service';
 import { SpyglassService } from '@app/services/spyglass.service';
 import { LedgerService } from '@app/services/ledger.service';
-import { RpcService } from '@app/services/rpc.service';
 
 @Component({
     selector: 'app-home',
@@ -22,7 +21,6 @@ export class HomeComponent implements OnInit {
         private readonly _bananoService: LedgerService,
         private readonly _accountService: AccountService,
         private readonly _viewportService: ViewportService,
-        rpc: RpcService
     ) {}
 
     ngOnInit(): void {
