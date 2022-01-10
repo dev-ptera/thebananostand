@@ -1,8 +1,8 @@
 // @ts-nocheck
 import { Injectable } from '@angular/core';
 import { UtilService } from './util.service';
-import {environment} from "../../environments/environment";
-import {RpcNode} from "@app/services/nano-client.service";
+import { environment } from '../../environments/environment';
+import { RpcNode } from '@app/services/nano-client.service';
 
 @Injectable({
     providedIn: 'root',
@@ -11,7 +11,7 @@ import {RpcNode} from "@app/services/nano-client.service";
 export class LedgerService {
     constructor(private readonly _util: UtilService) {}
 
-    private readonly _configApi(api): void {
+    private _configApi(api): void {
         api.setUrl(RpcNode.nodeAddress);
         api.setAuth(environment.token);
     }

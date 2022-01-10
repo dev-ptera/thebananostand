@@ -3,7 +3,7 @@ import { UtilService } from './util.service';
 import { AccountInfoResponse } from '@dev-ptera/nano-node-rpc';
 import { LedgerService } from '@app/services/ledger.service';
 import { AccountOverview } from '@app/types/AccountOverview';
-import {NanoClientService, RpcNode} from "@app/services/nano-client.service";
+import { NanoClientService, RpcNode } from '@app/services/nano-client.service';
 
 @Injectable({
     providedIn: 'root',
@@ -13,11 +13,11 @@ import {NanoClientService, RpcNode} from "@app/services/nano-client.service";
  *  All functions in this service can have its NanoClient datasource switched without any issues.
  * */
 export class RpcService {
-
-    constructor(private readonly _ledgerService: LedgerService,
-                private readonly _nanoClientService: NanoClientService,
-                private readonly _util: UtilService) {
-    }
+    constructor(
+        private readonly _ledgerService: LedgerService,
+        private readonly _nanoClientService: NanoClientService,
+        private readonly _util: UtilService
+    ) {}
 
     /** Given raw, converts BAN to a decimal. */
     private async _convertRawToBan(raw: string): Promise<number> {
@@ -39,10 +39,11 @@ export class RpcService {
     /** Returns array of receivable transactions, sorted by balance descending. */
     async getReceivable(address: string): Promise<string[]> {
         const MAX_PENDING = 100;
-        const pendingRpcData = await RpcNode.accounts_pending([address], MAX_PENDING, { sorting: true }).catch((err) => {
+        const pendingRpcData = await RpcNode.accounts_pending([address], MAX_PENDING, { sorting: true }).catch(
+            (err) => {
                 LOG_ERR(err);
                 return Promise.resolve({
-                    blocks: ""
+                    blocks: '',
                 });
             }
         );
@@ -66,7 +67,7 @@ export class RpcService {
                     } as UnopenedAccountResponse);
                 }
                 LOG_ERR(err);
-            })
+            }),
         ]);
         const accountOverview = await this._formatAccountInfoResponse(index, address, pending, accountInfoRpc);
         return accountOverview;
