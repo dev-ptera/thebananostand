@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
 
     constructor(
         private readonly _apiService: SpyglassService,
-        private readonly _bananoService: LedgerService,
+        private readonly _ledgerService: LedgerService,
         private readonly _accountService: AccountService,
         private readonly _viewportService: ViewportService,
     ) {}
@@ -39,7 +39,7 @@ export class HomeComponent implements OnInit {
 
     connectLedger(): void {
         this.err = undefined;
-        this._bananoService
+        this._ledgerService
             .checkLedgerOrError()
             .then(() => {
                 this.isLedgerLoaded = true;

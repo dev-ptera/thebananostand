@@ -148,9 +148,9 @@ export class SendDialogComponent {
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: SendDialogData,
         public util: UtilService,
+        public dialogRef: MatDialogRef<SendDialogComponent>,
         private readonly _ledgerService: LedgerService,
         private readonly _accountService: AccountService,
-        public dialogRef: MatDialogRef<SendDialogComponent>
     ) {}
 
     back(): void {

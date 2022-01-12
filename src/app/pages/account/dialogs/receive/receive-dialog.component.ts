@@ -108,9 +108,9 @@ export class ReceiveDialogComponent implements OnInit {
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: ReceiveDialogData,
         public util: UtilService,
+        public dialogRef: MatDialogRef<ReceiveDialogComponent>,
         private readonly _ledgerService: LedgerService,
         private readonly _accountService: AccountService,
-        public dialogRef: MatDialogRef<ReceiveDialogComponent>
     ) {}
 
     ngOnInit(): void {

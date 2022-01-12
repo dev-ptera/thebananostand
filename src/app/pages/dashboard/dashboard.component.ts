@@ -27,9 +27,9 @@ export class DashboardComponent implements OnInit {
 
     constructor(
         private readonly _router: Router,
-        private readonly _api: SpyglassService,
         private readonly _dialog: MatDialog,
         private readonly _util: UtilService,
+        private readonly _api: SpyglassService,
         private readonly _ledgerService: LedgerService,
         private readonly _accountService: AccountService
     ) {}

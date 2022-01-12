@@ -203,10 +203,10 @@ export class ChangeRepDialogComponent implements OnInit {
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: ChangeRepDialogData,
         public util: UtilService,
+        public dialogRef: MatDialogRef<ChangeRepDialogComponent>,
         private readonly _apiService: SpyglassService,
         private readonly _ledgerService: LedgerService,
         private readonly _accountService: AccountService,
-        public dialogRef: MatDialogRef<ChangeRepDialogComponent>
     ) {}
 
     ngOnInit(): void {
