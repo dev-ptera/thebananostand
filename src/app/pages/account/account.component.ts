@@ -63,7 +63,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this._disconnectDatasource();
+        this._disconnectDatasource(true);
     }
 
     /** Go back to dashboard. */
@@ -213,11 +213,13 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     /** Disconnects datasource if it exists. */
-    private _disconnectDatasource(): void {
+    private _disconnectDatasource(isDestroyed = false): void {
         if (this.ds) {
             this.ds.disconnect();
             this.ds = undefined;
-            this._ref.detectChanges();
+            if (!isDestroyed) {
+                this._ref.detectChanges();
+            }
         }
     }
 
