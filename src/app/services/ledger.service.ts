@@ -1,18 +1,18 @@
 // @ts-nocheck
-import { Injectable } from '@angular/core';
-import { UtilService } from './util.service';
-import { environment } from '../../environments/environment';
-import { RpcNode } from '@app/services/nano-client.service';
+import {Injectable} from '@angular/core';
+import {UtilService} from './util.service';
+import {environment} from '../../environments/environment';
+import {NanoClientService} from '@app/services/nano-client.service';
 
 @Injectable({
     providedIn: 'root',
 })
 /** Services that use the ledger device. */
 export class LedgerService {
-    constructor(private readonly _util: UtilService) {}
+    constructor(private readonly _util: UtilService, private readonly _nanoClientService: NanoClientService) {}
 
     private _configApi(api): void {
-        api.setUrl(RpcNode.nodeAddress);
+        api.setUrl(this._nanoClientService.getRpcNode().nodeAddress);
         api.setAuth(environment.token);
     }
 

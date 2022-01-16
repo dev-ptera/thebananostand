@@ -16,6 +16,8 @@ import { ThemeService } from '@app/services/theme.service';
 import { ConfirmedTx } from '@app/types/ConfirmedTx';
 import { AccountInsights } from '@app/types/AccountInsights';
 import { RpcService } from '@app/services/rpc.service';
+import {environment} from "../../../environments/environment";
+import {FilterDialogComponent, FilterDialogData} from "@app/pages/account/dialogs/filter/filter-dialog.component";
 
 @Component({
     selector: 'app-account',
@@ -144,8 +146,22 @@ export class AccountComponent implements OnInit, OnDestroy {
             }
         });
 
+        // If the account is not found within the accounts listed in the dashboard, redirect user back to home page.
+        // If running locally, create a dummy account.
         if (this.account === undefined) {
-            this.goHome();
+            if (environment.production) {
+                this.goHome();
+            } else {
+                this.account = {
+                    index: 0,
+                    fullAddress: this.address,
+                    shortAddress: this.util.shortenAddress(this.address),
+                    representative: undefined,
+                    balance: 50,
+                    formattedBalance: '--',
+                    pending: []
+                }
+            }
         }
     }
 
@@ -258,6 +274,24 @@ export class AccountComponent implements OnInit, OnDestroy {
         setTimeout(() => {
             item.showCopiedIcon = false;
         }, 700);
+    }
+
+    openFilterDialog(): void {
+        const ref = this._dialog.open(FilterDialogComponent, {
+            data: {
+                includeReceive: this.includeReceive,
+                includeSend: this.includeSend,
+                includeChange: this.includeChange,
+            },
+            disableClose: true,
+        });
+        ref.afterClosed().subscribe((data: FilterDialogData) => {
+
+           this.includeReceive = data.includeReceive;
+            this.includeSend = data.includeSend;
+            this.includeChange = data.includeChange;
+            this.createNewDataSource();
+        });
     }
 
     /** Hard Refresh for all information known about this account.

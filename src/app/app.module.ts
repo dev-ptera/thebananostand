@@ -47,6 +47,7 @@ import { AddIndexDialogComponent } from '@app/pages/dashboard/add-index/add-inde
 import { ReceiveDialogComponent } from '@app/pages/account/dialogs/receive/receive-dialog.component';
 import { AppUserMenuComponent } from '@app/components/user-menu.component';
 import { MatChipsModule } from '@angular/material/chips';
+import {FilterDialogComponent} from "@app/pages/account/dialogs/filter/filter-dialog.component";
 
 @NgModule({
     declarations: [
@@ -60,6 +61,7 @@ import { MatChipsModule } from '@angular/material/chips';
         AddIndexDialogComponent,
         ChangeRepDialogComponent,
         ReceiveDialogComponent,
+        FilterDialogComponent,
     ],
     imports: [
         AppRoutingModule,

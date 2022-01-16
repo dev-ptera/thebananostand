@@ -3,7 +3,7 @@ import { UtilService } from './util.service';
 import { AccountInfoResponse } from '@dev-ptera/nano-node-rpc';
 import { LedgerService } from '@app/services/ledger.service';
 import { AccountOverview } from '@app/types/AccountOverview';
-import { NanoClientService, RpcNode } from '@app/services/nano-client.service';
+import { NanoClientService } from '@app/services/nano-client.service';
 
 @Injectable({
     providedIn: 'root',
@@ -32,14 +32,16 @@ export class RpcService {
 
     /** Returns number of confirmed transactions an account has. */
     async getAccountHeight(address: string): Promise<number> {
-        const accountInfo = await RpcNode.account_info(address).catch((err) => Promise.reject(LOG_ERR(err)));
+        const accountInfo = await this._nanoClientService.getRpcNode()
+            .account_info(address).catch((err) => Promise.reject(LOG_ERR(err)));
         return Number(accountInfo.confirmation_height);
     }
 
     /** Returns array of receivable transactions, sorted by balance descending. */
     async getReceivable(address: string): Promise<string[]> {
         const MAX_PENDING = 100;
-        const pendingRpcData = await RpcNode.accounts_pending([address], MAX_PENDING, { sorting: true }).catch(
+        const pendingRpcData = await this._nanoClientService.getRpcNode()
+            .accounts_pending([address], MAX_PENDING, { sorting: true }).catch(
             (err) => {
                 LOG_ERR(err);
                 return Promise.resolve({
@@ -60,7 +62,8 @@ export class RpcService {
         const address = await this._ledgerService.getLedgerAccount(index);
         const [pending, accountInfoRpc] = await Promise.all([
             this.getReceivable(address),
-            RpcNode.account_info(address, { representative: true }).catch((err) => {
+            this._nanoClientService.getRpcNode()
+                .account_info(address, { representative: true }).catch((err) => {
                 if (err.error === 'Account not found') {
                     return Promise.resolve({
                         unopenedAccount: true,

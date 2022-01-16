@@ -78,6 +78,12 @@
                     </mat-icon>
                 </div>
                 <div style="display: flex; align-items: center" *ngIf="insights">
+
+                    <mat-icon style="cursor: pointer" (click)="openFilterDialog()">
+                        filter_list
+                    </mat-icon>
+
+                    <!--
                     <div class="mat-body-1" style="margin-right: 12px">Showing</div>
                     <mat-chip-list multiple>
                         <mat-chip
@@ -102,6 +108,7 @@
                             >Change Tx</mat-chip
                         >
                     </mat-chip-list>
+                    -->
                 </div>
             </div>
             <cdk-virtual-scroll-viewport
