@@ -110,7 +110,7 @@ export class ReceiveDialogComponent implements OnInit {
         public util: UtilService,
         public dialogRef: MatDialogRef<ReceiveDialogComponent>,
         private readonly _ledgerService: LedgerService,
-        private readonly _accountService: AccountService,
+        private readonly _accountService: AccountService
     ) {}
 
     ngOnInit(): void {

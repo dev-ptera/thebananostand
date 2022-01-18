@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { ConfirmedTx } from '@app/types/ConfirmedTx';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
@@ -5,33 +6,35 @@ import { SpyglassService } from '@app/services/spyglass.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { UtilService } from '@app/services/util.service';
 import { debounceTime } from 'rxjs/operators';
+import {FilterDialogData} from "@app/pages/account/dialogs/filter/filter-dialog.component";
 
 export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
-    _lowestHLoadedHeight: number;
-    _length: number;
     _blockCount: number;
     _address: string;
     _pageSize = 200;
-    _cachedData;
+    _cachedData: Array<ConfirmedTx | undefined>;
     _fetchedPages: Set<number>;
-    _dataStream: BehaviorSubject<(ConfirmedTx | undefined)[]>;
+    _dataStream: BehaviorSubject<Array<ConfirmedTx | undefined>>;
     _subscription: Subscription;
+    _lowestLoadedHeight: number;
+
+    reachedLastPage: boolean;
+    filteredTransactions: ConfirmedTx[] = [];
 
     constructor(
         address: string,
-        length: number,
         blockCount: number,
         private readonly _apiService: SpyglassService,
         private readonly _ref: ChangeDetectorRef,
         private readonly _util: UtilService,
-        private readonly _filters: { includeChange?: boolean; includeReceive?: boolean; includeSend?: boolean }
+        private readonly _filters: FilterDialogData,
+        private readonly _isFilterApplied: boolean
     ) {
         super();
-        this._lowestHLoadedHeight;
         this._address = address;
-        this._length = length;
         this._blockCount = blockCount;
-        this._cachedData = new Array(length);
+        this._lowestLoadedHeight = blockCount;
+        this._cachedData = new Array(blockCount);
         this._fetchedPages = new Set<number>();
         this._dataStream = new BehaviorSubject<(ConfirmedTx | undefined)[]>(this._cachedData);
         this._subscription = new Subscription();
@@ -59,31 +62,40 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
     }
 
     private _fetchPage(page: number): void {
+        const bufferEl = 20;
         if (this._fetchedPages.has(page)) {
             return;
         }
-        this._fetchedPages.add(page);
+
         console.info(`INFO: Fetching page #${page}`);
+        this._fetchedPages.add(page);
+        const offset = this._isFilterApplied
+            ? this._lowestLoadedHeight ? this._blockCount - (this._lowestLoadedHeight - 1) : 0
+            : page * this._pageSize
 
-        // TODO make this readable.
-        const offset =
-            this._filters.includeChange && this._filters.includeReceive && this._filters.includeSend
-                ? page * this._pageSize
-                : this._lowestHLoadedHeight
-                ? this._blockCount - (this._lowestHLoadedHeight - 1)
-                : 0;
-
+       // const offset = page * this._pageSize;
         void this._apiService
             .getConfirmedTransactions(this._address, this._pageSize, offset, this._filters)
             .then((data: ConfirmedTx[]) => {
                 data.map((tx) => {
-                    if (!this._lowestHLoadedHeight) {
-                        this._lowestHLoadedHeight = tx.height;
-                    }
                     tx.amount = this._util.numberWithCommas(tx.amount, 6);
-                    this._lowestHLoadedHeight = Math.min(this._lowestHLoadedHeight, tx.height);
+                    this._lowestLoadedHeight = tx.height;
+                    if (this._isFilterApplied) {
+                        this.filteredTransactions.push(tx);
+                    }
                 });
-                this._cachedData.splice(page * this._pageSize, this._pageSize, ...Array.from(data));
+
+                // TODO: Remove the double mem requirement; do not need filterTransactions to be saved in a separate array.
+                if (this._isFilterApplied) {
+                    this._cachedData = [];
+                    this._cachedData.push(...this.filteredTransactions);
+                    this.reachedLastPage = data.length !== this._pageSize;
+                    if (!this.reachedLastPage) {
+                        this._cachedData.push(...new Array(bufferEl));
+                    }
+                } else {
+                    this._cachedData.splice(page * this._pageSize, this._pageSize, ...Array.from(data));
+                }
                 this._dataStream.next(this._cachedData);
                 this._ref.detectChanges();
             });

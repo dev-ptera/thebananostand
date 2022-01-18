@@ -4,8 +4,8 @@ import { AccountComponent } from './pages/account/account.component';
 import { HomeComponent } from './pages/home/home.component';
 
 const routes: Routes = [
-    { path: ':account', component: AccountComponent,  data: { animation: 'Account' } },
-    { path: '', component: HomeComponent,data: { animation: 'Home' } },
+    { path: ':account', component: AccountComponent, data: { animation: 'Account' } },
+    { path: '', component: HomeComponent, data: { animation: 'Home' } },
 ];
 
 @NgModule({

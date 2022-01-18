@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
         private readonly _apiService: SpyglassService,
         private readonly _ledgerService: LedgerService,
         private readonly _accountService: AccountService,
-        private readonly _viewportService: ViewportService,
+        private readonly _viewportService: ViewportService
     ) {}
 
     ngOnInit(): void {

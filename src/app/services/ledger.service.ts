@@ -1,8 +1,8 @@
 // @ts-nocheck
-import {Injectable} from '@angular/core';
-import {UtilService} from './util.service';
-import {environment} from '../../environments/environment';
-import {NanoClientService} from '@app/services/nano-client.service';
+import { Injectable } from '@angular/core';
+import { UtilService } from './util.service';
+import { environment } from '../../environments/environment';
+import { NanoClientService } from '@app/services/nano-client.service';
 
 @Injectable({
     providedIn: 'root',

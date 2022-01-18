@@ -16,8 +16,8 @@ import { ThemeService } from '@app/services/theme.service';
 import { ConfirmedTx } from '@app/types/ConfirmedTx';
 import { AccountInsights } from '@app/types/AccountInsights';
 import { RpcService } from '@app/services/rpc.service';
-import {environment} from "../../../environments/environment";
-import {FilterDialogComponent, FilterDialogData} from "@app/pages/account/dialogs/filter/filter-dialog.component";
+import { environment } from '../../../environments/environment';
+import { FilterDialogComponent, FilterDialogData } from '@app/pages/account/dialogs/filter/filter-dialog.component';
 
 @Component({
     selector: 'app-account',
@@ -37,10 +37,18 @@ export class AccountComponent implements OnInit, OnDestroy {
     insights: AccountInsights;
 
     hideTransactionFilters: boolean;
-    includeReceive = true;
-    includeSend = true;
-    includeChange = true;
     loading = false;
+
+    filteredItems: ConfirmedTx[] = [];
+
+    filterData: FilterDialogData = {
+        includeReceive: true,
+        includeSend: true,
+        includeChange: true,
+        minAmount: undefined,
+        maxAmount: undefined,
+        filterAddresses: '',
+    };
 
     constructor(
         public util: UtilService,
@@ -137,6 +145,19 @@ export class AccountComponent implements OnInit, OnDestroy {
         });
     }
 
+    openFilterDialog(): void {
+        const ref = this._dialog.open(FilterDialogComponent, {
+            data: this.filterData,
+            disableClose: true,
+        });
+        ref.afterClosed().subscribe((data: FilterDialogData) => {
+            if (data.update) {
+                this.filterData = data;
+                this.createNewDataSource();
+            }
+        });
+    }
+
     /** Using data from the dashboard, sets the account */
     private _setAccount(): void {
         this._accountService.accounts.map((account) => {
@@ -159,8 +180,8 @@ export class AccountComponent implements OnInit, OnDestroy {
                     representative: undefined,
                     balance: 50,
                     formattedBalance: '--',
-                    pending: []
-                }
+                    pending: [],
+                };
             }
         }
     }
@@ -191,41 +212,22 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     /** Creates a new datasource, taking into account any transaction filters. */
     createNewDataSource(): void {
-        const length = this.countTotalDisplayableTxCount();
+        console.log('new datasource');
         this._disconnectDatasource();
-        this.ds = new MyDataSource(
-            this.address,
-            length,
-            this.accountHeight,
-            this._spyglassService,
-            this._ref,
-            this.util,
-            {
-                includeReceive: this.includeReceive,
-                includeChange: this.includeChange,
-                includeSend: this.includeSend,
-            }
-        );
+        this.ds = new MyDataSource(this.address, this.accountHeight, this._spyglassService, this._ref,
+            this.util, this.filterData, this.isFilterApplied());
     }
 
     /** Considering filters, returns the max number of transactions that can appear.
      *  Used to create placeholder 'loading' array and determine height of scroll container. */
     countTotalDisplayableTxCount(): number {
-        let txCount = 0;
-        if (this.hideTransactionFilters || !this.insights) {
-            txCount = this.accountHeight;
-        } else {
-            if (this.includeReceive) {
-                txCount += this.insights.totalTxReceived;
+        if (this.isFilterApplied()) {
+            if (this.ds) {
+                return this.ds._cachedData.length;
             }
-            if (this.includeSend) {
-                txCount += this.insights.totalTxSent;
-            }
-            if (this.includeChange) {
-                txCount += this.insights.totalTxChange;
-            }
+            return 210;
         }
-        return txCount;
+        return this.accountHeight;
     }
 
     /** Disconnects datasource if it exists. */
@@ -276,24 +278,6 @@ export class AccountComponent implements OnInit, OnDestroy {
         }, 700);
     }
 
-    openFilterDialog(): void {
-        const ref = this._dialog.open(FilterDialogComponent, {
-            data: {
-                includeReceive: this.includeReceive,
-                includeSend: this.includeSend,
-                includeChange: this.includeChange,
-            },
-            disableClose: true,
-        });
-        ref.afterClosed().subscribe((data: FilterDialogData) => {
-
-           this.includeReceive = data.includeReceive;
-            this.includeSend = data.includeSend;
-            this.includeChange = data.includeChange;
-            this.createNewDataSource();
-        });
-    }
-
     /** Hard Refresh for all information known about this account.
      *  Fetches blockcount, account info, pending blocks, insights & then confirmed tx. */
     refreshCurrentAccountInfo(): void {
@@ -314,5 +298,16 @@ export class AccountComponent implements OnInit, OnDestroy {
             .catch((err) => {
                 console.error(err);
             });
+    }
+
+    isFilterApplied(): boolean {
+        return Boolean(
+            !this.filterData.includeChange ||
+                !this.filterData.includeSend ||
+                !this.filterData.includeReceive ||
+                this.filterData.maxAmount ||
+                this.filterData.minAmount ||
+                this.filterData.filterAddresses
+        );
     }
 }

@@ -206,7 +206,7 @@ export class ChangeRepDialogComponent implements OnInit {
         public dialogRef: MatDialogRef<ChangeRepDialogComponent>,
         private readonly _apiService: SpyglassService,
         private readonly _ledgerService: LedgerService,
-        private readonly _accountService: AccountService,
+        private readonly _accountService: AccountService
     ) {}
 
     ngOnInit(): void {

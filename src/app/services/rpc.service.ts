@@ -32,23 +32,25 @@ export class RpcService {
 
     /** Returns number of confirmed transactions an account has. */
     async getAccountHeight(address: string): Promise<number> {
-        const accountInfo = await this._nanoClientService.getRpcNode()
-            .account_info(address).catch((err) => Promise.reject(LOG_ERR(err)));
+        const accountInfo = await this._nanoClientService
+            .getRpcNode()
+            .account_info(address)
+            .catch((err) => Promise.reject(LOG_ERR(err)));
         return Number(accountInfo.confirmation_height);
     }
 
     /** Returns array of receivable transactions, sorted by balance descending. */
     async getReceivable(address: string): Promise<string[]> {
         const MAX_PENDING = 100;
-        const pendingRpcData = await this._nanoClientService.getRpcNode()
-            .accounts_pending([address], MAX_PENDING, { sorting: true }).catch(
-            (err) => {
+        const pendingRpcData = await this._nanoClientService
+            .getRpcNode()
+            .accounts_pending([address], MAX_PENDING, { sorting: true })
+            .catch((err) => {
                 LOG_ERR(err);
                 return Promise.resolve({
                     blocks: '',
                 });
-            }
-        );
+            });
         const pendingBlocks = pendingRpcData.blocks[address];
         if (!pendingBlocks) {
             return [];
@@ -62,15 +64,17 @@ export class RpcService {
         const address = await this._ledgerService.getLedgerAccount(index);
         const [pending, accountInfoRpc] = await Promise.all([
             this.getReceivable(address),
-            this._nanoClientService.getRpcNode()
-                .account_info(address, { representative: true }).catch((err) => {
-                if (err.error === 'Account not found') {
-                    return Promise.resolve({
-                        unopenedAccount: true,
-                    } as UnopenedAccountResponse);
-                }
-                LOG_ERR(err);
-            }),
+            this._nanoClientService
+                .getRpcNode()
+                .account_info(address, { representative: true })
+                .catch((err) => {
+                    if (err.error === 'Account not found') {
+                        return Promise.resolve({
+                            unopenedAccount: true,
+                        } as UnopenedAccountResponse);
+                    }
+                    LOG_ERR(err);
+                }),
         ]);
         const accountOverview = await this._formatAccountInfoResponse(index, address, pending, accountInfoRpc);
         return accountOverview;

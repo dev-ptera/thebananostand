@@ -1,6 +1,6 @@
 .filter-dialog {
-    max-width: 340px;
-    width: 340px;
+    max-width: 350px;
+    width: 305px;
     height: 416px;
     display: flex;
     flex-direction: column;
@@ -18,6 +18,6 @@
         margin: 8px 0;
     }
     ::ng-deep .mat-checkbox-label {
-        margin-left: 8px!important;
+        margin-left: 8px !important;
     }
 }

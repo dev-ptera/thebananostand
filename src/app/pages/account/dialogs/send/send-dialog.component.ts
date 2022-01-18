@@ -150,7 +150,7 @@ export class SendDialogComponent {
         public util: UtilService,
         public dialogRef: MatDialogRef<SendDialogComponent>,
         private readonly _ledgerService: LedgerService,
-        private readonly _accountService: AccountService,
+        private readonly _accountService: AccountService
     ) {}
 
     back(): void {
