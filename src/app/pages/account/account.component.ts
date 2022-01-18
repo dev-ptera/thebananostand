@@ -214,8 +214,15 @@ export class AccountComponent implements OnInit, OnDestroy {
     createNewDataSource(): void {
         console.log('new datasource');
         this._disconnectDatasource();
-        this.ds = new MyDataSource(this.address, this.accountHeight, this._spyglassService, this._ref,
-            this.util, this.filterData, this.isFilterApplied());
+        this.ds = new MyDataSource(
+            this.address,
+            this.accountHeight,
+            this._spyglassService,
+            this._ref,
+            this.util,
+            this.filterData,
+            this.isFilterApplied()
+        );
     }
 
     /** Considering filters, returns the max number of transactions that can appear.

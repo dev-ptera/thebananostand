@@ -6,7 +6,7 @@ import { SpyglassService } from '@app/services/spyglass.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { UtilService } from '@app/services/util.service';
 import { debounceTime } from 'rxjs/operators';
-import {FilterDialogData} from "@app/pages/account/dialogs/filter/filter-dialog.component";
+import { FilterDialogData } from '@app/pages/account/dialogs/filter/filter-dialog.component';
 
 export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
     _blockCount: number;
@@ -70,10 +70,12 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
         console.info(`INFO: Fetching page #${page}`);
         this._fetchedPages.add(page);
         const offset = this._isFilterApplied
-            ? this._lowestLoadedHeight ? this._blockCount - (this._lowestLoadedHeight - 1) : 0
-            : page * this._pageSize
+            ? this._lowestLoadedHeight
+                ? this._blockCount - (this._lowestLoadedHeight - 1)
+                : 0
+            : page * this._pageSize;
 
-       // const offset = page * this._pageSize;
+        // const offset = page * this._pageSize;
         void this._apiService
             .getConfirmedTransactions(this._address, this._pageSize, offset, this._filters)
             .then((data: ConfirmedTx[]) => {

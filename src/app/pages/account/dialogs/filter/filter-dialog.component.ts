@@ -42,8 +42,7 @@ export type FilterDialogData = {
                         color="primary"
                         (click)="data.includeReceive = !data.includeReceive"
                         [selected]="data.includeReceive"
-                        >
-
+                    >
                         <mat-icon matChipAvatar style="font-size: 16px">download</mat-icon>
                         Received</mat-chip
                     >
@@ -52,7 +51,7 @@ export type FilterDialogData = {
                         color="primary"
                         (click)="data.includeSend = !data.includeSend"
                         [selected]="data.includeSend"
-                        >
+                    >
                         <mat-icon matChipAvatar style="font-size: 16px">upload</mat-icon>
                         Sent</mat-chip
                     >
@@ -61,7 +60,7 @@ export type FilterDialogData = {
                         color="primary"
                         (click)="data.includeChange = !data.includeChange"
                         [selected]="data.includeChange"
-                        >
+                    >
                         <mat-icon matChipAvatar style="font-size: 16px">how_to_vote</mat-icon>
                         Change</mat-chip
                     >
@@ -80,7 +79,12 @@ export type FilterDialogData = {
 
                 <mat-form-field style="width: 100%" appearance="fill">
                     <mat-label>Filter Addresses</mat-label>
-                    <input matInput type="text" [(ngModel)]="data.filterAddresses" placeholder="address1, address2, etc" />
+                    <input
+                        matInput
+                        type="text"
+                        [(ngModel)]="data.filterAddresses"
+                        placeholder="address1, address2, etc"
+                    />
                 </mat-form-field>
 
                 <blui-spacer></blui-spacer>

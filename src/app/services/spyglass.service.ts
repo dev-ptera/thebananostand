@@ -28,7 +28,8 @@ export class SpyglassService {
         filters?: FilterDialogData
     ): Promise<ConfirmedTx[]> {
         const url = 'https://api.spyglass.pw/banano/v1/account/confirmed-transactions';
-        const filterAddresses = (filters && filters.filterAddresses) ? filters.filterAddresses.split(',').map((x) => x.trim()) : [];
+        const filterAddresses =
+            filters && filters.filterAddresses ? filters.filterAddresses.split(',').map((x) => x.trim()) : [];
         return this._http.post<ConfirmedTx[]>(url, { address, size, offset, ...filters, filterAddresses }).toPromise();
     }
 
