@@ -24,6 +24,7 @@ export class DashboardComponent implements OnInit {
     manualAddIndex: number;
     disableRipple = false;
     loadingAllAccounts: boolean;
+    fade: boolean;
 
     constructor(
         private readonly _router: Router,
@@ -42,12 +43,14 @@ export class DashboardComponent implements OnInit {
     }
 
     async loadAccounts(): Promise<void> {
+        this.fade = true;
         this.loadingAllAccounts = true;
         this.loadingAccount = true;
         await this._accountService.populateAccountsFromLocalStorage();
         this.manualAddIndex = this._accountService.findNextUnloadedIndex();
         this.loadingAccount = false;
         this.loadingAllAccounts = false;
+        this.fade = false;
     }
 
     refresh(): void {

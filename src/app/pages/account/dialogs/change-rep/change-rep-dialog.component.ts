@@ -91,14 +91,14 @@ export type ChangeRepDialogData = {
                         <mat-form-field appearance="fill" style="width: 100%" *ngIf="selectFromList">
                             <mat-label>Representative</mat-label>
                             <mat-select [formControl]="representativesListForm">
-                                <mat-option *ngFor="let rep of getRepsWithMinScore(70)" [value]="rep.address">
+                                <mat-option *ngFor="let rep of getRepsWithMinScore(75)" [value]="rep.address">
                                     <div style="display: flex; justify-content: space-between">
                                         <div style="text-overflow: ellipsis; overflow:hidden">
                                             {{ rep.alias || util.shortenAddress(rep.address) }}
                                         </div>
                                         <div>
-                                            <strong style="margin-left: 8px">{{ rep.score }}</strong
-                                            >/100
+                                            <strong style="margin-left: 8px">{{ rep.score }}</strong>
+                                            /100
                                         </div>
                                     </div>
                                 </mat-option>

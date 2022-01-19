@@ -18,3 +18,11 @@
 ::ng-deep .blui-info-list-item-icon-wrapper {
     margin-right: 8px !important;
 }
+
+.fade blui-info-list-item {
+    -webkit-animation: fadein 500ms; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadein 500ms; /* Firefox < 16 */
+    -ms-animation: fadein 500ms; /* Internet Explorer */
+    -o-animation: fadein 500ms; /* Opera < 12.1 */
+    animation: fadein 500ms;
+}

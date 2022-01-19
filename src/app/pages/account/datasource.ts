@@ -19,6 +19,7 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
     _lowestLoadedHeight: number;
 
     reachedLastPage: boolean;
+    firstPageLoaded = false;
     filteredTransactions: ConfirmedTx[] = [];
 
     constructor(
@@ -38,6 +39,8 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
         this._fetchedPages = new Set<number>();
         this._dataStream = new BehaviorSubject<(ConfirmedTx | undefined)[]>(this._cachedData);
         this._subscription = new Subscription();
+        this._fetchedPages.clear();
+        this._fetchPage(0);
     }
 
     connect(collectionViewer: CollectionViewer): Observable<(ConfirmedTx | undefined)[]> {
@@ -79,6 +82,7 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
         void this._apiService
             .getConfirmedTransactions(this._address, this._pageSize, offset, this._filters)
             .then((data: ConfirmedTx[]) => {
+                this.firstPageLoaded = true;
                 data.map((tx) => {
                     tx.amount = this._util.numberWithCommas(tx.amount, 6);
                     this._lowestLoadedHeight = tx.height;

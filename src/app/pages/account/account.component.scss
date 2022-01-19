@@ -26,14 +26,18 @@
     width: 100%;
 }
 
-.example-viewport {
+.scroll-container {
     height: 60vh;
     width: 200px;
     border-radius: 4px;
-    border: 1px solid #cbcbcb78;
+    -webkit-animation: fadein 750ms; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadein 750ms; /* Firefox < 16 */
+    -ms-animation: fadein 750ms; /* Internet Explorer */
+    -o-animation: fadein 750ms; /* Opera < 12.1 */
+    animation: fadein 750ms;
 }
 
-.example-item {
+.ds-item {
     height: 50px;
 }
 

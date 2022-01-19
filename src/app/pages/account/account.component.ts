@@ -39,8 +39,6 @@ export class AccountComponent implements OnInit, OnDestroy {
     hideTransactionFilters: boolean;
     loading = false;
 
-    filteredItems: ConfirmedTx[] = [];
-
     filterData: FilterDialogData = {
         includeReceive: true,
         includeSend: true,
@@ -223,6 +221,7 @@ export class AccountComponent implements OnInit, OnDestroy {
             this.filterData,
             this.isFilterApplied()
         );
+        this._ref.detectChanges();
     }
 
     /** Considering filters, returns the max number of transactions that can appear.
@@ -242,6 +241,8 @@ export class AccountComponent implements OnInit, OnDestroy {
         if (this.ds) {
             this.ds.disconnect();
             this.ds = undefined;
+
+            // Do not run change detection when the component is destroyed; this ruins the angular scroll animation.
             if (!isDestroyed) {
                 this._ref.detectChanges();
             }
@@ -316,5 +317,9 @@ export class AccountComponent implements OnInit, OnDestroy {
                 this.filterData.minAmount ||
                 this.filterData.filterAddresses
         );
+    }
+
+    isDataLoaded(): boolean {
+        return Boolean(this.ds && this.ds.firstPageLoaded);
     }
 }

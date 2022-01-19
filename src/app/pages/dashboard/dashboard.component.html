@@ -67,6 +67,7 @@
     <mat-nav-list
         style="max-height: 60vh; overflow: auto"
         *ngIf="getAccounts().length > 0"
+        [class.fade]="fade"
         [disableRipple]="disableRipple"
     >
         <blui-info-list-item

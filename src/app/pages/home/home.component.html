@@ -27,8 +27,8 @@
                     Trouble Connecting?
                 </span>
                 <div *ngIf="showHelperText" style="margin-top: 32px">
-                    <div style="margin-bottom: 16px">Follow this list for help connecting your Ledger device:</div>
-                    <div><strong>#1</strong>: Connect your Ledger Device via USB</div>
+                    <div style="margin-bottom: 16px">Follow these steps for help connecting your Ledger device:</div>
+                    <div><strong>#1</strong>: Connect your Ledger Device via USB.</div>
                     <div>
                         <strong>#2</strong>: Ensure the BANANO app is installed and the version is up-to-date (>v1.2.6).
                     </div>
@@ -41,6 +41,7 @@
                 </div>
             </div>
             <app-dashboard *ngIf="isLedgerLoaded"></app-dashboard>
+            <strong style="visibility: hidden"><!-- Load error font styles --></strong>
         </div>
     </div>
 </div>
