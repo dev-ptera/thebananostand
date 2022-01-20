@@ -34,7 +34,7 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
         super();
         this._address = address;
         this._blockCount = blockCount;
-        this._lowestLoadedHeight = blockCount;
+        this._lowestLoadedHeight = undefined;
         this._cachedData = new Array(blockCount);
         this._fetchedPages = new Set<number>();
         this._dataStream = new BehaviorSubject<(ConfirmedTx | undefined)[]>(this._cachedData);
