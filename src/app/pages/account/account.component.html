@@ -112,6 +112,32 @@
                 </div>
             </div>
 
+            <div class="empty-states" *ngIf="ds || unopenedAccount">
+                <ng-container  *ngIf="isFilterApplied() && ds.firstPageLoaded && ds._cachedData.length === 0">
+                    <mat-divider></mat-divider>
+                    <blui-empty-state
+                        style="margin-top: 96px">
+                        <mat-icon blui-empty-icon>waterfall_chart</mat-icon>
+                        <div blui-title>No Results</div>
+                        <div blui-description>
+                            No transactions meet your filter criteria.
+                            Please adjust your filters and try again.</div>
+                    </blui-empty-state>
+                </ng-container>
+                <ng-container *ngIf="unopenedAccount">
+                    <mat-divider></mat-divider>
+                    <blui-empty-state
+                        style="margin-top: 96px">
+                        <mat-icon blui-empty-icon>no_accounts</mat-icon>
+                        <div blui-title>Unopened Account</div>
+                        <div blui-description>
+                            This account has not been opened yet.
+                            To open this account, it must receive an incoming transaction.
+                        </div>
+                    </blui-empty-state>
+                </ng-container>
+            </div>
+
             <cdk-virtual-scroll-viewport
                 itemSize="50"
                 class="scroll-container"

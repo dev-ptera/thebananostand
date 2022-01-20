@@ -30,6 +30,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     accountHeight: number;
     warnBannerDismissed = false;
+    unopenedAccount = false;
 
     colors = Colors;
     ds: MyDataSource;
@@ -204,6 +205,9 @@ export class AccountComponent implements OnInit, OnDestroy {
             })
             .catch((err) => {
                 console.error(err);
+                if (err && err.error === 'Account not found') {
+                    this.unopenedAccount = true;
+                }
                 this.loading = false;
             });
     }
@@ -289,6 +293,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     /** Hard Refresh for all information known about this account.
      *  Fetches blockcount, account info, pending blocks, insights & then confirmed tx. */
     refreshCurrentAccountInfo(): void {
+        this.unopenedAccount = false;
         if (this.loading) {
             return;
         }
