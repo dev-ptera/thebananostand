@@ -38,7 +38,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     insights: AccountInsights;
 
     hideTransactionFilters: boolean;
-    loading = false;
+    isLoadingHeight = false;
 
     filterData: FilterDialogData = {
         includeReceive: true,
@@ -191,13 +191,13 @@ export class AccountComponent implements OnInit, OnDestroy {
      * Called whenever a user finishes a send, receive, or change workflow.
      * */
     private _searchAccountTxHistory(): void {
-        this.loading = true;
+        this.isLoadingHeight = true;
         void this._rpcService
             .getAccountHeight(this.address)
             .then((height) => {
                 this.accountHeight = height;
                 this.hideTransactionFilters = height >= 100_000 || height === 0;
-                this.loading = false;
+                this.isLoadingHeight = false;
                 if (this.accountHeight > 0) {
                     this._searchAccountInsights();
                 }
@@ -208,7 +208,7 @@ export class AccountComponent implements OnInit, OnDestroy {
                 if (err && err.error === 'Account not found') {
                     this.unopenedAccount = true;
                 }
-                this.loading = false;
+                this.isLoadingHeight = false;
             });
     }
 
@@ -294,7 +294,8 @@ export class AccountComponent implements OnInit, OnDestroy {
      *  Fetches blockcount, account info, pending blocks, insights & then confirmed tx. */
     refreshCurrentAccountInfo(): void {
         this.unopenedAccount = false;
-        if (this.loading) {
+        this._disconnectDatasource();
+        if (this.isLoadingHeight) {
             return;
         }
         this._searchAccountTxHistory();

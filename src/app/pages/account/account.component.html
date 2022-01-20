@@ -85,8 +85,8 @@
                 </div>
             </div>
 
-            <div class="empty-states" *ngIf="ds || unopenedAccount">
-                <ng-container  *ngIf="isFilterApplied() && ds.firstPageLoaded && ds._cachedData.length === 0">
+            <div class="empty-states" *ngIf="ds || unopenedAccount || isLoadingHeight">
+                <ng-container  *ngIf="isFilterApplied() && (ds && ds.firstPageLoaded && ds._cachedData.length === 0)">
                     <mat-divider></mat-divider>
                     <blui-empty-state
                         style="margin-top: 96px">
@@ -106,6 +106,17 @@
                         <div blui-description>
                             This account has not been opened yet.
                             To open this account, it must receive an incoming transaction.
+                        </div>
+                    </blui-empty-state>
+                </ng-container>
+                <ng-container *ngIf="isLoadingHeight || (ds && !ds.firstPageLoaded)">
+                    <mat-divider></mat-divider>
+                    <blui-empty-state
+                        style="margin-top: 96px">
+                        <mat-icon blui-empty-icon>pending</mat-icon>
+                        <div blui-title>Loading Data</div>
+                        <div blui-description>
+                            Hang in there, counting them nanners.
                         </div>
                     </blui-empty-state>
                 </ng-container>
