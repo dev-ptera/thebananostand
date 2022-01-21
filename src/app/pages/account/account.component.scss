@@ -34,9 +34,20 @@
     animation: fadein 750ms;
 }
 
+@mixin slow-fade {
+    -webkit-animation: fadein 3000ms; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadein 3000ms; /* Firefox < 16 */
+    -ms-animation: fadein 3000ms; /* Internet Explorer */
+    -o-animation: fadein 3000ms; /* Opera < 12.1 */
+    animation: fadein 3000ms;
+}
+
 .empty-states {
     * {
         @include fade;
+    }
+    &.slow-fade-in * {
+        @include slow-fade;
     }
 }
 .scroll-container {

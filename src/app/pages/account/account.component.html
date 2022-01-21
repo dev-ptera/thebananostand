@@ -85,8 +85,10 @@
                 </div>
             </div>
 
-            <div class="empty-states" *ngIf="ds || unopenedAccount || isLoadingHeight">
-                <ng-container  *ngIf="isFilterApplied() && (ds && ds.firstPageLoaded && ds._cachedData.length === 0)">
+            <div *ngIf="showLoadingEmptyState() || showNoFilteredResultsEmptyState() || unopenedAccount"
+                 class="empty-states"
+                 [class.slow-fade-in]="showLoadingEmptyState()">
+                <ng-container *ngIf="showNoFilteredResultsEmptyState()">
                     <mat-divider></mat-divider>
                     <blui-empty-state
                         style="margin-top: 96px">
@@ -109,7 +111,7 @@
                         </div>
                     </blui-empty-state>
                 </ng-container>
-                <ng-container *ngIf="isLoadingHeight || (ds && !ds.firstPageLoaded)">
+                <ng-container *ngIf="showLoadingEmptyState()">
                     <mat-divider></mat-divider>
                     <blui-empty-state
                         style="margin-top: 96px">

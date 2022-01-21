@@ -328,4 +328,12 @@ export class AccountComponent implements OnInit, OnDestroy {
     isDataLoaded(): boolean {
         return Boolean(this.ds && this.ds.firstPageLoaded);
     }
+
+    showLoadingEmptyState(): boolean {
+       return this.isLoadingHeight || (this.ds && !this.ds.firstPageLoaded)
+    }
+
+    showNoFilteredResultsEmptyState(): boolean {
+        return this.isFilterApplied() && (this.ds && this.ds.firstPageLoaded && this.ds._cachedData.length === 0)
+    }
 }
