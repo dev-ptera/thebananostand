@@ -27,11 +27,11 @@
 }
 
 @mixin fade {
-    -webkit-animation: fadein 750ms; /* Safari, Chrome and Opera > 12.1 */
-    -moz-animation: fadein 750ms; /* Firefox < 16 */
-    -ms-animation: fadein 750ms; /* Internet Explorer */
-    -o-animation: fadein 750ms; /* Opera < 12.1 */
-    animation: fadein 750ms;
+    -webkit-animation: fadein 300ms; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadein 300ms; /* Firefox < 16 */
+    -ms-animation: fadein 300ms; /* Internet Explorer */
+    -o-animation: fadein 300ms; /* Opera < 12.1 */
+    animation: fadein 300ms;
 }
 
 @mixin slow-fade {
@@ -50,6 +50,11 @@
         @include slow-fade;
     }
 }
+
+.fade {
+    @include fade;
+}
+
 .scroll-container {
     height: 60vh;
     width: 200px;

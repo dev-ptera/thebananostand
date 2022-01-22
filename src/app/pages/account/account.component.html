@@ -77,7 +77,7 @@
                         refresh
                     </mat-icon>
                 </div>
-                <div style="display: flex; align-items: center; align-items: center" *ngIf="insights">
+                <div style="display: flex; align-items: center; align-items: center" *ngIf="!hideTransactionFilters" class="fade">
                     <div class="mat-subheading-2" style="margin: 0; margin-right: 12px">Transaction Filters</div>
                     <mat-icon style="cursor: pointer" (click)="openFilterDialog()">
                         {{ isFilterApplied() ? 'filter_list' : 'filter_list_off' }}
@@ -113,6 +113,15 @@
                 </ng-container>
                 <ng-container *ngIf="showLoadingEmptyState()">
                     <mat-divider></mat-divider>
+
+
+
+                    <mat-progress-bar
+                        *ngIf="showLoadingEmptyState()"
+                        color="primary"
+                        mode="indeterminate">
+                    </mat-progress-bar>
+                    <!--
                     <blui-empty-state
                         style="margin-top: 96px">
                         <mat-icon blui-empty-icon>pending</mat-icon>
@@ -121,6 +130,7 @@
                             Hang in there, counting them nanners.
                         </div>
                     </blui-empty-state>
+                -->
                 </ng-container>
             </div>
 

@@ -1,3 +1,12 @@
+
+@mixin fade {
+    -webkit-animation: fadein 250ms; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadein 250ms; /* Firefox < 16 */
+    -ms-animation: fadein 250ms; /* Internet Explorer */
+    -o-animation: fadein 250ms; /* Opera < 12.1 */
+    animation: fadein 250ms;
+}
+
 .change-rep-dialog {
     max-width: 340px;
     width: 340px;
@@ -7,6 +16,10 @@
 
     .mat-form-field-wrapper {
         padding-bottom: 0 !important;
+    }
+
+    .first-page-rep-metadata * {
+        @include fade;
     }
 
     .close-button {
