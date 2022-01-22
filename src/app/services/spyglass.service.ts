@@ -4,7 +4,6 @@ import { ConfirmedTx } from '@app/types/ConfirmedTx';
 import { RepScore } from '../pages/account/dialogs/change-rep/change-rep-dialog.component';
 import { UtilService } from './util.service';
 import { KnownAccount } from '@app/types/KnownAccount';
-import { AccountInsights } from '@app/types/AccountInsights';
 import { FilterDialogData } from '@app/pages/account/dialogs/filter/filter-dialog.component';
 
 @Injectable({
@@ -31,11 +30,6 @@ export class SpyglassService {
         const filterAddresses =
             filters && filters.filterAddresses ? filters.filterAddresses.split(',').map((x) => x.trim()) : [];
         return this._http.post<ConfirmedTx[]>(url, { address, size, offset, ...filters, filterAddresses }).toPromise();
-    }
-
-    getAccountInsights(address: string): Promise<AccountInsights> {
-        const url = `https://api.spyglass.pw/banano/v1/account/insights`;
-        return this._http.post<AccountInsights>(url, { address }).toPromise();
     }
 
     getRepresentativeAliases(): Promise<KnownAccount[]> {

@@ -75,10 +75,12 @@ export type ChangeRepDialogData = {
                             style="word-break: break-all; font-family: monospace"
                             [innerHTML]="util.formatHtmlAddress(data.currentRep)"
                         ></div>
-                        <ng-container
-                            *ngTemplateOutlet="metadata; context: { metadata: currentRepresentativeMetaData }"
-                        >
-                        </ng-container>
+                        <div class="first-page-rep-metadata">
+                            <ng-container
+                                *ngTemplateOutlet="metadata; context: { metadata: currentRepresentativeMetaData }"
+                            >
+                            </ng-container>
+                        </div>
                     </ng-container>
 
                     <ng-container *ngIf="activeStep === 1">

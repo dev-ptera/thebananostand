@@ -14,7 +14,6 @@ import { LedgerService } from '@app/services/ledger.service';
 import { ReceiveDialogComponent } from '@app/pages/account/dialogs/receive/receive-dialog.component';
 import { ThemeService } from '@app/services/theme.service';
 import { ConfirmedTx } from '@app/types/ConfirmedTx';
-import { AccountInsights } from '@app/types/AccountInsights';
 import { RpcService } from '@app/services/rpc.service';
 import { environment } from '../../../environments/environment';
 import { FilterDialogComponent, FilterDialogData } from '@app/pages/account/dialogs/filter/filter-dialog.component';
@@ -35,7 +34,6 @@ export class AccountComponent implements OnInit, OnDestroy {
     colors = Colors;
     ds: MyDataSource;
     account: AccountOverview;
-    insights: AccountInsights;
 
     hideTransactionFilters: boolean;
     isLoadingHeight = false;
@@ -198,9 +196,6 @@ export class AccountComponent implements OnInit, OnDestroy {
                 this.accountHeight = height;
                 this.hideTransactionFilters = height >= 100_000 || height === 0;
                 this.isLoadingHeight = false;
-                if (this.accountHeight > 0) {
-                    this._searchAccountInsights();
-                }
                 this.createNewDataSource();
             })
             .catch((err) => {
@@ -251,22 +246,6 @@ export class AccountComponent implements OnInit, OnDestroy {
                 this._ref.detectChanges();
             }
         }
-    }
-
-    /** Fetch insights from Spyglass API. */
-    private _searchAccountInsights(): void {
-        if (this.hideTransactionFilters) {
-            return;
-        }
-
-        this._spyglassService
-            .getAccountInsights(this.address)
-            .then((data) => {
-                this.insights = data;
-            })
-            .catch((err) => {
-                console.error(err);
-            });
     }
 
     isRepOffline(address: string): boolean {
