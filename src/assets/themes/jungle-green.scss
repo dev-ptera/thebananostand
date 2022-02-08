@@ -54,6 +54,7 @@ $jungle-green-theme: map-merge(
     @include blui-component-theme.blui-components-theme($jungle-green-theme);
     @include blueTheme.bluetheme($jungle-green-theme);
     @include fonts.bodyfont();
+    @include common.common();
 
     .blui-user-menu-avatar {
         color: map-get(blui.$blui-white, 500) !important;

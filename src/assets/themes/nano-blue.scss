@@ -54,6 +54,7 @@ $nano-blue: map-merge(
     @include blui-component-theme.blui-components-theme($nano-blue);
     @include blueTheme.bluetheme($nano-blue);
     @include fonts.bodyfont();
+    @include common.common();
     .blui-user-menu-avatar {
         color: map-get(blui.$blui-white, 500) !important;
     }
