@@ -1,96 +1,113 @@
-@import '~@brightlayer-ui/colors/palette';
-@import '~@angular/material/_theming.scss';
+@use 'node_modules/@brightlayer-ui/colors/palette' as blui;
+@use 'node_modules/@angular/material' as mat;
 
-$material-theme-primary: mat-palette($blui-yellow, 500);
-$material-theme-accent: mat-palette($blui-yellow, 500);
-$material-theme-warn: mat-palette($blui-red, 500);
+@use 'node_modules/@brightlayer-ui/angular-themes/blui-component-theme';
+@use 'node_modules/@brightlayer-ui/angular-themes/darkTheme';
+@use 'node_modules/@brightlayer-ui/angular-themes/margins';
+@use 'node_modules/@brightlayer-ui/angular-themes/fonts';
+@use 'node_modules/@brightlayer-ui/angular-themes/common';
+
+$material-theme-primary: mat.define-palette(blui.$blui-yellow, 500);
+$material-theme-accent: mat.define-palette(blui.$blui-yellow, 500);
+$material-theme-warn: mat.define-palette(blui.$blui-red, 500);
 $banano-yellow: map-merge(
-    mat-dark-theme($material-theme-primary, $material-theme-warn, $material-theme-warn),
+    mat.define-dark-theme($material-theme-primary, $material-theme-warn, $material-theme-warn),
     (
         foreground: (
-            text: map-get($blui-black, 50),
-            secondary-text: map-get($blui-black, 200),
-            hint-text: map-get($blui-gray, 300),
-            base: map-get($blui-white, 50),
-            divider: rgba(map-get($blui-black, 200), 0.36),
-            dividers: rgba(map-get($blui-black, 200), 0.36),
-            disabled: rgba(map-get($blui-black, 300), 0.36),
+            text: map-get(blui.$blui-black, 50),
+            secondary-text: map-get(blui.$blui-black, 200),
+            hint-text: map-get(blui.$blui-gray, 300),
+            base: map-get(blui.$blui-white, 50),
+            divider: rgba(map-get(blui.$blui-black, 200), 0.36),
+            dividers: rgba(map-get(blui.$blui-black, 200), 0.36),
+            disabled: rgba(map-get(blui.$blui-black, 300), 0.36),
             disabled-button: rgba(black, 0.3),
-            disabled-text: rgba(map-get($blui-black, 300), 0.36),
-            elevation: map-get($blui-darkBlack, 900),
-            icon: map-get($blui-black, 50),
-            icons: map-get($blui-black, 50),
-            slider-min: map-get($blui-black, 50),
+            disabled-text: rgba(map-get(blui.$blui-black, 300), 0.36),
+            elevation: map-get(blui.$blui-darkBlack, 900),
+            icon: map-get(blui.$blui-black, 50),
+            icons: map-get(blui.$blui-black, 50),
+            slider-min: map-get(blui.$blui-black, 50),
             slider-off: rgba(white, 0.3),
             slider-off-active: rgba(white, 0.3),
         ),
         background: (
-            status-bar: map-get($blui-darkBlack, 900),
-            app-bar: map-get($blui-darkBlack, 700),
-            background: map-get($blui-darkBlack, 300),
+            status-bar: map-get(blui.$blui-darkBlack, 900),
+            app-bar: map-get(blui.$blui-darkBlack, 700),
+            background: map-get(blui.$blui-darkBlack, 300),
             hover: rgba(white, 0.04),
-            card: map-get($blui-black, 900),
-            dialog: map-get($blui-black, 900),
+            card: map-get(blui.$blui-black, 900),
+            dialog: map-get(blui.$blui-black, 900),
             disabled-button: rgba(white, 0.12),
-            raised-button: map-get($blui-black, 500),
-            focused-button: $light-focused,
-            selected-button: map_get($mat-grey, 900),
-            selected-disabled-button: map_get($mat-grey, 800),
+            raised-button: map-get(blui.$blui-black, 500),
+            focused-button: mat.get-color-from-palette(mat.$dark-theme-background-palette, focused-button),
+            selected-button: mat.get-color-from-palette(mat.$dark-theme-background-palette, selected-button),
+            selected-disabled-button:
+                mat.get-color-from-palette(mat.$dark-theme-background-palette, selected-disabled-button),
             disabled-button-toggle: black,
-            unselected-chip: map_get($mat-grey, 700),
+            unselected-chip: mat.get-color-from-palette(mat.$dark-theme-background-palette, unselected-chip),
             disabled-list-option: black,
         ),
     )
 );
 
-.mat-mini-fab.mat-primary,
-.mat-raised-button.mat-primary,
-.mat-flat-button.mat-primary,
-.blui-info-list-item .blui-list-item-tag-label {
-    color: map-get($blui-black, 700) !important;
-}
+.banano-yellow {
+    @include mat.all-component-themes($banano-yellow);
+    @include blui-component-theme.blui-components-theme($banano-yellow);
+    @include darkTheme.darktheme($banano-yellow);
+    @include fonts.bodyfont();
 
-.mat-toolbar.mat-primary {
-    color: map-get($blui-black, 50) !important;
-    background: #0c0c0c !important;
-    * {
-        color: map-get($blui-black, 50) !important;
+    //   background-color: #FEFFF6;
+    //    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='250' viewBox='0 0 1080 900'%3E%3Cg fill-opacity='0.04'%3E%3Cpolygon fill='%23444' points='90 150 0 300 180 300'/%3E%3Cpolygon points='90 150 180 0 0 0'/%3E%3Cpolygon fill='%23AAA' points='270 150 360 0 180 0'/%3E%3Cpolygon fill='%23DDD' points='450 150 360 300 540 300'/%3E%3Cpolygon fill='%23999' points='450 150 540 0 360 0'/%3E%3Cpolygon points='630 150 540 300 720 300'/%3E%3Cpolygon fill='%23DDD' points='630 150 720 0 540 0'/%3E%3Cpolygon fill='%23444' points='810 150 720 300 900 300'/%3E%3Cpolygon fill='%23FFF' points='810 150 900 0 720 0'/%3E%3Cpolygon fill='%23DDD' points='990 150 900 300 1080 300'/%3E%3Cpolygon fill='%23444' points='990 150 1080 0 900 0'/%3E%3Cpolygon fill='%23DDD' points='90 450 0 600 180 600'/%3E%3Cpolygon points='90 450 180 300 0 300'/%3E%3Cpolygon fill='%23666' points='270 450 180 600 360 600'/%3E%3Cpolygon fill='%23AAA' points='270 450 360 300 180 300'/%3E%3Cpolygon fill='%23DDD' points='450 450 360 600 540 600'/%3E%3Cpolygon fill='%23999' points='450 450 540 300 360 300'/%3E%3Cpolygon fill='%23999' points='630 450 540 600 720 600'/%3E%3Cpolygon fill='%23FFF' points='630 450 720 300 540 300'/%3E%3Cpolygon points='810 450 720 600 900 600'/%3E%3Cpolygon fill='%23DDD' points='810 450 900 300 720 300'/%3E%3Cpolygon fill='%23AAA' points='990 450 900 600 1080 600'/%3E%3Cpolygon fill='%23444' points='990 450 1080 300 900 300'/%3E%3Cpolygon fill='%23222' points='90 750 0 900 180 900'/%3E%3Cpolygon points='270 750 180 900 360 900'/%3E%3Cpolygon fill='%23DDD' points='270 750 360 600 180 600'/%3E%3Cpolygon points='450 750 540 600 360 600'/%3E%3Cpolygon points='630 750 540 900 720 900'/%3E%3Cpolygon fill='%23444' points='630 750 720 600 540 600'/%3E%3Cpolygon fill='%23AAA' points='810 750 720 900 900 900'/%3E%3Cpolygon fill='%23666' points='810 750 900 600 720 600'/%3E%3Cpolygon fill='%23999' points='990 750 900 900 1080 900'/%3E%3Cpolygon fill='%23999' points='180 0 90 150 270 150'/%3E%3Cpolygon fill='%23444' points='360 0 270 150 450 150'/%3E%3Cpolygon fill='%23FFF' points='540 0 450 150 630 150'/%3E%3Cpolygon points='900 0 810 150 990 150'/%3E%3Cpolygon fill='%23222' points='0 300 -90 450 90 450'/%3E%3Cpolygon fill='%23FFF' points='0 300 90 150 -90 150'/%3E%3Cpolygon fill='%23FFF' points='180 300 90 450 270 450'/%3E%3Cpolygon fill='%23666' points='180 300 270 150 90 150'/%3E%3Cpolygon fill='%23222' points='360 300 270 450 450 450'/%3E%3Cpolygon fill='%23FFF' points='360 300 450 150 270 150'/%3E%3Cpolygon fill='%23444' points='540 300 450 450 630 450'/%3E%3Cpolygon fill='%23222' points='540 300 630 150 450 150'/%3E%3Cpolygon fill='%23AAA' points='720 300 630 450 810 450'/%3E%3Cpolygon fill='%23666' points='720 300 810 150 630 150'/%3E%3Cpolygon fill='%23FFF' points='900 300 810 450 990 450'/%3E%3Cpolygon fill='%23999' points='900 300 990 150 810 150'/%3E%3Cpolygon points='0 600 -90 750 90 750'/%3E%3Cpolygon fill='%23666' points='0 600 90 450 -90 450'/%3E%3Cpolygon fill='%23AAA' points='180 600 90 750 270 750'/%3E%3Cpolygon fill='%23444' points='180 600 270 450 90 450'/%3E%3Cpolygon fill='%23444' points='360 600 270 750 450 750'/%3E%3Cpolygon fill='%23999' points='360 600 450 450 270 450'/%3E%3Cpolygon fill='%23666' points='540 600 630 450 450 450'/%3E%3Cpolygon fill='%23222' points='720 600 630 750 810 750'/%3E%3Cpolygon fill='%23FFF' points='900 600 810 750 990 750'/%3E%3Cpolygon fill='%23222' points='900 600 990 450 810 450'/%3E%3Cpolygon fill='%23DDD' points='0 900 90 750 -90 750'/%3E%3Cpolygon fill='%23444' points='180 900 270 750 90 750'/%3E%3Cpolygon fill='%23FFF' points='360 900 450 750 270 750'/%3E%3Cpolygon fill='%23AAA' points='540 900 630 750 450 750'/%3E%3Cpolygon fill='%23FFF' points='720 900 810 750 630 750'/%3E%3Cpolygon fill='%23222' points='900 900 990 750 810 750'/%3E%3Cpolygon fill='%23222' points='1080 300 990 450 1170 450'/%3E%3Cpolygon fill='%23FFF' points='1080 300 1170 150 990 150'/%3E%3Cpolygon points='1080 600 990 750 1170 750'/%3E%3Cpolygon fill='%23666' points='1080 600 1170 450 990 450'/%3E%3Cpolygon fill='%23DDD' points='1080 900 1170 750 990 750'/%3E%3C/g%3E%3C/svg%3E");
+
+    .mat-mini-fab.mat-primary,
+    .mat-raised-button.mat-primary,
+    .mat-flat-button.mat-primary,
+    .blui-info-list-item .blui-list-item-tag-label {
+        color: map-get(blui.$blui-black, 700) !important;
     }
 
-    .blui-user-menu-header-title {
-        color: map-get($blui-black, 50) !important;
+    .mat-toolbar.mat-primary {
+        color: map-get(blui.$blui-black, 50) !important;
+        background: #0c0c0c !important;
+        * {
+            color: map-get(blui.$blui-black, 50) !important;
+        }
+
+        .blui-user-menu-header-title {
+            color: map-get(blui.$blui-black, 50) !important;
+        }
     }
-}
 
-.tx-state-icon .mat-icon {
-    color: map-get($blui-yellow, 500) !important;
-}
+    .tx-state-icon .mat-icon {
+        color: map-get(blui.$blui-yellow, 500) !important;
+    }
 
-#qr-code {
-    border: solid 1px map-get($blui-yellow, 500);
-}
+    #qr-code {
+        border: solid 1px map-get(blui.$blui-yellow, 500);
+    }
 
-.link {
-    color: map-get($blui-yellow, 500);
-}
+    .link {
+        color: map-get(blui.$blui-yellow, 500);
+    }
 
-.accounts-hash-link {
-    color: map-get($blui-black, 200);
-}
+    .accounts-hash-link {
+        color: map-get(blui.$blui-black, 200);
+    }
 
-.rep-offline-banner {
-    background-color: map-get($blui-red, 300) !important;
-    color: black !important;
-}
+    .rep-offline-banner {
+        background-color: map-get(blui.$blui-red, 300) !important;
+        color: black !important;
+    }
 
-.mat-stroked-button.mat-primary:not(.mat-button-disabled) {
-    color: map-get($blui-yellow, 500) !important;
-    border-color: map-get($blui-yellow, 500) !important;
-}
+    .mat-stroked-button.mat-primary:not(.mat-button-disabled) {
+        color: map-get(blui.$blui-yellow, 500) !important;
+        border-color: map-get(blui.$blui-yellow, 500) !important;
+    }
 
-.blui-list-item-tag.rep-offline-tag .blui-list-item-tag-label {
-    color: map-get($blui-black, 50) !important;
-}
-.mat-flat-button.mat-primary.mat-button-disabled {
-    color: #808588 !important;
+    .blui-list-item-tag.rep-offline-tag .blui-list-item-tag-label {
+        color: map-get(blui.$blui-black, 50) !important;
+    }
+    .mat-flat-button.mat-primary.mat-button-disabled {
+        color: #808588 !important;
+    }
 }

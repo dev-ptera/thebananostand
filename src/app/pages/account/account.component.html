@@ -77,7 +77,11 @@
                         refresh
                     </mat-icon>
                 </div>
-                <div style="display: flex; align-items: center; align-items: center" *ngIf="!hideTransactionFilters" class="fade">
+                <div
+                    style="display: flex; align-items: center; align-items: center"
+                    *ngIf="!hideTransactionFilters"
+                    class="fade"
+                >
                     <div class="mat-subheading-2" style="margin: 0; margin-right: 12px">Transaction Filters</div>
                     <mat-icon style="cursor: pointer" (click)="openFilterDialog()">
                         {{ isFilterApplied() ? 'filter_list' : 'filter_list_off' }}
@@ -85,41 +89,36 @@
                 </div>
             </div>
 
-            <div *ngIf="showLoadingEmptyState() || showNoFilteredResultsEmptyState() || unopenedAccount"
-                 class="empty-states"
-                 [class.slow-fade-in]="showLoadingEmptyState()">
+            <div
+                *ngIf="showLoadingEmptyState() || showNoFilteredResultsEmptyState() || unopenedAccount"
+                class="empty-states"
+                [class.slow-fade-in]="showLoadingEmptyState()"
+            >
                 <ng-container *ngIf="showNoFilteredResultsEmptyState()">
                     <mat-divider></mat-divider>
-                    <blui-empty-state
-                        style="margin-top: 96px">
+                    <blui-empty-state style="margin-top: 96px">
                         <mat-icon blui-empty-icon>waterfall_chart</mat-icon>
                         <div blui-title>No Results</div>
                         <div blui-description>
-                            No transactions meet your filter criteria.
-                            Please adjust your filters and try again.</div>
+                            No transactions meet your filter criteria. Please adjust your filters and try again.
+                        </div>
                     </blui-empty-state>
                 </ng-container>
                 <ng-container *ngIf="unopenedAccount">
                     <mat-divider></mat-divider>
-                    <blui-empty-state
-                        style="margin-top: 96px">
+                    <blui-empty-state style="margin-top: 96px">
                         <mat-icon blui-empty-icon>no_accounts</mat-icon>
                         <div blui-title>Unopened Account</div>
                         <div blui-description>
-                            This account has not been opened yet.
-                            To open this account, it must receive an incoming transaction.
+                            This account has not been opened yet. To open this account, it must receive an incoming
+                            transaction.
                         </div>
                     </blui-empty-state>
                 </ng-container>
                 <ng-container *ngIf="showLoadingEmptyState()">
                     <mat-divider></mat-divider>
 
-
-
-                    <mat-progress-bar
-                        *ngIf="showLoadingEmptyState()"
-                        color="primary"
-                        mode="indeterminate">
+                    <mat-progress-bar *ngIf="showLoadingEmptyState()" color="primary" mode="indeterminate">
                     </mat-progress-bar>
                     <!--
                     <blui-empty-state

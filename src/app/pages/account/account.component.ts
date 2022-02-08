@@ -309,10 +309,10 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     showLoadingEmptyState(): boolean {
-       return this.isLoadingHeight || (this.ds && !this.ds.firstPageLoaded)
+        return this.isLoadingHeight || (this.ds && !this.ds.firstPageLoaded);
     }
 
     showNoFilteredResultsEmptyState(): boolean {
-        return this.isFilterApplied() && (this.ds && this.ds.firstPageLoaded && this.ds._cachedData.length === 0)
+        return this.isFilterApplied() && this.ds && this.ds.firstPageLoaded && this.ds._cachedData.length === 0;
     }
 }

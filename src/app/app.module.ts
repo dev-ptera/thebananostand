@@ -48,7 +48,7 @@ import { ReceiveDialogComponent } from '@app/pages/account/dialogs/receive/recei
 import { AppUserMenuComponent } from '@app/components/user-menu.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { FilterDialogComponent } from '@app/pages/account/dialogs/filter/filter-dialog.component';
-import {MatProgressBarModule} from "@angular/material/progress-bar";
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
     declarations: [
