@@ -4,10 +4,13 @@ import { AccountService } from '@app/services/account.service';
 import { ViewportService } from '@app/services/viewport.service';
 import { SpyglassService } from '@app/services/spyglass.service';
 import { LedgerService } from '@app/services/ledger.service';
+import {MatDialog} from "@angular/material/dialog";
+import {SeedDialogComponent} from "@app/pages/home/seed/seed-dialog.component";
 
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
+    styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
     isLedgerLoaded: boolean;
@@ -20,7 +23,8 @@ export class HomeComponent implements OnInit {
         private readonly _apiService: SpyglassService,
         private readonly _ledgerService: LedgerService,
         private readonly _accountService: AccountService,
-        private readonly _viewportService: ViewportService
+        private readonly _viewportService: ViewportService,
+        private readonly _dialog: MatDialog,
     ) {}
 
     ngOnInit(): void {
@@ -35,6 +39,10 @@ export class HomeComponent implements OnInit {
 
     openLedgerHomePage(): void {
         window.open('https://www.ledger.com/');
+    }
+
+    openEnterSeedDialog(): void {
+        this._dialog.open(SeedDialogComponent);
     }
 
     connectLedger(): void {

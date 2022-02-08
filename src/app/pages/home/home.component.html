@@ -8,6 +8,55 @@
     </mat-toolbar>
     <div class="app-body">
         <div class="app-body-content">
+
+            <ng-container  *ngIf="!isLedgerLoaded">
+
+                <div style="text-align: center; margin-top: 32px">
+                    <div class="mat-display-1" style="display: flex; align-items: center; margin-bottom: 0; justify-content: center">
+                        <mat-icon [style.color]="colors.yellow[300]" style="margin-right: 24px; margin-top: -8px; font-size: 36px;">
+                            storefront
+                        </mat-icon>
+                        The Banano Stand
+                    </div>
+                    <div class="mat-subheading-2" style="width: 100%">
+                        The Banano Stand is an online wallet used to send or receive Banano.
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-wrap: wrap; justify-content: center">
+                    <mat-card>
+                        <blui-empty-state>
+                            <mat-icon blui-empty-icon>lock</mat-icon>
+                            <div blui-title>Seed / Mnemonic</div>
+                            <div blui-description>
+                                Enter your seed or mnemonic phrase to view accounts.
+                            </div>
+                            <button mat-flat-button blui-actions color="primary" [disabled]="loading" (click)="openEnterSeedDialog()">
+                                Enter Secret
+                            </button>
+                        </blui-empty-state>
+                    </mat-card>
+
+                    <mat-card>
+                        <blui-empty-state>
+                            <mat-icon blui-empty-icon>usb</mat-icon>
+                            <div blui-title>Nano Ledger</div>
+                            <div blui-description>
+                                Load accounts by reading data from a USB-connected <span class="link" (click)="openLedgerHomePage()">Ledger</span>
+                                device.
+                            </div>
+                            <button mat-flat-button blui-actions color="primary" [disabled]="loading" (click)="connectLedger()">
+                                Load Accounts
+                            </button>
+                        </blui-empty-state>
+
+                    </mat-card>
+                </div>
+
+
+            </ng-container>
+
+            <!--
             <blui-empty-state style="margin-top: 64px" *ngIf="!isLedgerLoaded">
                 <mat-icon blui-empty-icon>usb</mat-icon>
                 <div blui-title>Please Connect Your Ledger</div>
@@ -40,6 +89,7 @@
                     <div><strong>#6</strong>: Click the Load Accounts button above.</div>
                 </div>
             </div>
+            -->
             <app-dashboard *ngIf="isLedgerLoaded"></app-dashboard>
             <strong style="visibility: hidden"><!-- Load error font styles --></strong>
         </div>
