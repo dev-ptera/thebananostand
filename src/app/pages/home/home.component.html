@@ -9,7 +9,7 @@
     <div class="app-body">
         <div class="app-body-content">
 
-            <ng-container  *ngIf="!isLedgerLoaded">
+            <ng-container  *ngIf="!showDashboard()">
 
                 <div style="text-align: center; margin-top: 32px">
                     <div class="mat-display-1" style="display: flex; align-items: center; margin-bottom: 0; justify-content: center">
@@ -31,7 +31,7 @@
                             <div blui-description>
                                 Enter your seed or mnemonic phrase to view accounts.
                             </div>
-                            <button mat-flat-button blui-actions color="primary" [disabled]="loading" (click)="openEnterSeedDialog()">
+                            <button mat-flat-button blui-actions color="primary" [disabled]="isLoading" (click)="openEnterSeedDialog()">
                                 Enter Secret
                             </button>
                         </blui-empty-state>
@@ -45,7 +45,7 @@
                                 Load accounts by reading data from a USB-connected <span class="link" (click)="openLedgerHomePage()">Ledger</span>
                                 device.
                             </div>
-                            <button mat-flat-button blui-actions color="primary" [disabled]="loading" (click)="connectLedger()">
+                            <button mat-flat-button blui-actions color="primary" [disabled]="isLoading" (click)="connectLedger()">
                                 Load Accounts
                             </button>
                         </blui-empty-state>
@@ -69,13 +69,15 @@
                     Load Accounts
                 </button>
             </blui-empty-state>
-            <div style="margin-top: 32px; min-width: 584px" *ngIf="err">
+            -->
+
+            <div style="margin-top: 32px; min-width: 584px" *ngIf="ledgerLoadErrorMessage" [@fade]="'active'">
                 <mat-divider></mat-divider>
-                <div style="color: red; margin-top: 32px"><strong>ERROR:</strong> {{ err }}</div>
-                <span style="text-decoration: underline; cursor: pointer" (click)="showHelperText = true">
+                <div style="color: red; margin-top: 32px"><strong>ERROR:</strong> {{ ledgerLoadErrorMessage }}</div>
+                <span style="text-decoration: underline; cursor: pointer" (click)="isShowLedgerLoadHelperText = true">
                     Trouble Connecting?
                 </span>
-                <div *ngIf="showHelperText" style="margin-top: 32px">
+                <div *ngIf="isShowLedgerLoadHelperText" style="margin-top: 32px" [@fade]="'active'">
                     <div style="margin-bottom: 16px">Follow these steps for help connecting your Ledger device:</div>
                     <div><strong>#1</strong>: Connect your Ledger Device via USB.</div>
                     <div>
@@ -89,8 +91,7 @@
                     <div><strong>#6</strong>: Click the Load Accounts button above.</div>
                 </div>
             </div>
-            -->
-            <app-dashboard *ngIf="isLedgerLoaded"></app-dashboard>
+            <app-dashboard *ngIf="showDashboard()"></app-dashboard>
             <strong style="visibility: hidden"><!-- Load error font styles --></strong>
         </div>
     </div>

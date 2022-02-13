@@ -3,13 +3,16 @@ import { Injectable } from '@angular/core';
 import { UtilService } from './util.service';
 import { environment } from '../../environments/environment';
 import { NanoClientService } from '@app/services/nano-client.service';
+import {SeedService} from "@app/services/seed.service";
 
 @Injectable({
     providedIn: 'root',
 })
-/** Services that use the ledger device. */
+/** Services that use the ledger device. */  // TODO MAYBE rename this to 'TransactionService'
 export class LedgerService {
-    constructor(private readonly _util: UtilService, private readonly _nanoClientService: NanoClientService) {}
+    constructor(private readonly _util: UtilService,
+                private readonly _seedService: SeedService,
+                private readonly _nanoClientService: NanoClientService) {}
 
     private _configApi(api): void {
         api.setUrl(this._nanoClientService.getRpcNode().nodeAddress);
@@ -48,7 +51,7 @@ export class LedgerService {
         this._configApi(bananodeApi);
         let representative = await bananodeApi.getAccountRepresentative(account);
         if (!representative) {
-            representative = account;
+            representative = 'ban_3batmanuenphd7osrez9c45b3uqw9d9u81ne8xa6m43e1py56y9p48ap69zg'; // TODO populate this via the rep scores API. For now default to batman
         }
         console.log('banano checkpending config', config);
         const loggingUtil = window.bananocoinBananojs.loggingUtil;
@@ -90,7 +93,7 @@ export class LedgerService {
             const isSupportedFlag = await TransportWebUSB.isSupported();
             console.log('connectLedger', 'isSupportedFlag', isSupportedFlag);
             // Check Ledger is connected & app is open:
-            await this.getLedgerAccount(0);
+            await this.getAccountFromIndex(0);
             return Promise.resolve();
         } catch (err) {
             console.error(err);
@@ -99,15 +102,28 @@ export class LedgerService {
     }
 
     /** Given an index, reads ledger device & returns an address. */
-    async getLedgerAccount(accountIndex: number): Promise<string> {
-        const accountData = await window.bananocoin.bananojsHw.getLedgerAccountData(accountIndex);
-        console.log('connectLedger', 'accountData', accountData);
-        const account = accountData.account;
-        return account;
+    async getAccountFromIndex(accountIndex: number): Promise<string> {
+        if (this.isUsingSecret()) {
+            const seed = this._seedService.seed;
+            const privateKey = await window.bananocoinBananojs.getPrivateKey(seed, accountIndex);
+            const publicKey = await window.bananocoinBananojs.getPublicKey(privateKey);
+            const account = window.bananocoinBananojs.getBananoAccount(publicKey);
+            return account;
+        } else {
+            const accountData = await window.bananocoin.bananojsHw.getLedgerAccountData(accountIndex);
+            console.log('connectLedger', 'accountData', accountData);
+            const account = accountData.account;
+            return account;
+        }
+    }
+
+    isUsingSecret(): boolean {
+        return Boolean(this._seedService.seed);
     }
 
     async getAccountSigner(index: number): any {
-        const accountSigner = await window.bananocoin.bananojsHw.getLedgerAccountSigner(index);
-        return accountSigner;
+        return this.isUsingSecret() ?
+            await window.bananocoinBananojs.getPrivateKey(this._seedService.seed, index) :
+            await window.bananocoin.bananojsHw.getLedgerAccountSigner(index);
     }
 }

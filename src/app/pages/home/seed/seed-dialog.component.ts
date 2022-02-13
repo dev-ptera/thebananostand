@@ -1,5 +1,5 @@
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { LedgerService } from '@app/services/ledger.service';
 import { AccountService } from '@app/services/account.service';
 import { SpyglassService } from '@app/services/spyglass.service';
@@ -13,10 +13,10 @@ import {SeedService} from "@app/services/seed.service";
         <div class="seed-dialog">
             <h1 mat-dialog-title>Enter Seed / Mnemonic</h1>
             <div mat-dialog-content style="margin-bottom: 16px; display: flex; flex: 1 1 0px; flex-direction: column">
-                <div style="margin-bottom: 8px">Your secret phrase never leaves this website.</div>
+                <div style="margin-bottom: 16px">Your secret phrase never leaves this website.</div>
                 <mat-form-field appearance="fill">
                     <mat-label>Seed or Mnemonic</mat-label>
-                    <textarea matInput placeholder="Secret Phrase" [(value)]="secret"></textarea>
+                    <textarea matInput placeholder="Secret Phrase" [(ngModel)]="secret"></textarea>
                 </mat-form-field>
                 <blui-spacer></blui-spacer>
                 <div style="display: flex; justify-content: space-between">
@@ -35,7 +35,7 @@ import {SeedService} from "@app/services/seed.service";
 })
 export class SeedDialogComponent {
 
-    secret: string;
+    secret = '';
 
     constructor(
         public util: UtilService,
@@ -52,6 +52,7 @@ export class SeedDialogComponent {
 
     addSeed(): void {
         this._seedService.storeSeed(this.secret);
-        this.dialogRef.close();
+        // TODO: Make sure seed is...legit?  Password protected, etc.
+        this.dialogRef.close(true);
     }
 }
