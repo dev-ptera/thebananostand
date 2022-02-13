@@ -24,19 +24,10 @@ import { FilterDialogComponent, FilterDialogData } from '@app/pages/account/dial
     styleUrls: ['./account.component.scss'],
 })
 export class AccountComponent implements OnInit, OnDestroy {
-    // This is set on page load using route.
-    address: string;
-
-    accountHeight: number;
-    warnBannerDismissed = false;
-    unopenedAccount = false;
 
     colors = Colors;
     ds: MyDataSource;
     account: AccountOverview;
-
-    hideTransactionFilters: boolean;
-    isLoadingHeight = false;
 
     filterData: FilterDialogData = {
         includeReceive: true,
@@ -46,6 +37,16 @@ export class AccountComponent implements OnInit, OnDestroy {
         maxAmount: undefined,
         filterAddresses: '',
     };
+
+    // This is set on page load using route.
+    address: string;
+
+    accountHeight: number;
+
+    unopenedAccount = false;
+    isLoadingHeight = false;
+    warnBannerDismissed = false;
+    hideTransactionFilters = false;
 
     constructor(
         public util: UtilService,

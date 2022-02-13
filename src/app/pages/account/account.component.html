@@ -32,10 +32,11 @@
                     </div>
                     <div style="display: flex">
                         <button
+                            blui-inline
                             mat-flat-button
                             color="primary"
-                            class="action-button"
                             (click)="receive()"
+                            style="margin-right: 16px"
                             [disabled]="account.pending.length === 0"
                         >
                             <mat-icon>download</mat-icon>
@@ -44,19 +45,20 @@
                         </button>
 
                         <button
+                            blui-inline
                             mat-flat-button
                             color="primary"
-                            class="action-button"
                             (click)="send()"
+                            style="margin-right: 16px"
                             [disabled]="account.balance === 0"
                         >
                             <mat-icon>upload</mat-icon>
                             <span>Send</span>
                         </button>
                         <button
+                            blui-inline
                             mat-flat-button
                             color="primary"
-                            class="action-button"
                             (click)="changeRep()"
                             [disabled]="!account.representative"
                         >

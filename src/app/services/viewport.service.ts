@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 
-// Use this service to get viewport size.
 @Injectable({
     providedIn: 'root',
 })
+/** Use this service to get screen size; can be used to trigger conditional styles. */
 export class ViewportService {
     breakpointSubscription: any;
     mobileViewport: boolean;

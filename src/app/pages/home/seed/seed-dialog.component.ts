@@ -4,6 +4,7 @@ import { LedgerService } from '@app/services/ledger.service';
 import { AccountService } from '@app/services/account.service';
 import { SpyglassService } from '@app/services/spyglass.service';
 import { UtilService } from '@app/services/util.service';
+import {SeedService} from "@app/services/seed.service";
 
 @Component({
     selector: 'app-seed-dialog',
@@ -15,7 +16,7 @@ import { UtilService } from '@app/services/util.service';
                 <div style="margin-bottom: 8px">Your secret phrase never leaves this website.</div>
                 <mat-form-field appearance="fill">
                     <mat-label>Seed or Mnemonic</mat-label>
-                    <textarea matInput placeholder="Ex. It makes me feel..."></textarea>
+                    <textarea matInput placeholder="Secret Phrase" [(value)]="secret"></textarea>
                 </mat-form-field>
                 <blui-spacer></blui-spacer>
                 <div style="display: flex; justify-content: space-between">
@@ -34,12 +35,15 @@ import { UtilService } from '@app/services/util.service';
 })
 export class SeedDialogComponent {
 
+    secret: string;
+
     constructor(
         public util: UtilService,
         public dialogRef: MatDialogRef<SeedDialogComponent>,
         private readonly _apiService: SpyglassService,
         private readonly _ledgerService: LedgerService,
-        private readonly _accountService: AccountService
+        private readonly _accountService: AccountService,
+        private readonly _seedService: SeedService,
     ) {}
 
     closeDialog(): void {
@@ -47,6 +51,7 @@ export class SeedDialogComponent {
     }
 
     addSeed(): void {
-        // TODO
+        this._seedService.storeSeed(this.secret);
+        this.dialogRef.close();
     }
 }

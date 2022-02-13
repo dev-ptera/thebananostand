@@ -8,6 +8,8 @@ import { RpcService } from '@app/services/rpc.service';
 @Injectable({
     providedIn: 'root',
 })
+
+/** This is the service used by Dashboard and Account pages to manage a user's session and display state info. */
 export class AccountService {
     /** Loaded ledger accounts, their rep, & respective balances.  */
     accounts: AccountOverview[] = [];
@@ -28,14 +30,14 @@ export class AccountService {
     localStorageAdvancedViewKey = 'HW_WALLET_POC_ADVANCED_VIEW';
 
     constructor(
-        private readonly _api: SpyglassService,
+        private readonly _spyglassApi: SpyglassService,
         private readonly _util: UtilService,
         private readonly _rpcService: RpcService,
         private readonly _ledgerService: LedgerService
     ) {}
 
     fetchOnlineRepresentatives(): void {
-        this._api
+        this._spyglassApi
             .getOnlineReps()
             .then((reps) => {
                 this.onlineRepresentatives = new Set(reps);
@@ -46,7 +48,7 @@ export class AccountService {
     }
 
     fetchRepresentativeAliases(): void {
-        this._api
+        this._spyglassApi
             .getRepresentativeAliases()
             .then((pairs) => {
                 pairs.map((pair) => {
@@ -59,7 +61,7 @@ export class AccountService {
     }
 
     fetchKnownAccounts(): void {
-        this._api
+        this._spyglassApi
             .getAllKnownAccounts()
             .then((pairs) => {
                 pairs.map((pair) => {
