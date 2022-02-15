@@ -1423,17 +1423,17 @@
   dependencies:
     package "^1.0.1"
 
-"@brightlayer-ui/angular-components@^7.0.0-beta.0":
-  version "7.0.0-beta.0"
-  resolved "https://registry.yarnpkg.com/@brightlayer-ui/angular-components/-/angular-components-7.0.0-beta.0.tgz#6e32771b1694bd9a2083042546935e73b84274b5"
-  integrity sha512-5MTPa1orHW5Dwt3eeib6FXOzbeosyLHBMQbebP2+t7fSoT9VRubbWlrMHgvx4zJtrm3K7Vqw3+EJ19uO9/ziqw==
+"@brightlayer-ui/angular-components@7.0.0-beta.1":
+  version "7.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@brightlayer-ui/angular-components/-/angular-components-7.0.0-beta.1.tgz#0abfb230fe5884c39d4deb77b6c6d7e3e142188d"
+  integrity sha512-QNUgRDR5aQJy8o7NCG7ZAHdtrhH40aOMtITHQK77zcDMZwGYloDBpqoswMYZUi2bDxz0DqjIUF5klNsOULcotw==
   dependencies:
     tslib "^2.0.0"
 
-"@brightlayer-ui/angular-themes@^7.0.0-beta.0":
-  version "7.0.0-beta.0"
-  resolved "https://registry.yarnpkg.com/@brightlayer-ui/angular-themes/-/angular-themes-7.0.0-beta.0.tgz#0b7c5f5bda1d04390d1ad62d6d2552220209e613"
-  integrity sha512-/QgUeZc3Yj2+6NceFAXHTbNmwoIiCDUfWepjpvd0akeXQGmQ4//D74aRt5h4Op6EUrg4WsrNZXjSrxszPJpYJw==
+"@brightlayer-ui/angular-themes@^7.0.0-beta.1":
+  version "7.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@brightlayer-ui/angular-themes/-/angular-themes-7.0.0-beta.1.tgz#3c35ac868ae55058fbbd9d6e2e961bab461fa26d"
+  integrity sha512-K/YA8ewzNTwjU82G01X9N28n7dPhvWZuufDcSca57zlKNKWy9UpqOlIR8PEWXFvOkbmNTPCPct7BIEMDTHHzdQ==
   dependencies:
     "@brightlayer-ui/colors" "^3.0.0"
     "@fontsource/open-sans" "^4.1.0"

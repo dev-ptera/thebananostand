@@ -1,5 +1,5 @@
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; height: 40px">
-    <div>
+    <div style="padding-left: 4px;">
         <button mat-mini-fab color="primary" (click)="addAccount()" [disabled]="loadingAccount">
             <mat-icon>add</mat-icon>
         </button>
@@ -35,12 +35,12 @@
         </button>
     </div>
 
-    <mat-slide-toggle color="primary" [(ngModel)]="isAdvancedView" (change)="exitEdit($event)"
-        >Advanced</mat-slide-toggle
-    >
+    <mat-slide-toggle color="primary" [(ngModel)]="isAdvancedView" (change)="exitEdit($event)">
+        Advanced
+    </mat-slide-toggle>
 </div>
-<mat-card>
-    <div style="margin-left: 16px; margin-bottom: 16px">
+<mat-card style="padding: 0">
+    <div style="margin-left: 16px; padding: 16px 0;">
         <mat-checkbox
             color="warn"
             *ngIf="isAdvancedView"
@@ -65,7 +65,7 @@
     </blui-empty-state>
 
     <mat-nav-list
-        style="max-height: 60vh; overflow: auto"
+        style="max-height: 60vh; overflow: auto; padding-top: 0"
         *ngIf="getAccounts().length > 0"
         [class.fade]="fade"
         [disableRipple]="disableRipple"
@@ -122,7 +122,8 @@
                     *ngIf="!account.representative"
                     label="Unopened Account"
                     class="unopened-account-tag"
-                    [backgroundColor]="colors.gold[500]"
+                    [fontColor]="colors.black[500]"
+                    [backgroundColor]="colors.gray[100]"
                 >
                 </blui-list-item-tag>
 

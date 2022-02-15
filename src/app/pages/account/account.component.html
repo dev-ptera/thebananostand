@@ -92,13 +92,13 @@
             </div>
 
             <div
-                *ngIf="showLoadingEmptyState() || showNoFilteredResultsEmptyState() || unopenedAccount"
+                *ngIf="showProgressBar() || showNoFilteredResultsEmptyState() || unopenedAccount"
                 class="empty-states"
-                [class.slow-fade-in]="showLoadingEmptyState()"
+                [class.slow-fade-in]="showProgressBar()"
             >
                 <ng-container *ngIf="showNoFilteredResultsEmptyState()">
                     <mat-divider></mat-divider>
-                    <blui-empty-state style="margin-top: 96px">
+                    <blui-empty-state style="margin-top: 72px">
                         <mat-icon blui-empty-icon>waterfall_chart</mat-icon>
                         <div blui-title>No Results</div>
                         <div blui-description>
@@ -108,7 +108,7 @@
                 </ng-container>
                 <ng-container *ngIf="unopenedAccount">
                     <mat-divider></mat-divider>
-                    <blui-empty-state style="margin-top: 96px">
+                    <blui-empty-state style="margin-top: 72px">
                         <mat-icon blui-empty-icon>no_accounts</mat-icon>
                         <div blui-title>Unopened Account</div>
                         <div blui-description>
@@ -117,21 +117,10 @@
                         </div>
                     </blui-empty-state>
                 </ng-container>
-                <ng-container *ngIf="showLoadingEmptyState()">
+                <ng-container *ngIf="showProgressBar()">
                     <mat-divider></mat-divider>
-
-                    <mat-progress-bar *ngIf="showLoadingEmptyState()" color="primary" mode="indeterminate">
+                    <mat-progress-bar *ngIf="showProgressBar()" color="primary" mode="indeterminate">
                     </mat-progress-bar>
-                    <!--
-                    <blui-empty-state
-                        style="margin-top: 96px">
-                        <mat-icon blui-empty-icon>pending</mat-icon>
-                        <div blui-title>Loading Data</div>
-                        <div blui-description>
-                            Hang in there, counting them nanners.
-                        </div>
-                    </blui-empty-state>
-                -->
                 </ng-container>
             </div>
 

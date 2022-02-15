@@ -203,6 +203,7 @@ export class AccountComponent implements OnInit, OnDestroy {
                 console.error(err);
                 if (err && err.error === 'Account not found') {
                     this.unopenedAccount = true;
+                    this.hideTransactionFilters = true;
                 }
                 this.isLoadingHeight = false;
             });
@@ -309,7 +310,7 @@ export class AccountComponent implements OnInit, OnDestroy {
         return Boolean(this.ds && this.ds.firstPageLoaded);
     }
 
-    showLoadingEmptyState(): boolean {
+    showProgressBar(): boolean {
         return this.isLoadingHeight || (this.ds && !this.ds.firstPageLoaded);
     }
 

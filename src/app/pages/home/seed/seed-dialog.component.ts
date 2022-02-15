@@ -16,10 +16,11 @@ import {SeedService} from "@app/services/seed.service";
                 <div style="margin-bottom: 16px">Your secret phrase never leaves this website.</div>
                 <mat-form-field appearance="fill">
                     <mat-label>Seed or Mnemonic</mat-label>
-                    <textarea matInput placeholder="Secret Phrase" [(ngModel)]="secret"></textarea>
+                    <textarea matInput placeholder="Secret Phrase" [(ngModel)]="secret" style="min-height: 120px"></textarea>
                 </mat-form-field>
                 <blui-spacer></blui-spacer>
-                <div style="display: flex; justify-content: space-between">
+                <mat-divider style="margin-left: -24px; margin-right: -24px"></mat-divider>
+                <div style="display: flex; justify-content: space-between; margin-top: 16px;">
                     <button color="primary" mat-stroked-button (click)="closeDialog()">Close</button>
                     <button
                         color="primary"

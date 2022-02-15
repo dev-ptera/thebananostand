@@ -72,7 +72,7 @@ export type ReceiveDialogData = {
                 </div>
 
                 <blui-spacer></blui-spacer>
-                <mat-divider></mat-divider>
+                <mat-divider style="margin-left: -24px; margin-right: -24px"></mat-divider>
                 <blui-mobile-stepper [activeStep]="activeStep" [steps]="maxSteps" variant="text">
                     <button mat-stroked-button blui-back-button color="primary" (click)="closeDialog()">Close</button>
                     <button
