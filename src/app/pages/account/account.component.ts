@@ -65,9 +65,6 @@ export class AccountComponent implements OnInit, OnDestroy {
         this.address = window.location.pathname.replace('/', '');
         this._setAccount();
         this._searchAccountTxHistory();
-        if (this._accountService.knownAccounts.size === 0) {
-            this._accountService.fetchKnownAccounts();
-        }
     }
 
     ngOnDestroy(): void {

@@ -73,8 +73,6 @@ export class HomeComponent implements OnInit {
             .then(() => {
                 this.isLedgerLoaded = true;
                 this.isShowLedgerLoadHelperText = false;
-                this._accountService.fetchOnlineRepresentatives();
-                this._accountService.fetchRepresentativeAliases();
             })
             .catch((err) => {
                 console.error(err);

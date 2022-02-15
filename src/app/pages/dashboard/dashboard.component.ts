@@ -44,6 +44,8 @@ export class DashboardComponent implements OnInit {
         if (this._accountService.accounts.length === 0) {
             void this.loadAccounts();
             this._accountService.fetchOnlineRepresentatives();
+            this._accountService.fetchRepresentativeAliases();
+            this._accountService.fetchKnownAccounts();
         }
     }
 
