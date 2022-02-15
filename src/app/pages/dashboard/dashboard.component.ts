@@ -43,6 +43,7 @@ export class DashboardComponent implements OnInit {
         this.isAdvancedView = this._accountService.isAdvancedView();
         if (this._accountService.accounts.length === 0) {
             void this.loadAccounts();
+            this._accountService.fetchOnlineRepresentatives();
         }
     }
 

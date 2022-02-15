@@ -13,7 +13,9 @@ import {SeedService} from "@app/services/seed.service";
         <div class="seed-dialog">
             <h1 mat-dialog-title>Enter Seed / Mnemonic</h1>
             <div mat-dialog-content style="margin-bottom: 16px; display: flex; flex: 1 1 0px; flex-direction: column">
-                <div style="margin-bottom: 16px">Your secret phrase never leaves this website.</div>
+                <div style="margin-bottom: 16px">Your secret phrase never leaves this website.
+                    <span class="mat-subheading-1">Only seed working for now.</span>
+                </div>
                 <mat-form-field appearance="fill">
                     <mat-label>Seed or Mnemonic</mat-label>
                     <textarea matInput placeholder="Secret Phrase" [(ngModel)]="secret" style="min-height: 120px"></textarea>
