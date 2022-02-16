@@ -24,7 +24,6 @@ import { FilterDialogComponent, FilterDialogData } from '@app/pages/account/dial
     styleUrls: ['./account.component.scss'],
 })
 export class AccountComponent implements OnInit, OnDestroy {
-
     colors = Colors;
     ds: MyDataSource;
     account: AccountOverview;

@@ -1430,10 +1430,10 @@
   dependencies:
     tslib "^2.0.0"
 
-"@brightlayer-ui/angular-themes@^7.0.0-beta.1":
-  version "7.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@brightlayer-ui/angular-themes/-/angular-themes-7.0.0-beta.1.tgz#3c35ac868ae55058fbbd9d6e2e961bab461fa26d"
-  integrity sha512-K/YA8ewzNTwjU82G01X9N28n7dPhvWZuufDcSca57zlKNKWy9UpqOlIR8PEWXFvOkbmNTPCPct7BIEMDTHHzdQ==
+"@brightlayer-ui/angular-themes@^7.0.0-beta.2":
+  version "7.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/@brightlayer-ui/angular-themes/-/angular-themes-7.0.0-beta.2.tgz#55da56bc8406915e6b9fd8865f846b267d9afad5"
+  integrity sha512-ZaxbF3oLjcKFC2cQUW0ko1bXE9sTV5RXpKB1/3qhgLEJoJYJNDIJKrXNIkr87GU+NkcvzElqVi0+fU6Dz86FIQ==
   dependencies:
     "@brightlayer-ui/colors" "^3.0.0"
     "@fontsource/open-sans" "^4.1.0"

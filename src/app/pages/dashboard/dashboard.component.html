@@ -1,5 +1,14 @@
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; height: 40px; margin-top: 24px;">
-    <div style="padding-left: 4px;">
+<div
+    style="
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        height: 40px;
+        margin-top: 24px;
+    "
+>
+    <div style="padding-left: 4px">
         <button mat-mini-fab color="primary" (click)="addAccount()" [disabled]="loadingAccount">
             <mat-icon>add</mat-icon>
         </button>
@@ -40,7 +49,7 @@
     </mat-slide-toggle>
 </div>
 <mat-card style="padding: 0; display: flex; flex-direction: column">
-    <div style="margin-left: 16px; padding: 16px 0;">
+    <div style="margin-left: 16px; padding: 16px 0">
         <mat-checkbox
             color="warn"
             *ngIf="isAdvancedView"

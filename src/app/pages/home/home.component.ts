@@ -4,9 +4,9 @@ import { AccountService } from '@app/services/account.service';
 import { ViewportService } from '@app/services/viewport.service';
 import { SpyglassService } from '@app/services/spyglass.service';
 import { LedgerService } from '@app/services/ledger.service';
-import {MatDialog} from "@angular/material/dialog";
-import {SeedDialogComponent} from "@app/pages/home/seed/seed-dialog.component";
-import {animate, style, transition, trigger} from "@angular/animations";
+import { MatDialog } from '@angular/material/dialog';
+import { SeedDialogComponent } from '@app/pages/home/seed/seed-dialog.component';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
     selector: 'app-home',
@@ -14,18 +14,16 @@ import {animate, style, transition, trigger} from "@angular/animations";
     styleUrls: ['./home.component.scss'],
     animations: [
         trigger('fade', [
-            transition('void => active', [ // using status here for transition
+            transition('void => active', [
+                // using status here for transition
                 style({ opacity: 0 }),
-                animate(120, style({ opacity: 1 }))
+                animate(120, style({ opacity: 1 })),
             ]),
-            transition('* => void', [
-                animate(120, style({ opacity: 0 }))
-            ])
-        ])
-    ]
+            transition('* => void', [animate(120, style({ opacity: 0 }))]),
+        ]),
+    ],
 })
 export class HomeComponent implements OnInit {
-
     colors = Colors;
 
     isLoading = false;
@@ -40,7 +38,7 @@ export class HomeComponent implements OnInit {
         private readonly _apiService: SpyglassService,
         private readonly _ledgerService: LedgerService,
         private readonly _accountService: AccountService,
-        private readonly _viewportService: ViewportService,
+        private readonly _viewportService: ViewportService
     ) {}
 
     ngOnInit(): void {

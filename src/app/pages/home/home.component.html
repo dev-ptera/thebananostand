@@ -7,24 +7,40 @@
         <app-user-menu></app-user-menu>
     </mat-toolbar>
 
-    <div class="app-body" *ngIf="showDashboard()">
+    <div class="app-body" *ngIf="showDashboard()" responsive>
         <div class="app-body-content">
             <app-dashboard></app-dashboard>
         </div>
     </div>
 
-    <div class="app-body" *ngIf="!showDashboard()">
+    <div class="app-body" *ngIf="!showDashboard()" responsive>
         <blui-spacer></blui-spacer>
 
-        <div style="width: 100vw; height: 100vh; position: fixed; display: flex; justify-content: center; align-items: center; z-index: -1">
+        <div
+            *ngIf="!isSmall()"
+            style="
+                width: 100vw;
+                height: 100vh;
+                position: fixed;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: -1;
+            "
+        >
             <img src="assets/bananas-svgrepo-com.svg" style="height: 87vh; margin-bottom: 13vh; margin-right: 40vw" />
         </div>
 
         <div class="app-body-content" style="justify-content: center; position: relative">
-
             <div style="text-align: center; margin-top: 32px">
-                <div class="mat-display-1" style="display: flex; align-items: center; margin-bottom: 0; justify-content: center">
-                    <mat-icon [style.color]="colors.yellow[300]" style="margin-right: 24px; margin-top: -8px; font-size: 36px;">
+                <div
+                    class="mat-display-1"
+                    style="display: flex; align-items: center; margin-bottom: 0; justify-content: center"
+                >
+                    <mat-icon
+                        [style.color]="colors.yellow[300]"
+                        style="margin-right: 24px; margin-top: -8px; font-size: 36px"
+                    >
                         storefront
                     </mat-icon>
                     The Banano Stand
@@ -41,9 +57,26 @@
                         <div blui-title>Seed / Mnemonic</div>
                         <div blui-description>
                             Enter your seed or mnemonic phrase to view accounts.
-                            <blui-list-item-tag style="position: absolute; z-index: 999 ;bottom: 55px; right: 88px; transform: rotate(45deg); width: 50px" [backgroundColor]="colors.gray[500]" label="beta"></blui-list-item-tag>
+                            <blui-list-item-tag
+                                style="
+                                    position: absolute;
+                                    z-index: 999;
+                                    bottom: 55px;
+                                    right: 88px;
+                                    transform: rotate(45deg);
+                                    width: 50px;
+                                "
+                                [backgroundColor]="colors.gray[500]"
+                                label="beta"
+                            ></blui-list-item-tag>
                         </div>
-                        <button mat-flat-button blui-actions color="primary" [disabled]="isLoading" (click)="openEnterSeedDialog()">
+                        <button
+                            mat-flat-button
+                            blui-actions
+                            color="primary"
+                            [disabled]="isLoading"
+                            (click)="openEnterSeedDialog()"
+                        >
                             Enter Secret
                         </button>
                     </blui-empty-state>
@@ -54,14 +87,20 @@
                         <mat-icon blui-empty-icon>usb</mat-icon>
                         <div blui-title>Nano Ledger</div>
                         <div blui-description>
-                            Load accounts by reading data from a USB-connected <span class="link" (click)="openLedgerHomePage()">Ledger</span>
+                            Load accounts by reading data from a USB-connected
+                            <span class="link" (click)="openLedgerHomePage()">Ledger</span>
                             device.
                         </div>
-                        <button mat-flat-button blui-actions color="primary" [disabled]="isLoading" (click)="connectLedger()">
+                        <button
+                            mat-flat-button
+                            blui-actions
+                            color="primary"
+                            [disabled]="isLoading"
+                            (click)="connectLedger()"
+                        >
                             Load Accounts
                         </button>
                     </blui-empty-state>
-
                 </mat-card>
             </div>
             <div style="margin-top: 32px; min-width: 584px" *ngIf="ledgerLoadErrorMessage" [@fade]="'active'">
@@ -87,12 +126,16 @@
             <strong style="visibility: hidden"><!-- Load error font styles --></strong>
         </div>
         <blui-spacer></blui-spacer>
-        <a
-            href="https://github.com/dev-ptera/thebananostand"
-            target="_blank"
-            style="text-align: center; margin: 8px 0px"
-            class="link"
-        >Github</a
-        >
+
+        <div style="display: flex; align-items: center">
+            <img src="assets/github-icon.svg" style="margin-right: 8px" />
+            <a
+                href="https://github.com/dev-ptera/thebananostand"
+                target="_blank"
+                style="text-align: center; margin: 8px 0px"
+                class="link"
+                >Github</a
+            >
+        </div>
     </div>
 </div>

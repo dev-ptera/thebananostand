@@ -17,7 +17,6 @@ import { AddIndexDialogComponent } from '@app/pages/dashboard/add-index/add-inde
     styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-
     colors = Colors;
 
     manualAddIndex: number;
