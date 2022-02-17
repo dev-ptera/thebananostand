@@ -21,7 +21,7 @@ export class SeedService {
     }
 
     async getSeed(): string {
-        const encryptedSeed = window.localStorage.getItem('encryptedSeed')
+        const encryptedSeed = window.localStorage.getItem('encryptedSeed');
         console.log('getSeed', 'encryptedSeed', encryptedSeed);
         const seed = await window.bananocoin.passwordUtils.decryptData(encryptedSeed, this.password);
         console.log('getSeed', 'seed', seed);

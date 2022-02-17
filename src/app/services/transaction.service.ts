@@ -14,7 +14,7 @@ export class TransactionService {
         private readonly _util: UtilService,
         private readonly _seedService: SeedService,
         private readonly _nanoClientService: NanoClientService
-    ) { }
+    ) {}
 
     private _configApi(api): void {
         api.setUrl(this._nanoClientService.getRpcNode().nodeAddress);
@@ -126,7 +126,7 @@ export class TransactionService {
         if (this.isUsingSecret()) {
             const seed = await this._seedService.getSeed();
             console.log('getAccountSigner', 'seed', seed);
-            return await window.bananocoinBananojs.getPrivateKey(seed, index)
+            return await window.bananocoinBananojs.getPrivateKey(seed, index);
         } else {
             return await window.bananocoin.bananojsHw.getLedgerAccountSigner(index);
         }
