@@ -51,6 +51,10 @@ export class HomeComponent implements OnInit {
         return this._viewportService.isSmall();
     }
 
+    isMedium(): boolean {
+        return this._viewportService.isMedium();
+    }
+
     openLedgerHomePage(): void {
         window.open('https://www.ledger.com/');
     }
