@@ -8,8 +8,8 @@ import { SeedService } from '@app/services/seed.service';
 @Injectable({
     providedIn: 'root',
 })
-/** Services that use the ledger device. */ // TODO MAYBE rename this to 'TransactionService'
-export class LedgerService {
+/** Services that handle send, receive, change transactions. */
+export class TransactionService {
     constructor(
         private readonly _util: UtilService,
         private readonly _seedService: SeedService,
@@ -19,13 +19,6 @@ export class LedgerService {
     private _configApi(api): void {
         api.setUrl(this._nanoClientService.getRpcNode().nodeAddress);
         api.setAuth(environment.token);
-    }
-
-    async storeSeed(seed: string, password: string): Promise<void> {
-
-        console.log('storeSeed', 'window.bananocoin', Object.keys(window.bananocoinBananojs));
-        //const encryptedSeed = await window.bananocoin.passwordUtils.encryptData(seed, password);
-        //window.localStorage.setItem('encryptedSeed', encryptedSeed);
     }
 
     /** Attempts a withdraw.  On success, returns transaction hash. */

@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { LedgerService } from '@app/services/ledger.service';
+import { TransactionService } from '@app/services/transaction.service';
 import { AccountService } from '@app/services/account.service';
 import { SpyglassService } from '@app/services/spyglass.service';
 import { UtilService } from '@app/services/util.service';
@@ -112,7 +112,7 @@ export class FilterDialogComponent {
         public dialogRef: MatDialogRef<FilterDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public originalData: FilterDialogData,
         private readonly _apiService: SpyglassService,
-        private readonly _ledgerService: LedgerService,
+        private readonly _transactionService: TransactionService,
         private readonly _accountService: AccountService
     ) {
         this.data = Object.assign({}, originalData);

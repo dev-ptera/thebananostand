@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as Colors from '@brightlayer-ui/colors';
 import { FormControl } from '@angular/forms';
-import { LedgerService } from '@app/services/ledger.service';
+import { TransactionService } from '@app/services/transaction.service';
 import { AccountService } from '@app/services/account.service';
 import { SpyglassService } from '@app/services/spyglass.service';
 import { UtilService } from '@app/services/util.service';
@@ -207,7 +207,7 @@ export class ChangeRepDialogComponent implements OnInit {
         public util: UtilService,
         public dialogRef: MatDialogRef<ChangeRepDialogComponent>,
         private readonly _apiService: SpyglassService,
-        private readonly _ledgerService: LedgerService,
+        private readonly _transactionService: TransactionService,
         private readonly _accountService: AccountService
     ) {}
 
@@ -283,7 +283,7 @@ export class ChangeRepDialogComponent implements OnInit {
 
     changeRepresentative(): void {
         this.loading = true;
-        this._ledgerService
+        this._transactionService
             .changeRepresentative(this.getUseSelectedRepresentative(), this.data.address, this.data.index)
             .then((response) => {
                 this.txHash = response;

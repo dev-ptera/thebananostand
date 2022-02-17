@@ -1,9 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as Colors from '@brightlayer-ui/colors';
-import { UtilService } from '@app/services/util.service';
 import { AccountService } from '@app/services/account.service';
-import { LedgerService } from '@app/services/ledger.service';
+import { TransactionService } from '@app/services/transaction.service';
 
 export type ReceiveDialogData = {
     address: string;
@@ -107,9 +106,8 @@ export class ReceiveDialogComponent implements OnInit {
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: ReceiveDialogData,
-        public util: UtilService,
         public dialogRef: MatDialogRef<ReceiveDialogComponent>,
-        private readonly _ledgerService: LedgerService,
+        private readonly _transactionService: TransactionService,
         private readonly _accountService: AccountService
     ) {}
 
@@ -130,12 +128,11 @@ export class ReceiveDialogComponent implements OnInit {
     receiveTransaction(): void {
         this.loading = true;
         const hash = this.data.blocks[this.activeStep];
-        this._ledgerService
+        this._transactionService
             .receive(this.data.address, this.data.index, hash)
             .then((hash) => {
                 this.loading = false;
                 this.txHash = hash;
-                //                console.log(`Transaction received, hash: ${hash}`);
                 this.activeStep++;
                 this.success = this.maxSteps === this.activeStep;
             })

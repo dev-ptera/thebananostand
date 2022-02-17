@@ -1,22 +1,20 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
-import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
-import { MyDataSource } from '@app/pages/account/datasource';
-import { ViewportService } from '@app/services/viewport.service';
-import { UtilService } from '@app/services/util.service';
-import { SpyglassService } from '@app/services/spyglass.service';
-import { AccountService } from '@app/services/account.service';
-import { SendDialogComponent } from './dialogs/send/send-dialog.component';
-import { ChangeRepDialogComponent } from './dialogs/change-rep/change-rep-dialog.component';
-import { AccountOverview } from '@app/types/AccountOverview';
-import { LedgerService } from '@app/services/ledger.service';
-import { ReceiveDialogComponent } from '@app/pages/account/dialogs/receive/receive-dialog.component';
-import { ThemeService } from '@app/services/theme.service';
-import { ConfirmedTx } from '@app/types/ConfirmedTx';
-import { RpcService } from '@app/services/rpc.service';
-import { environment } from '../../../environments/environment';
-import { FilterDialogComponent, FilterDialogData } from '@app/pages/account/dialogs/filter/filter-dialog.component';
+import {Router} from '@angular/router';
+import {MatDialog} from '@angular/material/dialog';
+import {MyDataSource} from '@app/pages/account/datasource';
+import {UtilService} from '@app/services/util.service';
+import {SpyglassService} from '@app/services/spyglass.service';
+import {AccountService} from '@app/services/account.service';
+import {SendDialogComponent} from './dialogs/send/send-dialog.component';
+import {ChangeRepDialogComponent} from './dialogs/change-rep/change-rep-dialog.component';
+import {AccountOverview} from '@app/types/AccountOverview';
+import {ReceiveDialogComponent} from '@app/pages/account/dialogs/receive/receive-dialog.component';
+import {ThemeService} from '@app/services/theme.service';
+import {ConfirmedTx} from '@app/types/ConfirmedTx';
+import {RpcService} from '@app/services/rpc.service';
+import {environment} from '../../../environments/environment';
+import {FilterDialogComponent, FilterDialogData} from '@app/pages/account/dialogs/filter/filter-dialog.component';
 
 @Component({
     selector: 'app-account',
@@ -54,9 +52,7 @@ export class AccountComponent implements OnInit, OnDestroy {
         private readonly _ref: ChangeDetectorRef,
         private readonly _rpcService: RpcService,
         private readonly _themeService: ThemeService,
-        private readonly _ledgerService: LedgerService,
         private readonly _accountService: AccountService,
-        private readonly _viewportService: ViewportService,
         private readonly _spyglassService: SpyglassService
     ) {}
 
@@ -207,7 +203,6 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     /** Creates a new datasource, taking into account any transaction filters. */
     createNewDataSource(): void {
-        //        console.log('new datasource');
         this._disconnectDatasource();
         this.ds = new MyDataSource(
             this.address,

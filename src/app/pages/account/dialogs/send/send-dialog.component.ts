@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as Colors from '@brightlayer-ui/colors';
 import { UtilService } from '@app/services/util.service';
 import { AccountService } from '@app/services/account.service';
-import { LedgerService } from '@app/services/ledger.service';
+import { TransactionService } from '@app/services/transaction.service';
 
 export type SendDialogData = {
     address: string;
@@ -149,7 +149,7 @@ export class SendDialogComponent {
         @Inject(MAT_DIALOG_DATA) public data: SendDialogData,
         public util: UtilService,
         public dialogRef: MatDialogRef<SendDialogComponent>,
-        private readonly _ledgerService: LedgerService,
+        private readonly _transactionService: TransactionService,
         private readonly _accountService: AccountService
     ) {}
 
@@ -187,7 +187,7 @@ export class SendDialogComponent {
 
     withdraw(): void {
         this.loading = true;
-        this._ledgerService
+        this._transactionService
             .withdraw(this.recipient, this.sendAmount, this.data.index)
             .then((hash) => {
                 this.txHash = hash;

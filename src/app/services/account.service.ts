@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LedgerService } from './ledger.service';
+import { TransactionService } from './transaction.service';
 import { SpyglassService } from './spyglass.service';
 import { UtilService } from './util.service';
 import { AccountOverview } from '@app/types/AccountOverview';
@@ -33,7 +33,7 @@ export class AccountService {
         private readonly _spyglassApi: SpyglassService,
         private readonly _util: UtilService,
         private readonly _rpcService: RpcService,
-        private readonly _ledgerService: LedgerService
+        private readonly _transactionService: TransactionService
     ) {}
 
     fetchOnlineRepresentatives(): void {

@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
 import { AccountService } from '@app/services/account.service';
 import { ViewportService } from '@app/services/viewport.service';
-import { SpyglassService } from '@app/services/spyglass.service';
-import { LedgerService } from '@app/services/ledger.service';
+import { TransactionService } from '@app/services/transaction.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SeedDialogComponent } from '@app/pages/home/seed/seed-dialog.component';
 import { animate, style, transition, trigger } from '@angular/animations';
@@ -35,8 +34,7 @@ export class HomeComponent implements OnInit {
 
     constructor(
         private readonly _dialog: MatDialog,
-        private readonly _apiService: SpyglassService,
-        private readonly _ledgerService: LedgerService,
+        private readonly _transactionService: TransactionService,
         private readonly _accountService: AccountService,
         private readonly _viewportService: ViewportService
     ) {}
@@ -70,7 +68,7 @@ export class HomeComponent implements OnInit {
 
     connectLedger(): void {
         this.ledgerLoadErrorMessage = undefined;
-        this._ledgerService
+        this._transactionService
             .checkLedgerOrError()
             .then(() => {
                 this.isLedgerLoaded = true;

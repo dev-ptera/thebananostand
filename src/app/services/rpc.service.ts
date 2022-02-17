@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UtilService } from './util.service';
 import { AccountInfoResponse } from '@dev-ptera/nano-node-rpc';
-import { LedgerService } from '@app/services/ledger.service';
+import { TransactionService } from '@app/services/./transaction.service';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { NanoClientService } from '@app/services/nano-client.service';
 
@@ -14,7 +14,7 @@ import { NanoClientService } from '@app/services/nano-client.service';
  * */
 export class RpcService {
     constructor(
-        private readonly _ledgerService: LedgerService,
+        private readonly _transactionService: TransactionService,
         private readonly _nanoClientService: NanoClientService,
         private readonly _util: UtilService
     ) {}
@@ -61,7 +61,7 @@ export class RpcService {
 
     /** Returns a modified account info object, given an index. */
     async getAccountInfo(index: number): Promise<AccountOverview> {
-        const address = await this._ledgerService.getAccountFromIndex(index);
+        const address = await this._transactionService.getAccountFromIndex(index);
         const [pending, accountInfoRpc] = await Promise.all([
             this.getReceivable(address),
             this._nanoClientService

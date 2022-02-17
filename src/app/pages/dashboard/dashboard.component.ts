@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
 import { Router } from '@angular/router';
-import { SpyglassService } from '@app/services/spyglass.service';
 import { UtilService } from '@app/services/util.service';
-import { LedgerService } from '@app/services/ledger.service';
 import { AccountService } from '@app/services/account.service';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { MatCheckboxChange } from '@angular/material/checkbox';
@@ -33,8 +31,6 @@ export class DashboardComponent implements OnInit {
         private readonly _router: Router,
         private readonly _dialog: MatDialog,
         private readonly _util: UtilService,
-        private readonly _api: SpyglassService,
-        private readonly _ledgerService: LedgerService,
         private readonly _accountService: AccountService
     ) {}
 

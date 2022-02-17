@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { LedgerService } from '@app/services/ledger.service';
+import { TransactionService } from '@app/services/transaction.service';
 import { AccountService } from '@app/services/account.service';
 import { SpyglassService } from '@app/services/spyglass.service';
 import { UtilService } from '@app/services/util.service';
@@ -54,7 +54,7 @@ export class SeedDialogComponent {
         public util: UtilService,
         public dialogRef: MatDialogRef<SeedDialogComponent>,
         private readonly _apiService: SpyglassService,
-        private readonly _ledgerService: LedgerService,
+        private readonly _transactionService: TransactionService,
         private readonly _accountService: AccountService,
         private readonly _seedService: SeedService
     ) {}
