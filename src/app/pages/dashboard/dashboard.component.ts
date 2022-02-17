@@ -17,14 +17,17 @@ import { AddIndexDialogComponent } from '@app/pages/dashboard/add-index/add-inde
     styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-    loadingAccount: boolean;
     colors = Colors;
-    isAdvancedView: boolean;
-    selectedItems: Set<number> = new Set();
+
     manualAddIndex: number;
-    disableRipple = false;
-    loadingAllAccounts: boolean;
+
     fade: boolean;
+    isAdvancedView: boolean;
+    loadingAccount: boolean;
+    loadingAllAccounts: boolean;
+    disableRipple = false;
+
+    selectedItems: Set<number> = new Set();
 
     constructor(
         private readonly _router: Router,
@@ -39,6 +42,11 @@ export class DashboardComponent implements OnInit {
         this.isAdvancedView = this._accountService.isAdvancedView();
         if (this._accountService.accounts.length === 0) {
             void this.loadAccounts();
+
+            // Supplemental information loaded on dashboard init.
+            this._accountService.fetchOnlineRepresentatives();
+            this._accountService.fetchRepresentativeAliases();
+            this._accountService.fetchKnownAccounts();
         }
     }
 

@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 @Injectable({
     providedIn: 'root',
 })
+/**
+ * This a generic utilities service.  Any one-off functions can be found here.
+ * */
 export class UtilService {
     numberWithCommas(x: number | string, precision = 6): string {
         if (!x && x !== 0) {

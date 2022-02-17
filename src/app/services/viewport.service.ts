@@ -1,22 +1,39 @@
 import { Injectable } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { Subject } from 'rxjs';
 
-// Use this service to get viewport size.
+export type Breakpoint = 'sm' | 'md' | undefined;
+
+@Injectable({
+    providedIn: 'root',
+})
+/** Use this service to get screen size; can be used to trigger conditional styles. */
 @Injectable({
     providedIn: 'root',
 })
 export class ViewportService {
+    breakpoint: Breakpoint;
     breakpointSubscription: any;
-    mobileViewport: boolean;
+    md: boolean;
+    sm: boolean;
 
+    vpChange = new Subject<Breakpoint>();
+
+    // Viewports are treated as mutually exclusive; a viewpoint cannot be 'sm' and 'md' at the same time.
     constructor(private readonly _breakpointObserver: BreakpointObserver) {
-        this.breakpointSubscription = this._breakpointObserver.observe(['(max-width: 599px)']).subscribe((result) => {
-            const small = Object.keys(result.breakpoints)[0];
-            this.mobileViewport = result.breakpoints[small];
-        });
+        this.breakpointSubscription = this._breakpointObserver
+            .observe(['(max-width: 1280px)', '(max-width: 750px)'])
+            .subscribe((result) => {
+                const md = Object.keys(result.breakpoints)[0];
+                const sm = Object.keys(result.breakpoints)[1];
+                this.sm = result.breakpoints[sm];
+                this.md = result.breakpoints[md] && !this.sm;
+                this.breakpoint = this.sm ? 'sm' : this.md ? 'md' : undefined;
+                this.vpChange.next(this.breakpoint);
+            });
     }
 
     isSmall(): boolean {
-        return this.mobileViewport;
+        return this.sm;
     }
 }

@@ -6,20 +6,24 @@ import { environment } from '../../environments/environment';
 @Injectable({
     providedIn: 'root',
 })
+
+/** NanoClientService manages the RPC data source for the app.  If one datasource is unavailable, a backup node is available.
+ * Currently defaults to use the Kalium node for all RPC requests.
+ * Backup is the Batman node. */
 export class NanoClientService {
-    private batman = 'https://node.dev-ptera.com/banano-rpc';
-    private kalium = 'https://kaliumapi.appditto.com/api';
+    private readonly batman = 'https://node.dev-ptera.com/banano-rpc';
+    private readonly kalium = 'https://kaliumapi.appditto.com/api';
 
     private RpcNode: NanoClient;
-    private activeDatasources = [];
-    private knownDatasources = [this.batman, this.kalium];
+    private readonly activeDataSources = [];
+    private readonly knownDataSources = [this.batman, this.kalium];
 
     constructor(http: HttpClient) {
-        this.knownDatasources.map((source) => {
+        this.knownDataSources.map((source) => {
             http.post(source, { action: 'block_count' })
                 .toPromise()
                 .then(() => {
-                    this.activeDatasources.push(source);
+                    this.activeDataSources.push(source);
 
                     // Defaults to choosing Kalium as the datasource.
                     if (source === this.kalium || (source !== this.kalium && !this.RpcNode)) {
@@ -38,12 +42,13 @@ export class NanoClientService {
         });
     }
 
+    /** Returns a NanoClient that can be used to fetch or submit network data via RPC commands. */
     getRpcNode(): any {
         if (this.RpcNode) {
             return this.RpcNode;
         }
         return new NanoClient({
-            url: this.knownDatasources[0],
+            url: this.knownDataSources[0],
             requestHeaders: {
                 authorization: environment.token,
             },

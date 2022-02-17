@@ -56,6 +56,7 @@
 }
 
 .scroll-container {
+    border: solid 1px #efefef;
     height: 60vh;
     width: 200px;
     border-radius: 4px;
@@ -64,17 +65,4 @@
 
 .ds-item {
     height: 50px;
-}
-
-.action-button {
-    display: flex;
-    align-items: end;
-    height: 36px;
-    margin-right: 16px;
-    mat-icon {
-        line-height: 24px;
-        font-size: 16px;
-        margin-left: -8px;
-        margin-right: 4px;
-    }
 }
