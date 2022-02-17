@@ -10,7 +10,7 @@
         "npm-check-updates": "npm-check-updates --target patch -u",
         "lint": "eslint \"src/**/**.ts\"",
         "lint:fix": "eslint \"src/**/**.ts\" --fix",
-        "preflight": "npm update;npm run npm-check-updates;npm run ng update;npm i;npm audit fix;npm run lint:fix; npm run prettier;npm outdated;",
+        "preflight": "npm update && npm run npm-check-updates && npm run ng update && npm i && npm audit fix && npm run lint:fix && npm run prettier && npm outdated",
         "prettier": "prettier \"src/**/**.{ts,js,json,css,scss,html}\" --write",
         "prettier:check": "prettier \"src/**/**.{ts,js,json,css,scss,html}\" --check"
     },
@@ -44,7 +44,7 @@
         "@brightlayer-ui/eslint-config": "^3.0.0",
         "@brightlayer-ui/prettier-config": "^1.0.3",
         "@types/jasmine": "~3.6.11",
-        "@types/node": "^12.11.7",
+        "@types/node": "^12.20.46",
         "@typescript-eslint/eslint-plugin": "^5.10.2",
         "@typescript-eslint/parser": "^5.10.2",
         "eslint": "^8.7.0",

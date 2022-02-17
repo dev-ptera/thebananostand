@@ -25,7 +25,7 @@ You can send/receive from all your accounts after the ledger is connected succes
 
 Please open an issue on the github or contact me directly at dev.ptera@gmail.com.
 
-## developer installation instructions:
+## Developer Installation Instructions:
 
     npm i;
     npm run preflight;
