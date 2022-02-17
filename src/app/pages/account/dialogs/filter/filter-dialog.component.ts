@@ -88,10 +88,15 @@ export type FilterDialogData = {
                 </mat-form-field>
 
                 <blui-spacer></blui-spacer>
-                <div style="display: flex; justify-content: space-between">
+                <mat-divider style="margin-left: -24px; margin-right: -24px"></mat-divider>
+                <div style="display: flex; justify-content: space-between; margin-top: 16px">
                     <button color="primary" mat-stroked-button (click)="closeDialog()">Close</button>
-                    <button color="primary" mat-flat-button (click)="apply()"
-                            [disabled]="!data.includeReceive && !data.includeChange && !data.includeSend">
+                    <button
+                        color="primary"
+                        mat-flat-button
+                        (click)="apply()"
+                        [disabled]="!data.includeReceive && !data.includeChange && !data.includeSend"
+                    >
                         Apply
                     </button>
                 </div>

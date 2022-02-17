@@ -1,23 +1,29 @@
-@import '~@brightlayer-ui/colors/palette';
-@import '~@angular/material/_theming.scss';
+@use 'node_modules/@brightlayer-ui/colors/palette' as blui;
+@use 'node_modules/@angular/material' as mat;
 
-$material-theme-primary: mat-palette($blui-green, 700);
-$material-theme-accent: mat-palette($blui-green, 900);
-$material-theme-warn: mat-palette($blui-red, 500);
+@use 'node_modules/@brightlayer-ui/angular-themes/blui-component-theme';
+@use 'node_modules/@brightlayer-ui/angular-themes/blueTheme';
+@use 'node_modules/@brightlayer-ui/angular-themes/margins';
+@use 'node_modules/@brightlayer-ui/angular-themes/fonts';
+@use 'node_modules/@brightlayer-ui/angular-themes/common';
+
+$material-theme-primary: mat.define-palette(blui.$blui-green, 700);
+$material-theme-accent: mat.define-palette(blui.$blui-green, 900);
+$material-theme-warn: mat.define-palette(blui.$blui-red, 500);
 $jungle-green-theme: map-merge(
-    mat-light-theme($material-theme-primary, $material-theme-accent, $material-theme-warn),
+    mat.define-light-theme($material-theme-primary, $material-theme-accent, $material-theme-warn),
     (
         foreground: (
-            text: map-get($blui-black, 500),
-            secondary-text: map-get($blui-gray, 500),
-            hint-text: map-get($blui-black, 400),
-            base: map-get($blui-darkBlack, 900),
+            text: map-get(blui.$blui-black, 500),
+            secondary-text: map-get(blui.$blui-gray, 500),
+            hint-text: map-get(blui.$blui-black, 400),
+            base: map-get(blui.$blui-darkBlack, 900),
             divider: rgba(66, 78, 84, 0.12),
-            dividers: $dark-dividers,
+            dividers: mat.get-color-from-palette(mat.$light-theme-foreground-palette, dividers),
             disabled: rgba(66, 78, 84, 0.3),
             disabled-button: rgba(black, 0.26),
             disabled-text: rgba(66, 78, 84, 0.3),
-            elevation: map-get($blui-darkBlack, 900),
+            elevation: map-get(blui.$blui-darkBlack, 900),
             icon: rgba(black, 0.54),
             icons: rgba(black, 0.54),
             slider-min: rgba(black, 0.87),
@@ -25,24 +31,32 @@ $jungle-green-theme: map-merge(
             slider-off-active: rgba(black, 0.38),
         ),
         background: (
-            status-bar: map_get($mat-grey, 300),
-            app-bar: map-get($blui-gray, 50),
-            background: map-get($blui-white, 200),
+            status-bar: mat.get-color-from-palette(mat.$light-theme-background-palette, status-bar),
+            app-bar: map-get(blui.$blui-gray, 50),
+            background: map-get(blui.$blui-white, 200),
             hover: rgba(black, 0.04),
-            card: map-get($blui-white, 50),
-            dialog: map-get($blui-white, 50),
+            card: map-get(blui.$blui-white, 50),
+            dialog: map-get(blui.$blui-white, 50),
             disabled-button: rgba(114, 126, 132, 0.12),
-            raised-button: map-get($blui-white, 50),
-            focused-button: $dark-focused,
-            selected-button: map-get($blui-gray, 300),
-            selected-disabled-button: map-get($blui-gray, 400),
-            disabled-button-toggle: map-get($blui-gray, 200),
-            unselected-chip: map-get($blui-gray, 300),
-            disabled-list-option: map-get($blui-gray, 200),
+            raised-button: map-get(blui.$blui-white, 50),
+            focused-button: mat.get-color-from-palette(mat.$light-theme-background-palette, focused-button),
+            selected-button: map-get(blui.$blui-gray, 300),
+            selected-disabled-button: map-get(blui.$blui-gray, 400),
+            disabled-button-toggle: map-get(blui.$blui-gray, 200),
+            unselected-chip: map-get(blui.$blui-gray, 300),
+            disabled-list-option: map-get(blui.$blui-gray, 200),
         ),
     )
 );
 
-.blui-user-menu-avatar {
-    color: map-get($blui-white, 500) !important;
+.jungle-green {
+    @include mat.all-component-themes($jungle-green-theme);
+    @include blui-component-theme.blui-components-theme($jungle-green-theme);
+    @include blueTheme.bluetheme($jungle-green-theme);
+    @include fonts.bodyfont();
+    @include common.common();
+
+    .blui-user-menu-avatar {
+        color: map-get(blui.$blui-white, 500) !important;
+    }
 }

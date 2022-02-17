@@ -61,7 +61,7 @@ export class RpcService {
 
     /** Returns a modified account info object, given an index. */
     async getAccountInfo(index: number): Promise<AccountOverview> {
-        const address = await this._ledgerService.getLedgerAccount(index);
+        const address = await this._ledgerService.getAccountFromIndex(index);
         const [pending, accountInfoRpc] = await Promise.all([
             this.getReceivable(address),
             this._nanoClientService

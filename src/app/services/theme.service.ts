@@ -9,6 +9,13 @@ const NANO_BLUE = 'nano-blue';
 @Injectable({
     providedIn: 'root',
 })
+/**
+ * Theme service manages the on-screen palette.
+ *
+ * User's theme selection is stored in local_storage.
+ *
+ * Supports 3 themes - Green, Blue & Yellow; Green is default.
+ * */
 export class ThemeService {
     currentTheme: Theme;
     themeLocalStorageId = 'THEBANANOSTAND_THEME';

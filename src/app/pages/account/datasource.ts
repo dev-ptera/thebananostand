@@ -37,13 +37,13 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
         this._lowestLoadedHeight = undefined;
         this._cachedData = new Array(blockCount);
         this._fetchedPages = new Set<number>();
-        this._dataStream = new BehaviorSubject<(ConfirmedTx | undefined)[]>(this._cachedData);
+        this._dataStream = new BehaviorSubject<Array<ConfirmedTx | undefined>>(this._cachedData);
         this._subscription = new Subscription();
         this._fetchedPages.clear();
         this._fetchPage(0);
     }
 
-    connect(collectionViewer: CollectionViewer): Observable<(ConfirmedTx | undefined)[]> {
+    connect(collectionViewer: CollectionViewer): Observable<Array<ConfirmedTx | undefined>> {
         this._subscription.add(
             collectionViewer.viewChange.pipe(debounceTime(100)).subscribe((range) => {
                 const startPage = this._getPageForIndex(range.start);

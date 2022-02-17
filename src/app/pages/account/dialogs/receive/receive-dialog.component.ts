@@ -72,7 +72,7 @@ export type ReceiveDialogData = {
                 </div>
 
                 <blui-spacer></blui-spacer>
-                <mat-divider></mat-divider>
+                <mat-divider style="margin-left: -24px; margin-right: -24px"></mat-divider>
                 <blui-mobile-stepper [activeStep]="activeStep" [steps]="maxSteps" variant="text">
                     <button mat-stroked-button blui-back-button color="primary" (click)="closeDialog()">Close</button>
                     <button
@@ -135,7 +135,7 @@ export class ReceiveDialogComponent implements OnInit {
             .then((hash) => {
                 this.loading = false;
                 this.txHash = hash;
-                console.log('Transaction received, hash: ' + hash);
+                console.log(`Transaction received, hash: ${hash}`);
                 this.activeStep++;
                 this.success = this.maxSteps === this.activeStep;
             })
