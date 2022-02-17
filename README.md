@@ -1,4 +1,4 @@
-# TheBananoStand 
+# TheBananoStand
 
 This is a wallet that allows users to self-manage funds via a Ledger hardware wallet.
 
@@ -24,3 +24,9 @@ You can send/receive from all your accounts after the ledger is connected succes
 ## Issues, Requests ?
 
 Please open an issue on the github or contact me directly at dev.ptera@gmail.com.
+
+## developer installation instructions:
+
+    npm i;
+    npm run preflight;
+    npm start;

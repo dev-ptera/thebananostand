@@ -135,7 +135,7 @@ export class ReceiveDialogComponent implements OnInit {
             .then((hash) => {
                 this.loading = false;
                 this.txHash = hash;
-                console.log('Transaction received, hash: ' + hash);
+//                console.log(`Transaction received, hash: ${hash}`);
                 this.activeStep++;
                 this.success = this.maxSteps === this.activeStep;
             })

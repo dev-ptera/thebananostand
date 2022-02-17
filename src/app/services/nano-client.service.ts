@@ -11,12 +11,12 @@ import { environment } from '../../environments/environment';
  * Currently defaults to use the Kalium node for all RPC requests.
  * Backup is the Batman node. */
 export class NanoClientService {
-    private batman = 'https://node.dev-ptera.com/banano-rpc';
-    private kalium = 'https://kaliumapi.appditto.com/api';
+    private readonly batman = 'https://node.dev-ptera.com/banano-rpc';
+    private readonly kalium = 'https://kaliumapi.appditto.com/api';
 
     private RpcNode: NanoClient;
-    private activeDataSources = [];
-    private knownDataSources = [this.batman, this.kalium];
+    private readonly activeDataSources = [];
+    private readonly knownDataSources = [this.batman, this.kalium];
 
     constructor(http: HttpClient) {
         this.knownDataSources.map((source) => {

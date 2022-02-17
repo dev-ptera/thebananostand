@@ -111,12 +111,11 @@ export class LedgerService {
             const publicKey = await window.bananocoinBananojs.getPublicKey(privateKey);
             const account = window.bananocoinBananojs.getBananoAccount(publicKey);
             return account;
-        } else {
-            const accountData = await window.bananocoin.bananojsHw.getLedgerAccountData(accountIndex);
-            console.log('connectLedger', 'accountData', accountData);
-            const account = accountData.account;
-            return account;
         }
+        const accountData = await window.bananocoin.bananojsHw.getLedgerAccountData(accountIndex);
+        console.log('connectLedger', 'accountData', accountData);
+        const account = accountData.account;
+        return account;
     }
 
     isUsingSecret(): boolean {
