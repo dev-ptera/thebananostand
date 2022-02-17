@@ -27,6 +27,11 @@ Please open an issue on the github or contact me directly at dev.ptera@gmail.com
 
 ## Developer Installation Instructions:
 
+    # installs modules
     npm i;
+
+    # checks for updates, lints source code
     npm run preflight;
-    npm start;
+
+    # runs web server without opening browser.
+    npm run serve;

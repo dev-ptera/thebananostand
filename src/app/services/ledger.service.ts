@@ -14,11 +14,18 @@ export class LedgerService {
         private readonly _util: UtilService,
         private readonly _seedService: SeedService,
         private readonly _nanoClientService: NanoClientService
-    ) {}
+    ) { }
 
     private _configApi(api): void {
         api.setUrl(this._nanoClientService.getRpcNode().nodeAddress);
         api.setAuth(environment.token);
+    }
+
+    async storeSeed(seed: string, password: string): Promise<void> {
+
+        console.log('storeSeed', 'window.bananocoin', Object.keys(window.bananocoinBananojs));
+        //const encryptedSeed = await window.bananocoin.passwordUtils.encryptData(seed, password);
+        //window.localStorage.setItem('encryptedSeed', encryptedSeed);
     }
 
     /** Attempts a withdraw.  On success, returns transaction hash. */
@@ -106,7 +113,7 @@ export class LedgerService {
     /** Given an index, reads ledger device & returns an address. */
     async getAccountFromIndex(accountIndex: number): Promise<string> {
         if (this.isUsingSecret()) {
-            const seed = this._seedService.seed;
+            const seed = await this._seedService.getSeed();
             const privateKey = await window.bananocoinBananojs.getPrivateKey(seed, accountIndex);
             const publicKey = await window.bananocoinBananojs.getPublicKey(privateKey);
             const account = window.bananocoinBananojs.getBananoAccount(publicKey);
@@ -119,12 +126,16 @@ export class LedgerService {
     }
 
     isUsingSecret(): boolean {
-        return Boolean(this._seedService.seed);
+        return this._seedService.password !== undefined;
     }
 
     async getAccountSigner(index: number): any {
-        return this.isUsingSecret()
-            ? await window.bananocoinBananojs.getPrivateKey(this._seedService.seed, index)
-            : await window.bananocoin.bananojsHw.getLedgerAccountSigner(index);
+        if (this.isUsingSecret()) {
+            const seed = await this._seedService.getSeed();
+            console.log('getAccountSigner', 'seed', seed);
+            return await window.bananocoinBananojs.getPrivateKey(seed, index)
+        } else {
+            return await window.bananocoin.bananojsHw.getLedgerAccountSigner(index);
+        }
     }
 }
