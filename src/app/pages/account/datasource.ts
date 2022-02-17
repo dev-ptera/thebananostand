@@ -70,7 +70,7 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
             return;
         }
 
-//        console.info(`INFO: Fetching page #${page}`);
+        //        console.info(`INFO: Fetching page #${page}`);
         this._fetchedPages.add(page);
         const offset = this._isFilterApplied
             ? this._lowestLoadedHeight
