@@ -1,6 +1,6 @@
-import {Component, OnInit, ChangeDetectorRef, EventEmitter, Output} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
-import {SeedService} from "@app/services/seed.service";
+import { SeedService } from '@app/services/seed.service';
 
 @Component({
     selector: 'app-login',
@@ -8,7 +8,6 @@ import {SeedService} from "@app/services/seed.service";
     styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-
     @Output() unlocked: EventEmitter<void> = new EventEmitter();
     @Output() cancel: EventEmitter<void> = new EventEmitter();
 
@@ -20,7 +19,7 @@ export class LoginComponent implements OnInit {
     constructor(
         private readonly _breakpointObserver: BreakpointObserver,
         private readonly _changeDetectorRef: ChangeDetectorRef,
-        private readonly _seedService: SeedService,
+        private readonly _seedService: SeedService
     ) {}
 
     ngOnInit(): void {
@@ -35,10 +34,13 @@ export class LoginComponent implements OnInit {
     }
 
     login(): void {
-        this._seedService.unlockWallet(this.password).then(() => {
-            this.unlocked.emit();
-        }).catch((err) => {
-            console.error(err);
-        })
+        this._seedService
+            .unlockWallet(this.password)
+            .then(() => {
+                this.unlocked.emit();
+            })
+            .catch((err) => {
+                console.error(err);
+            });
     }
 }

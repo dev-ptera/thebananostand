@@ -10,10 +10,7 @@
         </div>
     </mat-toolbar>
 
-    <app-login *ngIf="showLogin()"
-               (unlocked)="isLoggedIn=true"
-               (cancel)="isCancelLogin=true"
-    ></app-login>
+    <app-login *ngIf="showLogin()" (unlocked)="isLoggedIn = true" (cancel)="isCancelLogin = true"></app-login>
 
     <div class="app-body" *ngIf="showDashboard()" responsive>
         <div class="app-body-content">
@@ -112,7 +109,7 @@
                 </mat-card>
             </div>
 
-            <div style="margin-top: 24px;">New acccount? <span class="link">Get started</span></div>
+            <div style="margin-top: 24px">New acccount? <span class="link">Get started</span></div>
 
             <div style="margin-top: 32px; min-width: 584px" *ngIf="ledgerLoadErrorMessage" [@fade]="'active'">
                 <mat-divider></mat-divider>

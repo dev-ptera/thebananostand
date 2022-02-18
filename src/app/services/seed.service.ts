@@ -6,9 +6,7 @@ import { Injectable } from '@angular/core';
 })
 /** Seed Service stores and encrypts a user's seed or mnemonic phrase. */
 export class SeedService {
-
     // TODO: Fix EMPTY password scenario.
-
 
     /** The password used to unlock the wallet. */
     password: string;

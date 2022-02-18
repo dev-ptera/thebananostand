@@ -6,7 +6,7 @@ import { TransactionService } from '@app/services/transaction.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SeedDialogComponent } from '@app/pages/home/seed/seed-dialog.component';
 import { animate, style, transition, trigger } from '@angular/animations';
-import {SeedService} from "@app/services/seed.service";
+import { SeedService } from '@app/services/seed.service';
 
 @Component({
     selector: 'app-home',
@@ -39,7 +39,7 @@ export class HomeComponent implements OnInit {
         private readonly _transactionService: TransactionService,
         private readonly _accountService: AccountService,
         private readonly _viewportService: ViewportService,
-        private readonly _seedService: SeedService,
+        private readonly _seedService: SeedService
     ) {}
 
     ngOnInit(): void {

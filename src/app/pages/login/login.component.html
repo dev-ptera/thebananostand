@@ -1,16 +1,14 @@
 <section class="login-section" [class.fullScreen]="!useCard">
-
-
     <div
         style="
-                width: 100vw;
-                height: 100vh;
-                position: fixed;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: -1;
-            "
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: -1;
+        "
     >
         <img src="assets/banana.svg" style="height: 87vh; margin-top: 0vh; margin-right: 40vw" />
     </div>
@@ -20,16 +18,14 @@
             <mat-card-title style="margin-bottom: 0">Welcome Back!</mat-card-title>
         </mat-card-header>
         <mat-card-content class="login-card-content">
-            <p class="login-card-subtitle">
-                Your wallet is locked; enter your password below to access your account.
-            </p>
+            <p class="login-card-subtitle">Your wallet is locked; enter your password below to access your account.</p>
             <mat-divider class="top-divider"></mat-divider>
             <form>
                 <mat-form-field appearance="fill">
                     <mat-label>Password</mat-label>
                     <input
                         matInput
-                        [ngModelOptions]="{standalone: true}"
+                        [ngModelOptions]="{ standalone: true }"
                         [(ngModel)]="password"
                         [type]="passwordVisible ? 'text' : 'password'"
                         placeholder="Password"
@@ -43,22 +39,8 @@
         </mat-card-content>
         <mat-divider class="bottom-divider"></mat-divider>
         <mat-card-actions>
-            <button
-                mat-stroked-button
-                class="cancel-button"
-                (click)="cancel.emit()"
-                color="primary"
-            >
-                Cancel
-            </button>
-            <button
-                mat-flat-button
-                class="submit-button"
-                (click)="login()"
-                color="primary"
-            >
-                Unlock
-            </button>
+            <button mat-stroked-button class="cancel-button" (click)="cancel.emit()" color="primary">Cancel</button>
+            <button mat-flat-button class="submit-button" (click)="login()" color="primary">Unlock</button>
         </mat-card-actions>
     </mat-card>
 </section>
