@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import {SeedService} from "@app/services/seed.service";
+import { SeedService } from '@app/services/seed.service';
 
 @Component({
     selector: 'app-account-settings',
