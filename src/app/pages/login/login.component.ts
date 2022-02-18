@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 import { SeedService } from '@app/services/seed.service';
+import {FormControl} from "@angular/forms";
 
 @Component({
     selector: 'app-login',
@@ -13,8 +14,9 @@ export class LoginComponent implements OnInit {
 
     useCard: boolean;
     passwordVisible = false;
+    hasIncorrectPassword: boolean;
 
-    password: string;
+    password = new FormControl('', []);
 
     constructor(
         private readonly _breakpointObserver: BreakpointObserver,
@@ -33,14 +35,23 @@ export class LoginComponent implements OnInit {
         this.passwordVisible = !this.passwordVisible;
     }
 
+    getErrorMessage() {
+        if (this.hasIncorrectPassword) {
+            return 'Incorrect password';
+        }
+        return 'asdgasdg';
+    }
+
     login(): void {
         this._seedService
-            .unlockWallet(this.password)
+            .unlockWallet(this.password.value)
             .then(() => {
                 this.unlocked.emit();
             })
             .catch((err) => {
                 console.error(err);
+                this.hasIncorrectPassword = true;
+                this.password.setErrors({ password: 'incorrect'});
             });
     }
 }

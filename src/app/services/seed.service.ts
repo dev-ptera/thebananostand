@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -6,46 +5,50 @@ import { Injectable } from '@angular/core';
 })
 /** Seed Service stores and encrypts a user's seed or mnemonic phrase. */
 export class SeedService {
-    // TODO: Fix EMPTY password scenario.
 
     /** The password used to unlock the wallet. */
     password: string;
 
+    unlockedLocalSeed = false;
+    unlockedLocalLedger = false;
+
     readonly localStorageSeedId = 'encryptedSeed';
-
-    hasSecret(): boolean {
-        return Boolean(window.localStorage.getItem(this.localStorageSeedId));
-    }
-
-    async storePassword(password: string): Promise<void> {
-        this.password = password;
-        console.log('storePassword', 'password', password);
-    }
 
     async storeSeed(seed: string, password: string): Promise<void> {
         this.password = password;
+        this.unlockedLocalSeed = true;
+        // @ts-ignore
         const encryptedSeed = await window.bananocoin.passwordUtils.encryptData(seed, password);
         window.localStorage.setItem(this.localStorageSeedId, encryptedSeed);
-        console.log('storeSeed', 'encryptedSeed', encryptedSeed);
     }
 
-    async getSeed(): string {
+    async getSeed(): Promise<string>  {
         const encryptedSeed = window.localStorage.getItem(this.localStorageSeedId);
-        console.log('getSeed', 'encryptedSeed', encryptedSeed);
+        // @ts-ignore
         const seed = await window.bananocoin.passwordUtils.decryptData(encryptedSeed, this.password);
-        console.log('getSeed', 'seed', seed);
         return seed;
     }
 
     // Throws an error if the login attempt fails.
     async unlockWallet(password: string): Promise<void> {
         const encryptedSeed = window.localStorage.getItem(this.localStorageSeedId);
+        // @ts-ignore
         await window.bananocoin.passwordUtils.decryptData(encryptedSeed, password);
         this.password = password;
+        this.unlockedLocalSeed = true;
     }
 
-    isUnlocked(): boolean {
-        return Boolean(this.password);
+    isLocalSeedUnlocked(): boolean {
+        return this.unlockedLocalSeed;
+    }
+
+    isLocalLedgerUnlocked(): boolean {
+        return this.unlockedLocalLedger;
+    }
+
+    hasSecret(): boolean {
+        const secret = window.localStorage.getItem(this.localStorageSeedId);
+        return Boolean(secret);
     }
 
     clearSeed(): void {

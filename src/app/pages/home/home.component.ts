@@ -28,9 +28,9 @@ export class HomeComponent implements OnInit {
 
     isLoading = false;
     isLoggedIn = false;
+    isCancelLogin = false;
     isLedgerLoaded = false;
     isShowLedgerLoadHelperText = false;
-    isCancelLogin = false;
 
     ledgerLoadErrorMessage: string;
 
@@ -43,7 +43,7 @@ export class HomeComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.isLoggedIn = this._seedService.isUnlocked();
+        this.isLoggedIn = this._seedService.isLocalSeedUnlocked();
         if (this._accountService.accounts.length > 0) {
             this.isLedgerLoaded = true;
         }
@@ -77,6 +77,7 @@ export class HomeComponent implements OnInit {
             .then(() => {
                 this.isLedgerLoaded = true;
                 this.isShowLedgerLoadHelperText = false;
+                this._seedService.unlockedLocalLedger = true;
             })
             .catch((err) => {
                 console.error(err);
@@ -89,7 +90,7 @@ export class HomeComponent implements OnInit {
     }
 
     showLogin(): boolean {
-        return this._seedService.hasSecret() && !this.isLoggedIn && !this.isCancelLogin;
+        return !this.isLedgerLoaded && this._seedService.hasSecret() && !this.isLoggedIn && !this.isCancelLogin;
     }
 
     showHome(): boolean {

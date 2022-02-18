@@ -105,7 +105,7 @@ export class TransactionService {
 
     /** Given an index, reads ledger device & returns an address. */
     async getAccountFromIndex(accountIndex: number): Promise<string> {
-        if (this.isUsingSecret()) {
+        if (this._seedService.isLocalSeedUnlocked()) {
             const seed = await this._seedService.getSeed();
             const privateKey = await window.bananocoinBananojs.getPrivateKey(seed, accountIndex);
             const publicKey = await window.bananocoinBananojs.getPublicKey(privateKey);
@@ -118,12 +118,8 @@ export class TransactionService {
         return account;
     }
 
-    isUsingSecret(): boolean {
-        return this._seedService.isUnlocked();
-    }
-
     async getAccountSigner(index: number): any {
-        if (this.isUsingSecret()) {
+        if (this._seedService.isLocalSeedUnlocked()) {
             const seed = await this._seedService.getSeed();
             console.log('getAccountSigner', 'seed', seed);
             return await window.bananocoinBananojs.getPrivateKey(seed, index);

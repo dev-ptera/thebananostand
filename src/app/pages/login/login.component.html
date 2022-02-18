@@ -24,16 +24,15 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Password</mat-label>
                     <input
-                        matInput
-                        [ngModelOptions]="{ standalone: true }"
-                        [(ngModel)]="password"
+                        matInput [formControl]="password"
                         [type]="passwordVisible ? 'text' : 'password'"
                         placeholder="Password"
-                        required
+
                     />
                     <button mat-icon-button matSuffix (click)="togglePasswordVisibility()">
                         <mat-icon>{{ passwordVisible ? 'visibility' : 'visibility_off' }}</mat-icon>
                     </button>
+                    <mat-error *ngIf="hasIncorrectPassword">{{getErrorMessage()}}</mat-error>
                 </mat-form-field>
             </form>
         </mat-card-content>

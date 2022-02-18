@@ -40,7 +40,6 @@ import { SeedService } from '@app/services/seed.service';
                 <div style="display: flex; justify-content: space-between; margin-top: 16px;">
                     <button color="primary" mat-stroked-button (click)="closeDialog()">Close</button>
                     <button color="primary" mat-flat-button (click)="addSeed()">Submit</button>
-                    <!--<button color="primary" mat-flat-button (click)="addPassword()">Old Seed</button>-->
                 </div>
             </div>
         </div>
@@ -65,17 +64,9 @@ export class SeedDialogComponent {
         this.dialogRef.close(this.hasCreatedNewWallet);
     }
 
-    async addPassword(): Promise<void> {
-        await this._seedService.storePassword(this.password);
-        this.hasCreatedNewWallet = true;
-        // TODO: Make sure seed is...legit?  Password protected, etc.
-        this.dialogRef.close(this.hasCreatedNewWallet);
-    }
-
     async addSeed(): Promise<void> {
         await this._seedService.storeSeed(this.secret, this.password);
         this.hasCreatedNewWallet = true;
-        // TODO: Make sure seed is...legit?  Password protected, etc.
         this.dialogRef.close(this.hasCreatedNewWallet);
     }
 }
