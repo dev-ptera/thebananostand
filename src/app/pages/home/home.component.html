@@ -4,8 +4,16 @@
             <mat-icon [style.color]="colors.yellow[300]">storefront</mat-icon>
             <span style="margin-left: 12px">The Banano Stand</span>
         </div>
-        <app-user-menu></app-user-menu>
+        <div style="display: flex">
+            <app-theme-picker style="margin-right: 16px"></app-theme-picker>
+            <app-account-settings></app-account-settings>
+        </div>
     </mat-toolbar>
+
+    <app-login *ngIf="showLogin()"
+               (unlocked)="isLoggedIn=true"
+               (cancel)="isCancelLogin=true"
+    ></app-login>
 
     <div class="app-body" *ngIf="showDashboard()" responsive>
         <div class="app-body-content">
@@ -13,7 +21,7 @@
         </div>
     </div>
 
-    <div class="app-body" *ngIf="!showDashboard()" responsive>
+    <div class="app-body" *ngIf="showHome()" responsive>
         <blui-spacer></blui-spacer>
 
         <div
@@ -28,7 +36,7 @@
                 z-index: -1;
             "
         >
-            <img src="assets/bananas-svgrepo-com.svg" style="height: 87vh; margin-bottom: 13vh; margin-right: 40vw" />
+            <img src="assets/banana.svg" style="height: 87vh; margin-bottom: 13vh; margin-right: 40vw" />
         </div>
 
         <div class="app-body-content" style="justify-content: center; position: relative">
@@ -103,6 +111,9 @@
                     </blui-empty-state>
                 </mat-card>
             </div>
+
+            <div style="margin-top: 24px;">New acccount? <span class="link">Get started</span></div>
+
             <div style="margin-top: 32px; min-width: 584px" *ngIf="ledgerLoadErrorMessage" [@fade]="'active'">
                 <mat-divider></mat-divider>
                 <div style="color: red; margin-top: 32px"><strong>ERROR:</strong> {{ ledgerLoadErrorMessage }}</div>
@@ -127,7 +138,7 @@
         </div>
         <blui-spacer></blui-spacer>
 
-        <div style="display: flex; align-items: center">
+        <div style="display: flex; align-items: center; margin-top: 16px">
             <img src="assets/github-icon.svg" style="margin-right: 8px" />
             <a
                 href="https://github.com/dev-ptera/thebananostand"

@@ -1,12 +1,11 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
 import { ThemeService } from '@app/services/theme.service';
 
 @Component({
-    selector: 'app-user-menu',
+    selector: 'app-theme-picker',
     template: `
-        <blui-user-menu class="app-user-menu" menuTitle="Theme" [(open)]="userMenuOpen">
-            <mat-icon blui-avatar>settings</mat-icon>
+        <blui-user-menu class="app-theme-picker" menuTitle="Theme" [(open)]="userMenuOpen">
+            <mat-icon blui-avatar>palette</mat-icon>
             <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
                 <blui-info-list-item [dense]="true" (click)="toggleJungleGreenTheme()">
                     <mat-icon blui-icon>light_mode</mat-icon>
@@ -23,13 +22,13 @@ import { ThemeService } from '@app/services/theme.service';
             </mat-nav-list>
         </blui-user-menu>
     `,
-    styleUrls: ['./user-menu.component.scss'],
+    styleUrls: ['./theme-picker.component.scss'],
     encapsulation: ViewEncapsulation.None,
 })
-export class AppUserMenuComponent {
+export class AppThemePickerComponent {
     userMenuOpen = false;
 
-    constructor(private readonly _router: Router, private readonly _theme: ThemeService) {}
+    constructor(private readonly _theme: ThemeService) {}
 
     toggleJungleGreenTheme(): void {
         this.userMenuOpen = false;

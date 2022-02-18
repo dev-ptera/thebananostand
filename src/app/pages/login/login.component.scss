@@ -1,0 +1,110 @@
+mat-form-field {
+    width: 100%;
+    margin-bottom: 32px;
+}
+.small mat-form-field {
+    margin-bottom: 24px;
+}
+::ng-deep .password-form-card-header .mat-card-header-text {
+    margin: 0 !important;
+}
+
+.login-section {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 64px);
+
+    .login-card {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        position: relative;
+        max-width: 420px;
+        max-height: 500px;
+        flex-direction: column;
+        padding: 0;
+        mat-card-header {
+            padding: 32px 24px 0 24px;
+            .mat-card-title {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    &.fullScreen {
+        height: calc(100vh - 56px);
+        .login-card {
+            max-width: none;
+            max-height: none;
+            border-radius: 0;
+            .login-card-content {
+                padding: 16px;
+                .top-divider {
+                    margin: 40px -16px 32px;
+                }
+            }
+            .mat-card-actions:last-child {
+                margin: 0;
+                padding: 16px;
+                .cancel-button {
+                    width: 100%;
+                    margin-right: 16px;
+                }
+                .submit-button {
+                    width: 100%;
+                    margin-left: 16px;
+                }
+            }
+        }
+    }
+}
+
+.login-card-content {
+    flex: 1 1 0px;
+    display: flex;
+    padding: 16px 24px;
+    margin-bottom: 0;
+    overflow: auto;
+    flex-direction: column;
+    .login-card-subtitle {
+        margin-bottom: 0;
+    }
+    .top-divider {
+        margin: 40px -24px 32px;
+        position: relative;
+        width: auto !important;
+    }
+}
+
+.mat-card .mat-divider-horizontal.bottom-divider {
+    position: relative;
+}
+.login-form-group {
+    mat-form-field {
+        margin-bottom: 0;
+    }
+    .validation-list {
+        margin-top: -24px;
+        margin-bottom: 32px;
+    }
+}
+mat-card-actions {
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+
+    .cancel-button,
+    .submit-button {
+        width: 100px;
+    }
+}
+
+.mat-card {
+    .mat-card-actions:last-child {
+        margin-bottom: 0;
+        padding: 24px 32px;
+    }
+}

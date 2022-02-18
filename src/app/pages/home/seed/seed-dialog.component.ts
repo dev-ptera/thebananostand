@@ -39,8 +39,8 @@ import { SeedService } from '@app/services/seed.service';
                 <mat-divider style="margin-left: -24px; margin-right: -24px"></mat-divider>
                 <div style="display: flex; justify-content: space-between; margin-top: 16px;">
                     <button color="primary" mat-stroked-button (click)="closeDialog()">Close</button>
-                    <button color="primary" mat-flat-button (click)="addSeed()">New Seed</button>
-                    <button color="primary" mat-flat-button (click)="addPassword()">Old Seed</button>
+                    <button color="primary" mat-flat-button (click)="addSeed()">Submit</button>
+                    <!--<button color="primary" mat-flat-button (click)="addPassword()">Old Seed</button>-->
                 </div>
             </div>
         </div>
@@ -49,6 +49,8 @@ import { SeedService } from '@app/services/seed.service';
 export class SeedDialogComponent {
     secret = '';
     password = '';
+
+    hasCreatedNewWallet = false;
 
     constructor(
         public util: UtilService,
@@ -60,18 +62,20 @@ export class SeedDialogComponent {
     ) {}
 
     closeDialog(): void {
-        this.dialogRef.close();
+        this.dialogRef.close(this.hasCreatedNewWallet);
     }
 
     async addPassword(): Promise<void> {
         await this._seedService.storePassword(this.password);
+        this.hasCreatedNewWallet = true;
         // TODO: Make sure seed is...legit?  Password protected, etc.
-        this.dialogRef.close(true);
+        this.dialogRef.close(this.hasCreatedNewWallet);
     }
 
     async addSeed(): Promise<void> {
         await this._seedService.storeSeed(this.secret, this.password);
+        this.hasCreatedNewWallet = true;
         // TODO: Make sure seed is...legit?  Password protected, etc.
-        this.dialogRef.close(true);
+        this.dialogRef.close(this.hasCreatedNewWallet);
     }
 }

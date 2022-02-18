@@ -6,7 +6,7 @@
             </button>
             <div [style.marginLeft.px]="8">{{ account?.fullAddress }}</div>
         </div>
-        <app-user-menu></app-user-menu>
+        <app-theme-picker></app-theme-picker>
     </mat-toolbar>
     <mat-toolbar
         color="warn"
@@ -23,7 +23,7 @@
         </button>
     </mat-toolbar>
 
-    <div class="app-body" *ngIf="account">
+    <div class="app-body" *ngIf="account" responsive>
         <div class="app-body-content">
             <div
                 style="

@@ -6,6 +6,7 @@ import { TransactionService } from '@app/services/transaction.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SeedDialogComponent } from '@app/pages/home/seed/seed-dialog.component';
 import { animate, style, transition, trigger } from '@angular/animations';
+import {SeedService} from "@app/services/seed.service";
 
 @Component({
     selector: 'app-home',
@@ -26,9 +27,10 @@ export class HomeComponent implements OnInit {
     colors = Colors;
 
     isLoading = false;
-    isLedgerLoaded: boolean;
-    isSecretAccessible: boolean; // Is secret provided & password valid;
+    isLoggedIn = false;
+    isLedgerLoaded = false;
     isShowLedgerLoadHelperText = false;
+    isCancelLogin = false;
 
     ledgerLoadErrorMessage: string;
 
@@ -36,10 +38,12 @@ export class HomeComponent implements OnInit {
         private readonly _dialog: MatDialog,
         private readonly _transactionService: TransactionService,
         private readonly _accountService: AccountService,
-        private readonly _viewportService: ViewportService
+        private readonly _viewportService: ViewportService,
+        private readonly _seedService: SeedService,
     ) {}
 
     ngOnInit(): void {
+        this.isLoggedIn = this._seedService.isUnlocked();
         if (this._accountService.accounts.length > 0) {
             this.isLedgerLoaded = true;
         }
@@ -61,8 +65,8 @@ export class HomeComponent implements OnInit {
         this.isShowLedgerLoadHelperText = false;
         this.ledgerLoadErrorMessage = undefined;
         const ref = this._dialog.open(SeedDialogComponent);
-        ref.afterClosed().subscribe((isSecretAccessible) => {
-            this.isSecretAccessible = isSecretAccessible;
+        ref.afterClosed().subscribe((isNewWalletCreated) => {
+            this.isLoggedIn = isNewWalletCreated;
         });
     }
 
@@ -81,6 +85,14 @@ export class HomeComponent implements OnInit {
     }
 
     showDashboard(): boolean {
-        return this.isLedgerLoaded || this.isSecretAccessible;
+        return !this.showLogin() && (this.isLedgerLoaded || this.isLoggedIn);
+    }
+
+    showLogin(): boolean {
+        return this._seedService.hasSecret() && !this.isLoggedIn && !this.isCancelLogin;
+    }
+
+    showHome(): boolean {
+        return !this.showLogin() && !this.showDashboard();
     }
 }

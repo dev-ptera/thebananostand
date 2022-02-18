@@ -119,7 +119,7 @@ export class TransactionService {
     }
 
     isUsingSecret(): boolean {
-        return this._seedService.password !== undefined;
+        return this._seedService.isUnlocked();
     }
 
     async getAccountSigner(index: number): any {
