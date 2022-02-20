@@ -6,7 +6,10 @@
             </button>
             <div [style.marginLeft.px]="8">{{ account?.fullAddress }}</div>
         </div>
-        <app-theme-picker></app-theme-picker>
+        <div style="display: flex">
+            <app-theme-picker></app-theme-picker>
+            <app-account-settings></app-account-settings>
+        </div>
     </mat-toolbar>
     <mat-toolbar
         color="warn"
