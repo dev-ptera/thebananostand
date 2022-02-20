@@ -12,35 +12,59 @@ import { SeedService } from '@app/services/seed.service';
     template: `
         <div class="seed-dialog">
             <h1 mat-dialog-title>Enter Seed / Mnemonic</h1>
-            <div mat-dialog-content style="margin-bottom: 16px; display: flex; flex: 1 1 0px; flex-direction: column">
-                <div style="margin-bottom: 16px">
-                    Your secret phrase never leaves this website.
-                    <span class="mat-subheading-1">Only seed working for now.</span>
-                </div>
-                <mat-form-field appearance="fill">
-                    <mat-label>Seed or Mnemonic</mat-label>
-                    <textarea
-                        matInput
-                        placeholder="Secret Phrase"
-                        [(ngModel)]="secret"
-                        style="min-height: 120px"
-                    ></textarea>
-                </mat-form-field>
-                <mat-form-field appearance="fill">
-                    <mat-label>Password (optional)</mat-label>
-                    <textarea
-                        matInput
-                        placeholder="Password"
-                        [(ngModel)]="password"
-                        style="min-height: 40px"
-                    ></textarea>
-                </mat-form-field>
+            <div mat-dialog-content style="display: flex; flex: 1 1 0px; flex-direction: column">
+
+                <ng-container *ngIf="activeStep === 0">
+                    <div style="margin-bottom: 24px">
+                        Your secret phrase never leaves this website.
+                        <span class="mat-subheading-1">Only seed working for now.</span>
+                    </div>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Seed or Mnemonic</mat-label>
+                        <textarea
+                            matInput
+                            placeholder="Secret Phrase"
+                            [(ngModel)]="secret"
+                            style="min-height: 120px"
+                        ></textarea>
+                    </mat-form-field>
+                </ng-container>
+
+                <ng-container *ngIf="activeStep === 1">
+                    <div style="margin-bottom: 24px">
+                        Enter a password to secure your wallet.  This is optional but encouraged.
+                    </div>
+
+                    <mat-form-field style="width: 100%;" appearance="fill">
+                        <mat-label>Password (optional)</mat-label>
+                        <input matInput
+                               [type]="passwordVisible ? 'text' : 'password'"
+                               [(ngModel)]="password" />
+                        <button mat-icon-button matSuffix (click)="togglePasswordVisibility()">
+                            <mat-icon>{{ passwordVisible ? 'visibility' : 'visibility_off' }}</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </ng-container>
+
                 <blui-spacer></blui-spacer>
                 <mat-divider style="margin-left: -24px; margin-right: -24px"></mat-divider>
-                <div style="display: flex; justify-content: space-between; margin-top: 16px;">
-                    <button color="primary" mat-stroked-button (click)="closeDialog()">Close</button>
-                    <button color="primary" mat-flat-button (click)="addSeed()">Submit</button>
-                </div>
+                <blui-mobile-stepper [activeStep]="activeStep" [steps]="maxSteps">
+                    <button mat-stroked-button blui-back-button color="primary" (click)="back()">
+                        <ng-container *ngIf="activeStep === 0">Close</ng-container>
+                        <ng-container *ngIf="activeStep > 0">Back</ng-container>
+                    </button>
+                    <button
+                        mat-flat-button
+                        blui-next-button
+                        color="primary"
+                        (click)="next()"
+                        class="loading-button"
+                        [disabled]="!isValidSeed()"
+                    >
+                        <ng-container *ngIf="activeStep < lastStep">Next</ng-container>
+                        <ng-container *ngIf="activeStep === lastStep">Load</ng-container>
+                    </button>
+                </blui-mobile-stepper>
             </div>
         </div>
     `,
@@ -48,8 +72,12 @@ import { SeedService } from '@app/services/seed.service';
 export class SeedDialogComponent {
     secret = '';
     password = '';
+    activeStep = 0;
+    maxSteps = 2;
+    lastStep = this.maxSteps - 1;
 
     hasCreatedNewWallet = false;
+    passwordVisible = false;
 
     constructor(
         public util: UtilService,
@@ -62,6 +90,30 @@ export class SeedDialogComponent {
 
     closeDialog(): void {
         this.dialogRef.close(this.hasCreatedNewWallet);
+    }
+
+    isValidSeed(): boolean {
+        return true;
+    }
+
+    next(): void {
+        if (this.activeStep === this.lastStep) {
+            void this.addSeed();
+        } else {
+            this.activeStep++;
+        }
+    }
+
+    back(): void {
+        if (this.activeStep === 0) {
+            this.closeDialog();
+        } else {
+            this.activeStep--;
+        }
+    }
+
+    togglePasswordVisibility(): void {
+        this.passwordVisible = !this.passwordVisible;
     }
 
     async addSeed(): Promise<void> {
