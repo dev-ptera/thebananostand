@@ -12,15 +12,12 @@
         "target": "es2015",
         "module": "es2020",
         "paths": {
-            "@angular/*": [ "../node_modules/@angular/*" ],
+            "@angular/*": ["../node_modules/@angular/*"],
             "@app/components/*": ["app/components/*"],
             "@app/pages/*": ["app/pages/*"],
             "@app/services/*": ["app/services/*"],
-            "@app/types/*": ["app/types/*"],
+            "@app/types/*": ["app/types/*"]
         },
-        "lib": [
-            "es2018",
-            "dom"
-        ]
+        "lib": ["es2018", "dom"]
     }
 }

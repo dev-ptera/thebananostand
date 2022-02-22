@@ -13,7 +13,6 @@ import { SeedService } from '@app/services/seed.service';
         <div class="seed-dialog">
             <h1 mat-dialog-title>Enter Seed / Mnemonic</h1>
             <div mat-dialog-content style="display: flex; flex: 1 1 0px; flex-direction: column">
-
                 <ng-container *ngIf="activeStep === 0">
                     <div style="margin-bottom: 24px">
                         Your secret phrase never leaves this website.
@@ -32,14 +31,12 @@ import { SeedService } from '@app/services/seed.service';
 
                 <ng-container *ngIf="activeStep === 1">
                     <div style="margin-bottom: 24px">
-                        Enter a password to secure your wallet.  This is optional but encouraged.
+                        Enter a password to secure your wallet. This is optional but encouraged.
                     </div>
 
                     <mat-form-field style="width: 100%;" appearance="fill">
                         <mat-label>Password (optional)</mat-label>
-                        <input matInput
-                               [type]="passwordVisible ? 'text' : 'password'"
-                               [(ngModel)]="password" />
+                        <input matInput [type]="passwordVisible ? 'text' : 'password'" [(ngModel)]="password" />
                         <button mat-icon-button matSuffix (click)="togglePasswordVisibility()">
                             <mat-icon>{{ passwordVisible ? 'visibility' : 'visibility_off' }}</mat-icon>
                         </button>
