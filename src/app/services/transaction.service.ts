@@ -5,6 +5,15 @@ import { environment } from '../../environments/environment';
 import { NanoClientService } from '@app/services/nano-client.service';
 import { SeedService } from '@app/services/seed.service';
 
+type ReceiveResponse = {
+    pendingBlocks: string[];
+    pendingCount: number;
+    pendingMessage: string;
+    receiveBlocks: string[];
+    receiveCount: number;
+    receiveMessage: string;
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -66,8 +75,12 @@ export class TransactionService {
             representative,
             hash,
             config.prefix
-        );
-        return receiveResponse;
+        ) as string || ReceiveResponse;
+
+        if (typeof receiveResponse === 'string') {
+            return receiveResponse;
+        }
+        return receiveResponse.receiveBlocks[0];
     }
 
     /** Attempts a change block.  On success, returns transaction hash. */
@@ -123,8 +136,7 @@ export class TransactionService {
             const seed = await this._seedService.getSeed();
             console.log('getAccountSigner', 'seed', seed);
             return await window.bananocoinBananojs.getPrivateKey(seed, index);
-        } 
-            return await window.bananocoin.bananojsHw.getLedgerAccountSigner(index);
-        
+        }
+        return await window.bananocoin.bananojsHw.getLedgerAccountSigner(index);
     }
 }

@@ -31,26 +31,28 @@
                     margin-bottom: 8px;
                     margin-top: 16px;
                 ">
-                <img style="height:150px;" src="https://monkey.banano.cc/api/v1/monkey/{{account?.fullAddress}}">
-                <div>
-                    <div class="mat-headline" style="margin-bottom: 16px">
-                        <strong>{{ account.formattedBalance }} BAN </strong>Balance
-                    </div>
-                    <div style="display: flex">
-                        <button blui-inline mat-flat-button color="primary" (click)="receive()" style="margin-right: 16px" [disabled]="account.pending.length === 0">
-                            <mat-icon>download</mat-icon>
-                            <span>Receive Incoming</span>
-                            <span *ngIf="account.pending.length > 0">&nbsp;({{ account.pending.length }})</span>
-                        </button>
+                <div style="display: flex; align-items: center">
+                    <img style="height:150px; width: 150px; margin-right: 16px; margin-left: -16px" src="https://monkey.banano.cc/api/v1/monkey/{{account?.fullAddress}}">
+                    <div>
+                        <div class="mat-headline" style="margin-bottom: 16px">
+                            <strong>{{ account.formattedBalance }} BAN </strong>Balance
+                        </div>
+                        <div style="display: flex">
+                            <button blui-inline mat-flat-button color="primary" (click)="receive()" style="margin-right: 16px" [disabled]="account.pending.length === 0">
+                                <mat-icon>download</mat-icon>
+                                <span>Receive Incoming</span>
+                                <span *ngIf="account.pending.length > 0">&nbsp;({{ account.pending.length }})</span>
+                            </button>
 
-                        <button blui-inline mat-flat-button color="primary" (click)="send()" style="margin-right: 16px" [disabled]="account.balance === 0">
-                            <mat-icon>upload</mat-icon>
-                            <span>Send</span>
-                        </button>
-                        <button blui-inline mat-flat-button color="primary" (click)="changeRep()" [disabled]="!account.representative">
-                            <mat-icon>how_to_vote</mat-icon>
-                            <span>Change Representative</span>
-                        </button>
+                            <button blui-inline mat-flat-button color="primary" (click)="send()" style="margin-right: 16px" [disabled]="account.balance === 0">
+                                <mat-icon>upload</mat-icon>
+                                <span>Send</span>
+                            </button>
+                            <button blui-inline mat-flat-button color="primary" (click)="changeRep()" [disabled]="!account.representative">
+                                <mat-icon>how_to_vote</mat-icon>
+                                <span>Change Representative</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <app-qr [address]="account.fullAddress"></app-qr>
