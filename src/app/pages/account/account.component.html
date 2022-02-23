@@ -11,7 +11,11 @@
             <app-account-settings></app-account-settings>
         </div>
     </mat-toolbar>
-    <mat-toolbar color="warn" class="mat-elevation-z2 app-toolbar rep-offline-banner" *ngIf="isRepOffline(account?.representative) && !warnBannerDismissed">
+    <mat-toolbar
+        color="warn"
+        class="mat-elevation-z2 app-toolbar rep-offline-banner"
+        *ngIf="isRepOffline(account?.representative) && !warnBannerDismissed"
+    >
         <div class="mat-subheading-2">
             Your current representative is <strong>offline</strong>. If this happens often, it is suggested that you use
             the Change Representative button below to select a recommended rep.
@@ -24,31 +28,56 @@
 
     <div class="app-body" *ngIf="account" responsive>
         <div class="app-body-content">
-            <div style="
+            <div
+                style="
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
                     margin-bottom: 8px;
                     margin-top: 16px;
-                ">
+                "
+            >
                 <div style="display: flex; align-items: center">
-                    <img style="height:150px; width: 150px; margin-right: 16px; margin-left: -16px" src="https://monkey.banano.cc/api/v1/monkey/{{account?.fullAddress}}">
+                    <img
+                        style="height: 150px; width: 150px; margin-right: 16px; margin-left: -16px"
+                        src="https://monkey.banano.cc/api/v1/monkey/{{ account?.fullAddress }}"
+                    />
                     <div>
                         <div class="mat-headline" style="margin-bottom: 16px">
                             <strong>{{ account.formattedBalance }} BAN </strong>Balance
                         </div>
                         <div style="display: flex">
-                            <button blui-inline mat-flat-button color="primary" (click)="receive()" style="margin-right: 16px" [disabled]="account.pending.length === 0">
+                            <button
+                                blui-inline
+                                mat-flat-button
+                                color="primary"
+                                (click)="receive()"
+                                style="margin-right: 16px"
+                                [disabled]="account.pending.length === 0"
+                            >
                                 <mat-icon>download</mat-icon>
                                 <span>Receive Incoming</span>
                                 <span *ngIf="account.pending.length > 0">&nbsp;({{ account.pending.length }})</span>
                             </button>
 
-                            <button blui-inline mat-flat-button color="primary" (click)="send()" style="margin-right: 16px" [disabled]="account.balance === 0">
+                            <button
+                                blui-inline
+                                mat-flat-button
+                                color="primary"
+                                (click)="send()"
+                                style="margin-right: 16px"
+                                [disabled]="account.balance === 0"
+                            >
                                 <mat-icon>upload</mat-icon>
                                 <span>Send</span>
                             </button>
-                            <button blui-inline mat-flat-button color="primary" (click)="changeRep()" [disabled]="!account.representative">
+                            <button
+                                blui-inline
+                                mat-flat-button
+                                color="primary"
+                                (click)="changeRep()"
+                                [disabled]="!account.representative"
+                            >
                                 <mat-icon>how_to_vote</mat-icon>
                                 <span>Change Representative</span>
                             </button>
@@ -57,14 +86,21 @@
                 </div>
                 <app-qr [address]="account.fullAddress"></app-qr>
             </div>
-            <div class="mat-headline" style="margin: 16px 0; display: flex; align-items: center; justify-content: space-between">
+            <div
+                class="mat-headline"
+                style="margin: 16px 0; display: flex; align-items: center; justify-content: space-between"
+            >
                 <div style="display: flex; align-items: center">
                     <span>Account History</span>
                     <mat-icon style="margin-left: 16px; cursor: pointer" (click)="refreshCurrentAccountInfo()">
                         refresh
                     </mat-icon>
                 </div>
-                <div style="display: flex; align-items: center; align-items: center" *ngIf="!hideTransactionFilters" class="fade">
+                <div
+                    style="display: flex; align-items: center; align-items: center"
+                    *ngIf="!hideTransactionFilters"
+                    class="fade"
+                >
                     <div class="mat-subheading-2" style="margin: 0; margin-right: 12px">Transaction Filters</div>
                     <mat-icon style="cursor: pointer" (click)="openFilterDialog()">
                         {{ isFilterApplied() ? 'filter_list' : 'filter_list_off' }}
@@ -72,7 +108,11 @@
                 </div>
             </div>
 
-            <div *ngIf="showProgressBar() || showNoFilteredResultsEmptyState() || unopenedAccount" class="empty-states" [class.slow-fade-in]="showProgressBar()">
+            <div
+                *ngIf="showProgressBar() || showNoFilteredResultsEmptyState() || unopenedAccount"
+                class="empty-states"
+                [class.slow-fade-in]="showProgressBar()"
+            >
                 <ng-container *ngIf="showNoFilteredResultsEmptyState()">
                     <mat-divider></mat-divider>
                     <blui-empty-state style="margin-top: 72px">
@@ -101,9 +141,17 @@
                 </ng-container>
             </div>
 
-            <cdk-virtual-scroll-viewport itemSize="50" class="scroll-container" *ngIf="ds && ds.firstPageLoaded" [style.maxHeight.px]="countTotalDisplayableTxCount() * 50">
+            <cdk-virtual-scroll-viewport
+                itemSize="50"
+                class="scroll-container"
+                *ngIf="ds && ds.firstPageLoaded"
+                [style.maxHeight.px]="countTotalDisplayableTxCount() * 50"
+            >
                 <div *cdkVirtualFor="let item of ds; let i = index; let even = even" class="ds-item">
-                    <blui-info-list-item *ngIf="item" style="height: 50px" [style.backgroundColor]="
+                    <blui-info-list-item
+                        *ngIf="item"
+                        style="height: 50px"
+                        [style.backgroundColor]="
                             even
                                 ? isDark()
                                     ? colors.darkBlack[300]
@@ -111,7 +159,8 @@
                                 : isDark()
                                 ? colors.darkBlack[200]
                                 : colors.white[50]
-                        ">
+                        "
+                    >
                         <div blui-icon class="tx-state-icon">
                             <mat-icon *ngIf="item.type === 'receive'" class="receive">add_circle_outline</mat-icon>
                             <mat-icon *ngIf="item.type === 'send'" class="send">remove_circle_outline</mat-icon>
@@ -123,7 +172,11 @@
                             <span (mouseenter)="item.hover = true" (mouseleave)="item.hover = false">
                                 <span *ngIf="item.type === 'receive'">from </span>
                                 <span *ngIf="item.type === 'send' || item.type === 'change'">to </span>
-                                <span class="link accounts-hash-link" [style.marginLeft.px]="8" (click)="openLink(item.hash)">
+                                <span
+                                    class="link accounts-hash-link"
+                                    [style.marginLeft.px]="8"
+                                    (click)="openLink(item.hash)"
+                                >
                                     <ng-container *ngIf="item.type === 'receive' || item.type === 'send'">
                                         {{ formatAddress(item.address) }}
                                     </ng-container>
@@ -131,13 +184,18 @@
                                         {{ formatAddress(item.newRepresentative) }}
                                     </ng-container>
                                 </span>
-                                <button mat-icon-button *ngIf="item.hover" (click)="copy(item)" style="
+                                <button
+                                    mat-icon-button
+                                    *ngIf="item.hover"
+                                    (click)="copy(item)"
+                                    style="
                                         cursor: pointer;
                                         margin-left: 8px;
                                         height: 24px;
                                         width: 24px;
                                         line-height: 24px;
-                                    ">
+                                    "
+                                >
                                     <mat-icon style="font-size: 16px">{{
                                         item.showCopiedIcon ? 'check_circle' : 'copy_all'
                                     }}</mat-icon>

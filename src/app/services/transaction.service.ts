@@ -12,7 +12,7 @@ type ReceiveResponse = {
     receiveBlocks: string[];
     receiveCount: number;
     receiveMessage: string;
-}
+};
 
 @Injectable({
     providedIn: 'root',
@@ -67,15 +67,16 @@ export class TransactionService {
         console.log('banano checkpending config', config);
         const loggingUtil = window.bananocoinBananojs.loggingUtil;
         const depositUtil = window.bananocoinBananojs.depositUtil;
-        const receiveResponse = await depositUtil.receive(
-            loggingUtil,
-            bananodeApi,
-            account,
-            accountSigner,
-            representative,
-            hash,
-            config.prefix
-        ) as string || ReceiveResponse;
+        const receiveResponse =
+            ((await depositUtil.receive(
+                loggingUtil,
+                bananodeApi,
+                account,
+                accountSigner,
+                representative,
+                hash,
+                config.prefix
+            )) as string) || ReceiveResponse;
 
         if (typeof receiveResponse === 'string') {
             return receiveResponse;

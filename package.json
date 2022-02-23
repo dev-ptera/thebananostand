@@ -14,7 +14,7 @@
         "preflight": "npm update && npm run npm-check-updates && npm run ng update && npm i && npm audit fix && npm run lint:fix && npm run prettier && npm outdated",
         "prettier-src": "prettier \"src/**/**.{ts,js,json,css,scss,html}\" --write",
         "prettier-root": "prettier \"*.{ts,js,json,css,scss,html}\" --write",
-        "prettier": "npm run prettier-src;npm run prettier-root;",
+        "prettier": "npm run prettier-src && npm run prettier-root",
         "prettier:check": "prettier \"src/**/**.{ts,js,json,css,scss,html}\" --check"
     },
     "private": true,
