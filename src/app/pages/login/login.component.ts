@@ -35,11 +35,11 @@ export class LoginComponent implements OnInit {
         this.passwordVisible = !this.passwordVisible;
     }
 
-    getErrorMessage() {
+    getErrorMessage(): string  {
         if (this.hasIncorrectPassword) {
             return 'Incorrect password';
         }
-        return 'asdgasdg';
+        return undefined;
     }
 
     login(): void {

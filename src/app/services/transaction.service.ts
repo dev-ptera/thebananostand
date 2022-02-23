@@ -46,10 +46,9 @@ export class TransactionService {
                 amountRaw,
                 config.prefix
             );
-            console.log('withdraw', 'response', response);
             return Promise.resolve(response);
         } catch (error) {
-            console.log('withdraw', 'error', error);
+            console.error(error);
             return Promise.reject(error);
         }
     }
@@ -64,7 +63,6 @@ export class TransactionService {
         if (!representative) {
             representative = 'ban_3batmanuenphd7osrez9c45b3uqw9d9u81ne8xa6m43e1py56y9p48ap69zg'; // TODO populate this via the rep scores API. For now default to batman
         }
-        console.log('banano checkpending config', config);
         const loggingUtil = window.bananocoinBananojs.loggingUtil;
         const depositUtil = window.bananocoinBananojs.depositUtil;
         const receiveResponse =
@@ -93,10 +91,9 @@ export class TransactionService {
         const config = window.bananocoinBananojsHw.bananoConfig;
         try {
             const response = await bananoUtil.change(bananodeApi, accountSigner, newRep, config.prefix);
-            console.log('change', 'response', response);
             return Promise.resolve(response);
         } catch (error) {
-            console.log('change', 'error', error);
+            console.error(error);
             return Promise.reject(error);
         }
     }
@@ -127,7 +124,6 @@ export class TransactionService {
             return account;
         }
         const accountData = await window.bananocoin.bananojsHw.getLedgerAccountData(accountIndex);
-        console.log('connectLedger', 'accountData', accountData);
         const account = accountData.account;
         return account;
     }
@@ -135,7 +131,6 @@ export class TransactionService {
     async getAccountSigner(index: number): any {
         if (this._seedService.isLocalSeedUnlocked()) {
             const seed = await this._seedService.getSeed();
-            console.log('getAccountSigner', 'seed', seed);
             return await window.bananocoinBananojs.getPrivateKey(seed, index);
         }
         return await window.bananocoin.bananojsHw.getLedgerAccountSigner(index);

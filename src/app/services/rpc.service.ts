@@ -5,6 +5,16 @@ import { TransactionService } from '@app/services/./transaction.service';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { NanoClientService } from '@app/services/nano-client.service';
 
+const LOG_ERR = (err: any): any => {
+    console.error(`ERROR: Issue fetching RPC data.  ${err}`);
+    return err;
+};
+
+type UnopenedAccountResponse = {
+    unopenedAccount: true;
+};
+
+
 @Injectable({
     providedIn: 'root',
 })
@@ -113,12 +123,3 @@ export class RpcService {
         };
     }
 }
-
-const LOG_ERR = (err: any): any => {
-    console.error(`ERROR: Issue fetching RPC data.  ${err}`);
-    return err;
-};
-
-type UnopenedAccountResponse = {
-    unopenedAccount: true;
-};

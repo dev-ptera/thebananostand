@@ -127,12 +127,12 @@ export class ReceiveDialogComponent implements OnInit {
     /** Iterates through each pending transaction block and receives them. */
     receiveTransaction(): void {
         this.loading = true;
-        const hash = this.data.blocks[this.activeStep];
+        const pendingHash = this.data.blocks[this.activeStep];
         this._transactionService
-            .receive(this.data.address, this.data.index, hash)
-            .then((hash) => {
+            .receive(this.data.address, this.data.index, pendingHash)
+            .then((receivedHash) => {
                 this.loading = false;
-                this.txHash = hash;
+                this.txHash = receivedHash;
                 this.activeStep++;
                 this.success = this.maxSteps === this.activeStep;
             })
