@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 import { SeedService } from '@app/services/seed.service';
-import {FormControl} from "@angular/forms";
+import { FormControl } from '@angular/forms';
 
 @Component({
     selector: 'app-login',
@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
             .catch((err) => {
                 console.error(err);
                 this.hasIncorrectPassword = true;
-                this.password.setErrors({ password: 'incorrect'});
+                this.password.setErrors({ password: 'incorrect' });
             });
     }
 }

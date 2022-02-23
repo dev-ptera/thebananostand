@@ -30,9 +30,9 @@
                             "src/favicon.ico",
                             "src/assets",
                             {
-                              "glob": "**/*",
-                              "input": "./node_modules/@bananocoin",
-                              "output": "./assets/@bananocoin"
+                                "glob": "**/*",
+                                "input": "./node_modules/@bananocoin",
+                                "output": "./assets/@bananocoin"
                             }
                         ],
                         "styles": [
@@ -101,10 +101,7 @@
                         "tsConfig": "tsconfig.spec.json",
                         "karmaConfig": "karma.conf.js",
                         "inlineStyleLanguage": "scss",
-                        "assets": [
-                            "src/favicon.ico",
-                            "src/assets"
-                        ],
+                        "assets": ["src/favicon.ico", "src/assets"],
                         "styles": [
                             "src/styles.scss",
                             "./node_modules/@brightlayer-ui/angular-themes/theme.scss",

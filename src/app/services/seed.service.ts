@@ -5,7 +5,6 @@ import { Injectable } from '@angular/core';
 })
 /** Seed Service stores and encrypts a user's seed or mnemonic phrase. */
 export class SeedService {
-
     /** The password used to unlock the wallet. */
     password: string;
 
@@ -22,7 +21,7 @@ export class SeedService {
         window.localStorage.setItem(this.localStorageSeedId, encryptedSeed);
     }
 
-    async getSeed(): Promise<string>  {
+    async getSeed(): Promise<string> {
         const encryptedSeed = window.localStorage.getItem(this.localStorageSeedId);
         // @ts-ignore
         const seed = await window.bananocoin.passwordUtils.decryptData(encryptedSeed, this.password);

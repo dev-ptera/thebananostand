@@ -123,8 +123,8 @@ export class TransactionService {
             const seed = await this._seedService.getSeed();
             console.log('getAccountSigner', 'seed', seed);
             return await window.bananocoinBananojs.getPrivateKey(seed, index);
-        } else {
+        } 
             return await window.bananocoin.bananojsHw.getLedgerAccountSigner(index);
-        }
+        
     }
 }
