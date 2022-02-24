@@ -1,4 +1,20 @@
 .mat-card {
-    max-width: 300px;
+    max-width: 332px;
     margin: 16px;
+    box-sizing: border-box;
+}
+
+.ledger-error-card {
+    margin-top: 16px;
+    width: 100%;
+    max-width: 694px;
+    box-sizing: border-box;
+    .instructions {
+        div {
+            margin-bottom: 4px;
+        }
+        strong {
+            margin-right: 8px;
+        }
+    }
 }

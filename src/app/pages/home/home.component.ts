@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
 import { AccountService } from '@app/services/account.service';
 import { ViewportService } from '@app/services/viewport.service';
 import { TransactionService } from '@app/services/transaction.service';
 import { MatDialog } from '@angular/material/dialog';
-import { SeedDialogComponent } from '@app/pages/home/seed/seed-dialog.component';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { SeedService } from '@app/services/seed.service';
+import { EnterSeedDialogComponent } from '@app/pages/home/enter-seed/enter-seed-dialog.component';
+import { NewSeedDialogComponent } from '@app/pages/home/new-seed/new-seed-dialog.component';
+import { MAT_SNACK_BAR_DATA, MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-home',
@@ -32,10 +34,9 @@ export class HomeComponent implements OnInit {
     isLedgerLoaded = false;
     isShowLedgerLoadHelperText = false;
 
-    ledgerLoadErrorMessage: string;
-
     constructor(
         private readonly _dialog: MatDialog,
+        private readonly _snackBar: MatSnackBar,
         private readonly _transactionService: TransactionService,
         private readonly _accountService: AccountService,
         private readonly _viewportService: ViewportService,
@@ -53,35 +54,32 @@ export class HomeComponent implements OnInit {
         return this._viewportService.isSmall();
     }
 
-    isMedium(): boolean {
-        return this._viewportService.isMedium();
-    }
-
     openLedgerHomePage(): void {
         window.open('https://www.ledger.com/');
     }
 
     openEnterSeedDialog(): void {
-        this.isShowLedgerLoadHelperText = false;
-        this.ledgerLoadErrorMessage = undefined;
-        const ref = this._dialog.open(SeedDialogComponent);
-        ref.afterClosed().subscribe((isNewWalletCreated) => {
-            this.isLoggedIn = isNewWalletCreated;
+        const ref = this._dialog.open(EnterSeedDialogComponent);
+        ref.afterClosed().subscribe((isNewWalletImported) => {
+            this.isLoggedIn = isNewWalletImported;
         });
     }
 
     connectLedger(): void {
-        this.ledgerLoadErrorMessage = undefined;
         this._transactionService
             .checkLedgerOrError()
             .then(() => {
                 this.isLedgerLoaded = true;
-                this.isShowLedgerLoadHelperText = false;
                 this._seedService.unlockedLocalLedger = true;
             })
             .catch((err) => {
-                console.error(err);
-                this.ledgerLoadErrorMessage = err.message;
+                const snack = this._snackBar.openFromComponent(LedgerSnackbarErrorComponent, {
+                    data: err,
+                    duration: 5000,
+                });
+                snack.onAction().subscribe(() => {
+                    this.isShowLedgerLoadHelperText = true;
+                });
             });
     }
 
@@ -96,4 +94,28 @@ export class HomeComponent implements OnInit {
     showHome(): boolean {
         return !this.showLogin() && !this.showDashboard();
     }
+
+    openNewWalletDialog(): void {
+        const ref = this._dialog.open(NewSeedDialogComponent);
+        ref.afterClosed().subscribe((isNewWalletCreated) => {
+            this.isLoggedIn = isNewWalletCreated;
+        });
+    }
+}
+
+@Component({
+    selector: 'ledger-snack-bar',
+    template: `<div style="display: flex; justify-content: space-between; align-items: center">
+        <mat-icon>error_outline</mat-icon>
+        <span style="margin-right: 48px; margin-left: 12px">{{ data }}</span>
+        <button mat-button color="accent" style="width: 130px" #action (click)="snackBar.dismissWithAction()">
+            Troubleshoot
+        </button>
+    </div>`,
+})
+export class LedgerSnackbarErrorComponent {
+    constructor(
+        @Inject(MAT_SNACK_BAR_DATA) public data: string,
+        public snackBar: MatSnackBarRef<LedgerSnackbarErrorComponent>
+    ) {}
 }

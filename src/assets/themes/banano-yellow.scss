@@ -8,7 +8,7 @@
 @use 'node_modules/@brightlayer-ui/angular-themes/common';
 
 $material-theme-primary: mat.define-palette(blui.$blui-yellow, 500);
-$material-theme-accent: mat.define-palette(blui.$blui-yellow, 500);
+$material-theme-accent: mat.define-palette(blui.$blui-orange, 500);
 $material-theme-warn: mat.define-palette(blui.$blui-red, 500);
 $banano-yellow: map-merge(
     mat.define-dark-theme($material-theme-primary, $material-theme-warn, $material-theme-warn),

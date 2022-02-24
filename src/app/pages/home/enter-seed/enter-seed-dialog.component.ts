@@ -7,8 +7,8 @@ import { UtilService } from '@app/services/util.service';
 import { SeedService } from '@app/services/seed.service';
 
 @Component({
-    selector: 'app-seed-dialog',
-    styleUrls: ['seed-dialog.component.scss'],
+    selector: 'app-enter-seed-dialog',
+    styleUrls: ['enter-seed-dialog.component.scss'],
     template: `
         <div class="seed-dialog">
             <h1 mat-dialog-title>Enter Seed / Mnemonic</h1>
@@ -66,7 +66,7 @@ import { SeedService } from '@app/services/seed.service';
         </div>
     `,
 })
-export class SeedDialogComponent {
+export class EnterSeedDialogComponent {
     secret = '';
     password = '';
     activeStep = 0;
@@ -78,7 +78,7 @@ export class SeedDialogComponent {
 
     constructor(
         public util: UtilService,
-        public dialogRef: MatDialogRef<SeedDialogComponent>,
+        public dialogRef: MatDialogRef<EnterSeedDialogComponent>,
         private readonly _apiService: SpyglassService,
         private readonly _transactionService: TransactionService,
         private readonly _accountService: AccountService,

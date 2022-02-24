@@ -14,7 +14,6 @@ type UnopenedAccountResponse = {
     unopenedAccount: true;
 };
 
-
 @Injectable({
     providedIn: 'root',
 })

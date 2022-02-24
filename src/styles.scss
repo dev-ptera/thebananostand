@@ -84,6 +84,10 @@ body {
     padding-bottom: 0 !important;
 }
 
+.mat-snack-bar-container {
+    max-width: unset !important;
+}
+
 .loading-button {
     display: flex !important;
     height: 36px;

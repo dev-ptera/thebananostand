@@ -1,18 +1,4 @@
 <section class="login-section" [class.fullScreen]="!useCard">
-    <div
-        style="
-            width: 100vw;
-            height: 100vh;
-            position: fixed;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: -1;
-        "
-    >
-        <img src="assets/banana.svg" style="height: 87vh; margin-top: 0vh; margin-right: 40vw" />
-    </div>
-
     <mat-card class="login-card">
         <mat-card-header *ngIf="useCard" class="password-form-card-header">
             <mat-card-title style="margin-bottom: 0">Welcome Back!</mat-card-title>

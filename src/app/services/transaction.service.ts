@@ -110,7 +110,13 @@ export class TransactionService {
             return Promise.resolve();
         } catch (err) {
             console.error(err);
-            return Promise.reject(err);
+            if (err.message) {
+                if (err.message.includes('No device selected')) {
+                    return Promise.reject('No ledger device connected.');
+                }
+            }
+
+            return Promise.reject('Error connecting ledger.');
         }
     }
 

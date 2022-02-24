@@ -16,7 +16,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDividerModule } from '@angular/material/divider';
 
 import { AppComponent } from './app.component';
-import { HomeComponent } from './pages/home/home.component';
+import { HomeComponent, LedgerSnackbarErrorComponent } from './pages/home/home.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -48,11 +48,13 @@ import { ReceiveDialogComponent } from '@app/pages/account/dialogs/receive/recei
 import { MatChipsModule } from '@angular/material/chips';
 import { FilterDialogComponent } from '@app/pages/account/dialogs/filter/filter-dialog.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { SeedDialogComponent } from '@app/pages/home/seed/seed-dialog.component';
+import { EnterSeedDialogComponent } from '@app/pages/home/enter-seed/enter-seed-dialog.component';
 import { ResponsiveDirective } from './directives/responsive.directive';
 import { LoginComponent } from '@app/pages/login/login.component';
 import { AppThemePickerComponent } from '@app/components/theme-picker/theme-picker.component';
 import { AppAccountSettingsComponent } from '@app/components/account-settings/account-settings.component';
+import { NewSeedDialogComponent } from '@app/pages/home/new-seed/new-seed-dialog.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
     declarations: [
@@ -67,10 +69,12 @@ import { AppAccountSettingsComponent } from '@app/components/account-settings/ac
         ChangeRepDialogComponent,
         ReceiveDialogComponent,
         FilterDialogComponent,
-        SeedDialogComponent,
+        EnterSeedDialogComponent,
         ResponsiveDirective,
         LoginComponent,
         AppAccountSettingsComponent,
+        NewSeedDialogComponent,
+        LedgerSnackbarErrorComponent,
     ],
     imports: [
         AppRoutingModule,
@@ -98,6 +102,7 @@ import { AppAccountSettingsComponent } from '@app/components/account-settings/ac
         EmptyStateModule,
         MatSlideToggleModule,
         MatSelectModule,
+        MatSnackBarModule,
         ReactiveFormsModule,
         MatCheckboxModule,
         MatChipsModule,
