@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Data, RouterOutlet } from '@angular/router';
 import { slideInAnimation } from './animation';
 import { ViewportService } from '@app/services/viewport.service';
-import { AccountService } from '@app/services/account.service';
 import { SeedService } from '@app/services/seed.service';
 
 @Component({
