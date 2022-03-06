@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
-import { SeedService } from '@app/services/seed.service';
+import { SecretService } from '@app/services/secret.service';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -17,11 +17,12 @@ export class LoginComponent implements OnInit {
     hasIncorrectPassword: boolean;
 
     password = new FormControl('', []);
+    passwordInput;
 
     constructor(
         private readonly _breakpointObserver: BreakpointObserver,
         private readonly _changeDetectorRef: ChangeDetectorRef,
-        private readonly _seedService: SeedService
+        private readonly _seedService: SecretService
     ) {}
 
     ngOnInit(): void {
@@ -29,6 +30,10 @@ export class LoginComponent implements OnInit {
             this.useCard = !state.matches;
             this._changeDetectorRef.detectChanges();
         });
+    }
+
+    ngAfterViewInit(): void {
+        this.passwordInput = document.getElementById('password');
     }
 
     togglePasswordVisibility(): void {
@@ -51,7 +56,10 @@ export class LoginComponent implements OnInit {
             .catch((err) => {
                 console.error(err);
                 this.hasIncorrectPassword = true;
+                console.log(this.password);
                 this.password.setErrors({ password: 'incorrect' });
+                this.passwordInput.focus();
+                this.password.markAsTouched();
             });
     }
 }

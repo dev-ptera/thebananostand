@@ -48,7 +48,7 @@ import { ReceiveDialogComponent } from '@app/pages/account/dialogs/receive/recei
 import { MatChipsModule } from '@angular/material/chips';
 import { FilterDialogComponent } from '@app/pages/account/dialogs/filter/filter-dialog.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { EnterSeedDialogComponent } from '@app/pages/home/enter-seed/enter-seed-dialog.component';
+import { EnterSecretDialogComponent } from '@app/pages/home/enter-secret/enter-secret-dialog.component';
 import { ResponsiveDirective } from './directives/responsive.directive';
 import { LoginComponent } from '@app/pages/login/login.component';
 import { AppThemePickerComponent } from '@app/components/theme-picker/theme-picker.component';
@@ -69,7 +69,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
         ChangeRepDialogComponent,
         ReceiveDialogComponent,
         FilterDialogComponent,
-        EnterSeedDialogComponent,
+        EnterSecretDialogComponent,
         ResponsiveDirective,
         LoginComponent,
         AppAccountSettingsComponent,

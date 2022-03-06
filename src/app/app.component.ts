@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Data, RouterOutlet } from '@angular/router';
 import { slideInAnimation } from './animation';
 import { ViewportService } from '@app/services/viewport.service';
-import { SeedService } from '@app/services/seed.service';
+import { SecretService } from '@app/services/secret.service';
 
 @Component({
     selector: 'app-root',
@@ -10,10 +10,10 @@ import { SeedService } from '@app/services/seed.service';
     animations: [slideInAnimation],
 })
 export class AppComponent {
-    constructor(private readonly _vp: ViewportService, private readonly _seedService: SeedService) {}
+    constructor(private readonly _vp: ViewportService, private readonly _seedService: SecretService) {}
 
     showBanana(): boolean {
-        const unlocked = this._seedService.isLocalSeedUnlocked() || this._seedService.isLocalLedgerUnlocked();
+        const unlocked = this._seedService.isLocalSecretUnlocked() || this._seedService.isLocalLedgerUnlocked();
         const isBigScreen = !this._vp.isSmall() && !this._vp.isMedium();
         return !unlocked && isBigScreen;
     }

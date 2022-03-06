@@ -4,20 +4,17 @@ import { TransactionService } from '@app/services/transaction.service';
 import { AccountService } from '@app/services/account.service';
 import { SpyglassService } from '@app/services/spyglass.service';
 import { UtilService } from '@app/services/util.service';
-import { SeedService } from '@app/services/seed.service';
+import { SecretService } from '@app/services/secret.service';
 
 @Component({
-    selector: 'app-enter-seed-dialog',
-    styleUrls: ['enter-seed-dialog.component.scss'],
+    selector: 'app-enter-secret-dialog',
+    styleUrls: ['enter-secret-dialog.component.scss'],
     template: `
-        <div class="seed-dialog">
+        <div class="secret-dialog">
             <h1 mat-dialog-title>Enter Seed / Mnemonic</h1>
             <div mat-dialog-content style="display: flex; flex: 1 1 0px; flex-direction: column">
                 <ng-container *ngIf="activeStep === 0">
-                    <div style="margin-bottom: 24px">
-                        Your secret phrase never leaves this website.
-                        <span class="mat-subheading-1">Only seed working for now.</span>
-                    </div>
+                    <div style="margin-bottom: 24px">Your secret phrase never leaves this website.</div>
                     <mat-form-field appearance="fill">
                         <mat-label>Seed or Mnemonic</mat-label>
                         <textarea
@@ -56,7 +53,7 @@ import { SeedService } from '@app/services/seed.service';
                         color="primary"
                         (click)="next()"
                         class="loading-button"
-                        [disabled]="!isValidSeed()"
+                        [disabled]="!isValidSecret()"
                     >
                         <ng-container *ngIf="activeStep < lastStep">Next</ng-container>
                         <ng-container *ngIf="activeStep === lastStep">Load</ng-container>
@@ -66,7 +63,7 @@ import { SeedService } from '@app/services/seed.service';
         </div>
     `,
 })
-export class EnterSeedDialogComponent {
+export class EnterSecretDialogComponent {
     secret = '';
     password = '';
     activeStep = 0;
@@ -78,19 +75,22 @@ export class EnterSeedDialogComponent {
 
     constructor(
         public util: UtilService,
-        public dialogRef: MatDialogRef<EnterSeedDialogComponent>,
+        public dialogRef: MatDialogRef<EnterSecretDialogComponent>,
         private readonly _apiService: SpyglassService,
         private readonly _transactionService: TransactionService,
         private readonly _accountService: AccountService,
-        private readonly _seedService: SeedService
+        private readonly _seedService: SecretService
     ) {}
 
     closeDialog(): void {
         this.dialogRef.close(this.hasCreatedNewWallet);
     }
 
-    isValidSeed(): boolean {
-        return true;
+    isValidSecret(): boolean {
+        if (!this.secret) {
+            return false;
+        }
+        return this.secret.trim().length === 64 || this.secret.trim().split(' ').length === 24;
     }
 
     next(): void {
@@ -114,7 +114,7 @@ export class EnterSeedDialogComponent {
     }
 
     async addSeed(): Promise<void> {
-        await this._seedService.storeSeed(this.secret, this.password);
+        await this._seedService.storeSecret(this.secret, this.password);
         this.hasCreatedNewWallet = true;
         this.dialogRef.close(this.hasCreatedNewWallet);
     }

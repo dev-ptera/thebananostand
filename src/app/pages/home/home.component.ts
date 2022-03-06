@@ -5,8 +5,8 @@ import { ViewportService } from '@app/services/viewport.service';
 import { TransactionService } from '@app/services/transaction.service';
 import { MatDialog } from '@angular/material/dialog';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { SeedService } from '@app/services/seed.service';
-import { EnterSeedDialogComponent } from '@app/pages/home/enter-seed/enter-seed-dialog.component';
+import { SecretService } from '@app/services/secret.service';
+import { EnterSecretDialogComponent } from '@app/pages/home/enter-secret/enter-secret-dialog.component';
 import { NewSeedDialogComponent } from '@app/pages/home/new-seed/new-seed-dialog.component';
 import { MAT_SNACK_BAR_DATA, MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 
@@ -57,11 +57,11 @@ export class HomeComponent implements OnInit {
         private readonly _transactionService: TransactionService,
         private readonly _accountService: AccountService,
         private readonly _viewportService: ViewportService,
-        private readonly _seedService: SeedService
+        private readonly _seedService: SecretService
     ) {}
 
     ngOnInit(): void {
-        this.isLoggedIn = this._seedService.isLocalSeedUnlocked();
+        this.isLoggedIn = this._seedService.isLocalSecretUnlocked();
         if (this._accountService.accounts.length > 0) {
             this.isLedgerLoaded = true;
         }
@@ -76,7 +76,7 @@ export class HomeComponent implements OnInit {
     }
 
     openEnterSeedDialog(): void {
-        const ref = this._dialog.open(EnterSeedDialogComponent);
+        const ref = this._dialog.open(EnterSecretDialogComponent);
         ref.afterClosed().subscribe((isNewWalletImported) => {
             this.isLoggedIn = isNewWalletImported;
         });

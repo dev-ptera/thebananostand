@@ -33,6 +33,11 @@
                                 "glob": "**/*",
                                 "input": "./node_modules/@bananocoin",
                                 "output": "./assets/@bananocoin"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "./node_modules/bip39",
+                                "output": "./assets/bip39"
                             }
                         ],
                         "styles": [

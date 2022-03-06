@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { UtilService } from './util.service';
 import { environment } from '../../environments/environment';
 import { NanoClientService } from '@app/services/nano-client.service';
-import { SeedService } from '@app/services/seed.service';
+import { SecretService } from '@app/services/secret.service';
 
 type ReceiveResponse = {
     pendingBlocks: string[];
@@ -21,7 +21,7 @@ type ReceiveResponse = {
 export class TransactionService {
     constructor(
         private readonly _util: UtilService,
-        private readonly _seedService: SeedService,
+        private readonly _secretService: SecretService,
         private readonly _nanoClientService: NanoClientService
     ) {}
 
@@ -61,7 +61,8 @@ export class TransactionService {
         this._configApi(bananodeApi);
         let representative = await bananodeApi.getAccountRepresentative(account);
         if (!representative) {
-            representative = 'ban_3batmanuenphd7osrez9c45b3uqw9d9u81ne8xa6m43e1py56y9p48ap69zg'; // TODO populate this via the rep scores API. For now default to batman
+            // TODO populate this via the rep scores API. For now default to batman
+            representative = 'ban_3batmanuenphd7osrez9c45b3uqw9d9u81ne8xa6m43e1py56y9p48ap69zg';
         }
         const loggingUtil = window.bananocoinBananojs.loggingUtil;
         const depositUtil = window.bananocoinBananojs.depositUtil;
@@ -122,8 +123,8 @@ export class TransactionService {
 
     /** Given an index, reads ledger device & returns an address. */
     async getAccountFromIndex(accountIndex: number): Promise<string> {
-        if (this._seedService.isLocalSeedUnlocked()) {
-            const seed = await this._seedService.getSeed();
+        if (this._secretService.isLocalSecretUnlocked()) {
+            const seed = await this._secretService.getSecret();
             const privateKey = await window.bananocoinBananojs.getPrivateKey(seed, accountIndex);
             const publicKey = await window.bananocoinBananojs.getPublicKey(privateKey);
             const account = window.bananocoinBananojs.getBananoAccount(publicKey);
@@ -135,8 +136,8 @@ export class TransactionService {
     }
 
     async getAccountSigner(index: number): any {
-        if (this._seedService.isLocalSeedUnlocked()) {
-            const seed = await this._seedService.getSeed();
+        if (this._secretService.isLocalSecretUnlocked()) {
+            const seed = await this._secretService.getSecret();
             return await window.bananocoinBananojs.getPrivateKey(seed, index);
         }
         return await window.bananocoin.bananojsHw.getLedgerAccountSigner(index);

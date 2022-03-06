@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import { SeedService } from '@app/services/seed.service';
+import { SecretService } from '@app/services/secret.service';
 
 @Component({
     selector: 'app-account-settings',
@@ -21,7 +21,7 @@ import { SeedService } from '@app/services/seed.service';
 export class AppAccountSettingsComponent {
     userMenuOpen = false;
 
-    constructor(private readonly _router: Router, private readonly _seedService: SeedService) {}
+    constructor(private readonly _router: Router, private readonly _seedService: SecretService) {}
 
     clearData(): void {
         this._seedService.clearSeed();
