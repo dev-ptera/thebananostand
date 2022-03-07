@@ -79,7 +79,7 @@ export class EnterSecretDialogComponent {
         private readonly _apiService: SpyglassService,
         private readonly _transactionService: TransactionService,
         private readonly _accountService: AccountService,
-        private readonly _seedService: SecretService
+        private readonly _secretService: SecretService
     ) {}
 
     closeDialog(): void {
@@ -114,7 +114,7 @@ export class EnterSecretDialogComponent {
     }
 
     async addSeed(): Promise<void> {
-        await this._seedService.storeSecret(this.secret, this.password);
+        await this._secretService.storeSecret(this.secret, this.password);
         this.hasCreatedNewWallet = true;
         this.dialogRef.close(this.hasCreatedNewWallet);
     }

@@ -13,6 +13,7 @@ import { ReceiveDialogComponent } from '@app/pages/account/dialogs/receive/recei
 import { ThemeService } from '@app/services/theme.service';
 import { ConfirmedTx } from '@app/types/ConfirmedTx';
 import { RpcService } from '@app/services/rpc.service';
+import { ViewportService } from '@app/services/viewport.service';
 import { environment } from '../../../environments/environment';
 import { FilterDialogComponent, FilterDialogData } from '@app/pages/account/dialogs/filter/filter-dialog.component';
 
@@ -47,6 +48,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     constructor(
         public util: UtilService,
+        public vp: ViewportService,
         private readonly _router: Router,
         private readonly _dialog: MatDialog,
         private readonly _ref: ChangeDetectorRef,

@@ -4,7 +4,7 @@
             <button mat-icon-button (click)="goHome()">
                 <mat-icon>arrow_back</mat-icon>
             </button>
-            <div [style.marginLeft.px]="8">{{ account?.fullAddress }}</div>
+            <div [style.marginLeft.px]="8">{{ vp.md || vp.sm ? account?.shortAddress : account?.fullAddress }}</div>
         </div>
         <div style="display: flex">
             <app-theme-picker></app-theme-picker>
@@ -26,7 +26,13 @@
         </button>
     </mat-toolbar>
 
-    <div class="app-body" *ngIf="account" responsive>
+    <div
+        class="app-body"
+        *ngIf="account"
+        responsive
+        [style.paddingRight.px]="vp.sm ? 0 : inherit"
+        [style.paddingLeft.px]="vp.sm ? 0 : inherit"
+    >
         <div class="app-body-content">
             <div
                 style="
@@ -36,9 +42,12 @@
                     margin-bottom: 8px;
                     margin-top: 16px;
                 "
+                [style.paddingLeft.px]="vp.sm ? 16 : inherit"
+                [style.paddingRight.px]="vp.sm ? 16 : inherit"
             >
                 <div style="display: flex; align-items: center">
                     <img
+                        *ngIf="!vp.sm"
                         style="height: 150px; margin-top: -32px; width: 150px; margin-right: 16px; margin-left: -16px"
                         src="https://monkey.banano.cc/api/v1/monkey/{{ account?.fullAddress }}"
                     />
@@ -56,7 +65,7 @@
                                 [disabled]="account.pending.length === 0"
                             >
                                 <mat-icon>download</mat-icon>
-                                <span>Receive Incoming</span>
+                                <span>Receive {{ vp.sm || vp.md ? '' : ' Incoming' }}</span>
                                 <span *ngIf="account.pending.length > 0">&nbsp;({{ account.pending.length }})</span>
                             </button>
 
@@ -79,16 +88,18 @@
                                 [disabled]="!account.representative"
                             >
                                 <mat-icon>how_to_vote</mat-icon>
-                                <span>Change Representative</span>
+                                <span>Change {{ vp.sm || vp.md ? 'Rep' : 'Representative' }}</span>
                             </button>
                         </div>
                     </div>
                 </div>
-                <app-qr [address]="account.fullAddress"></app-qr>
+                <app-qr *ngIf="!vp.sm && !vp.md" [address]="account.fullAddress"></app-qr>
             </div>
             <div
                 class="mat-headline"
                 style="margin: 16px 0; display: flex; align-items: center; justify-content: space-between"
+                [style.paddingLeft.px]="vp.sm ? 16 : inherit"
+                [style.paddingRight.px]="vp.sm ? 16 : inherit"
             >
                 <div style="display: flex; align-items: center">
                     <span>Account History</span>
@@ -101,7 +112,9 @@
                     *ngIf="!hideTransactionFilters"
                     class="fade"
                 >
-                    <div class="mat-subheading-2" style="margin: 0; margin-right: 12px">Transaction Filters</div>
+                    <div class="mat-subheading-2" style="margin: 0; margin-right: 12px">
+                        {{ vp.sm ? '' : 'Transaction ' }} Filters
+                    </div>
                     <mat-icon style="cursor: pointer" (click)="openFilterDialog()">
                         {{ isFilterApplied() ? 'filter_list' : 'filter_list_off' }}
                     </mat-icon>
@@ -128,10 +141,7 @@
                     <blui-empty-state style="margin-top: 72px">
                         <mat-icon blui-empty-icon>no_accounts</mat-icon>
                         <div blui-title>Unopened Account</div>
-                        <div blui-description>
-                            This account has not been opened yet. To open this account, it must receive an incoming
-                            transaction.
-                        </div>
+                        <div blui-description>To open this account, it must receive an incoming transaction.</div>
                     </blui-empty-state>
                 </ng-container>
                 <ng-container *ngIf="showProgressBar()">
@@ -201,14 +211,18 @@
                                     }}</mat-icon>
                                 </button>
                             </span>
-                            <span [style.marginLeft.px]="32">tx #{{ util.numberWithCommas(item.height) }}</span>
+                            <span *ngIf="!vp.sm" [style.marginLeft.px]="32">
+                                tx #{{ util.numberWithCommas(item.height) }}
+                            </span>
                         </div>
                     </blui-info-list-item>
                     <blui-info-list-item *ngIf="!item" style="height: 50px">
                         <mat-icon blui-icon>sync</mat-icon>
                         <div blui-title>Loading</div>
                         <div blui-right-content>
-                            <span [style.marginLeft.px]="32"> tx #{{ util.numberWithCommas(accountHeight - i) }} </span>
+                            <span *ngIf="!vp.sm" [style.marginLeft.px]="32">
+                                tx #{{ util.numberWithCommas(accountHeight - i) }}
+                            </span>
                         </div>
                     </blui-info-list-item>
                 </div>

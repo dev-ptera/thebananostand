@@ -7,6 +7,7 @@ import { AccountOverview } from '@app/types/AccountOverview';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatDialog } from '@angular/material/dialog';
+import { ViewportService } from '@app/services/viewport.service';
 import { AddIndexDialogComponent } from '@app/pages/dashboard/add-index/add-index.component';
 
 @Component({
@@ -31,7 +32,8 @@ export class DashboardComponent implements OnInit {
         private readonly _router: Router,
         private readonly _dialog: MatDialog,
         private readonly _util: UtilService,
-        private readonly _accountService: AccountService
+        private readonly _accountService: AccountService,
+        public vp: ViewportService
     ) {}
 
     ngOnInit(): void {

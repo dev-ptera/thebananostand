@@ -57,11 +57,11 @@ export class HomeComponent implements OnInit {
         private readonly _transactionService: TransactionService,
         private readonly _accountService: AccountService,
         private readonly _viewportService: ViewportService,
-        private readonly _seedService: SecretService
+        private readonly _secretService: SecretService
     ) {}
 
     ngOnInit(): void {
-        this.isLoggedIn = this._seedService.isLocalSecretUnlocked();
+        this.isLoggedIn = this._secretService.isLocalSecretUnlocked();
         if (this._accountService.accounts.length > 0) {
             this.isLedgerLoaded = true;
         }
@@ -87,7 +87,7 @@ export class HomeComponent implements OnInit {
             .checkLedgerOrError()
             .then(() => {
                 this.isLedgerLoaded = true;
-                this._seedService.unlockedLocalLedger = true;
+                this._secretService.unlockedLocalLedger = true;
             })
             .catch((err) => {
                 const snack = this._snackBar.openFromComponent(LedgerSnackbarErrorComponent, {
@@ -105,7 +105,7 @@ export class HomeComponent implements OnInit {
     }
 
     showLogin(): boolean {
-        return !this.isLedgerLoaded && this._seedService.hasSecret() && !this.isLoggedIn && !this.isCancelLogin;
+        return !this.isLedgerLoaded && this._secretService.hasSecret() && !this.isLoggedIn && !this.isCancelLogin;
     }
 
     showHome(): boolean {

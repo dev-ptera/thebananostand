@@ -10,10 +10,10 @@ import { SecretService } from '@app/services/secret.service';
     animations: [slideInAnimation],
 })
 export class AppComponent {
-    constructor(private readonly _vp: ViewportService, private readonly _seedService: SecretService) {}
+    constructor(private readonly _vp: ViewportService, private readonly _secretService: SecretService) {}
 
     showBanana(): boolean {
-        const unlocked = this._seedService.isLocalSecretUnlocked() || this._seedService.isLocalLedgerUnlocked();
+        const unlocked = this._secretService.isLocalSecretUnlocked() || this._secretService.isLocalLedgerUnlocked();
         const isBigScreen = !this._vp.isSmall() && !this._vp.isMedium();
         return !unlocked && isBigScreen;
     }

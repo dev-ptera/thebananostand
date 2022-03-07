@@ -48,7 +48,11 @@
         Advanced
     </mat-slide-toggle>
 </div>
-<mat-card style="padding: 0; display: flex; flex-direction: column">
+<mat-card
+    style="padding: 0; display: flex; flex-direction: column"
+    [style.marginLeft.px]="vp.sm ? -16 : 0"
+    [style.marginRight.px]="vp.sm ? -16 : 0"
+>
     <div style="margin-left: 16px; padding: 16px 0">
         <mat-checkbox
             color="warn"
@@ -97,9 +101,11 @@
                 (change)="toggleCheck($event, account)"
             >
             </mat-checkbox>
-            <div blui-left-content style="min-width: 120px">
+            <div blui-left-content [style.minWidth.px]="vp.sm ? 50 : 120">
                 <blui-list-item-tag
-                    [label]="(account.index > 100000 ? '#' : 'Account #') + _util.numberWithCommas(account.index)"
+                    [label]="
+                        (account.index > 100000 || vp.sm ? '#' : 'Account #') + _util.numberWithCommas(account.index)
+                    "
                 ></blui-list-item-tag>
             </div>
             <div blui-title>{{ account.shortAddress }}</div>

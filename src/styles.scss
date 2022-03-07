@@ -4,6 +4,10 @@
 @use 'assets/themes/jungle-green';
 @use 'assets/themes/nano-blue';
 
+html * {
+    box-sizing: border-box;
+}
+
 html,
 body {
     height: 100%;
