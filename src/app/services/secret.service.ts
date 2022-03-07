@@ -41,7 +41,7 @@ export class SecretService {
     async unlockWallet(password: string): Promise<void> {
         const encryptedSeed = window.localStorage.getItem(this.localStorageSeedId);
         // @ts-ignore
-        const decrypt = await window.bananocoin.passwordUtils.decryptData(encryptedSeed, password);
+        await window.bananocoin.passwordUtils.decryptData(encryptedSeed, password);
         this.walletPassword = password;
         this.unlockedLocalSecret = true;
     }
