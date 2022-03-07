@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as Colors from '@brightlayer-ui/colors';
 import { AccountService } from '@app/services/account.service';
 import { TransactionService } from '@app/services/transaction.service';
+import { SecretService } from '@app/services/secret.service';
 
 export type ReceiveDialogData = {
     address: string;
@@ -57,8 +58,13 @@ export type ReceiveDialogData = {
                 <div mat-dialog-content style="margin-bottom: 32px;">
                     <ng-container>
                         <div style="margin-bottom: 8px">
-                            You are attempting to receive incoming transaction(s). Use the button below and your ledger
-                            device to manually receive each block.
+                            You are attempting to receive incoming transaction(s).
+                            <ng-container *ngIf="secretService.isLocalSecretUnlocked()">
+                                Use the button below receive each block.
+                            </ng-container>
+                            <ng-container *ngIf="secretService.isLocalLedgerUnlocked()">
+                                Use the button below and your ledger device to manually receive each block.
+                            </ng-container>
                         </div>
                         <div *ngIf="activeStep === 0" style="margin-bottom: 8px">
                             There are <strong>{{ data.blocks.length }}</strong> total transaction(s) to receive.
@@ -108,7 +114,8 @@ export class ReceiveDialogComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: ReceiveDialogData,
         public dialogRef: MatDialogRef<ReceiveDialogComponent>,
         private readonly _transactionService: TransactionService,
-        private readonly _accountService: AccountService
+        private readonly _accountService: AccountService,
+        public secretService: SecretService,
     ) {}
 
     ngOnInit(): void {

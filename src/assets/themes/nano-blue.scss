@@ -5,6 +5,7 @@
 @use 'node_modules/@brightlayer-ui/angular-themes/blueTheme';
 @use 'node_modules/@brightlayer-ui/angular-themes/margins';
 @use 'node_modules/@brightlayer-ui/angular-themes/fonts';
+@use 'node_modules/@brightlayer-ui/angular-themes/typography';
 @use 'node_modules/@brightlayer-ui/angular-themes/common';
 
 $material-theme-primary: mat.define-palette(blui.$blui-blue, 500);
@@ -54,6 +55,7 @@ $nano-blue: map-merge(
     @include blui-component-theme.blui-components-theme($nano-blue);
     @include blueTheme.bluetheme($nano-blue);
     @include fonts.bodyfont();
+    @include typography.typography();
     @include common.common();
     .blui-user-menu-avatar {
         color: map-get(blui.$blui-white, 500) !important;

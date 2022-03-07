@@ -24,6 +24,11 @@ body {
     min-height: 100vh;
 }
 
+.blui-empty-state-description {
+    font-size: 0.875rem!important;
+    line-height: 1.57!important;
+}
+
 .app-toolbar {
     display: flex;
     padding-right: 32px !important;

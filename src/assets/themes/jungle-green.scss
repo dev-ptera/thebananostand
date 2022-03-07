@@ -5,6 +5,7 @@
 @use 'node_modules/@brightlayer-ui/angular-themes/blueTheme';
 @use 'node_modules/@brightlayer-ui/angular-themes/margins';
 @use 'node_modules/@brightlayer-ui/angular-themes/fonts';
+@use 'node_modules/@brightlayer-ui/angular-themes/typography';
 @use 'node_modules/@brightlayer-ui/angular-themes/common';
 
 $material-theme-primary: mat.define-palette(blui.$blui-green, 700);
@@ -54,6 +55,7 @@ $jungle-green-theme: map-merge(
     @include blui-component-theme.blui-components-theme($jungle-green-theme);
     @include blueTheme.bluetheme($jungle-green-theme);
     @include fonts.bodyfont();
+    @include typography.typography();
     @include common.common();
 
     .blui-user-menu-avatar {

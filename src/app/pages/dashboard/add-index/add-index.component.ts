@@ -19,7 +19,9 @@ import { FormControl } from '@angular/forms';
                 </form>
             </div>
             {{ errorMessage }}
-            <div mat-dialog-actions style="display: flex; justify-content: space-between">
+            <blui-spacer></blui-spacer>
+            <mat-divider style="margin-left: -24px; margin-right: -24px"></mat-divider>
+            <div mat-dialog-actions style="display: flex; justify-content: space-between; margin-bottom: 0">
                 <button mat-stroked-button mat-dialog-close color="primary">Close</button>
                 <button
                     mat-flat-button

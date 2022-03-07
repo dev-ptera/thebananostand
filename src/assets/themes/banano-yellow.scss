@@ -5,6 +5,7 @@
 @use 'node_modules/@brightlayer-ui/angular-themes/darkTheme';
 @use 'node_modules/@brightlayer-ui/angular-themes/margins';
 @use 'node_modules/@brightlayer-ui/angular-themes/fonts';
+@use 'node_modules/@brightlayer-ui/angular-themes/typography';
 @use 'node_modules/@brightlayer-ui/angular-themes/common';
 
 $material-theme-primary: mat.define-palette(blui.$blui-yellow, 500);
@@ -55,6 +56,7 @@ $banano-yellow: map-merge(
     @include blui-component-theme.blui-components-theme($banano-yellow);
     @include darkTheme.darktheme($banano-yellow);
     @include fonts.bodyfont();
+    @include typography.typography();
     @include common.common();
 
     .primary {
