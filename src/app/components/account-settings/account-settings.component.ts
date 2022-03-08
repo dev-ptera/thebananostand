@@ -21,15 +21,15 @@ import { SecretService } from '@app/services/secret.service';
 export class AppAccountSettingsComponent {
     userMenuOpen = false;
 
-    constructor(private readonly _router: Router, private readonly _seedService: SecretService) {}
+    constructor(private readonly _router: Router, private readonly _secretService: SecretService) {}
 
     clearData(): void {
-        this._seedService.clearSeed();
+        this._secretService.clearSeed();
         void this._router.navigate(['']);
         this.userMenuOpen = false;
     }
 
     show(): boolean {
-        return this._seedService.hasSecret();
+        return this._secretService.hasSecret();
     }
 }
