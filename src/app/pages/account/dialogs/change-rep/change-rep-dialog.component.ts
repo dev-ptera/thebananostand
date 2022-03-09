@@ -197,7 +197,7 @@ export class ChangeRepDialogComponent implements OnInit {
     selectFromList: boolean;
 
     colors = Colors;
-    repScores: RepScore[];
+    repScores: RepScore[] = [];
     representativesListForm = new FormControl();
     currentRepresentativeMetaData: RepScore;
     newRepresentativeMetaData: RepScore;
