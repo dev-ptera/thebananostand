@@ -67,17 +67,17 @@ export type FilterDialogData = {
                 </mat-chip-list>
 
                 <div style="display: flex; justify-content: space-between; margin-top: 24px">
-                    <mat-form-field style="width: 130px" appearance="fill">
+                    <mat-form-field blui-input style="width: 130px" appearance="fill">
                         <mat-label>Min BAN</mat-label>
                         <input matInput type="number" [(ngModel)]="data.minAmount" />
                     </mat-form-field>
-                    <mat-form-field style="width: 130px" appearance="fill">
+                    <mat-form-field blui-input style="width: 130px" appearance="fill">
                         <mat-label>Max BAN</mat-label>
                         <input matInput type="number" [(ngModel)]="data.maxAmount" />
                     </mat-form-field>
                 </div>
 
-                <mat-form-field style="width: 100%" appearance="fill">
+                <mat-form-field blui-input style="width: 100%" appearance="fill">
                     <mat-label>Filter Addresses</mat-label>
                     <input
                         matInput

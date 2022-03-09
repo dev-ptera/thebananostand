@@ -21,7 +21,7 @@ import { SecretService } from '@app/services/secret.service';
                             matInput
                             placeholder="Secret Phrase"
                             [(ngModel)]="secret"
-                            style="min-height: 120px"
+                            style="min-height: 120px; resize: none"
                         ></textarea>
                     </mat-form-field>
                 </ng-container>
