@@ -13,8 +13,6 @@ export class SecretService {
     private readonly localStorageSeedId = 'bananostand_encryptedSeed';
 
     async storeSecret(secret: string, walletPassword: string): Promise<void> {
-        this.walletPassword = walletPassword;
-        this.unlockedLocalSecret = true;
         if (secret.length === 64) {
             await this.storeSeed(secret, walletPassword);
         } else {
@@ -22,9 +20,16 @@ export class SecretService {
             const seed = window.bip39.mnemonicToEntropy(secret);
             await this.storeSeed(seed, walletPassword);
         }
+        this.walletPassword = walletPassword;
+        this.unlockedLocalSecret = true;
     }
 
     private async storeSeed(seed: string, password: string): Promise<void> {
+        // @ts-ignore
+        const result = window.bananocoin.bananojs.bananoUtil.isSeedValid(seed);
+        if (!result.valid) {
+            return Promise.reject("Secret is not valid");
+        }
         // @ts-ignore
         const encryptedSeed = await window.bananocoin.passwordUtils.encryptData(seed, password);
         window.localStorage.setItem(this.localStorageSeedId, encryptedSeed);

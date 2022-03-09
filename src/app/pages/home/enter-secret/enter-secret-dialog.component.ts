@@ -40,6 +40,10 @@ import { SecretService } from '@app/services/secret.service';
                     </mat-form-field>
                 </ng-container>
 
+                <div *ngIf="error" style="display: flex; align-items: center;">
+                    <mat-icon color="warn">error</mat-icon>
+                    <span style="margin-left: 8px">{{error}}</span>
+                </div>
                 <blui-spacer></blui-spacer>
                 <mat-divider style="margin-left: -24px; margin-right: -24px"></mat-divider>
                 <blui-mobile-stepper [activeStep]="activeStep" [steps]="maxSteps">
@@ -73,6 +77,8 @@ export class EnterSecretDialogComponent {
     hasCreatedNewWallet = false;
     passwordVisible = false;
 
+    error: string;
+
     constructor(
         public util: UtilService,
         public dialogRef: MatDialogRef<EnterSecretDialogComponent>,
@@ -102,6 +108,7 @@ export class EnterSecretDialogComponent {
     }
 
     back(): void {
+        this.error = undefined;
         if (this.activeStep === 0) {
             this.closeDialog();
         } else {
@@ -114,8 +121,13 @@ export class EnterSecretDialogComponent {
     }
 
     async addSeed(): Promise<void> {
-        await this._secretService.storeSecret(this.secret, this.password);
-        this.hasCreatedNewWallet = true;
-        this.dialogRef.close(this.hasCreatedNewWallet);
+        this.error = undefined;
+        this._secretService.storeSecret(this.secret, this.password).then(() => {
+            this.hasCreatedNewWallet = true;
+            this.dialogRef.close(this.hasCreatedNewWallet);
+        }).catch((err) => {
+            console.error(err);
+            this.error = err;
+        })
     }
 }
