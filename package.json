@@ -35,10 +35,8 @@
         "@brightlayer-ui/angular-themes": "^7.0.0-beta.2",
         "@brightlayer-ui/colors": "^3.0.1",
         "@dev-ptera/nano-node-rpc": "^2.0.2",
-        "bip39": "^3.0.4",
         "qrcode": "^1.5.0",
         "rxjs": "~6.6.7",
-        "stream-browserify": "^3.0.0",
         "tslib": "^2.1.0",
         "zone.js": "^0.11.5"
     },
