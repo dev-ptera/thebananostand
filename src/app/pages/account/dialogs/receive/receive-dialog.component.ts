@@ -87,10 +87,10 @@ export type ReceiveDialogData = {
                         class="loading-button"
                         (click)="receiveTransaction()"
                     >
-                        <div class="spinner-container" [class.isLoading]="loading">
+                        <div class="spinner-container" [class.isLoading]="isReceivingTx">
                             <mat-spinner class="primary-spinner" diameter="20"></mat-spinner>
                         </div>
-                        <span *ngIf="!loading"> Receive </span>
+                        <span *ngIf="!isReceivingTx"> Receive </span>
                     </button>
                 </blui-mobile-stepper>
             </ng-container>
@@ -106,7 +106,7 @@ export class ReceiveDialogComponent implements OnInit {
     errorMessage: string;
     success: boolean;
 
-    loading: boolean;
+    isReceivingTx: boolean;
 
     colors = Colors;
 
@@ -115,7 +115,7 @@ export class ReceiveDialogComponent implements OnInit {
         public dialogRef: MatDialogRef<ReceiveDialogComponent>,
         private readonly _transactionService: TransactionService,
         private readonly _accountService: AccountService,
-        public secretService: SecretService,
+        public secretService: SecretService
     ) {}
 
     ngOnInit(): void {
@@ -133,18 +133,23 @@ export class ReceiveDialogComponent implements OnInit {
 
     /** Iterates through each pending transaction block and receives them. */
     receiveTransaction(): void {
-        this.loading = true;
+        if (this.isReceivingTx) {
+            return;
+        }
+
+        this.isReceivingTx = true;
         const pendingHash = this.data.blocks[this.activeStep];
         this._transactionService
             .receive(this.data.address, this.data.index, pendingHash)
             .then((receivedHash) => {
-                this.loading = false;
+                this.isReceivingTx = false;
                 this.txHash = receivedHash;
                 this.activeStep++;
                 this.success = this.maxSteps === this.activeStep;
             })
             .catch((err) => {
                 this.errorMessage = err;
+                this.isReceivingTx = false;
             });
     }
 }

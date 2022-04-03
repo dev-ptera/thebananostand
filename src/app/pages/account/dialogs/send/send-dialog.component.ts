@@ -22,7 +22,7 @@ export type SendDialogData = {
                 style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
                 <blui-empty-state>
-                    <mat-icon blui-empty-icon> check_circle </mat-icon>
+                    <mat-icon blui-empty-icon> check_circle</mat-icon>
                     <div blui-title>Transaction Sent</div>
                     <div blui-description>
                         Your transaction has been successfully sent and can be viewed
@@ -44,7 +44,7 @@ export type SendDialogData = {
                 style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
                 <blui-empty-state>
-                    <mat-icon blui-empty-icon> error </mat-icon>
+                    <mat-icon blui-empty-icon> error</mat-icon>
                     <div blui-title>Transaction Failed</div>
                     <div blui-description>Your transaction could not be completed. {{ errorMessage }}</div>
                     <div blui-actions>
@@ -119,10 +119,10 @@ export type SendDialogData = {
                     >
                         <ng-container *ngIf="activeStep < lastStep">Next</ng-container>
                         <ng-container *ngIf="activeStep === lastStep">
-                            <div class="spinner-container" [class.isLoading]="loading">
+                            <div class="spinner-container" [class.isLoading]="isProcessingTx">
                                 <mat-spinner class="primary-spinner" diameter="20"></mat-spinner>
                             </div>
-                            <span *ngIf="!loading"> Send </span>
+                            <span *ngIf="!isProcessingTx"> Send </span>
                         </ng-container>
                     </button>
                 </blui-mobile-stepper>
@@ -141,7 +141,7 @@ export class SendDialogComponent {
     errorMessage: string;
 
     success: boolean;
-    loading: boolean;
+    isProcessingTx: boolean;
 
     colors = Colors;
 
@@ -186,17 +186,23 @@ export class SendDialogComponent {
     }
 
     withdraw(): void {
-        this.loading = true;
+        if (this.isProcessingTx) {
+            return;
+        }
+
+        this.isProcessingTx = true;
         this._transactionService
             .withdraw(this.recipient, this.sendAmount, this.data.index)
             .then((hash) => {
                 this.txHash = hash;
                 this.success = true;
+                this.isProcessingTx = false;
             })
             .catch((err) => {
                 console.error(err);
                 this.errorMessage = err;
                 this.success = false;
+                this.isProcessingTx = false;
             });
     }
 }

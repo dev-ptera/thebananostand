@@ -28,7 +28,7 @@ export class SecretService {
         // @ts-ignore
         const result = window.bananocoin.bananojs.bananoUtil.isSeedValid(seed);
         if (!result.valid) {
-            return Promise.reject("Secret is not valid");
+            return Promise.reject('Secret is not valid');
         }
         // @ts-ignore
         const encryptedSeed = await window.bananocoin.passwordUtils.encryptData(seed, password);

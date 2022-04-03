@@ -42,7 +42,7 @@ import { SecretService } from '@app/services/secret.service';
 
                 <div *ngIf="error" style="display: flex; align-items: center;">
                     <mat-icon color="warn">error</mat-icon>
-                    <span style="margin-left: 8px">{{error}}</span>
+                    <span style="margin-left: 8px">{{ error }}</span>
                 </div>
                 <blui-spacer></blui-spacer>
                 <mat-divider style="margin-left: -24px; margin-right: -24px"></mat-divider>
@@ -122,12 +122,15 @@ export class EnterSecretDialogComponent {
 
     async addSeed(): Promise<void> {
         this.error = undefined;
-        this._secretService.storeSecret(this.secret, this.password).then(() => {
-            this.hasCreatedNewWallet = true;
-            this.dialogRef.close(this.hasCreatedNewWallet);
-        }).catch((err) => {
-            console.error(err);
-            this.error = err;
-        })
+        this._secretService
+            .storeSecret(this.secret, this.password)
+            .then(() => {
+                this.hasCreatedNewWallet = true;
+                this.dialogRef.close(this.hasCreatedNewWallet);
+            })
+            .catch((err) => {
+                console.error(err);
+                this.error = err;
+            });
     }
 }
