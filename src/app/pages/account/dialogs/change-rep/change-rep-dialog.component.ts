@@ -109,7 +109,7 @@ export type ChangeRepDialogData = {
 
                         <mat-form-field style="width: 100%;" appearance="fill" *ngIf="!selectFromList">
                             <mat-label>Representative Address</mat-label>
-                            <input matInput type="value" [(ngModel)]="manualEnteredNewRepresentative" />
+                            <input matInput type="value" [(ngModel)]="manualEnteredNewRepresentative"/>
                         </mat-form-field>
                     </ng-container>
 
@@ -142,10 +142,10 @@ export type ChangeRepDialogData = {
                     >
                         <ng-container *ngIf="activeStep < lastStep">Next</ng-container>
                         <ng-container *ngIf="activeStep === lastStep">
-                            <div class="spinner-container" [class.isLoading]="loading">
+                            <div class="spinner-container" [class.isLoading]="isChangingRepresentative">
                                 <mat-spinner class="primary-spinner" diameter="20"></mat-spinner>
                             </div>
-                            <span *ngIf="!loading"> Change </span>
+                            <span *ngIf="!isChangingRepresentative"> Change </span>
                         </ng-container>
                     </button>
                 </blui-mobile-stepper>
@@ -192,7 +192,7 @@ export class ChangeRepDialogComponent implements OnInit {
     manualEnteredNewRepresentative: string;
     errorMessage: string;
 
-    loading: boolean;
+    isChangingRepresentative: boolean;
     success: boolean;
     selectFromList: boolean;
 
@@ -282,17 +282,23 @@ export class ChangeRepDialogComponent implements OnInit {
     }
 
     changeRepresentative(): void {
-        this.loading = true;
+        if (this.isChangingRepresentative) {
+            return;
+        }
+
+        this.isChangingRepresentative = true;
         this._transactionService
             .changeRepresentative(this.getUseSelectedRepresentative(), this.data.address, this.data.index)
             .then((response) => {
                 this.txHash = response;
                 this.success = true;
+                this.isChangingRepresentative = false;
             })
             .catch((err) => {
                 console.error(err);
                 this.errorMessage = err;
                 this.success = false;
+                this.isChangingRepresentative = false;
             });
     }
 }
