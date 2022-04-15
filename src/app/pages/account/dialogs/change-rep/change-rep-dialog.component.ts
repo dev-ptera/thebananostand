@@ -109,7 +109,7 @@ export type ChangeRepDialogData = {
 
                         <mat-form-field style="width: 100%;" appearance="fill" *ngIf="!selectFromList">
                             <mat-label>Representative Address</mat-label>
-                            <input matInput type="value" [(ngModel)]="manualEnteredNewRepresentative"/>
+                            <input matInput type="value" [(ngModel)]="manualEnteredNewRepresentative" />
                         </mat-form-field>
                     </ng-container>
 

@@ -22,7 +22,7 @@ export type ReceiveDialogData = {
                 style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
                 <blui-empty-state>
-                    <mat-icon blui-empty-icon> check_circle </mat-icon>
+                    <mat-icon blui-empty-icon> check_circle</mat-icon>
                     <div blui-title>Received Successfully</div>
                     <div blui-description>
                         All transactions have been successfully received. You can now close this window.
@@ -36,15 +36,15 @@ export type ReceiveDialogData = {
             </div>
 
             <div
-                *ngIf="errorMessage"
+                *ngIf="hasErrorReceiving"
                 mat-dialog-content
                 class="dialog-content"
                 style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
                 <blui-empty-state>
-                    <mat-icon blui-empty-icon> error </mat-icon>
+                    <mat-icon blui-empty-icon> error</mat-icon>
                     <div blui-title>Transaction Failed</div>
-                    <div blui-description>Your transaction could not be completed. {{ errorMessage }}</div>
+                    <div blui-description>Your transaction could not be completed.</div>
                     <div blui-actions>
                         <button mat-flat-button color="primary" class="close-button" (click)="closeDialog()">
                             Close
@@ -53,7 +53,7 @@ export type ReceiveDialogData = {
                 </blui-empty-state>
             </div>
 
-            <ng-container *ngIf="!success && !errorMessage">
+            <ng-container *ngIf="!success && !hasErrorReceiving">
                 <h1 mat-dialog-title>Receive Transaction</h1>
                 <div mat-dialog-content style="margin-bottom: 32px;">
                     <ng-container>
@@ -66,18 +66,26 @@ export type ReceiveDialogData = {
                                 Use the button below and your ledger device to manually receive each block.
                             </ng-container>
                         </div>
-                        <div *ngIf="activeStep === 0" style="margin-bottom: 8px">
-                            There are <strong>{{ data.blocks.length }}</strong> total transaction(s) to receive.
+                        <div style="margin-bottom: 8px">
+                            There are <strong>{{ data.blocks.length - activeStep }}</strong> remaining transaction(s) to
+                            receive.
                         </div>
+                        <!--
                         <div *ngIf="activeStep > 0">
                             Transaction #{{ activeStep }} received.
                             <span class="link" (click)="openLink()">View Hash</span>
                         </div>
+                        -->
                     </ng-container>
                 </div>
 
                 <blui-spacer></blui-spacer>
                 <mat-divider style="margin-left: -24px; margin-right: -24px"></mat-divider>
+                <mat-progress-bar
+                    mode="determinate"
+                    [value]="bufferValue"
+                    style="margin-left: -24px; margin-right: -24px; width: unset;"
+                ></mat-progress-bar>
                 <blui-mobile-stepper [activeStep]="activeStep" [steps]="maxSteps" variant="text">
                     <button mat-stroked-button blui-back-button color="primary" (click)="closeDialog()">Close</button>
                     <button
@@ -103,12 +111,13 @@ export class ReceiveDialogComponent implements OnInit {
     lastStep;
 
     txHash: string;
-    errorMessage: string;
+    hasErrorReceiving: boolean;
     success: boolean;
 
     isReceivingTx: boolean;
 
     colors = Colors;
+    bufferValue = 0;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: ReceiveDialogData,
@@ -132,24 +141,31 @@ export class ReceiveDialogComponent implements OnInit {
     }
 
     /** Iterates through each pending transaction block and receives them. */
-    receiveTransaction(): void {
+    async receiveTransaction(): Promise<void> {
+        this.bufferValue = 0;
+
         if (this.isReceivingTx) {
             return;
         }
 
         this.isReceivingTx = true;
-        const pendingHash = this.data.blocks[this.activeStep];
-        this._transactionService
-            .receive(this.data.address, this.data.index, pendingHash)
-            .then((receivedHash) => {
-                this.isReceivingTx = false;
+        for (const receivableBlock of this.data.blocks) {
+            try {
+                const receivedHash = await this._transactionService.receive(
+                    this.data.address,
+                    this.data.index,
+                    receivableBlock
+                );
                 this.txHash = receivedHash;
                 this.activeStep++;
+                this.bufferValue = (100 / this.maxSteps) * this.activeStep;
                 this.success = this.maxSteps === this.activeStep;
-            })
-            .catch((err) => {
-                this.errorMessage = err;
+            } catch (err) {
+                console.error(err);
+                this.hasErrorReceiving = true;
                 this.isReceivingTx = false;
-            });
+                return;
+            }
+        }
     }
 }
