@@ -58,7 +58,7 @@ export type ReceiveDialogData = {
                 <div mat-dialog-content style="margin-bottom: 32px;">
                     <ng-container>
                         <div style="margin-bottom: 8px">
-                            You are attempting to receive incoming transaction(s).
+                            You are attempting to receive an incoming transaction(s).
                             <ng-container *ngIf="secretService.isLocalSecretUnlocked()">
                                 Use the button below receive each block.
                             </ng-container>
@@ -67,25 +67,13 @@ export type ReceiveDialogData = {
                             </ng-container>
                         </div>
                         <div style="margin-bottom: 8px">
-                            There are <strong>{{ data.blocks.length - activeStep }}</strong> remaining transaction(s) to
-                            receive.
+                            <strong>{{ data.blocks.length - activeStep }}</strong> receivable transaction(s) remaining.
                         </div>
-                        <!--
-                        <div *ngIf="activeStep > 0">
-                            Transaction #{{ activeStep }} received.
-                            <span class="link" (click)="openLink()">View Hash</span>
-                        </div>
-                        -->
                     </ng-container>
                 </div>
 
                 <blui-spacer></blui-spacer>
                 <mat-divider style="margin-left: -24px; margin-right: -24px"></mat-divider>
-                <mat-progress-bar
-                    mode="determinate"
-                    [value]="bufferValue"
-                    style="margin-left: -24px; margin-right: -24px; width: unset;"
-                ></mat-progress-bar>
                 <blui-mobile-stepper [activeStep]="activeStep" [steps]="maxSteps" variant="text">
                     <button mat-stroked-button blui-back-button color="primary" (click)="closeDialog()">Close</button>
                     <button
@@ -98,7 +86,7 @@ export type ReceiveDialogData = {
                         <div class="spinner-container" [class.isLoading]="isReceivingTx">
                             <mat-spinner class="primary-spinner" diameter="20"></mat-spinner>
                         </div>
-                        <span *ngIf="!isReceivingTx"> Receive </span>
+                        <span *ngIf="!isReceivingTx">Receive</span>
                     </button>
                 </blui-mobile-stepper>
             </ng-container>
@@ -134,10 +122,6 @@ export class ReceiveDialogComponent implements OnInit {
 
     closeDialog(): void {
         this.dialogRef.close(this.txHash);
-    }
-
-    openLink(): void {
-        this._accountService.showBlockInExplorer(this.txHash);
     }
 
     /** Iterates through each pending transaction block and receives them. */
