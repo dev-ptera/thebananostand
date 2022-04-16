@@ -96,8 +96,13 @@ body {
     max-width: unset !important;
 }
 
-.blui-mobile-stepper .mat-button-base {
-    width: 75px;
+.blui-mobile-stepper {
+    .mat-subheading-2 {
+        margin-bottom: 0 !important;
+    }
+    .mat-button-base {
+        width: 80px;
+    }
 }
 
 .loading-button {

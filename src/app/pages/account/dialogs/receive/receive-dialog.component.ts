@@ -60,7 +60,7 @@ export type ReceiveDialogData = {
                         <div style="margin-bottom: 8px">
                             You are attempting to receive an incoming transaction(s).
                             <ng-container *ngIf="secretService.isLocalSecretUnlocked()">
-                                Use the button below receive each block.
+                                Use the button below to receive each block.
                             </ng-container>
                             <ng-container *ngIf="secretService.isLocalLedgerUnlocked()">
                                 Use the button below and your ledger device to manually receive each block.
@@ -73,7 +73,12 @@ export type ReceiveDialogData = {
                 </div>
 
                 <blui-spacer></blui-spacer>
-                <mat-divider style="margin-left: -24px; margin-right: -24px"></mat-divider>
+                <mat-progress-bar *ngIf="maxSteps !== 1"
+                    mode="determinate"
+                    [value]="bufferValue"
+                    style="margin-left: -24px; margin-right: -24px; width: unset;"
+                ></mat-progress-bar>
+                <mat-divider *ngIf="maxSteps === 1" style="margin-left: -24px; margin-right: -24px"></mat-divider>
                 <blui-mobile-stepper [activeStep]="activeStep" [steps]="maxSteps" variant="text">
                     <button mat-stroked-button blui-back-button color="primary" (click)="closeDialog()">Close</button>
                     <button
