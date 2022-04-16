@@ -1,5 +1,4 @@
 @use 'node_modules/@brightlayer-ui/colors/palette.scss' as blui;
-@use 'node_modules/@brightlayer-ui/colors/palette';
 @use 'assets/themes/banano-yellow';
 @use 'assets/themes/jungle-green';
 @use 'assets/themes/nano-blue';
@@ -97,9 +96,14 @@ body {
     max-width: unset !important;
 }
 
+.blui-mobile-stepper .mat-button-base {
+    width: 75px;
+}
+
 .loading-button {
     display: flex !important;
     height: 36px;
+
     justify-content: center;
     align-items: center;
     $duration: 200ms;
