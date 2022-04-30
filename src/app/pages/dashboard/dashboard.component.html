@@ -102,10 +102,17 @@
             >
             </mat-checkbox>
             <div blui-left-content [style.minWidth.px]="vp.sm ? 50 : 120">
+
+                <img
+                    *ngIf="!vp.sm"
+                    style="height: 150px; margin-top: -32px; width: 150px; margin-left: -16px; z-index: 999"
+                    src="https://monkey.banano.cc/api/v1/monkey/{{ account?.fullAddress }}"
+                />
                 <blui-list-item-tag
+                    style="position: absolute"
                     class="account-number-tag"
                     [label]="
-                        (account.index > 100000 || vp.sm ? '#' : 'Account #') + _util.numberWithCommas(account.index)
+                        '#' +  _util.numberWithCommas(account.index)
                     "
                 ></blui-list-item-tag>
             </div>
