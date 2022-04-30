@@ -103,6 +103,7 @@
             </mat-checkbox>
             <div blui-left-content [style.minWidth.px]="vp.sm ? 50 : 120">
                 <blui-list-item-tag
+                    class="account-number-tag"
                     [label]="
                         (account.index > 100000 || vp.sm ? '#' : 'Account #') + _util.numberWithCommas(account.index)
                     "

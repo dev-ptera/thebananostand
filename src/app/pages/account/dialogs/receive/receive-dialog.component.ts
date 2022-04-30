@@ -73,7 +73,8 @@ export type ReceiveDialogData = {
                 </div>
 
                 <blui-spacer></blui-spacer>
-                <mat-progress-bar *ngIf="maxSteps !== 1"
+                <mat-progress-bar
+                    *ngIf="maxSteps !== 1"
                     mode="determinate"
                     [value]="bufferValue"
                     style="margin-left: -24px; margin-right: -24px; width: unset;"

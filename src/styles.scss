@@ -17,6 +17,16 @@ body {
 body {
 }
 
+.add-accounts-example {
+    font-family: monospace;
+    background: #dedede;
+}
+
+.account-number-tag {
+    background-color: map-get(blui.$blui-gray, 50) !important;
+    color: map-get(blui.$blui-gray, 500) !important;
+}
+
 .app-root {
     display: flex;
     flex-direction: column;

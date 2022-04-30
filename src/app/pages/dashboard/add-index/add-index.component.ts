@@ -10,7 +10,7 @@ import { FormControl } from '@angular/forms';
             <h1 mat-dialog-title>Add Accounts</h1>
             <div mat-dialog-content style="margin-bottom: 32px;">
                 <div>Use the input field below to manually add accounts by their index number. e.g:</div>
-                <span style="font-family: monospace; background: #dedede">1028, 1029, 1030</span>
+                <span class="add-accounts-example">1028, 1029, 1030</span>
                 <form style="margin-top: 32px">
                     <mat-form-field style="width: 100%" appearance="fill">
                         <mat-label>Indexes</mat-label>
