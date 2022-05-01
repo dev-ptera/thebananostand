@@ -105,11 +105,11 @@
 
                 <img
                     *ngIf="!vp.sm"
-                    style="height: 150px; margin-top: -32px; width: 150px; margin-left: -16px; z-index: 999"
+                    style="height: 150px; margin-top: -32px; width: 150px; margin-left: -16px;"
                     src="https://monkey.banano.cc/api/v1/monkey/{{ account?.fullAddress }}"
                 />
                 <blui-list-item-tag
-                    style="position: absolute"
+                    style="position: absolute; z-index: 999"
                     class="account-number-tag"
                     [label]="
                         '#' +  _util.numberWithCommas(account.index)
