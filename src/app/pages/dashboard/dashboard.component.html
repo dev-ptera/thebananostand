@@ -105,15 +105,13 @@
 
                 <img
                     *ngIf="!vp.sm"
-                    style="height: 150px; margin-top: -32px; width: 150px; margin-left: -16px;"
+                    style="height: 130px; width: 130px; margin-top: -32px; margin-left: -16px;"
                     src="https://monkey.banano.cc/api/v1/monkey/{{ account?.fullAddress }}"
                 />
                 <blui-list-item-tag
-                    style="position: absolute; z-index: 999"
+                    responsive
                     class="account-number-tag"
-                    [label]="
-                        '#' +  _util.numberWithCommas(account.index)
-                    "
+                    [label]="'#' +  _util.numberWithCommas(account.index)"
                 ></blui-list-item-tag>
             </div>
             <div blui-title>{{ account.shortAddress }}</div>

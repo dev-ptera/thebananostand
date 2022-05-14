@@ -25,6 +25,12 @@ body {
 .account-number-tag {
     background-color: map-get(blui.$blui-white, 50) !important;
     color: map-get(blui.$blui-black, 500) !important;
+    position: absolute;
+    z-index: 999;
+    top: 50px;
+    &.sm {
+        position: unset;
+    }
 }
 
 .app-root {
