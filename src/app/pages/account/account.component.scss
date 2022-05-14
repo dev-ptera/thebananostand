@@ -10,11 +10,12 @@
 }
 
 .rep-offline-banner {
-    min-height: 64px;
+    min-height: unset;
+    height: 32px;
     display: flex;
     justify-content: space-between;
     height: unset;
-    padding: 12px 62px;
+    padding: 4px 64px;
     div {
         margin: 0;
         line-height: 22px;
@@ -57,6 +58,7 @@
 
 .scroll-container {
     border: solid 1px #efefef;
+    box-sizing: content-box;
     height: 60vh;
     width: 200px;
     border-radius: 4px;
