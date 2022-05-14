@@ -16,13 +16,14 @@
         class="mat-elevation-z2 app-toolbar rep-offline-banner"
         *ngIf="isRepOffline(account?.representative) && !warnBannerDismissed"
     >
-        <div class="mat-subheading-1">
+        <div class="mat-body-2">
             Your current representative is <strong>offline</strong>. If this happens often, it is suggested that you use
             the Change Representative button below to select a recommended rep.
             <span class="link" style="color: unset" (click)="openChangeRepDocs()">Why is this important?</span>
         </div>
-        <button mat-icon-button (click)="warnBannerDismissed = true" style="margin-left: 16px">
-            <mat-icon>close</mat-icon>
+        <button mat-icon-button (click)="warnBannerDismissed = true"
+                style="margin-left: 16px; height: 24px; width: 24px; line-height: 24px">
+            <mat-icon style="font-size: 16px">close</mat-icon>
         </button>
     </mat-toolbar>
 
@@ -30,8 +31,8 @@
         class="app-body"
         *ngIf="account"
         responsive
-        [style.paddingRight.px]="vp.sm ? 0 : inherit"
-        [style.paddingLeft.px]="vp.sm ? 0 : inherit"
+        [style.paddingRight.px]="vp.sm ? 0 : 'inherit'"
+        [style.paddingLeft.px]="vp.sm ? 0 : 'inherit'"
     >
         <div class="app-body-content">
             <div
@@ -42,8 +43,8 @@
                     margin-bottom: 8px;
                     margin-top: 16px;
                 "
-                [style.paddingLeft.px]="vp.sm ? 16 : inherit"
-                [style.paddingRight.px]="vp.sm ? 16 : inherit"
+                [style.paddingLeft.px]="vp.sm ? 16 : 'inherit'"
+                [style.paddingRight.px]="vp.sm ? 16 : 'inherit'"
             >
                 <div style="display: flex; align-items: center">
                     <img
@@ -98,8 +99,8 @@
             <div
                 class="mat-headline"
                 style="margin: 16px 0; display: flex; align-items: center; justify-content: space-between"
-                [style.paddingLeft.px]="vp.sm ? 16 : inherit"
-                [style.paddingRight.px]="vp.sm ? 16 : inherit"
+                [style.paddingLeft.px]="vp.sm ? 16 : 'inherit'"
+                [style.paddingRight.px]="vp.sm ? 16 : 'inherit'"
             >
                 <div style="display: flex; align-items: center">
                     <span>Account History</span>
