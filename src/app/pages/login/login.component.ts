@@ -47,6 +47,11 @@ export class LoginComponent implements OnInit {
         return undefined;
     }
 
+    enter(e: Event): void {
+        e.stopImmediatePropagation();
+        this.login();
+    }
+
     login(): void {
         this._seedService
             .unlockWallet(this.password.value)

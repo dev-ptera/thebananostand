@@ -15,8 +15,9 @@
                         [formControl]="password"
                         [type]="passwordVisible ? 'text' : 'password'"
                         placeholder="Password"
+                        (keyup.enter)="enter($event)"
                     />
-                    <button mat-icon-button matSuffix (click)="togglePasswordVisibility()">
+                    <button type="button" mat-icon-button matSuffix (click)="togglePasswordVisibility()">
                         <mat-icon>{{ passwordVisible ? 'visibility' : 'visibility_off' }}</mat-icon>
                     </button>
                     <mat-error *ngIf="hasIncorrectPassword">{{ getErrorMessage() }}</mat-error>
