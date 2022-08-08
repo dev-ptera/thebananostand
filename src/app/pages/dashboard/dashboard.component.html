@@ -9,7 +9,9 @@
     "
 >
     <div style="padding-left: 4px">
-        <button mat-mini-fab color="primary" (click)="addAccount()" [disabled]="loadingAccount">
+        <button mat-mini-fab color="primary" (click)="addAccount()" [disabled]="loadingAccount"
+                matTooltip="Add next account in list"
+                matTooltipPosition="above">
             <mat-icon>add</mat-icon>
         </button>
         <button
@@ -19,6 +21,8 @@
             style="margin-left: 16px"
             (click)="addAccountFromIndex()"
             [disabled]="loadingAccount"
+            matTooltip="Add a specific account"
+            matTooltipPosition="above"
         >
             <mat-icon>manage_search</mat-icon>
         </button>
@@ -29,6 +33,8 @@
             style="margin-left: 16px"
             (click)="refresh()"
             [disabled]="loadingAllAccounts"
+            matTooltip="Refresh all displayed accounts"
+            matTooltipPosition="above"
         >
             <mat-icon>refresh</mat-icon>
         </button>
@@ -39,6 +45,8 @@
             style="margin-left: 16px"
             (click)="hideSelected()"
             [disabled]="selectedItems.size === 0"
+            matTooltip="Hide selected accounts from view"
+            matTooltipPosition="above"
         >
             <mat-icon>delete</mat-icon>
         </button>
@@ -109,7 +117,7 @@
                     "
                 ></blui-list-item-tag>
             </div>
-            <div blui-title>{{ account.shortAddress }}</div>
+            <div blui-title style="font-family: monospace">{{ account.shortAddress }}</div>
             <div blui-subtitle>
                 <ng-container *ngIf="account.representative">
                     represented by {{ formatRepresentative(account.representative) }}

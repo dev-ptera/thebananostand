@@ -3,6 +3,9 @@
 @use 'assets/themes/jungle-green';
 @use 'assets/themes/nano-blue';
 
+// Again, why is this required for tooltips?
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+
 html * {
     box-sizing: border-box;
 }
