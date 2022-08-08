@@ -23,8 +23,8 @@ body {
 }
 
 .account-number-tag {
- //   background-color: map-get(blui.$blui-gray, 50) !important;
- //   color: map-get(blui.$blui-gray, 500) !important;
+    //   background-color: map-get(blui.$blui-gray, 50) !important;
+    //   color: map-get(blui.$blui-gray, 500) !important;
 }
 
 .app-root {
@@ -243,10 +243,6 @@ body {
     }
 }
 
-
-
-
-
 // Theme overrides
 
 mat-card,
@@ -257,16 +253,18 @@ mat-list-item-content,
 cdk-virtual-scroll-viewport,
 cdk-virtual-scroll-content-wrapper,
 mat-dialog-container {
-    border-radius: 1rem!important;
+    border-radius: 1rem !important;
 }
 
-button.mat-flat-button, button.mat-stroked-button  {
-    border-radius: .25rem!important;
+button.mat-flat-button,
+button.mat-stroked-button {
+    border-radius: 0.25rem !important;
 }
 
 .blui-list-item-tag-content {
-    padding: 0 0.5rem!important;
+    padding: 0 0.5rem !important;
 }
-.blui-list-item-tag, .blui-list-item-tag-content {
-    border-radius: 0.875rem!important;
+.blui-list-item-tag,
+.blui-list-item-tag-content {
+    border-radius: 0.875rem !important;
 }

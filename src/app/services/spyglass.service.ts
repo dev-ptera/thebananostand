@@ -5,7 +5,7 @@ import { RepScore } from '../pages/account/dialogs/change-rep/change-rep-dialog.
 import { UtilService } from './util.service';
 import { KnownAccount } from '@app/types/KnownAccount';
 import { FilterDialogData } from '@app/pages/account/dialogs/filter/filter-dialog.component';
-import {Subject} from "rxjs";
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -19,7 +19,6 @@ import {Subject} from "rxjs";
  *  Documentation for interacting with Spyglass API can be found here: https://spyglass-api.web.app/
  * */
 export class SpyglassService {
-
     httpApi: string;
     api1 = 'https://api.spyglass.pw/banano';
     api2 = 'https://api.creeper.banano.cc/banano';

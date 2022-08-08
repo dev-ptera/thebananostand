@@ -84,7 +84,7 @@
         [disableRipple]="disableRipple"
     >
         <blui-info-list-item
-            *ngFor="let account of getAccounts(); let i = index;"
+            *ngFor="let account of getAccounts(); let i = index"
             [divider]="i === getAccounts().length - 1 ? '' : 'partial'"
             [hidePadding]="true"
             (click)="openAccount(account.fullAddress)"
