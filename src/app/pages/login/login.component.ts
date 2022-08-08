@@ -61,7 +61,6 @@ export class LoginComponent implements OnInit {
             .catch((err) => {
                 console.error(err);
                 this.hasIncorrectPassword = true;
-                console.log(this.password);
                 this.password.setErrors({ password: 'incorrect' });
                 this.passwordInput.focus();
                 this.password.markAsTouched();
