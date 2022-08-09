@@ -55,7 +55,7 @@ import { AppThemePickerComponent } from '@app/components/theme-picker/theme-pick
 import { AppAccountSettingsComponent } from '@app/components/account-settings/account-settings.component';
 import { NewSeedDialogComponent } from '@app/pages/home/new-seed/new-seed-dialog.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import {MatTooltipModule} from "@angular/material/tooltip";
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
     declarations: [

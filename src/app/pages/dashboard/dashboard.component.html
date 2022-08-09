@@ -9,9 +9,14 @@
     "
 >
     <div style="padding-left: 4px">
-        <button mat-mini-fab color="primary" (click)="addAccount()" [disabled]="loadingAccount"
-                matTooltip="Add next account"
-                matTooltipPosition="above">
+        <button
+            mat-mini-fab
+            color="primary"
+            (click)="addAccount()"
+            [disabled]="loadingAccount"
+            matTooltip="Add next account"
+            matTooltipPosition="above"
+        >
             <mat-icon>add</mat-icon>
         </button>
         <button
@@ -72,9 +77,7 @@
             [checked]="selectedItems.size === getAccounts().length && selectedItems.size > 0"
         >
         </mat-checkbox>
-        <span class="mat-subheading-1" style="margin-right: 8px; margin-left: 8px">
-            Accounts Balance:
-        </span>
+        <span class="mat-subheading-1" style="margin-right: 8px; margin-left: 8px"> Accounts Balance: </span>
         {{ getBalance() }}
     </div>
     <mat-divider style="position: relative" *ngIf="getAccounts().length > 0"></mat-divider>
