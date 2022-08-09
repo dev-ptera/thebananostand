@@ -58,6 +58,9 @@ $jungle-green-theme: map-merge(
     @include typography.typography();
     @include common.common();
 
+    .non-special-address-chars {
+        color: #b5b5b5;
+    }
     .blui-user-menu-avatar {
         color: map-get(blui.$blui-white, 500) !important;
     }

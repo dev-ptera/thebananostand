@@ -57,11 +57,12 @@
 }
 
 .scroll-container {
-    border: solid 1px #efefef;
+    border: 0!important;
     box-sizing: content-box;
     height: 60vh;
-    width: 200px;
-    border-radius: 4px;
+    width: calc(100% + 32px);
+    margin-left: -16px;
+    margin-right: -16px;
     @include fade;
 }
 

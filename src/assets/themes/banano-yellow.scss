@@ -11,6 +11,7 @@
 $material-theme-primary: mat.define-palette(blui.$blui-yellow, 500);
 $material-theme-accent: mat.define-palette(blui.$blui-orange, 500);
 $material-theme-warn: mat.define-palette(blui.$blui-red, 500);
+$divider: rgba(map-get(blui.$blui-black, 500), 0.36);
 $banano-yellow: map-merge(
     mat.define-dark-theme($material-theme-primary, $material-theme-warn, $material-theme-warn),
     (
@@ -19,9 +20,9 @@ $banano-yellow: map-merge(
             secondary-text: map-get(blui.$blui-black, 200),
             hint-text: map-get(blui.$blui-gray, 300),
             base: map-get(blui.$blui-white, 50),
-            divider: rgba(map-get(blui.$blui-black, 200), 0.36),
-            dividers: rgba(map-get(blui.$blui-black, 200), 0.36),
-            disabled: rgba(map-get(blui.$blui-black, 300), 0.36),
+            divider: $divider,
+            dividers: $divider,
+            disabled: $divider,
             disabled-button: rgba(black, 0.3),
             disabled-text: rgba(map-get(blui.$blui-black, 300), 0.36),
             elevation: map-get(blui.$blui-darkBlack, 900),
@@ -132,5 +133,9 @@ $banano-yellow: map-merge(
         .blui-list-item-tag-label {
             color: map-get(blui.$blui-black, 100) !important;
         }
+    }
+
+    mat-card {
+        border: solid 1px $divider;
     }
 }

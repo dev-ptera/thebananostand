@@ -66,15 +66,18 @@
             color="warn"
             *ngIf="isAdvancedView"
             [disabled]="getAccounts().length === 0"
-            style="margin-right: 32px"
+            style="margin-right: 24px"
             (change)="toggleAll($event)"
             [indeterminate]="selectedItems.size < getAccounts().length && selectedItems.size > 0"
             [checked]="selectedItems.size === getAccounts().length && selectedItems.size > 0"
         >
         </mat-checkbox>
-        <span class="mat-subheading-1" style="margin-right: 8px">Accounts Balance: </span>{{ getBalance() }}
+        <span class="mat-subheading-1" style="margin-right: 8px; margin-left: 8px">
+            Accounts Balance:
+        </span>
+        {{ getBalance() }}
     </div>
-    <mat-divider style="position: relative"></mat-divider>
+    <mat-divider style="position: relative" *ngIf="getAccounts().length > 0"></mat-divider>
 
     <blui-empty-state
         *ngIf="getAccounts().length === 0 && !loadingAllAccounts"
