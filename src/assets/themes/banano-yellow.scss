@@ -138,4 +138,8 @@ $banano-yellow: map-merge(
     mat-card {
         border: solid 1px $divider;
     }
+
+    .account-mobile-footer {
+        background-color: map-get(blui.$blui-black, 900);
+    }
 }

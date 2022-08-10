@@ -43,12 +43,15 @@ body {
 
 .app-toolbar {
     display: flex;
-    padding-right: 32px !important;
+    padding: 0 24px !important;
     justify-content: space-between;
     position: sticky;
     position: -webkit-sticky;
     top: 0;
     z-index: 1000;
+    &.sm {
+        padding: 0 8px !important;
+    }
 }
 
 .blui-user-menu-avatar {
@@ -61,11 +64,8 @@ body {
     align-items: center;
     flex-grow: 1;
     width: 100%;
-    padding: 32px 32px;
+    padding: 32px 16px;
     box-sizing: border-box;
-    &.md {
-        padding: 32px 16px;
-    }
     &.sm {
         padding: 0px;
     }
@@ -119,6 +119,18 @@ body {
     .mat-button-base {
         width: 80px;
     }
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+    -moz-appearance: textfield;
 }
 
 .loading-button {
@@ -249,6 +261,16 @@ mat-list-item,
 mat-list-item-content,
 mat-dialog-container {
     border-radius: 1rem !important;
+}
+.sm {
+    mat-card,
+    mat-nav-list,
+    .mat-list-item-ripple,
+    mat-list-item,
+    mat-list-item-content,
+    mat-dialog-container {
+        border-radius: 0rem !important;
+    }
 }
 
 cdk-virtual-scroll-viewport,

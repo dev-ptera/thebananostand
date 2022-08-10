@@ -1,6 +1,6 @@
 <div class="app-root">
-    <mat-toolbar color="primary" class="mat-elevation-z2 app-toolbar">
-        <div [style.marginLeft.px]="isSmall() ? 8 : 24" style="display: flex; align-items: center">
+    <mat-toolbar color="primary" class="mat-elevation-z2 app-toolbar" responsive>
+        <div [style.marginLeft.px]="isSmall() ? 4 : 0" style="display: flex; align-items: center">
             <mat-icon [style.color]="colors.yellow[300]">storefront</mat-icon>
             <span style="margin-left: 12px">The Banano Stand</span>
         </div>
@@ -18,10 +18,10 @@
         </div>
     </div>
 
-    <div class="app-body" *ngIf="showHome()" responsive>
+    <div class="app-body home-body" *ngIf="showHome()" responsive>
         <blui-spacer></blui-spacer>
 
-        <div class="app-body-content" style="justify-content: center; position: relative; padding: 24px 0">
+        <div class="app-body-content" style="justify-content: center; position: relative; padding: 32px 16px">
             <div style="text-align: center">
                 <div
                     class="mat-display-1"

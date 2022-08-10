@@ -25,6 +25,7 @@ export class DashboardComponent implements OnInit {
     loadingAccount: boolean;
     loadingAllAccounts: boolean;
     disableRipple = false;
+    mobileUserMenuOpen = false;
 
     selectedItems: Set<number> = new Set();
 

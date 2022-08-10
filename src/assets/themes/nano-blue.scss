@@ -57,10 +57,13 @@ $nano-blue: map-merge(
     @include fonts.bodyfont();
     @include typography.typography();
     @include common.common();
-    .blui-user-menu-avatar {
+    .app-toolbar .blui-user-menu-avatar {
         color: map-get(blui.$blui-white, 500) !important;
     }
     .non-special-address-chars {
         color: #b5b5b5;
+    }
+    .account-mobile-footer {
+        background-color: map-get(blui.$blui-white, 50);
     }
 }

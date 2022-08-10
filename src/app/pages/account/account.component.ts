@@ -41,6 +41,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     accountHeight: number;
 
+    mobileUserMenuOpen = false;
     unopenedAccount = false;
     isLoadingHeight = false;
     warnBannerDismissed = false;

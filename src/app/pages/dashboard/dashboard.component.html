@@ -1,4 +1,47 @@
+<ng-template #accountNumber let-account="account">
+    <blui-list-item-tag
+        class="account-number-tag"
+        [label]="(account.index > 100000 ? '#' : 'Account #') + _util.numberWithCommas(account.index)"
+    ></blui-list-item-tag>
+</ng-template>
+
+<ng-template #accountActionsUserMenu>
+    <blui-user-menu menuTitle="Wallet Actions" [(open)]="mobileUserMenuOpen" *ngIf="vp.sm">
+        <mat-icon blui-avatar>more_vert</mat-icon>
+        <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
+            <blui-info-list-item [dense]="true" (click)="addAccount(); mobileUserMenuOpen = false">
+                <mat-icon blui-icon>add</mat-icon>
+                <div blui-title>Add Account</div>
+            </blui-info-list-item>
+            <blui-info-list-item [dense]="true" (click)="addAccountFromIndex(); mobileUserMenuOpen = false">
+                <mat-icon blui-icon>manage_search</mat-icon>
+                <div blui-title>Add Specific Account</div>
+            </blui-info-list-item>
+            <blui-info-list-item [dense]="true" (click)="refresh(); mobileUserMenuOpen = false">
+                <mat-icon blui-icon>refresh</mat-icon>
+                <div blui-title>Refresh Balances</div>
+            </blui-info-list-item>
+            <blui-info-list-item [dense]="true" (click)="isAdvancedView = !isAdvancedView; mobileUserMenuOpen = false">
+                <mat-icon blui-icon>visibility</mat-icon>
+                <div blui-title>
+                    <ng-container *ngIf="!isAdvancedView">Enable Select Accounts</ng-container>
+                    <ng-container *ngIf="isAdvancedView">Disable Select Accounts</ng-container>
+                </div>
+            </blui-info-list-item>
+            <blui-info-list-item
+                *ngIf="selectedItems.size > 0"
+                [dense]="true"
+                (click)="hideSelected(); mobileUserMenuOpen = false"
+            >
+                <mat-icon blui-icon>delete</mat-icon>
+                <div blui-title>Hide Selected Accounts</div>
+            </blui-info-list-item>
+        </mat-nav-list>
+    </blui-user-menu>
+</ng-template>
+
 <div
+    *ngIf="!vp.sm"
     style="
         display: flex;
         justify-content: space-between;
@@ -61,24 +104,24 @@
         Advanced
     </mat-slide-toggle>
 </div>
-<mat-card
-    style="padding: 0; display: flex; flex-direction: column"
-    [style.marginLeft.px]="vp.sm ? -16 : 0"
-    [style.marginRight.px]="vp.sm ? -16 : 0"
->
-    <div style="margin-left: 16px; padding: 16px 0">
-        <mat-checkbox
-            color="warn"
-            *ngIf="isAdvancedView"
-            [disabled]="getAccounts().length === 0"
-            style="margin-right: 24px"
-            (change)="toggleAll($event)"
-            [indeterminate]="selectedItems.size < getAccounts().length && selectedItems.size > 0"
-            [checked]="selectedItems.size === getAccounts().length && selectedItems.size > 0"
-        >
-        </mat-checkbox>
-        <span class="mat-subheading-1" style="margin-right: 8px; margin-left: 8px"> Accounts Balance: </span>
-        {{ getBalance() }}
+
+<mat-card style="padding: 0; display: flex; flex-direction: column">
+    <div style="margin-left: 16px; padding: 16px 0; display: flex; justify-content: space-between; align-items: center">
+        <div>
+            <mat-checkbox
+                color="warn"
+                *ngIf="isAdvancedView"
+                [disabled]="getAccounts().length === 0"
+                style="margin-right: 24px"
+                (change)="toggleAll($event)"
+                [indeterminate]="selectedItems.size < getAccounts().length && selectedItems.size > 0"
+                [checked]="selectedItems.size === getAccounts().length && selectedItems.size > 0"
+            >
+            </mat-checkbox>
+            <span class="mat-subheading-1" style="margin-right: 8px; margin-left: 8px"> Accounts Balance: </span>
+            <span> {{ getBalance() }}</span>
+        </div>
+        <ng-template [ngTemplateOutlet]="accountActionsUserMenu"></ng-template>
     </div>
     <mat-divider style="position: relative" *ngIf="getAccounts().length > 0"></mat-divider>
 
@@ -92,7 +135,9 @@
     </blui-empty-state>
 
     <mat-nav-list
+        class="dashboard-account-list"
         style="max-height: 62vh; overflow: auto; padding-top: 0"
+        [style.maxHeight]="vp.sm ? 'calc(100vh - (56px + 74px))' : '62vh'"
         *ngIf="getAccounts().length > 0"
         [class.fade]="fade"
         [disableRipple]="disableRipple"
@@ -115,13 +160,8 @@
                 (change)="toggleCheck($event, account)"
             >
             </mat-checkbox>
-            <div blui-left-content [style.minWidth.px]="vp.sm ? 50 : 120">
-                <blui-list-item-tag
-                    class="account-number-tag"
-                    [label]="
-                        (account.index > 100000 || vp.sm ? '#' : 'Account #') + _util.numberWithCommas(account.index)
-                    "
-                ></blui-list-item-tag>
+            <div blui-left-content [style.minWidth.px]="vp.sm ? 50 : 120" *ngIf="!vp.sm">
+                <ng-template *ngTemplateOutlet="accountNumber; context: { account }"></ng-template>
             </div>
             <div blui-title style="font-family: monospace">{{ account.shortAddress }}</div>
             <div blui-subtitle>
@@ -129,6 +169,9 @@
                     represented by {{ formatRepresentative(account.representative) }}
                 </ng-container>
                 <ng-container *ngIf="!account.representative"> unopened account </ng-container>
+            </div>
+            <div blui-info *ngIf="vp.sm">
+                <ng-template *ngTemplateOutlet="accountNumber; context: { account }"></ng-template>
             </div>
             <div blui-right-content>
                 <blui-list-item-tag
@@ -149,7 +192,7 @@
 
                 <blui-list-item-tag
                     *ngIf="!account.representative"
-                    label="Unopened Account"
+                    [label]="vp.sm ? 'Unopened' : 'Unopened Account'"
                     class="unopened-account-tag"
                     [fontColor]="colors.black[500]"
                     [backgroundColor]="colors.gray[100]"

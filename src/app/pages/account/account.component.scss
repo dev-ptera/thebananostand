@@ -23,6 +23,18 @@
     }
 }
 
+.sm {
+    .accounts-hash-link {
+        font-size: 1rem;
+    }
+}
+.accounts-hash-link {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: monospace;
+}
+
 .app-body-content > * {
     width: 100%;
 }
@@ -64,6 +76,9 @@
     margin-left: -16px;
     margin-right: -16px;
     @include fade;
+    &.sm {
+        height: calc(100vh - 56px - 104px - 68px - 4px);
+    }
 }
 
 .ds-item {

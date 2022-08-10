@@ -26,3 +26,7 @@
     -o-animation: fadein 250ms; /* Opera < 12.1 */
     animation: fadein 250ms;
 }
+
+::ng-deep .sm .dashboard-account-list .mat-list-item.blui-info-list-item-content .mat-list-item-content {
+    height: 6rem !important;
+}
