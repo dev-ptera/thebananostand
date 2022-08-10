@@ -54,6 +54,7 @@
     <div style="padding-left: 4px">
         <button
             mat-mini-fab
+            id="add-single-account-button"
             color="primary"
             (click)="addAccount()"
             [disabled]="loadingAccount"
@@ -135,6 +136,7 @@
     </blui-empty-state>
 
     <mat-nav-list
+        id="dashboard-account-list"
         class="dashboard-account-list"
         style="max-height: 62vh; overflow: auto; padding-top: 0"
         [style.maxHeight]="vp.sm ? 'calc(100vh - (56px + 74px))' : '62vh'"

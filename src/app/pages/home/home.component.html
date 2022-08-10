@@ -10,15 +10,15 @@
         </div>
     </mat-toolbar>
 
-    <app-login *ngIf="showLogin()" (unlocked)="isLoggedIn = true" (cancel)="isCancelLogin = true"></app-login>
+    <app-login id="login-wrapper" *ngIf="showLogin()" (unlocked)="isLoggedIn = true" (cancel)="isCancelLogin = true"></app-login>
 
-    <div class="app-body" *ngIf="showDashboard()" responsive>
+    <div class="app-body" *ngIf="showDashboard()" id="dashboard-wrapper" responsive>
         <div class="app-body-content">
             <app-dashboard></app-dashboard>
         </div>
     </div>
 
-    <div class="app-body home-body" *ngIf="showHome()" responsive>
+    <div class="app-body home-body" *ngIf="showHome()" id="home-wrapper" responsive>
         <blui-spacer></blui-spacer>
 
         <div class="app-body-content" style="justify-content: center; position: relative; padding: 32px 16px">
@@ -51,6 +51,7 @@
                         <div blui-title>Seed / Mnemonic</div>
                         <div blui-description>Enter your seed or mnemonic phrase to view accounts.</div>
                         <button
+                            id="enter-secret"
                             mat-flat-button
                             blui-actions
                             color="primary"

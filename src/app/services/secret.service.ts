@@ -8,11 +8,14 @@ export class SecretService {
     unlockedLocalSecret = false;
     unlockedLocalLedger = false;
 
+    // Only used when a user does not provide a password.
+    readonly DEFAULT_PASSWORD = 'default_password';
+
     /** The password used to unlock the wallet. */
     private walletPassword: string;
     private readonly localStorageSeedId = 'bananostand_encryptedSeed';
 
-    async storeSecret(secret: string, walletPassword: string): Promise<void> {
+    async storeSecret(secret: string, walletPassword = this.DEFAULT_PASSWORD): Promise<void> {
         if (secret.length === 64) {
             await this.storeSeed(secret, walletPassword);
         } else {
@@ -24,7 +27,7 @@ export class SecretService {
         this.unlockedLocalSecret = true;
     }
 
-    private async storeSeed(seed: string, password: string): Promise<void> {
+    private async storeSeed(seed: string, password = this.DEFAULT_PASSWORD): Promise<void> {
         // @ts-ignore
         const result = window.bananocoin.bananojs.bananoUtil.isSeedValid(seed);
         if (!result.valid) {
@@ -43,7 +46,7 @@ export class SecretService {
     }
 
     // Throws an error if the login attempt fails.
-    async unlockWallet(password: string): Promise<void> {
+    async unlockWallet(password = this.DEFAULT_PASSWORD): Promise<void> {
         const encryptedSeed = window.localStorage.getItem(this.localStorageSeedId);
         // @ts-ignore
         await window.bananocoin.passwordUtils.decryptData(encryptedSeed, password);
