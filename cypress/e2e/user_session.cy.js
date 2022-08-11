@@ -19,7 +19,7 @@ describe("User Session", () => {
         cy.get('#secret-next').click();
         cy.get('#secret-next').click();
         cy.reload();
-        cy.get('#login-wrapper');
+       // cy.get('#login-wrapper');
         cy.get('#account-unlock-button').click();
         cy.get('#dashboard-wrapper');
     });
