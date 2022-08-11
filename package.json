@@ -8,7 +8,7 @@
         "build": "ng build",
         "watch": "ng build --watch --configuration development",
         "test": "ng test",
-        "test:ci": "ng test --watch false",
+        "test:ci": "ng test --watch false --browsers=ChromeHeadless",
         "cypress": "cypress open",
         "cypress:run": "cypress run",
         "cytest": "start-server-and-test start http://localhost:4200 cypress:run",
