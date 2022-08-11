@@ -66,6 +66,7 @@
         <button
             *ngIf="isAdvancedView"
             mat-mini-fab
+            id="add-specific-account-button"
             color="primary"
             style="margin-left: 16px"
             (click)="addAccountFromIndex()"
@@ -78,6 +79,7 @@
         <button
             *ngIf="isAdvancedView"
             mat-mini-fab
+            id="refresh-dashboard-button"
             color="primary"
             style="margin-left: 16px"
             (click)="refresh()"
@@ -101,7 +103,7 @@
         </button>
     </div>
 
-    <mat-slide-toggle color="primary" [(ngModel)]="isAdvancedView" (change)="exitEdit($event)">
+    <mat-slide-toggle id="advanced-toggle" color="primary" [(ngModel)]="isAdvancedView" (change)="exitEdit($event)">
         Advanced
     </mat-slide-toggle>
 </div>
