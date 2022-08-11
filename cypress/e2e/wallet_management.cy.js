@@ -53,7 +53,7 @@ describe("Wallet Management", () => {
         })
     });
 
-    it.only("should load account at index 99", () => {
+    it("should load account at index 99", () => {
         cy.wait('@loadInitialAccount').then(() => {
             cy.intercept({ method: 'POST', url: '**', times: 2 }).as('addAccount');
             cy.get('#advanced-toggle').click();
