@@ -68,6 +68,7 @@ describe("User Session", () => {
         cy.get('#secret-next').click();
         cy.get('#password-input').type(password);
         cy.get('#secret-next').click().then(() => {
+            cy.wait(5000);
             cy.window().then(
                 (window) => {
                     expect(window.localStorage.getItem('bananostand_encryptedSeed')).to.be.ok;
