@@ -1,25 +1,39 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
-
+    push:
+        branches:
+            - master
+    pull_request:
+        branches:
+            - master
 jobs:
-  build:
-    name: BananoStand CI
-    runs-on: ubuntu-latest
-    container: cypress/browsers:node16.14.2-slim-chrome103-ff102
-    env:
-      GITHUB_RUN_ID: ${{ github.run_id }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@master
+    general-checks:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
 
-      - name: Cypress Tests
-        shell: bash
-        run: yarn && yarn cytest
+            - name: Prettier Check
+              shell: bash
+              run: yarn && yarn prettier:check
 
+            - name: Lint Check
+              shell: bash
+              run: yarn && yarn lint
+
+            - name: Unit test
+              shell: bash
+              run: yarn && yarn test:ci
+
+            - name: Build
+              shell: bash
+              run: yarn && yarn build
+
+            # Install NPM dependencies, cache them correctly
+            # and run all Cypress tests
+            - name: Cypress run
+              if: github.event.pull_request.base.ref == 'master'
+              uses: cypress-io/github-action@v4
+              with:
+                  start: yarn start
