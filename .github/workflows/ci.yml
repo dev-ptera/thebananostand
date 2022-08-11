@@ -19,21 +19,21 @@ jobs:
 
       - name: Prettier Check
         shell: bash
-        run: npm i && npm run prettier:check
+        run: yarn && yarn prettier:check
 
       - name: Lint Check
         shell: bash
-        run: npm i && npm run lint
+        run: yarn && yarn lint
 
       - name: Unit test
         shell: bash
-        run: npm i && npm run test --no-watch
+        run: yarn && yarn test:ci
 
       - name: Build
         shell: bash
-        run: npm i && npm run build
+        run: yarn && yarn build
 
       - name: Cypress Tests
         shell: bash
-        run: npm i && npm run cytest
+        run: yarn && yarn cytest
 
