@@ -18,10 +18,11 @@ describe("User Session", () => {
         cy.get('#secret-input').type(LOW_FUND_SEED);
         cy.get('#secret-next').click();
         cy.get('#secret-next').click();
-        cy.reload();
-       // cy.get('#login-wrapper');
-        cy.get('#account-unlock-button').click();
-        cy.get('#dashboard-wrapper');
+        cy.reload().then(() => {
+            cy.get('#login-wrapper');
+            cy.get('#account-unlock-button').click();
+            cy.get('#dashboard-wrapper');
+        })
     });
 
     it("should login with a seed and password", () => {
@@ -32,7 +33,7 @@ describe("User Session", () => {
         cy.get('#password-input').type(password);
         cy.get('#secret-next').click();
         cy.reload();
-        cy.get('#login-wrapper');
+        cy.get('#home-wrapper');
         cy.get('#active-wallet-password-input').type(password);
         cy.get('#account-unlock-button').click();
         cy.get('#dashboard-wrapper');
@@ -46,11 +47,13 @@ describe("User Session", () => {
         cy.get('#secret-next').click();
         cy.get('#password-input').type(password);
         cy.get('#secret-next').click();
-        cy.reload();
-        cy.get('#login-wrapper');
-        cy.get('#active-wallet-password-input').type(incorrectPassword);
-        cy.get('#account-unlock-button').click();
-        cy.get('#login-wrapper');
+        cy.reload().then(() => {
+            cy.get('#home-wrapper');
+            cy.get('#active-wallet-password-input').type(incorrectPassword);
+            cy.get('#account-unlock-button').click();
+            cy.get('#login-wrapper');
+
+        })
     });
 
     it("should clear a user's encrypted secret", () => {

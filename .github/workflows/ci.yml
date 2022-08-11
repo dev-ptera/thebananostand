@@ -17,22 +17,6 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: Prettier Check
-        shell: bash
-        run: yarn && yarn prettier:check
-
-      - name: Lint Check
-        shell: bash
-        run: yarn && yarn lint
-
-      - name: Unit test
-        shell: bash
-        run: yarn && yarn test:ci
-
-      - name: Build
-        shell: bash
-        run: yarn && yarn build
-
       - name: Cypress Tests
         shell: bash
         run: yarn && yarn cytest
