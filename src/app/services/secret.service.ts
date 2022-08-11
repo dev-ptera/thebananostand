@@ -15,7 +15,12 @@ export class SecretService {
     private walletPassword: string;
     private readonly localStorageSeedId = 'bananostand_encryptedSeed';
 
-    async storeSecret(secret: string, walletPassword = this.DEFAULT_PASSWORD): Promise<void> {
+    async storeSecret(secret: string, walletPassword: string): Promise<void> {
+
+        if (walletPassword.length === 0) {
+            walletPassword = this.DEFAULT_PASSWORD;
+        }
+
         if (secret.length === 64) {
             await this.storeSeed(secret, walletPassword);
         } else {
@@ -27,14 +32,19 @@ export class SecretService {
         this.unlockedLocalSecret = true;
     }
 
-    private async storeSeed(seed: string, password = this.DEFAULT_PASSWORD): Promise<void> {
+    private async storeSeed(seed: string, walletPassword: string): Promise<void> {
+
+        if (walletPassword.length === 0) {
+            walletPassword = this.DEFAULT_PASSWORD;
+        }
+
         // @ts-ignore
         const result = window.bananocoin.bananojs.bananoUtil.isSeedValid(seed);
         if (!result.valid) {
             return Promise.reject('Secret is not valid');
         }
         // @ts-ignore
-        const encryptedSeed = await window.bananocoin.passwordUtils.encryptData(seed, password);
+        const encryptedSeed = await window.bananocoin.passwordUtils.encryptData(seed, walletPassword);
         window.localStorage.setItem(this.localStorageSeedId, encryptedSeed);
     }
 
@@ -46,11 +56,16 @@ export class SecretService {
     }
 
     // Throws an error if the login attempt fails.
-    async unlockWallet(password = this.DEFAULT_PASSWORD): Promise<void> {
+    async unlockWallet(walletPassword: string): Promise<void> {
+
+        if (walletPassword.length === 0) {
+            walletPassword = this.DEFAULT_PASSWORD;
+        }
+
         const encryptedSeed = window.localStorage.getItem(this.localStorageSeedId);
         // @ts-ignore
-        await window.bananocoin.passwordUtils.decryptData(encryptedSeed, password);
-        this.walletPassword = password;
+        await window.bananocoin.passwordUtils.decryptData(encryptedSeed, walletPassword);
+        this.walletPassword = walletPassword;
         this.unlockedLocalSecret = true;
     }
 
