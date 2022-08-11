@@ -7,9 +7,26 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v2
+
+            - name: Prettier Check
+              shell: bash
+              run: yarn && yarn prettier:check
+
+            - name: Lint Check
+              shell: bash
+              run: yarn && yarn lint
+
+            - name: Unit test
+              shell: bash
+              run: yarn && yarn test:ci
+
+            - name: Build
+              shell: bash
+              run: yarn && yarn build
+
             # Install NPM dependencies, cache them correctly
             # and run all Cypress tests
             - name: Cypress run
               uses: cypress-io/github-action@v4
               with:
-                  start: yarn start
+                start: yarn start
