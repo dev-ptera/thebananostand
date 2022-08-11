@@ -12,7 +12,7 @@ jobs:
   build:
     name: BananoStand CI
     runs-on: ubuntu-latest
-    container: cypress/browsers:node12.18.3-chrome87-ff82
+    container: cypress/browsers:node16.14.2-slim-chrome103-ff102
     env:
       GITHUB_RUN_ID: ${{ github.run_id }}
     steps:
