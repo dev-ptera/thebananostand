@@ -19,8 +19,7 @@ describe("User Session", () => {
         cy.get('#secret-input').type(LOW_FUND_SEED);
         cy.get('#secret-next').click();
         cy.get('#secret-next').click();
-        // cy.wait(500)
-        cy.get('#secret-next').should('not.exist');
+        cy.get('#secret-next').should('not.exist'); // Waits for the New Seed window to dismiss.
         reload();
         cy.window().then(() => {
 
@@ -38,7 +37,6 @@ describe("User Session", () => {
         cy.get('#secret-next').click();
         cy.get('#password-input').type(password);
         cy.get('#secret-next').click();
-       // cy.wait(500)
         cy.get('#secret-next').should('not.exist');
         reload();
         cy.get('#login-wrapper');
@@ -55,7 +53,6 @@ describe("User Session", () => {
         cy.get('#secret-next').click();
         cy.get('#password-input').type(password);
         cy.get('#secret-next').click();
-        // cy.wait(500)
         cy.get('#secret-next').should('not.exist');
         reload();
         cy.get('#login-wrapper');
@@ -70,22 +67,21 @@ describe("User Session", () => {
         cy.get('#secret-input').type(LOW_FUND_SEED);
         cy.get('#secret-next').click();
         cy.get('#password-input').type(password);
-        cy.get('#secret-next').click().then(() => {
-            // cy.wait(500)
-            cy.get('#secret-next').should('not.exist');
-            cy.window().then(
-                (window) => {
-                    expect(window.localStorage.getItem('bananostand_encryptedSeed')).to.be.ok;
-                }
-            );
-        })
+        cy.get('#secret-next').click();
+        cy.get('#secret-next').should('not.exist');
+
+        cy.window().then(
+            (window) => {
+                expect(window.localStorage.getItem('bananostand_encryptedSeed')).to.be.ok;
+            }
+        );
         cy.get('#account-settings').click();
-        cy.get('#clear-data-button').click().then(() => {
-            cy.window().then(
-                (window) => {
-                    expect(window.localStorage.getItem('bananostand_encryptedSeed')).to.not.be.ok;
-                }
-            );
-        })
+        cy.get('#clear-data-button').click();
+
+        cy.window().then(
+            (window) => {
+                expect(window.localStorage.getItem('bananostand_encryptedSeed')).to.not.be.ok;
+            }
+        );
     });
 });
