@@ -19,5 +19,8 @@ jobs:
 
       - name: Cypress Tests
         shell: bash
-        run: yarn && yarn cytest
+        uses: cypress-io/github-action@v4
+        with:
+            # Specify Browser since container image is compile with Firefox
+            browser: firefox
 
