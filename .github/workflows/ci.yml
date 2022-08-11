@@ -1,25 +1,16 @@
 name: CI
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
-
+on: [push]
 jobs:
-  build:
-    name: BananoStand CI
-    runs-on: ubuntu-latest
-    container: cypress/browsers:node16.14.2-slim-chrome103-ff102
-    env:
-      GITHUB_RUN_ID: ${{ github.run_id }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@master
-
-      - name: Cypress Tests
-        shell: bash
-        run: yarn && yarn cytest
-
+    cypress-run:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+            # Install NPM dependencies, cache them correctly
+            # and run all Cypress tests
+            - name: Cypress run
+              uses: cypress-io/github-action@v4
+              with:
+                  build: yarn build
+                  start: yarn start
