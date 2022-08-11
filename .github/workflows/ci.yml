@@ -12,13 +12,14 @@ jobs:
   build:
     name: BananoStand CI
     runs-on: ubuntu-latest
+    container: cypress/browsers:node12.18.3-chrome87-ff82
     env:
       GITHUB_RUN_ID: ${{ github.run_id }}
     steps:
+      - name: Checkout
       - uses: actions/checkout@master
 
       - name: Cypress Tests
-        shell: bash
         uses: cypress-io/github-action@v4
         with:
             # Specify Browser since container image is compile with Firefox
