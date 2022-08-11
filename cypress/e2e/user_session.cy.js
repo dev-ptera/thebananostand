@@ -18,10 +18,15 @@ describe("User Session", () => {
         cy.get('#secret-input').type(LOW_FUND_SEED);
         cy.get('#secret-next').click();
         cy.get('#secret-next').click();
+        cy.wait(5000);
         reload();
-        cy.get('#login-wrapper');
-        cy.get('#account-unlock-button').click();
-        cy.get('#dashboard-wrapper');
+        cy.window().then(() => {
+
+            cy.get('#login-wrapper');
+            cy.get('#account-unlock-button').click();
+            cy.get('#dashboard-wrapper');
+            }
+        );
     });
 
     it("should login with a seed and password", () => {
@@ -31,6 +36,7 @@ describe("User Session", () => {
         cy.get('#secret-next').click();
         cy.get('#password-input').type(password);
         cy.get('#secret-next').click();
+        cy.wait(5000);
         reload();
         cy.get('#login-wrapper');
         cy.get('#active-wallet-password-input').type(password);
@@ -46,6 +52,7 @@ describe("User Session", () => {
         cy.get('#secret-next').click();
         cy.get('#password-input').type(password);
         cy.get('#secret-next').click();
+        cy.wait(5000);
         reload();
         cy.get('#login-wrapper');
         cy.get('#active-wallet-password-input').type(incorrectPassword);
@@ -60,6 +67,7 @@ describe("User Session", () => {
         cy.get('#secret-next').click();
         cy.get('#password-input').type(password);
         cy.get('#secret-next').click().then(() => {
+            cy.wait(5000);
             expect(localStorage.getItem('bananostand_encryptedSeed')).to.be.ok;
         })
         cy.get('#account-settings').click();
