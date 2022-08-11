@@ -7,7 +7,6 @@ describe("User Session", () => {
         cy.intercept(root).as('home');
         cy.visit(root);
         cy.wait('@home'); // once the route resolves, cy.wait will resolve as well
-        cy.wait(2000);
     }
 
     beforeEach(() => {
@@ -20,6 +19,7 @@ describe("User Session", () => {
         cy.get('#secret-input').type(LOW_FUND_SEED);
         cy.get('#secret-next').click();
         cy.get('#secret-next').click();
+        cy.wait(5000);
         reload();
         cy.window().then(() => {
 
@@ -37,6 +37,7 @@ describe("User Session", () => {
         cy.get('#secret-next').click();
         cy.get('#password-input').type(password);
         cy.get('#secret-next').click();
+        cy.wait(5000);
         reload();
         cy.get('#login-wrapper');
         cy.get('#active-wallet-password-input').type(password);
@@ -52,6 +53,7 @@ describe("User Session", () => {
         cy.get('#secret-next').click();
         cy.get('#password-input').type(password);
         cy.get('#secret-next').click();
+        cy.wait(5000);
         reload();
         cy.get('#login-wrapper');
         cy.get('#active-wallet-password-input').type(incorrectPassword);
