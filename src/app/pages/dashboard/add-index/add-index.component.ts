@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AccountService } from '@app/services/account.service';
 import { FormControl } from '@angular/forms';
-import {MatDialogRef} from "@angular/material/dialog";
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-add-index-dialog',
@@ -15,7 +15,12 @@ import {MatDialogRef} from "@angular/material/dialog";
                 <form style="margin-top: 32px">
                     <mat-form-field style="width: 100%" appearance="fill">
                         <mat-label>Indexes</mat-label>
-                        <input type="text" matInput [formControl]="indexFormControl" id="specific-account-index-input"/>
+                        <input
+                            type="text"
+                            matInput
+                            [formControl]="indexFormControl"
+                            id="specific-account-index-input"
+                        />
                     </mat-form-field>
                 </form>
             </div>
@@ -44,7 +49,8 @@ export class AddIndexDialogComponent {
 
     constructor(
         public dialogRef: MatDialogRef<AddIndexDialogComponent>,
-        private readonly _accountService: AccountService) {}
+        private readonly _accountService: AccountService
+    ) {}
 
     async addAccounts(): Promise<void> {
         this.loading = true;
