@@ -17,23 +17,23 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: Unit test
-        shell: bash
-        run: yarn && yarn test --no-watch
-
       - name: Prettier Check
         shell: bash
-        run: yarn && yarn prettier:check
+        run: npm i && npm run prettier:check
 
       - name: Lint Check
         shell: bash
-        run: yarn && yarn lint
+        run: npm i && npm run lint
+
+      - name: Unit test
+        shell: bash
+        run: npm i && npm run test --no-watch
 
       - name: Build
         shell: bash
-        run: yarn && yarn build
+        run: npm i && npm run build
 
       - name: Cypress Tests
         shell: bash
-        run: yarn && yarn cytest
+        run: npm i && npm run cytest
 
