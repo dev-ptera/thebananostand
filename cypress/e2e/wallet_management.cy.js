@@ -16,21 +16,15 @@ describe("Wallet Management", () => {
 
     it("should load first two accounts on the dashboard", () => {
         cy.get('#enter-secret').click();
-        cy.wait(500);
         cy.get('#secret-input').type(LOW_FUND_SEED);
         cy.get('#secret-next').click();
-        cy.intercept({ method: 'POST', url: '**', times: 1 }).as('pending');
-        cy.intercept({ method: 'POST', url: '**', times: 1 }).as('accountInfo');
+        cy.intercept({ method: 'POST', url: '**' }).as('loadingAccount1');
         cy.get('#secret-next').click();
-        cy.wait('@pending');
-        cy.wait('@accountInfo').then(() => {
+        cy.wait('@loadingAccount1').then(() => {
             cy.get('#dashboard-wrapper');
-            cy.intercept({ method: 'POST', url: '**', times: 1 }).as('pending');
-            cy.intercept({ method: 'POST', url: '**', times: 1 }).as('accountInfo');
+            cy.intercept({ method: 'POST', url: '**' }).as('loadingAccount2');
             cy.get('#add-single-account-button').click();
-            cy.wait('@pending');
-            cy.wait('@accountInfo').then(() => {
-                cy.wait(100);
+            cy.wait('@loadingAccount2').then(() => {
                 cy.get('#dashboard-account-list').find('.blui-info-list-item').should('have.length', 2);
 
             })
@@ -39,14 +33,11 @@ describe("Wallet Management", () => {
 
     it("should load transaction details for the first account", () => {
         cy.get('#enter-secret').click();
-        cy.wait(500);
         cy.get('#secret-input').type(LOW_FUND_SEED);
         cy.get('#secret-next').click();
-        cy.intercept({ method: 'POST', url: '**', times: 1 }).as('pending');
-        cy.intercept({ method: 'POST', url: '**', times: 1 }).as('accountInfo');
+        cy.intercept({ method: 'POST', url: '**' }).as('loadingAccount1');
         cy.get('#secret-next').click();
-        cy.wait('@pending');
-        cy.wait('@accountInfo').then(() => {
+        cy.wait('@loadingAccount1').then(() => {
             cy.intercept({ method: 'POST', url: '**/account/confirmed-transactions' }).as('confirmedTx');
             cy.get('#dashboard-account-list').find('.blui-info-list-item').click();
             cy.wait('@confirmedTx').then(() => {
