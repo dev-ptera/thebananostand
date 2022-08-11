@@ -70,4 +70,41 @@ describe("Wallet Management", () => {
             })
         })
     });
+
+    it("should remove account via select all", () => {
+        cy.wait('@loadInitialAccount').then(() => {
+            cy.get('#dashboard-account-list').find('.blui-info-list-item').should('have.length', 1);
+            cy.get('#advanced-toggle').click();
+            cy.get('.mat-checkbox').first().click();
+            cy.get('#hide-account-dashboard-button').click().then(() => {
+                cy.get('#dashboard-account-list').should('not.exist');
+            })
+        })
+    });
+
+    it("should remove account via select single", () => {
+        cy.wait('@loadInitialAccount').then(() => {
+            cy.get('#dashboard-account-list').find('.blui-info-list-item').should('have.length', 1);
+            cy.get('#advanced-toggle').click();
+            cy.get('.mat-checkbox').last().click();
+            cy.get('#hide-account-dashboard-button').click().then(() => {
+                cy.get('#dashboard-account-list').should('not.exist');
+            })
+        })
+    });
+
+    it("should remove a single account", () => {
+        cy.wait('@loadInitialAccount').then(() => {
+            cy.intercept({ method: 'POST', url: '**', times: 2 }).as('loadingAccount2');
+            cy.get('#add-single-account-button').click();
+            cy.wait('@loadingAccount2').then(() => {
+                cy.get('#dashboard-account-list').find('.blui-info-list-item').should('have.length', 2);
+                cy.get('#advanced-toggle').click();
+                cy.get('.mat-checkbox').last().click();
+                cy.get('#hide-account-dashboard-button').click().then(() => {
+                    cy.get('#dashboard-account-list').find('.blui-info-list-item').should('have.length', 1);
+                })
+            })
+        })
+    });
 });
