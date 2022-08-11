@@ -141,6 +141,7 @@ export class ReceiveDialogComponent implements OnInit {
         this.isReceivingTx = true;
         for (const receivableBlock of this.data.blocks) {
             try {
+                // eslint-disable-next-line no-await-in-loop
                 const receivedHash = await this._transactionService.receive(
                     this.data.address,
                     this.data.index,

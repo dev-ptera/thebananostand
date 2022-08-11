@@ -9,6 +9,8 @@
         "watch": "ng build --watch --configuration development",
         "test": "ng test",
         "cypress": "cypress open",
+        "cypress:run": "cypress run",
+        "cytest": "start-server-and-test start http://localhost:4200 cypress:run",
         "npm-check-updates": "npm-check-updates --target patch -u",
         "lint": "eslint \"src/**/**.ts\"",
         "lint:fix": "eslint \"src/**/**.ts\" --fix",
@@ -54,6 +56,7 @@
         "cypress": "^10.4.0",
         "eslint": "^8.10.0",
         "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-cypress": "^2.12.1",
         "jasmine-core": "~3.7.1",
         "karma": "~6.3.20",
         "karma-chrome-launcher": "^3.1.1",
@@ -62,6 +65,7 @@
         "karma-jasmine-html-reporter": "~1.5.4",
         "npm-check-updates": "^12.5.11",
         "prettier": "^2.4.1",
+        "start-server-and-test": "^1.14.0",
         "typescript": "~4.4.4"
     },
     "prettier": "@brightlayer-ui/prettier-config"

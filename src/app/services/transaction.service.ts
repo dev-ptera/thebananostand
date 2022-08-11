@@ -5,15 +5,6 @@ import { environment } from '../../environments/environment';
 import { NanoClientService } from '@app/services/nano-client.service';
 import { SecretService } from '@app/services/secret.service';
 
-type ReceiveResponse = {
-    pendingBlocks: string[];
-    pendingCount: number;
-    pendingMessage: string;
-    receiveBlocks: string[];
-    receiveCount: number;
-    receiveMessage: string;
-};
-
 @Injectable({
     providedIn: 'root',
 })
@@ -105,7 +96,8 @@ export class TransactionService {
         const TransportWebUSB = window.TransportWebUSB;
         try {
             const isSupportedFlag = await TransportWebUSB.isSupported();
-            console.log('connectLedger', 'isSupportedFlag', isSupportedFlag);
+            // eslint-disable-next-line no-console
+            console.info('connectLedger', 'isSupportedFlag', isSupportedFlag);
             // Check Ledger is connected & app is open:
             await this.getAccountFromIndex(0);
             return Promise.resolve();

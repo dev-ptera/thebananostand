@@ -163,8 +163,8 @@ export class AccountComponent implements OnInit, OnDestroy {
         // If the account is not found within the accounts listed in the dashboard, redirect user back to home page.
         // If running locally, create a dummy account.
         if (this.account === undefined) {
-            if (environment.production || true) {
-                // Remove `true` for testing locally.
+            if (environment.production) {
+                // (|| true) can be added to prevent changing page.
                 this.goHome();
             } else {
                 this.account = {

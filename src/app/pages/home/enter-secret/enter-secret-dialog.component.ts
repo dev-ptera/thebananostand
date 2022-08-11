@@ -34,7 +34,12 @@ import { SecretService } from '@app/services/secret.service';
 
                     <mat-form-field style="width: 100%;" appearance="fill" (keyup.enter)="next()">
                         <mat-label>Password (optional)</mat-label>
-                        <input matInput [type]="passwordVisible ? 'text' : 'password'" [(ngModel)]="password" id="password-input"/>
+                        <input
+                            matInput
+                            [type]="passwordVisible ? 'text' : 'password'"
+                            [(ngModel)]="password"
+                            id="password-input"
+                        />
                         <button mat-icon-button matSuffix (click)="togglePasswordVisibility()">
                             <mat-icon>{{ passwordVisible ? 'visibility' : 'visibility_off' }}</mat-icon>
                         </button>

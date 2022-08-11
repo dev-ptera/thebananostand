@@ -5,7 +5,13 @@ import { SecretService } from '@app/services/secret.service';
 @Component({
     selector: 'app-account-settings',
     template: `
-        <blui-user-menu id="account-settings" class="app-theme-picker" menuTitle="Account" [(open)]="userMenuOpen" *ngIf="show()">
+        <blui-user-menu
+            id="account-settings"
+            class="app-theme-picker"
+            menuTitle="Account"
+            [(open)]="userMenuOpen"
+            *ngIf="show()"
+        >
             <mat-icon blui-avatar>settings</mat-icon>
             <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
                 <blui-info-list-item [dense]="true" (click)="clearData()" id="clear-data-button">

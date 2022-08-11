@@ -16,26 +16,28 @@ export class SecretService {
     private readonly localStorageSeedId = 'bananostand_encryptedSeed';
 
     async storeSecret(secret: string, walletPassword: string): Promise<void> {
+        let password = walletPassword;
 
-        if (walletPassword.length === 0) {
-            walletPassword = this.DEFAULT_PASSWORD;
+        if (password.length === 0) {
+            password = this.DEFAULT_PASSWORD;
         }
 
         if (secret.length === 64) {
-            await this.storeSeed(secret, walletPassword);
+            await this._storeSeed(secret, password);
         } else {
             // @ts-ignore
             const seed = window.bip39.mnemonicToEntropy(secret);
-            await this.storeSeed(seed, walletPassword);
+            await this._storeSeed(seed, password);
         }
-        this.walletPassword = walletPassword;
+        this.walletPassword = password;
         this.unlockedLocalSecret = true;
     }
 
-    private async storeSeed(seed: string, walletPassword: string): Promise<void> {
+    private async _storeSeed(seed: string, walletPassword: string): Promise<void> {
+        let password = walletPassword;
 
-        if (walletPassword.length === 0) {
-            walletPassword = this.DEFAULT_PASSWORD;
+        if (password.length === 0) {
+            password = this.DEFAULT_PASSWORD;
         }
 
         // @ts-ignore
@@ -44,7 +46,7 @@ export class SecretService {
             return Promise.reject('Secret is not valid');
         }
         // @ts-ignore
-        const encryptedSeed = await window.bananocoin.passwordUtils.encryptData(seed, walletPassword);
+        const encryptedSeed = await window.bananocoin.passwordUtils.encryptData(seed, password);
         window.localStorage.setItem(this.localStorageSeedId, encryptedSeed);
     }
 
@@ -57,15 +59,16 @@ export class SecretService {
 
     // Throws an error if the login attempt fails.
     async unlockWallet(walletPassword: string): Promise<void> {
+        let password = walletPassword;
 
-        if (walletPassword.length === 0) {
-            walletPassword = this.DEFAULT_PASSWORD;
+        if (password.length === 0) {
+            password = this.DEFAULT_PASSWORD;
         }
 
         const encryptedSeed = window.localStorage.getItem(this.localStorageSeedId);
         // @ts-ignore
-        await window.bananocoin.passwordUtils.decryptData(encryptedSeed, walletPassword);
-        this.walletPassword = walletPassword;
+        await window.bananocoin.passwordUtils.decryptData(encryptedSeed, password);
+        this.walletPassword = password;
         this.unlockedLocalSecret = true;
     }
 

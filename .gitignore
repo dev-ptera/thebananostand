@@ -48,3 +48,5 @@ Thumbs.db
 src/environments/api-token.ts
 
 .angular
+
+cypress/videos

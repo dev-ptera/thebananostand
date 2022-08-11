@@ -10,7 +10,12 @@
         </div>
     </mat-toolbar>
 
-    <app-login id="login-wrapper" *ngIf="showLogin()" (unlocked)="isLoggedIn = true" (cancel)="isCancelLogin = true"></app-login>
+    <app-login
+        id="login-wrapper"
+        *ngIf="showLogin()"
+        (unlocked)="isLoggedIn = true"
+        (cancel)="isCancelLogin = true"
+    ></app-login>
 
     <div class="app-body" *ngIf="showDashboard()" id="dashboard-wrapper" responsive>
         <div class="app-body-content">
