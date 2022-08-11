@@ -163,7 +163,7 @@
             >
             </mat-checkbox>
             <div blui-left-content [style.minWidth.px]="vp.sm ? 50 : 120" *ngIf="!vp.sm">
-                <ng-template *ngTemplateOutlet="accountNumber; context: { account }"></ng-template>
+                <ng-template *ngTemplateOutlet="accountNumber; context: { account: this.account }"></ng-template>
             </div>
             <div blui-title style="font-family: monospace">{{ account.shortAddress }}</div>
             <div blui-subtitle>
@@ -173,7 +173,7 @@
                 <ng-container *ngIf="!account.representative"> unopened account </ng-container>
             </div>
             <div blui-info *ngIf="vp.sm">
-                <ng-template *ngTemplateOutlet="accountNumber; context: { account }"></ng-template>
+                <ng-template *ngTemplateOutlet="accountNumber; context: { account: this.account }"></ng-template>
             </div>
             <div blui-right-content>
                 <blui-list-item-tag
