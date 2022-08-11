@@ -10,10 +10,7 @@ describe("User Session", () => {
     });
 
     const reload = () => {
-        const snapshotName = 'logged-in';
-        cy.saveLocalStorage(snapshotName);
         cy.reload();
-        cy.restoreLocalStorage(snapshotName);
     }
 
     it("should login with just a seed (no password)", () => {

@@ -10,7 +10,7 @@
         "test": "ng test",
         "test:ci": "ng test --watch false --browsers=ChromeHeadless",
         "cypress": "cypress open",
-        "cypress:run": "cypress run",
+        "cypress:run": "cypress run --browser chrome",
         "cytest": "start-server-and-test start http://localhost:4200 cypress:run",
         "npm-check-updates": "npm-check-updates --target patch -u",
         "lint": "eslint \"src/**/**.ts\"",

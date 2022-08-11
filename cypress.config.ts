@@ -6,7 +6,6 @@ export default defineConfig({
         chromeWebSecurity: false,
         video: false,
         setupNodeEvents(on, config) {
-            require("cypress-localstorage-commands/plugin")(on, config);
             // implement node event listeners here
         },
     },

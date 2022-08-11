@@ -20,8 +20,6 @@ jobs:
         uses: actions/checkout@master
 
       - name: Cypress Tests
-        uses: cypress-io/github-action@v4
-        with:
-            # Specify Browser since container image is compile with Firefox
-            browser: firefox
+        shell: bash
+        run: yarn && npm run cytest
 
