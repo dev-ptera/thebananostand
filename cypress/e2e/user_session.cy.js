@@ -4,25 +4,27 @@ describe("User Session", () => {
     const root = 'http://localhost:4200'
 
     beforeEach(() => {
-        // Cypress starts out with a blank slate for each test
-        // so we must tell it to visit our website with the `cy.visit()` command.
-        // Since we want to visit the same URL at the start of all our tests,
-        // we include it in our beforeEach function so that it runs before each test
         cy.intercept(root).as('home');
         cy.visit(root);
         cy.wait('@home'); // once the route resolves, cy.wait will resolve as well
-    })
+    });
+
+    const reload = () => {
+        const snapshotName = 'logged-in';
+        cy.saveLocalStorage(snapshotName);
+        cy.reload();
+        cy.restoreLocalStorage(snapshotName);
+    }
 
     it("should login with just a seed (no password)", () => {
         cy.get('#enter-secret').click();
         cy.get('#secret-input').type(LOW_FUND_SEED);
         cy.get('#secret-next').click();
         cy.get('#secret-next').click();
-        cy.reload().then(() => {
-            cy.get('#login-wrapper');
-            cy.get('#account-unlock-button').click();
-            cy.get('#dashboard-wrapper');
-        })
+        reload();
+        cy.get('#login-wrapper');
+        cy.get('#account-unlock-button').click();
+        cy.get('#dashboard-wrapper');
     });
 
     it("should login with a seed and password", () => {
@@ -32,8 +34,8 @@ describe("User Session", () => {
         cy.get('#secret-next').click();
         cy.get('#password-input').type(password);
         cy.get('#secret-next').click();
-        cy.reload();
-        cy.get('#home-wrapper');
+        reload();
+        cy.get('#login-wrapper');
         cy.get('#active-wallet-password-input').type(password);
         cy.get('#account-unlock-button').click();
         cy.get('#dashboard-wrapper');
@@ -47,13 +49,11 @@ describe("User Session", () => {
         cy.get('#secret-next').click();
         cy.get('#password-input').type(password);
         cy.get('#secret-next').click();
-        cy.reload().then(() => {
-            cy.get('#home-wrapper');
-            cy.get('#active-wallet-password-input').type(incorrectPassword);
-            cy.get('#account-unlock-button').click();
-            cy.get('#login-wrapper');
-
-        })
+        reload();
+        cy.get('#login-wrapper');
+        cy.get('#active-wallet-password-input').type(incorrectPassword);
+        cy.get('#account-unlock-button').click();
+        cy.get('#login-wrapper');
     });
 
     it("should clear a user's encrypted secret", () => {
