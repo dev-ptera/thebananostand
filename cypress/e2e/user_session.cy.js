@@ -6,8 +6,8 @@ describe("User Session", () => {
     const reload = () => {
         cy.intercept(root).as('home');
         cy.visit(root);
-        cy.wait(2000);
         cy.wait('@home'); // once the route resolves, cy.wait will resolve as well
+        cy.wait(2000);
     }
 
     beforeEach(() => {
