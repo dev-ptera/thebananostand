@@ -19,7 +19,8 @@ describe("User Session", () => {
         cy.get('#secret-input').type(LOW_FUND_SEED);
         cy.get('#secret-next').click();
         cy.get('#secret-next').click();
-        cy.wait(500);
+        // cy.wait(500)
+        cy.get('#secret-next').should('not.exist');
         reload();
         cy.window().then(() => {
 
@@ -37,7 +38,8 @@ describe("User Session", () => {
         cy.get('#secret-next').click();
         cy.get('#password-input').type(password);
         cy.get('#secret-next').click();
-        cy.wait(500)
+       // cy.wait(500)
+        cy.get('#secret-next').should('not.exist');
         reload();
         cy.get('#login-wrapper');
         cy.get('#active-wallet-password-input').type(password);
@@ -53,7 +55,8 @@ describe("User Session", () => {
         cy.get('#secret-next').click();
         cy.get('#password-input').type(password);
         cy.get('#secret-next').click();
-        cy.wait(500)
+        // cy.wait(500)
+        cy.get('#secret-next').should('not.exist');
         reload();
         cy.get('#login-wrapper');
         cy.get('#active-wallet-password-input').type(incorrectPassword);
@@ -68,7 +71,8 @@ describe("User Session", () => {
         cy.get('#secret-next').click();
         cy.get('#password-input').type(password);
         cy.get('#secret-next').click().then(() => {
-            cy.wait(500);
+            // cy.wait(500)
+            cy.get('#secret-next').should('not.exist');
             cy.window().then(
                 (window) => {
                     expect(window.localStorage.getItem('bananostand_encryptedSeed')).to.be.ok;
