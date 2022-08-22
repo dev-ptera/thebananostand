@@ -139,17 +139,18 @@
     </blui-empty-state>
 
     <mat-nav-list
+        responsive
         id="dashboard-account-list"
         class="dashboard-account-list"
-        style="max-height: 62vh; overflow: auto; padding-top: 0"
-        [style.maxHeight]="vp.sm ? 'calc(100vh - (56px + 74px))' : '62vh'"
+        style="overflow: auto; padding-top: 0"
+        [style.maxHeight]="vp.sm ? 'calc(100vh - (56px + 74px))' : 'calc(100vh - 300px)'"
         *ngIf="getAccounts().length > 0"
         [class.fade]="fade"
         [disableRipple]="disableRipple"
     >
         <blui-info-list-item
             *ngFor="let account of getAccounts(); let i = index"
-            [divider]="i === getAccounts().length - 1 ? '' : 'partial'"
+            [divider]="i === getAccounts().length - 1 ? undefined : 'partial'"
             [hidePadding]="true"
             (click)="openAccount(account.fullAddress)"
         >
@@ -169,7 +170,7 @@
                 <ng-template *ngTemplateOutlet="accountNumber; context: { account: this.account }"></ng-template>
             </div>
             <div blui-title style="font-family: monospace">{{ account.shortAddress }}</div>
-            <div blui-subtitle>
+            <div blui-subtitle *ngIf="!vp.sm">
                 <ng-container *ngIf="account.representative">
                     represented by {{ formatRepresentative(account.representative) }}
                 </ng-container>

@@ -7,6 +7,12 @@
     .mat-list-base .mat-list-item.blui-info-list-item-content .mat-list-item-content {
         height: 50px;
     }
+    .sm {
+        ::ng-deep .blui-info-list-item-content .mat-list-item-content,
+        .mat-list-base .mat-list-item.blui-info-list-item-content .mat-list-item-content {
+            height: 72px;
+        }
+    }
 }
 
 .rep-offline-banner {
@@ -71,16 +77,13 @@
 .scroll-container {
     border: 0 !important;
     box-sizing: content-box;
-    height: 52vh;
     width: calc(100% + 32px);
     margin-left: -16px;
     margin-right: -16px;
+    $height: calc(100vh - 420px);
+    max-height: $height;
     @include fade;
     &.sm {
-        height: calc(100vh - 56px - 104px - 68px - 4px);
+        max-height: calc(100vh - 56px - 104px - 72px);
     }
-}
-
-.ds-item {
-    height: 50px;
 }

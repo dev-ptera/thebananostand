@@ -266,6 +266,10 @@ export class AccountComponent implements OnInit, OnDestroy {
         }, 700);
     }
 
+    getTransactionRowHeight(): number {
+        return this.vp.sm ? 72 : 50;
+    }
+
     /** Hard Refresh for all information known about this account.
      *  Fetches blockcount, account info, pending blocks, insights & then confirmed tx. */
     refreshCurrentAccountInfo(): void {
