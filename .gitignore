@@ -50,3 +50,4 @@ src/environments/api-token.ts
 .angular
 
 cypress/videos
+cypress/screenshots

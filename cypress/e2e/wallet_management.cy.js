@@ -30,7 +30,7 @@ describe("Wallet Management", () => {
         })
     });
 
-    it.only("should load transaction details for the first account", () => {
+    it("should load transaction details for the first account", () => {
         cy.wait('@loadInitialAccount').then(() => {
             cy.intercept({ method: 'POST', url: '**/account/confirmed-transactions' }).as('confirmedTx');
             cy.get('#dashboard-account-list').find('.blui-info-list-item').click();
