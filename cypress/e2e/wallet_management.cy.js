@@ -30,12 +30,12 @@ describe("Wallet Management", () => {
         })
     });
 
-    it("should load transaction details for the first account", () => {
+    it.only("should load transaction details for the first account", () => {
         cy.wait('@loadInitialAccount').then(() => {
             cy.intercept({ method: 'POST', url: '**/account/confirmed-transactions' }).as('confirmedTx');
             cy.get('#dashboard-account-list').find('.blui-info-list-item').click();
             cy.wait('@confirmedTx').then(() => {
-                cy.get('#account-scroll-container').find('.blui-info-list-item').its('length').should('be.gte', 10);
+                cy.get('#account-scroll-container').find('.blui-info-list-item').its('length').should('be.gte', 2);
             })
         })
     });
