@@ -267,7 +267,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     getTransactionRowHeight(): number {
-        return this.vp.sm ? 80 : 50;
+        return this.vp.sm ? 72 : 50;
     }
 
     /** Hard Refresh for all information known about this account.

@@ -17,17 +17,9 @@ body {
     padding: 0;
 }
 
-body {
-}
-
 .add-accounts-example {
     font-family: monospace;
     background: #dedede;
-}
-
-.account-number-tag {
-    //   background-color: map-get(blui.$blui-gray, 50) !important;
-    //   color: map-get(blui.$blui-gray, 500) !important;
 }
 
 .app-root {
@@ -253,7 +245,6 @@ input[type='number'] {
 }
 
 // Theme overrides
-
 mat-card,
 mat-nav-list,
 .mat-list-item-ripple,
