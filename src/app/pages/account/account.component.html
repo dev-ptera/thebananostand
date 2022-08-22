@@ -212,25 +212,25 @@
                 </div>
 
                 <cdk-virtual-scroll-viewport
-                    itemSize="50"
+                    *ngIf="ds && ds.firstPageLoaded"
+                    [itemSize]="getTransactionRowHeight()"
                     id="account-scroll-container"
+                    [style.height.px]="countTotalDisplayableTxCount() * getTransactionRowHeight()"
                     class="scroll-container"
                     responsive
-                    *ngIf="ds && ds.firstPageLoaded"
-                    [style.maxHeight.px]="countTotalDisplayableTxCount() * 50"
                 >
-                    <div *cdkVirtualFor="let item of ds; let i = index; let even = even" class="ds-item">
+                    <div *cdkVirtualFor="let item of ds; let i = index; let even = even">
                         <blui-info-list-item
                             *ngIf="item"
-                            style="height: 50px"
+                            [style.height.px]="getTransactionRowHeight()"
                             [style.backgroundColor]="
                                 even
                                     ? isDark()
                                         ? colors.darkBlack[300]
                                         : colors.white[100]
                                     : isDark()
-                                    ? colors.darkBlack[200]
-                                    : colors.white[50]
+                                        ? colors.darkBlack[200]
+                                        : colors.white[50]
                             "
                         >
                             <div blui-icon class="tx-state-icon">
