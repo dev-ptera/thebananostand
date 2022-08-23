@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
-import {UtilService} from '@app/services/util.service';
-import {AccountService} from '@app/services/account.service';
-import {TransactionService} from '@app/services/transaction.service';
+import { UtilService } from '@app/services/util.service';
+import { AccountService } from '@app/services/account.service';
+import { TransactionService } from '@app/services/transaction.service';
 
 export type SendOverlayData = {
     address: string;

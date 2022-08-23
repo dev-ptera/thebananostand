@@ -56,15 +56,13 @@ import { AppAccountSettingsComponent } from '@app/components/account-settings/ac
 import { NewSeedDialogComponent } from '@app/pages/home/new-seed/new-seed-dialog.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {
-    ChangeRepBottomSheetComponent
-} from "@app/pages/account/bottom-sheet/change-rep/change-rep-bottom-sheet.component";
-import {MatBottomSheetModule} from "@angular/material/bottom-sheet";
-import {ChangeRepComponent} from "@app/pages/account/actions/change-rep/change-rep.component";
-import {SendComponent} from "@app/pages/account/actions/send/send.component";
-import {SendBottomSheetComponent} from "@app/pages/account/bottom-sheet/send/send-bottom-sheet.component";
-import {ReceiveComponent} from "@app/pages/account/actions/receive/receive.component";
-import {ReceiveBottomSheetComponent} from "@app/pages/account/bottom-sheet/receive/receive-bottom-sheet.component";
+import { ChangeRepBottomSheetComponent } from '@app/pages/account/bottom-sheet/change-rep/change-rep-bottom-sheet.component';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { ChangeRepComponent } from '@app/pages/account/actions/change-rep/change-rep.component';
+import { SendComponent } from '@app/pages/account/actions/send/send.component';
+import { SendBottomSheetComponent } from '@app/pages/account/bottom-sheet/send/send-bottom-sheet.component';
+import { ReceiveComponent } from '@app/pages/account/actions/receive/receive.component';
+import { ReceiveBottomSheetComponent } from '@app/pages/account/bottom-sheet/receive/receive-bottom-sheet.component';
 
 @NgModule({
     declarations: [

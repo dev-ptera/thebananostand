@@ -1,17 +1,15 @@
-import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {SendOverlayData} from "@app/pages/account/actions/send/send.component";
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { SendOverlayData } from '@app/pages/account/actions/send/send.component';
 
 @Component({
     selector: 'app-change-rep-dialog',
-    template: `
-        <app-send-overlay [data]="data" (closeWithHash)="closeDialog($event)"></app-send-overlay>
-    `,
+    template: ` <app-send-overlay [data]="data" (closeWithHash)="closeDialog($event)"></app-send-overlay> `,
 })
 export class SendDialogComponent {
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: SendOverlayData,
-        private readonly _dialogRef: MatDialogRef<SendDialogComponent>,
+        private readonly _dialogRef: MatDialogRef<SendDialogComponent>
     ) {}
 
     closeDialog(hash: string): void {

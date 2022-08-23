@@ -1,10 +1,10 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
-import {FormControl} from '@angular/forms';
-import {TransactionService} from '@app/services/transaction.service';
-import {AccountService} from '@app/services/account.service';
-import {SpyglassService} from '@app/services/spyglass.service';
-import {UtilService} from '@app/services/util.service';
+import { FormControl } from '@angular/forms';
+import { TransactionService } from '@app/services/transaction.service';
+import { AccountService } from '@app/services/account.service';
+import { SpyglassService } from '@app/services/spyglass.service';
+import { UtilService } from '@app/services/util.service';
 
 export type RepScore = {
     address: string;
@@ -108,7 +108,7 @@ export type ChangeRepOverlayData = {
 
                         <mat-form-field style="width: 100%;" appearance="fill" *ngIf="!selectFromList">
                             <mat-label>Representative Address</mat-label>
-                            <input matInput type="value" [(ngModel)]="manualEnteredNewRepresentative"/>
+                            <input matInput type="value" [(ngModel)]="manualEnteredNewRepresentative" />
                         </mat-form-field>
                     </ng-container>
 
@@ -182,7 +182,6 @@ export type ChangeRepOverlayData = {
     `,
 })
 export class ChangeRepComponent implements OnInit {
-
     @Input() data: ChangeRepOverlayData;
     @Output() closeWithHash: EventEmitter<string> = new EventEmitter<string>();
 

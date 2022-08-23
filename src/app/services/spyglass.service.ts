@@ -5,7 +5,7 @@ import { UtilService } from './util.service';
 import { KnownAccount } from '@app/types/KnownAccount';
 import { FilterDialogData } from '@app/pages/account/dialogs/filter/filter-dialog.component';
 import { Subject } from 'rxjs';
-import {RepScore} from "@app/pages/account/actions/change-rep/change-rep.component";
+import { RepScore } from '@app/pages/account/actions/change-rep/change-rep.component';
 
 @Injectable({
     providedIn: 'root',

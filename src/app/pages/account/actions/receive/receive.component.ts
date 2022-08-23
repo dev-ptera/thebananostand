@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
 import { AccountService } from '@app/services/account.service';
 import { TransactionService } from '@app/services/transaction.service';
@@ -99,7 +99,6 @@ export type ReceiveOverlayData = {
     `,
 })
 export class ReceiveComponent implements OnInit {
-
     @Input() data: ReceiveOverlayData;
     @Output() closeWithHash: EventEmitter<string> = new EventEmitter<string>();
 

@@ -16,12 +16,10 @@ import { RpcService } from '@app/services/rpc.service';
 import { ViewportService } from '@app/services/viewport.service';
 import { environment } from '../../../environments/environment';
 import { FilterDialogComponent, FilterDialogData } from '@app/pages/account/dialogs/filter/filter-dialog.component';
-import {MatBottomSheet} from "@angular/material/bottom-sheet";
-import {
-    ChangeRepBottomSheetComponent
-} from "@app/pages/account/bottom-sheet/change-rep/change-rep-bottom-sheet.component";
-import {SendBottomSheetComponent} from "@app/pages/account/bottom-sheet/send/send-bottom-sheet.component";
-import {ReceiveBottomSheetComponent} from "@app/pages/account/bottom-sheet/receive/receive-bottom-sheet.component";
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { ChangeRepBottomSheetComponent } from '@app/pages/account/bottom-sheet/change-rep/change-rep-bottom-sheet.component';
+import { SendBottomSheetComponent } from '@app/pages/account/bottom-sheet/send/send-bottom-sheet.component';
+import { ReceiveBottomSheetComponent } from '@app/pages/account/bottom-sheet/receive/receive-bottom-sheet.component';
 
 @Component({
     selector: 'app-account',
@@ -107,7 +105,7 @@ export class AccountComponent implements OnInit, OnDestroy {
                     disableClose: true,
                 });
                 ref.afterDismissed().subscribe((hash) => this._postOverlayActions(hash));
-            }, this.bottomSheetDismissDelayMs)
+            }, this.bottomSheetDismissDelayMs);
         } else {
             const ref = this._dialog.open(ReceiveDialogComponent, {
                 data: overlayData,
@@ -131,7 +129,7 @@ export class AccountComponent implements OnInit, OnDestroy {
                     disableClose: true,
                 });
                 ref.afterDismissed().subscribe((hash) => this._postOverlayActions(hash));
-            }, this.bottomSheetDismissDelayMs)
+            }, this.bottomSheetDismissDelayMs);
         } else {
             const ref = this._dialog.open(SendDialogComponent, {
                 data: overlayData,
@@ -155,7 +153,7 @@ export class AccountComponent implements OnInit, OnDestroy {
                     disableClose: true,
                 });
                 ref.afterDismissed().subscribe((hash) => this._postOverlayActions(hash));
-            }, this.bottomSheetDismissDelayMs)
+            }, this.bottomSheetDismissDelayMs);
         } else {
             const ref = this._dialog.open(ChangeRepDialogComponent, {
                 data: overlayData,
