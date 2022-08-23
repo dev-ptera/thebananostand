@@ -1,4 +1,9 @@
-.receive-dialog {
+:host {
+    display: flex;
+    width: 100%;
+}
+
+.receive-overlay {
     max-width: 340px;
     width: 340px;
     height: 350px;

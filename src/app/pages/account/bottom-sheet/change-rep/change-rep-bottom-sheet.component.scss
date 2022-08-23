@@ -1,0 +1,8 @@
+:host {
+    display: flex;
+}
+::ng-deep .app-change-rep-bottom-sheet .change-rep-overlay {
+    max-width: unset!important;
+    width: 100% !important;
+    height: 450px!important;
+}

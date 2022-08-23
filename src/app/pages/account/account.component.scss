@@ -83,6 +83,6 @@
     max-height: $height;
     @include fade;
     &.sm {
-        max-height: calc(100vh - 56px - 104px - 72px);
+        max-height: calc(100vh - 56px - 104px - 64px);
     }
 }

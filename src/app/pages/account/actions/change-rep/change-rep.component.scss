@@ -6,7 +6,12 @@
     animation: fadein 250ms;
 }
 
-.change-rep-dialog {
+:host {
+    display: flex;
+    width: 100%;
+}
+
+.change-rep-overlay {
     max-width: 340px;
     width: 340px;
     height: 416px;
