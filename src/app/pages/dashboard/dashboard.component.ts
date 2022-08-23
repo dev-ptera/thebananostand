@@ -9,6 +9,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewportService } from '@app/services/viewport.service';
 import { AddIndexDialogComponent } from '@app/pages/dashboard/add-index/add-index.component';
+import { ThemeService } from '@app/services/theme.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -33,6 +34,7 @@ export class DashboardComponent implements OnInit {
         private readonly _router: Router,
         private readonly _dialog: MatDialog,
         private readonly _util: UtilService,
+        private readonly _themeService: ThemeService,
         private readonly _accountService: AccountService,
         public vp: ViewportService
     ) {}
@@ -58,6 +60,10 @@ export class DashboardComponent implements OnInit {
         this.loadingAccount = false;
         this.loadingAllAccounts = false;
         this.fade = false;
+    }
+
+    isDark(): boolean {
+        return this._themeService.isDark();
     }
 
     refresh(): void {

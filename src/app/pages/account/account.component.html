@@ -145,7 +145,7 @@
                 <app-qr *ngIf="!vp.sm" [address]="account.fullAddress"></app-qr>
             </mat-card>
 
-            <mat-card style="padding-bottom: 4px" [style.paddingTop.px]="vp.sm ? 0 : 16">
+            <mat-card style="padding-bottom: 0px" [style.paddingTop.px]="vp.sm ? 0 : 16">
                 <div
                     *ngIf="!vp.sm"
                     [class.mat-headline]="!vp.sm"
@@ -284,7 +284,7 @@
                                 </span>
                             </div>
                         </blui-info-list-item>
-                        <blui-info-list-item *ngIf="!item" style="height: 50px">
+                        <blui-info-list-item *ngIf="!item" [style.height.px]="getTransactionRowHeight()">
                             <mat-icon blui-icon>sync</mat-icon>
                             <div blui-title>Loading</div>
                             <div blui-right-content>

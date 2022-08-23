@@ -142,17 +142,31 @@
         responsive
         id="dashboard-account-list"
         class="dashboard-account-list"
-        style="overflow: auto; padding-top: 0"
+        style="
+            overflow: auto;
+            padding-top: 0;
+            border-top-right-radius: 0 !important;
+            border-top-left-radius: 0 !important;
+        "
         [style.maxHeight]="vp.sm ? 'calc(100vh - (56px + 74px))' : 'calc(100vh - 300px)'"
         *ngIf="getAccounts().length > 0"
         [class.fade]="fade"
         [disableRipple]="disableRipple"
     >
         <blui-info-list-item
-            *ngFor="let account of getAccounts(); let i = index"
+            *ngFor="let account of getAccounts(); let i = index; let even = even"
             [divider]="i === getAccounts().length - 1 ? undefined : 'partial'"
             [hidePadding]="true"
             (click)="openAccount(account.fullAddress)"
+            [style.backgroundColor]="
+                even
+                    ? isDark()
+                        ? colors.darkBlack[300]
+                        : colors.white[100]
+                    : isDark()
+                    ? colors.darkBlack[200]
+                    : colors.white[50]
+            "
         >
             <mat-checkbox
                 *ngIf="isAdvancedView"
@@ -176,7 +190,7 @@
                 </ng-container>
                 <ng-container *ngIf="!account.representative"> unopened account </ng-container>
             </div>
-            <div blui-info *ngIf="vp.sm">
+            <div blui-info *ngIf="vp.sm" style="margin-top: 4px">
                 <ng-template *ngTemplateOutlet="accountNumber; context: { account: this.account }"></ng-template>
             </div>
             <div blui-right-content>

@@ -129,9 +129,9 @@ $banano-yellow: map-merge(
     }
 
     .blui-list-item-tag.account-number-tag {
-        background-color: map-get(blui.$blui-black, 500) !important;
+        background-color: map-get(blui.$blui-yellow, 500) !important;
         .blui-list-item-tag-label {
-            color: map-get(blui.$blui-black, 100) !important;
+            color: map-get(blui.$blui-black, 900) !important;
         }
     }
 
