@@ -3,9 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { ConfirmedTx } from '@app/types/ConfirmedTx';
 import { UtilService } from './util.service';
 import { KnownAccount } from '@app/types/KnownAccount';
-import { FilterDialogData } from '@app/pages/account/dialogs/filter/filter-dialog.component';
 import { Subject } from 'rxjs';
 import { RepScore } from '@app/pages/account/actions/change-rep/change-rep.component';
+import {FilterOverlayData} from "@app/pages/account/actions/filter/filter.component";
 
 @Injectable({
     providedIn: 'root',
@@ -73,7 +73,7 @@ export class SpyglassService {
         address: string,
         size: number,
         offset: number,
-        filters?: FilterDialogData
+        filters?: FilterOverlayData
     ): Promise<ConfirmedTx[]> {
         await this._hasPingedApi();
         const url = `${this.httpApi}/v1/account/confirmed-transactions`;

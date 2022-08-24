@@ -4,7 +4,8 @@ import { SendOverlayData } from '@app/pages/account/actions/send/send.component'
 
 @Component({
     selector: 'app-send-bottom-sheet',
-    template: ` <app-send-overlay [data]="data" (closeWithHash)="closeDialog($event)"></app-send-overlay> `,
+    template: `
+        <app-send-overlay [data]="data" (closeWithHash)="closeSheet($event)"></app-send-overlay> `,
     styleUrls: ['send-bottom-sheet.component.scss'],
     host: { class: 'app-send-bottom-sheet' },
 })
@@ -14,7 +15,7 @@ export class SendBottomSheetComponent {
         private readonly _sheet: MatBottomSheetRef<SendBottomSheetComponent>
     ) {}
 
-    closeDialog(hash: string): void {
+    closeSheet(hash: string): void {
         this._sheet.dismiss(hash);
     }
 }

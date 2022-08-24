@@ -1,7 +1,12 @@
-.filter-dialog {
+:host {
+    display: flex;
+    width: 100%;
+}
+
+.filter-overlay {
     max-width: 350px;
     width: 305px;
-    height: 400px;
+    height: 440px;
     display: flex;
     flex-direction: column;
     .mat-form-field-wrapper {

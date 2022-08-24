@@ -4,7 +4,8 @@ import { ChangeRepOverlayData } from '@app/pages/account/actions/change-rep/chan
 
 @Component({
     selector: 'app-change-rep-bottom-sheet',
-    template: ` <app-change-rep-overlay [data]="data" (closeWithHash)="closeDialog($event)"></app-change-rep-overlay> `,
+    template: `
+        <app-change-rep-overlay [data]="data" (closeWithHash)="closeSheet($event)"></app-change-rep-overlay> `,
     styleUrls: ['change-rep-bottom-sheet.component.scss'],
     host: { class: 'app-change-rep-bottom-sheet' },
 })
@@ -14,7 +15,7 @@ export class ChangeRepBottomSheetComponent {
         private readonly _sheet: MatBottomSheetRef<ChangeRepBottomSheetComponent>
     ) {}
 
-    closeDialog(hash: string): void {
+    closeSheet(hash: string): void {
         this._sheet.dismiss(hash);
     }
 }

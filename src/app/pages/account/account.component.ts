@@ -15,11 +15,13 @@ import { ConfirmedTx } from '@app/types/ConfirmedTx';
 import { RpcService } from '@app/services/rpc.service';
 import { ViewportService } from '@app/services/viewport.service';
 import { environment } from '../../../environments/environment';
-import { FilterDialogComponent, FilterDialogData } from '@app/pages/account/dialogs/filter/filter-dialog.component';
+import { FilterDialogComponent } from '@app/pages/account/dialogs/filter/filter-dialog.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ChangeRepBottomSheetComponent } from '@app/pages/account/bottom-sheet/change-rep/change-rep-bottom-sheet.component';
 import { SendBottomSheetComponent } from '@app/pages/account/bottom-sheet/send/send-bottom-sheet.component';
 import { ReceiveBottomSheetComponent } from '@app/pages/account/bottom-sheet/receive/receive-bottom-sheet.component';
+import {FilterOverlayData} from "@app/pages/account/actions/filter/filter.component";
+import {FilterBottomSheetComponent} from "@app/pages/account/bottom-sheet/filter/filter-bottom-sheet.component";
 
 @Component({
     selector: 'app-account',
@@ -31,7 +33,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     ds: MyDataSource;
     account: AccountOverview;
 
-    filterData: FilterDialogData = {
+    filterData: FilterOverlayData = {
         includeReceive: true,
         includeSend: true,
         includeChange: true,
@@ -94,23 +96,20 @@ export class AccountComponent implements OnInit, OnDestroy {
     /** Iterates through each pending transaction block and receives them. */
     receive(): void {
         const overlayData = {
-            address: this.account.fullAddress,
-            blocks: this.account.pending,
-            index: this.account.index,
+            data: {
+                address: this.account.fullAddress,
+                blocks: this.account.pending,
+                index: this.account.index,
+            },
+            disableClose: true
         };
         if (this.vp.sm) {
             setTimeout(() => {
-                const ref = this._sheet.open(ReceiveBottomSheetComponent, {
-                    data: overlayData,
-                    disableClose: true,
-                });
+                const ref = this._sheet.open(ReceiveBottomSheetComponent, overlayData);
                 ref.afterDismissed().subscribe((hash) => this._postOverlayActions(hash));
             }, this.bottomSheetDismissDelayMs);
         } else {
-            const ref = this._dialog.open(ReceiveDialogComponent, {
-                data: overlayData,
-                disableClose: true,
-            });
+            const ref = this._dialog.open(ReceiveDialogComponent, overlayData);
             ref.afterClosed().subscribe((hash) => this._postOverlayActions(hash));
         }
     }
@@ -118,23 +117,20 @@ export class AccountComponent implements OnInit, OnDestroy {
     /** Opens dialog to send funds. */
     send(): void {
         const overlayData = {
-            address: this.account.fullAddress,
-            maxSendAmount: this.account.balance,
-            index: this.account.index,
+            data: {
+                address: this.account.fullAddress,
+                maxSendAmount: this.account.balance,
+                index: this.account.index,
+            },
+            disableClose: true,
         };
         if (this.vp.sm) {
             setTimeout(() => {
-                const ref = this._sheet.open(SendBottomSheetComponent, {
-                    data: overlayData,
-                    disableClose: true,
-                });
+                const ref = this._sheet.open(SendBottomSheetComponent, overlayData);
                 ref.afterDismissed().subscribe((hash) => this._postOverlayActions(hash));
             }, this.bottomSheetDismissDelayMs);
         } else {
-            const ref = this._dialog.open(SendDialogComponent, {
-                data: overlayData,
-                disableClose: true,
-            });
+            const ref = this._dialog.open(SendDialogComponent, overlayData);
             ref.afterClosed().subscribe((hash) => this._postOverlayActions(hash));
         }
     }
@@ -142,23 +138,20 @@ export class AccountComponent implements OnInit, OnDestroy {
     /** Opens dialog to change account representative. */
     changeRep(): void {
         const overlayData = {
-            address: this.account.fullAddress,
-            currentRep: this.account.representative,
-            index: this.account.index,
+            data: {
+                address: this.account.fullAddress,
+                currentRep: this.account.representative,
+                index: this.account.index,
+            },
+            disableClose: true,
         };
         if (this.vp.sm) {
             setTimeout(() => {
-                const ref = this._sheet.open(ChangeRepBottomSheetComponent, {
-                    data: overlayData,
-                    disableClose: true,
-                });
+                const ref = this._sheet.open(ChangeRepBottomSheetComponent, overlayData);
                 ref.afterDismissed().subscribe((hash) => this._postOverlayActions(hash));
             }, this.bottomSheetDismissDelayMs);
         } else {
-            const ref = this._dialog.open(ChangeRepDialogComponent, {
-                data: overlayData,
-                disableClose: true,
-            });
+            const ref = this._dialog.open(ChangeRepDialogComponent, overlayData);
             ref.afterClosed().subscribe((hash) => this._postOverlayActions(hash));
         }
     }
@@ -172,16 +165,27 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     openFilterDialog(): void {
-        const ref = this._dialog.open(FilterDialogComponent, {
+
+        const overlayData = {
             data: this.filterData,
             disableClose: true,
-        });
-        ref.afterClosed().subscribe((data: FilterDialogData) => {
+        }
+        const postFilterActions = (data: FilterOverlayData): void => {
             if (data.update) {
                 this.filterData = data;
                 this.createNewDataSource();
             }
-        });
+        }
+
+        if (this.vp.sm) {
+            setTimeout(() => {
+                const ref = this._sheet.open(FilterBottomSheetComponent, overlayData);
+                ref.afterDismissed().subscribe((hash) => postFilterActions(hash));
+            }, this.bottomSheetDismissDelayMs);
+        } else {
+            const ref = this._dialog.open(FilterDialogComponent, overlayData);
+            ref.afterClosed().subscribe((hash) => postFilterActions(hash));
+        }
     }
 
     /** Using data from the dashboard, sets the account */

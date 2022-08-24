@@ -63,6 +63,8 @@ import { SendComponent } from '@app/pages/account/actions/send/send.component';
 import { SendBottomSheetComponent } from '@app/pages/account/bottom-sheet/send/send-bottom-sheet.component';
 import { ReceiveComponent } from '@app/pages/account/actions/receive/receive.component';
 import { ReceiveBottomSheetComponent } from '@app/pages/account/bottom-sheet/receive/receive-bottom-sheet.component';
+import {FilterComponent} from "@app/pages/account/actions/filter/filter.component";
+import {FilterBottomSheetComponent} from "@app/pages/account/bottom-sheet/filter/filter-bottom-sheet.component";
 
 @NgModule({
     declarations: [
@@ -82,6 +84,8 @@ import { ReceiveBottomSheetComponent } from '@app/pages/account/bottom-sheet/rec
         ChangeRepDialogComponent,
         ReceiveDialogComponent,
         FilterDialogComponent,
+        FilterComponent,
+        FilterBottomSheetComponent,
         EnterSecretDialogComponent,
         ResponsiveDirective,
         ReceiveBottomSheetComponent,

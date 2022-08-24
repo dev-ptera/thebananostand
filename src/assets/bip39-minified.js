@@ -23903,7 +23903,7 @@
                                     return (
                                         e < this.head.data.length
                                             ? ((r = this.head.data.slice(0, e)),
-                                              (this.head.data = this.head.data.slice(e)))
+                                              (this.head.adjustedFilters = this.head.data.slice(e)))
                                             : (r =
                                                   e === this.head.data.length
                                                       ? this.shift()
