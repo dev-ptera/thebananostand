@@ -40,8 +40,13 @@ export type ChangeRepOverlayData = {
                         You can now close this window.
                     </div>
                     <div blui-actions>
-                        <button mat-flat-button color="primary" class="close-button" (click)="closeOverlay()"
-                            data-cy="change-close-completed-button">
+                        <button
+                            mat-flat-button
+                            color="primary"
+                            class="close-button"
+                            (click)="closeOverlay()"
+                            data-cy="change-close-completed-button"
+                        >
                             Close
                         </button>
                     </div>
@@ -59,8 +64,13 @@ export type ChangeRepOverlayData = {
                     <div blui-title>Representative Change Failed</div>
                     <div blui-description>Your representative could not be changed. {{ errorMessage }}</div>
                     <div blui-actions>
-                        <button mat-flat-button color="primary" class="close-button" (click)="closeOverlay()"
-                            data-cy="change-close-fail-button">
+                        <button
+                            mat-flat-button
+                            color="primary"
+                            class="close-button"
+                            (click)="closeOverlay()"
+                            data-cy="change-close-fail-button"
+                        >
                             Close
                         </button>
                     </div>
@@ -128,7 +138,13 @@ export type ChangeRepOverlayData = {
                 <blui-spacer></blui-spacer>
                 <mat-divider style="margin-left: -48px; margin-right: -48px"></mat-divider>
                 <blui-mobile-stepper [activeStep]="activeStep" [steps]="maxSteps">
-                    <button mat-stroked-button blui-back-button color="primary" (click)="back()" data-cy="change-close-button">
+                    <button
+                        mat-stroked-button
+                        blui-back-button
+                        color="primary"
+                        (click)="back()"
+                        data-cy="change-close-button"
+                    >
                         <ng-container *ngIf="activeStep === 0">Close</ng-container>
                         <ng-container *ngIf="activeStep > 0">Back</ng-container>
                     </button>

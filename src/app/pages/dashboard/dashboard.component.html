@@ -33,8 +33,11 @@
                 <mat-icon blui-icon>refresh</mat-icon>
                 <div blui-title>Refresh Balances</div>
             </blui-info-list-item>
-            <blui-info-list-item [dense]="true" (click)="isAdvancedView = !isAdvancedView; mobileUserMenuOpen = false"
-                data-cy="select-accounts-mobile-button">
+            <blui-info-list-item
+                [dense]="true"
+                (click)="isAdvancedView = !isAdvancedView; mobileUserMenuOpen = false"
+                data-cy="select-accounts-mobile-button"
+            >
                 <mat-icon blui-icon>visibility</mat-icon>
                 <div blui-title>
                     <ng-container *ngIf="!isAdvancedView">Enable Select Accounts</ng-container>
