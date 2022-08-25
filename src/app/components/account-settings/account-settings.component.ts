@@ -6,7 +6,7 @@ import { SecretService } from '@app/services/secret.service';
     selector: 'app-account-settings',
     template: `
         <blui-user-menu
-            id="account-settings"
+            data-cy="account-settings"
             class="app-theme-picker"
             menuTitle="Account"
             [(open)]="userMenuOpen"
@@ -14,7 +14,7 @@ import { SecretService } from '@app/services/secret.service';
         >
             <mat-icon blui-avatar>settings</mat-icon>
             <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
-                <blui-info-list-item [dense]="true" (click)="clearData()" id="clear-data-button">
+                <blui-info-list-item [dense]="true" (click)="clearData()" data-cy="clear-data-button">
                     <mat-icon blui-icon>delete</mat-icon>
                     <div blui-title>Clear Local Data</div>
                 </blui-info-list-item>

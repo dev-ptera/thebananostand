@@ -22,6 +22,7 @@
     <button
         blui-inline
         mat-flat-button
+        data-cy="receive-action"
         color="primary"
         (click)="receive()"
         style="margin-right: 16px"
@@ -38,6 +39,7 @@
     <button
         blui-inline
         mat-flat-button
+        data-cy="send-action"
         color="primary"
         (click)="send()"
         style="margin-right: 16px"
@@ -132,6 +134,7 @@
                             <button
                                 blui-inline
                                 mat-flat-button
+                                data-cy="change-action-desktop"
                                 color="primary"
                                 (click)="changeRep()"
                                 [disabled]="!account.representative"
@@ -214,7 +217,7 @@
                 <cdk-virtual-scroll-viewport
                     *ngIf="ds && ds.firstPageLoaded"
                     [itemSize]="getTransactionRowHeight()"
-                    id="account-scroll-container"
+                    data-cy="account-scroll-container"
                     [style.height.px]="countTotalDisplayableTxCount() * getTransactionRowHeight()"
                     class="scroll-container"
                     responsive

@@ -18,7 +18,7 @@ import { SecretService } from '@app/services/secret.service';
                     <mat-form-field appearance="fill">
                         <mat-label>Seed or Mnemonic</mat-label>
                         <textarea
-                            id="secret-input"
+                            data-cy="secret-input"
                             matInput
                             placeholder="Secret Phrase"
                             [(ngModel)]="secret"
@@ -38,7 +38,7 @@ import { SecretService } from '@app/services/secret.service';
                             matInput
                             [type]="passwordVisible ? 'text' : 'password'"
                             [(ngModel)]="password"
-                            id="password-input"
+                            data-cy="password-input"
                         />
                         <button mat-icon-button matSuffix (click)="togglePasswordVisibility()">
                             <mat-icon>{{ passwordVisible ? 'visibility' : 'visibility_off' }}</mat-icon>
@@ -58,7 +58,7 @@ import { SecretService } from '@app/services/secret.service';
                         <ng-container *ngIf="activeStep > 0">Back</ng-container>
                     </button>
                     <button
-                        id="secret-next"
+                        data-cy="secret-next"
                         mat-flat-button
                         blui-next-button
                         color="primary"

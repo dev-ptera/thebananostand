@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {TransactionService} from '@app/services/transaction.service';
-import {AccountService} from '@app/services/account.service';
-import {SpyglassService} from '@app/services/spyglass.service';
-import {UtilService} from '@app/services/util.service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { TransactionService } from '@app/services/transaction.service';
+import { AccountService } from '@app/services/account.service';
+import { SpyglassService } from '@app/services/spyglass.service';
+import { UtilService } from '@app/services/util.service';
 
 export type FilterOverlayData = {
     includeReceive: boolean;
@@ -31,8 +31,7 @@ export type FilterOverlayData = {
                     >
                         <mat-icon matChipAvatar style="font-size: 16px">download</mat-icon>
                         Received
-                    </mat-chip
-                    >
+                    </mat-chip>
                     <mat-chip
                         variant="outline"
                         color="primary"
@@ -41,8 +40,7 @@ export type FilterOverlayData = {
                     >
                         <mat-icon matChipAvatar style="font-size: 16px">upload</mat-icon>
                         Sent
-                    </mat-chip
-                    >
+                    </mat-chip>
                     <mat-chip
                         variant="outline"
                         color="primary"
@@ -51,18 +49,17 @@ export type FilterOverlayData = {
                     >
                         <mat-icon matChipAvatar style="font-size: 16px">how_to_vote</mat-icon>
                         Change
-                    </mat-chip
-                    >
+                    </mat-chip>
                 </mat-chip-list>
 
                 <div style="display: flex; justify-content: space-between; margin-top: 24px">
                     <mat-form-field blui-input style="width: 130px" appearance="fill">
                         <mat-label>Min BAN</mat-label>
-                        <input matInput type="number" [(ngModel)]="adjustedFilters.minAmount"/>
+                        <input matInput type="number" [(ngModel)]="adjustedFilters.minAmount" />
                     </mat-form-field>
                     <mat-form-field blui-input style="width: 130px" appearance="fill">
                         <mat-label>Max BAN</mat-label>
-                        <input matInput type="number" [(ngModel)]="adjustedFilters.maxAmount"/>
+                        <input matInput type="number" [(ngModel)]="adjustedFilters.maxAmount" />
                     </mat-form-field>
                 </div>
 
@@ -84,7 +81,11 @@ export type FilterOverlayData = {
                         color="primary"
                         mat-flat-button
                         (click)="apply()"
-                        [disabled]="!adjustedFilters.includeReceive && !adjustedFilters.includeChange && !adjustedFilters.includeSend"
+                        [disabled]="
+                            !adjustedFilters.includeReceive &&
+                            !adjustedFilters.includeChange &&
+                            !adjustedFilters.includeSend
+                        "
                     >
                         Apply
                     </button>

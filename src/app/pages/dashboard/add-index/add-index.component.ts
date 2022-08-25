@@ -19,7 +19,7 @@ import { MatDialogRef } from '@angular/material/dialog';
                             type="text"
                             matInput
                             [formControl]="indexFormControl"
-                            id="specific-account-index-input"
+                            data-cy="add-specific-account-input"
                         />
                     </mat-form-field>
                 </form>
@@ -30,7 +30,7 @@ import { MatDialogRef } from '@angular/material/dialog';
             <div mat-dialog-actions style="display: flex; justify-content: space-between; margin-bottom: 0">
                 <button mat-stroked-button mat-dialog-close color="primary">Close</button>
                 <button
-                    id="app-add-index-dialog-button"
+                    data-cy="add-account-overlay-button"
                     mat-flat-button
                     color="primary"
                     [disabled]="loading || !indexFormControl.value"

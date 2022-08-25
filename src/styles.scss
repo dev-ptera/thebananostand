@@ -172,9 +172,6 @@ input[type='number'] {
     cursor: pointer !important;
 }
 
-.tx-state-icon {
-}
-
 @mixin dialog-content-fade {
     -webkit-animation: fadein 300ms; /* Safari, Chrome and Opera > 12.1 */
     -moz-animation: fadein 300ms; /* Firefox < 16 */
@@ -297,4 +294,16 @@ button.mat-stroked-button {
 .blui-list-item-tag,
 .blui-list-item-tag-content {
     border-radius: 0.875rem !important;
+}
+
+.mat-bottom-sheet-container {
+    .receive-overlay,
+    .send-overlay,
+    .filter-overlay,
+    .change-rep-overlay {
+        .mat-stroked-button,
+        .mat-flat-button {
+            width: 110px !important;
+        }
+    }
 }

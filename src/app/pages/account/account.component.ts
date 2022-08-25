@@ -20,8 +20,8 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ChangeRepBottomSheetComponent } from '@app/pages/account/bottom-sheet/change-rep/change-rep-bottom-sheet.component';
 import { SendBottomSheetComponent } from '@app/pages/account/bottom-sheet/send/send-bottom-sheet.component';
 import { ReceiveBottomSheetComponent } from '@app/pages/account/bottom-sheet/receive/receive-bottom-sheet.component';
-import {FilterOverlayData} from "@app/pages/account/actions/filter/filter.component";
-import {FilterBottomSheetComponent} from "@app/pages/account/bottom-sheet/filter/filter-bottom-sheet.component";
+import { FilterOverlayData } from '@app/pages/account/actions/filter/filter.component';
+import { FilterBottomSheetComponent } from '@app/pages/account/bottom-sheet/filter/filter-bottom-sheet.component';
 
 @Component({
     selector: 'app-account',
@@ -101,7 +101,7 @@ export class AccountComponent implements OnInit, OnDestroy {
                 blocks: this.account.pending,
                 index: this.account.index,
             },
-            disableClose: true
+            disableClose: true,
         };
         if (this.vp.sm) {
             setTimeout(() => {
@@ -165,17 +165,16 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     openFilterDialog(): void {
-
         const overlayData = {
             data: this.filterData,
             disableClose: true,
-        }
+        };
         const postFilterActions = (data: FilterOverlayData): void => {
             if (data.update) {
                 this.filterData = data;
                 this.createNewDataSource();
             }
-        }
+        };
 
         if (this.vp.sm) {
             setTimeout(() => {

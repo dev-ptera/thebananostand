@@ -6,7 +6,7 @@ import { SpyglassService } from '@app/services/spyglass.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { UtilService } from '@app/services/util.service';
 import { debounceTime } from 'rxjs/operators';
-import {FilterOverlayData} from "@app/pages/account/actions/filter/filter.component";
+import { FilterOverlayData } from '@app/pages/account/actions/filter/filter.component';
 
 export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
     _blockCount: number;

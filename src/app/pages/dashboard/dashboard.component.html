@@ -7,21 +7,34 @@
 
 <ng-template #accountActionsUserMenu>
     <blui-user-menu menuTitle="Wallet Actions" [(open)]="mobileUserMenuOpen" *ngIf="vp.sm">
-        <mat-icon blui-avatar>more_vert</mat-icon>
+        <mat-icon data-cy="show-dashboard-actions" blui-avatar>more_vert</mat-icon>
         <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
-            <blui-info-list-item [dense]="true" (click)="addAccount(); mobileUserMenuOpen = false">
+            <blui-info-list-item
+                [dense]="true"
+                (click)="addAccount(); mobileUserMenuOpen = false"
+                data-cy="add-next-account-mobile-button"
+            >
                 <mat-icon blui-icon>add</mat-icon>
                 <div blui-title>Add Account</div>
             </blui-info-list-item>
-            <blui-info-list-item [dense]="true" (click)="addAccountFromIndex(); mobileUserMenuOpen = false">
+            <blui-info-list-item
+                [dense]="true"
+                (click)="addAccountFromIndex(); mobileUserMenuOpen = false"
+                data-cy="add-specific-account-mobile-button"
+            >
                 <mat-icon blui-icon>manage_search</mat-icon>
                 <div blui-title>Add Specific Account</div>
             </blui-info-list-item>
-            <blui-info-list-item [dense]="true" (click)="refresh(); mobileUserMenuOpen = false">
+            <blui-info-list-item
+                [dense]="true"
+                (click)="refresh(); mobileUserMenuOpen = false"
+                data-cy="refresh-dashboard-mobile-button"
+            >
                 <mat-icon blui-icon>refresh</mat-icon>
                 <div blui-title>Refresh Balances</div>
             </blui-info-list-item>
-            <blui-info-list-item [dense]="true" (click)="isAdvancedView = !isAdvancedView; mobileUserMenuOpen = false">
+            <blui-info-list-item [dense]="true" (click)="isAdvancedView = !isAdvancedView; mobileUserMenuOpen = false"
+                data-cy="select-accounts-mobile-button">
                 <mat-icon blui-icon>visibility</mat-icon>
                 <div blui-title>
                     <ng-container *ngIf="!isAdvancedView">Enable Select Accounts</ng-container>
@@ -32,6 +45,7 @@
                 *ngIf="selectedItems.size > 0"
                 [dense]="true"
                 (click)="hideSelected(); mobileUserMenuOpen = false"
+                data-cy="remove-account-mobile-button"
             >
                 <mat-icon blui-icon>delete</mat-icon>
                 <div blui-title>Hide Selected Accounts</div>
@@ -54,7 +68,7 @@
     <div style="padding-left: 4px">
         <button
             mat-mini-fab
-            id="add-single-account-button"
+            data-cy="add-single-account-desktop-button"
             color="primary"
             (click)="addAccount()"
             [disabled]="loadingAccount"
@@ -66,7 +80,7 @@
         <button
             *ngIf="isAdvancedView"
             mat-mini-fab
-            id="add-specific-account-button"
+            data-cy="add-specific-account-desktop-button"
             color="primary"
             style="margin-left: 16px"
             (click)="addAccountFromIndex()"
@@ -79,7 +93,7 @@
         <button
             *ngIf="isAdvancedView"
             mat-mini-fab
-            id="refresh-dashboard-button"
+            data-cy="refresh-dashboard-desktop-button"
             color="primary"
             style="margin-left: 16px"
             (click)="refresh()"
@@ -93,7 +107,7 @@
             *ngIf="isAdvancedView"
             mat-mini-fab
             color="warn"
-            id="hide-account-dashboard-button"
+            data-cy="remove-account-dashboard-desktop-button"
             style="margin-left: 16px"
             (click)="hideSelected()"
             [disabled]="selectedItems.size === 0"
@@ -104,7 +118,12 @@
         </button>
     </div>
 
-    <mat-slide-toggle id="advanced-toggle" color="primary" [(ngModel)]="isAdvancedView" (change)="exitEdit($event)">
+    <mat-slide-toggle
+        data-cy="advanced-toggle"
+        color="primary"
+        [(ngModel)]="isAdvancedView"
+        (change)="exitEdit($event)"
+    >
         Advanced
     </mat-slide-toggle>
 </div>
@@ -140,7 +159,7 @@
 
     <mat-nav-list
         responsive
-        id="dashboard-account-list"
+        data-cy="dashboard-account-list"
         class="dashboard-account-list"
         style="
             overflow: auto;
