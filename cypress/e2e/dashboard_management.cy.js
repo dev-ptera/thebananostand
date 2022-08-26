@@ -60,7 +60,7 @@ describe('Dashboard Management', () => {
         });
     })
 
-    describe('Refresh Balances', () => {
+    describe.only('Refresh Balances', () => {
 
         const refreshPage = 'refreshPage';
         const verifyPageRefreshed = () => {
@@ -70,9 +70,20 @@ describe('Dashboard Management', () => {
             })
         }
 
+        const interceptRefresh = () => {
+            cy.intercept({ method: 'POST', url: '**', times: 2 },
+                (req) => {
+                    req.continue(((res) => {
+                        // This is added because sometimes the list is refreshed
+                        // so quick we cannot verify the list has disappeared?
+                        res.setDelay(1000)
+                    }))
+                }).as(refreshPage);
+        }
+
         it('should refresh account balances (desktop)', () => {
             cy.wait(`@${loadInitialAccount}`).then(() => {
-                cy.intercept({ method: 'POST', url: '**', times: 2 }).as(refreshPage);
+                interceptRefresh();
                 cy.get('[data-cy=advanced-toggle]').click();
                 cy.get('[data-cy=refresh-dashboard-desktop-button]').click().then(() => {
                     verifyPageRefreshed()
@@ -83,7 +94,7 @@ describe('Dashboard Management', () => {
         it('should refresh account balances (mobile)', () => {
             cy.viewport('iphone-6');
             cy.wait(`@${loadInitialAccount}`).then(() => {
-                cy.intercept({ method: 'POST', url: '**', times: 2 }).as(refreshPage);
+                interceptRefresh();
                 cy.get('[data-cy=show-dashboard-actions]').click();
                 cy.get('[data-cy=refresh-dashboard-mobile-button]').click().then(() => {
                     verifyPageRefreshed();
