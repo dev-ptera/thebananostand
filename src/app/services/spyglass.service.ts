@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ConfirmedTx } from '@app/types/ConfirmedTx';
-import { RepScore } from '../pages/account/dialogs/change-rep/change-rep-dialog.component';
 import { UtilService } from './util.service';
 import { KnownAccount } from '@app/types/KnownAccount';
-import { FilterDialogData } from '@app/pages/account/dialogs/filter/filter-dialog.component';
 import { Subject } from 'rxjs';
+import { RepScore } from '@app/pages/account/actions/change-rep/change-rep.component';
+import { FilterOverlayData } from '@app/pages/account/actions/filter/filter.component';
 
 @Injectable({
     providedIn: 'root',
@@ -45,8 +45,18 @@ export class SpyglassService {
                 });
         });
 
-        // REQ 2 not included for now; api.creeper is not returning correct timestmaps.
-        Promise.race([req1])
+        const req2 = new Promise((resolve) => {
+            this._http
+                .get<any>(`${this.api2}/v1/representatives/online`)
+                .toPromise()
+                .then(() => resolve(this.api2))
+                .catch((err) => {
+                    console.error(err);
+                    resolve(this.api1);
+                });
+        });
+
+        Promise.race([req1, req2])
             .then((faster: string) => {
                 this.apiToUseSubject.next(faster);
             })
@@ -73,7 +83,7 @@ export class SpyglassService {
         address: string,
         size: number,
         offset: number,
-        filters?: FilterDialogData
+        filters?: FilterOverlayData
     ): Promise<ConfirmedTx[]> {
         await this._hasPingedApi();
         const url = `${this.httpApi}/v1/account/confirmed-transactions`;

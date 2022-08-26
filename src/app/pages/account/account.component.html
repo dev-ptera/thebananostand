@@ -22,6 +22,7 @@
     <button
         blui-inline
         mat-flat-button
+        data-cy="receive-action"
         color="primary"
         (click)="receive()"
         style="margin-right: 16px"
@@ -38,6 +39,7 @@
     <button
         blui-inline
         mat-flat-button
+        data-cy="send-action"
         color="primary"
         (click)="send()"
         style="margin-right: 16px"
@@ -132,6 +134,7 @@
                             <button
                                 blui-inline
                                 mat-flat-button
+                                data-cy="change-action-desktop"
                                 color="primary"
                                 (click)="changeRep()"
                                 [disabled]="!account.representative"
@@ -145,7 +148,7 @@
                 <app-qr *ngIf="!vp.sm" [address]="account.fullAddress"></app-qr>
             </mat-card>
 
-            <mat-card style="padding-bottom: 4px" [style.paddingTop.px]="vp.sm ? 0 : 16">
+            <mat-card style="padding-bottom: 0px" [style.paddingTop.px]="vp.sm ? 0 : 16">
                 <div
                     *ngIf="!vp.sm"
                     [class.mat-headline]="!vp.sm"
@@ -214,7 +217,7 @@
                 <cdk-virtual-scroll-viewport
                     *ngIf="ds && ds.firstPageLoaded"
                     [itemSize]="getTransactionRowHeight()"
-                    id="account-scroll-container"
+                    data-cy="account-scroll-container"
                     [style.height.px]="countTotalDisplayableTxCount() * getTransactionRowHeight()"
                     class="scroll-container"
                     responsive
@@ -284,7 +287,7 @@
                                 </span>
                             </div>
                         </blui-info-list-item>
-                        <blui-info-list-item *ngIf="!item" style="height: 50px">
+                        <blui-info-list-item *ngIf="!item" [style.height.px]="getTransactionRowHeight()">
                             <mat-icon blui-icon>sync</mat-icon>
                             <div blui-title>Loading</div>
                             <div blui-right-content>

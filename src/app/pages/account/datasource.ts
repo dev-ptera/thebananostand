@@ -6,7 +6,7 @@ import { SpyglassService } from '@app/services/spyglass.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { UtilService } from '@app/services/util.service';
 import { debounceTime } from 'rxjs/operators';
-import { FilterDialogData } from '@app/pages/account/dialogs/filter/filter-dialog.component';
+import { FilterOverlayData } from '@app/pages/account/actions/filter/filter.component';
 
 export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
     _blockCount: number;
@@ -28,7 +28,7 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
         private readonly _apiService: SpyglassService,
         private readonly _ref: ChangeDetectorRef,
         private readonly _util: UtilService,
-        private readonly _filters: FilterDialogData,
+        private readonly _filters: FilterOverlayData,
         private readonly _isFilterApplied: boolean
     ) {
         super();

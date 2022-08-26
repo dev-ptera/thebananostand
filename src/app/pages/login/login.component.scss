@@ -36,6 +36,7 @@ mat-form-field {
 
     &.fullScreen {
         height: calc(100vh - 56px);
+        height: calc(var(--app-height) - 56px);
         .login-card {
             max-width: none;
             max-height: none;

@@ -15,72 +15,72 @@ describe("User Session", () => {
     });
 
     it("should login with just a seed (no password)", () => {
-        cy.get('#enter-secret').click();
-        cy.get('#secret-input').type(LOW_FUND_SEED);
-        cy.get('#secret-next').click();
-        cy.get('#secret-next').click();
-        cy.get('#secret-next').should('not.exist'); // Waits for the New Seed window to dismiss.
+        cy.get('[data-cy=enter-secret]').click();
+        cy.get('[data-cy=secret-input]').type(LOW_FUND_SEED);
+        cy.get('[data-cy=secret-next]').click();
+        cy.get('[data-cy=secret-next]').click();
+        cy.get('[data-cy=secret-next]').should('not.exist'); // Waits for the New Seed window to dismiss.
         reload();
         cy.window().then(() => {
 
-            cy.get('#login-wrapper');
-            cy.get('#account-unlock-button').click();
-            cy.get('#dashboard-wrapper');
+            cy.get('[data-cy=login-wrapper]');
+            cy.get('[data-cy=account-unlock-button]').click();
+            cy.get('[data-cy=dashboard-wrapper]');
             }
         );
     });
 
     it("should login with a seed and password", () => {
         const password = 'SamplePasswordTest123!'
-        cy.get('#enter-secret').click();
-        cy.get('#secret-input').type(LOW_FUND_SEED);
-        cy.get('#secret-next').click();
-        cy.get('#password-input').type(password);
-        cy.get('#secret-next').click();
-        cy.get('#secret-next').should('not.exist');
+        cy.get('[data-cy=enter-secret]').click();
+        cy.get('[data-cy=secret-input]').type(LOW_FUND_SEED);
+        cy.get('[data-cy=secret-next]').click();
+        cy.get('[data-cy=password-input]').type(password);
+        cy.get('[data-cy=secret-next]').click();
+        cy.get('[data-cy=secret-next]').should('not.exist');
         reload();
-        cy.get('#login-wrapper');
-        cy.get('#active-wallet-password-input').type(password);
-        cy.get('#account-unlock-button').click();
-        cy.get('#dashboard-wrapper');
+        cy.get('[data-cy=login-wrapper]');
+        cy.get('[data-cy=active-wallet-password-input]').type(password);
+        cy.get('[data-cy=account-unlock-button]').click();
+        cy.get('[data-cy=dashboard-wrapper]');
     });
 
     it("should not allow an incorrect password to login", () => {
         const password = 'SamplePasswordTest123!'
         const incorrectPassword = 'SamplePasswordTest123!!'
-        cy.get('#enter-secret').click();
-        cy.get('#secret-input').type(LOW_FUND_SEED);
-        cy.get('#secret-next').click();
-        cy.get('#password-input').type(password);
-        cy.get('#secret-next').click();
-        cy.get('#secret-next').should('not.exist');
+        cy.get('[data-cy=enter-secret]').click();
+        cy.get('[data-cy=secret-input]').type(LOW_FUND_SEED);
+        cy.get('[data-cy=secret-next]').click();
+        cy.get('[data-cy=password-input]').type(password);
+        cy.get('[data-cy=secret-next]').click();
+        cy.get('[data-cy=secret-next]').should('not.exist');
         reload();
-        cy.get('#login-wrapper');
-        cy.get('#active-wallet-password-input').type(incorrectPassword);
-        cy.get('#account-unlock-button').click();
-        cy.get('#login-wrapper');
+        cy.get('[data-cy=login-wrapper]');
+        cy.get('[data-cy=active-wallet-password-input]').type(incorrectPassword);
+        cy.get('[data-cy=account-unlock-button]').click();
+        cy.get('[data-cy=login-wrapper]');
     });
 
     it("should clear a user's encrypted secret", () => {
         const password = 'SamplePasswordTest123!'
-        cy.get('#enter-secret').click();
-        cy.get('#secret-input').type(LOW_FUND_SEED);
-        cy.get('#secret-next').click();
-        cy.get('#password-input').type(password);
-        cy.get('#secret-next').click();
-        cy.get('#secret-next').should('not.exist');
+        cy.get('[data-cy=enter-secret]').click();
+        cy.get('[data-cy=secret-input]').type(LOW_FUND_SEED);
+        cy.get('[data-cy=secret-next]').click();
+        cy.get('[data-cy=password-input]').type(password);
+        cy.get('[data-cy=secret-next]').click();
+        cy.get('[data-cy=secret-next]').should('not.exist');
 
         cy.window().then(
             (window) => {
-                expect(window.localStorage.getItem('bananostand_encryptedSeed')).to.be.ok;
+               void expect(window.localStorage.getItem('bananostand_encryptedSeed')).to.be.ok;
             }
         );
-        cy.get('#account-settings').click();
-        cy.get('#clear-data-button').click();
+        cy.get('[data-cy=account-settings]').click();
+        cy.get('[data-cy=clear-data-button]').click();
 
         cy.window().then(
             (window) => {
-                expect(window.localStorage.getItem('bananostand_encryptedSeed')).to.not.be.ok;
+                void expect(window.localStorage.getItem('bananostand_encryptedSeed')).to.not.be.ok;
             }
         );
     });
