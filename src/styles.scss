@@ -248,24 +248,33 @@ input[type='number'] {
 }
 
 // Theme overrides
-mat-card,
-mat-nav-list,
-.mat-list-item-ripple,
-mat-list-item,
-mat-list-item-content,
-mat-dialog-container {
-    border-radius: 1rem !important;
-}
-.sm {
+
+@mixin border-radius {
     mat-card,
     mat-nav-list,
     .mat-list-item-ripple,
     mat-list-item,
     mat-list-item-content,
     mat-dialog-container {
-        border-radius: 0rem !important;
+        border-radius: 1rem !important;
+    }
+    .sm {
+        mat-card,
+        mat-nav-list,
+        .mat-list-item-ripple,
+        mat-list-item,
+        mat-list-item-content,
+        mat-dialog-container {
+            border-radius: 0rem !important;
+        }
+    }
+
+    .home-body mat-card {
+        border-radius: 1rem !important;
     }
 }
+@include border-radius();
+
 .mat-dialog-container,
 .mat-bottom-sheet-container {
     overflow: hidden !important;

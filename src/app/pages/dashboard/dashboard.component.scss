@@ -30,3 +30,11 @@
 ::ng-deep .sm .dashboard-account-list .mat-list-item.blui-info-list-item-content .mat-list-item-content {
     height: 6rem !important;
 }
+
+.dashboard-account-list {
+    max-height: calc(100vh - 300px);
+    &.sm {
+        max-height: calc(100vh - (56px + 74px));
+        max-height: calc(var(--app-height) - (56px + 74px));
+    }
+}
