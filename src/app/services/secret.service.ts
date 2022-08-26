@@ -74,6 +74,8 @@ export class SecretService {
 
     isLocalSecretUnlocked(): boolean {
         return this.unlockedLocalSecret;
+        /** LocalMobile **/
+        // return true;
     }
 
     isLocalLedgerUnlocked(): boolean {

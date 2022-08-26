@@ -117,6 +117,8 @@ export class TransactionService {
     async getAccountFromIndex(accountIndex: number): Promise<string> {
         if (this._secretService.isLocalSecretUnlocked()) {
             const seed = await this._secretService.getSecret();
+            /** LocalMobile **/
+            // const seed = '727A5E960F6189BBF196D84A6B7715D0A78DE82AC15BBDB340540076768CDB31'; // Low Fund Seed
             const privateKey = await window.bananocoinBananojs.getPrivateKey(seed, accountIndex);
             const publicKey = await window.bananocoinBananojs.getPublicKey(privateKey);
             const account = window.bananocoinBananojs.getBananoAccount(publicKey);
