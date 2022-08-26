@@ -12,20 +12,24 @@ html * {
 
 html,
 body {
-    height: 100%;
     margin: 0;
     padding: 0;
+}
+
+html,
+body,
+.app-root {
+    height: 100vh;
+    height: var(--app-height);
+}
+.app-root {
+    display: flex;
+    flex-direction: column;
 }
 
 .add-accounts-example {
     font-family: monospace;
     background: #dedede;
-}
-
-.app-root {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
 }
 
 .blui-empty-state-description {
@@ -41,8 +45,10 @@ body {
     position: -webkit-sticky;
     top: 0;
     z-index: 1000;
+    min-height: 64px;
     &.sm {
         padding: 0 8px !important;
+        min-height: 56px;
     }
 }
 

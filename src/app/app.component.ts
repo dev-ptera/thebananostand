@@ -10,7 +10,14 @@ import { SecretService } from '@app/services/secret.service';
     animations: [slideInAnimation],
 })
 export class AppComponent {
-    constructor(private readonly _vp: ViewportService, private readonly _secretService: SecretService) {}
+    constructor(private readonly _vp: ViewportService, private readonly _secretService: SecretService) {
+        const appHeight = (): void => {
+            const doc = document.documentElement;
+            doc.style.setProperty(`--app-height`, `${window.innerHeight}px`);
+        };
+        window.addEventListener(`resize`, appHeight);
+        appHeight();
+    }
 
     showBanana(): boolean {
         const unlocked = this._secretService.isLocalSecretUnlocked() || this._secretService.isLocalLedgerUnlocked();

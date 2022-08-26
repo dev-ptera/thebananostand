@@ -57,7 +57,8 @@ export class HomeComponent implements OnInit {
         private readonly _transactionService: TransactionService,
         private readonly _accountService: AccountService,
         private readonly _viewportService: ViewportService,
-        private readonly _secretService: SecretService
+        private readonly _secretService: SecretService,
+        public vp: ViewportService
     ) {}
 
     ngOnInit(): void {

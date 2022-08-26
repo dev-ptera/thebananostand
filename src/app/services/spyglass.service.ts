@@ -45,8 +45,18 @@ export class SpyglassService {
                 });
         });
 
-        // REQ 2 not included for now; api.creeper is not returning correct timestmaps.
-        Promise.race([req1])
+        const req2 = new Promise((resolve) => {
+            this._http
+                .get<any>(`${this.api2}/v1/representatives/online`)
+                .toPromise()
+                .then(() => resolve(this.api2))
+                .catch((err) => {
+                    console.error(err);
+                    resolve(this.api1);
+                });
+        });
+
+        Promise.race([req1, req2])
             .then((faster: string) => {
                 this.apiToUseSubject.next(faster);
             })
