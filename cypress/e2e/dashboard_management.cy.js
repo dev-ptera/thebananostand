@@ -25,7 +25,7 @@ describe('Dashboard Management', () => {
             cy.intercept({ method: 'POST', url: '**/account/confirmed-transactions' }).as('confirmedTx');
             cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').click();
             cy.wait('@confirmedTx').then(() => {
-                cy.get('#account-scroll-container').find('.blui-info-list-item').its('length').should('be.gte', 2);
+                cy.get('[data-cy=account-scroll-container]').find('.blui-info-list-item').its('length').should('be.gte', 2);
             })
         })
     });
