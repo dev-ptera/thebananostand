@@ -28,7 +28,8 @@
 
         <div class="app-body-content" style="justify-content: center; position: relative; padding: 32px 16px">
             <div style="text-align: center">
-                <div *ngIf="!vp.sm"
+                <div
+                    *ngIf="!vp.sm"
                     class="mat-display-1"
                     style="display: flex; align-items: center; margin-bottom: 0; justify-content: center"
                 >
@@ -40,8 +41,7 @@
                     </mat-icon>
                     The Banano Stand
                 </div>
-                <div class="mat-body-1" style="width: 100%; padding: 0 24px"
-                     [style.marginBottom.px]="vp.sm ? 16 : 8">
+                <div class="mat-body-1" style="width: 100%; padding: 0 24px" [style.marginBottom.px]="vp.sm ? 16 : 8">
                     The Banano Stand is an online wallet used to send or receive Banano.
                 </div>
             </div>
