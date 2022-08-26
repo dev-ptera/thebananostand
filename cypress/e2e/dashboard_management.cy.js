@@ -60,7 +60,7 @@ describe('Dashboard Management', () => {
         });
     })
 
-    describe.only('Refresh Balances', () => {
+    describe('Refresh Balances', () => {
 
         const refreshPage = 'refreshPage';
         const verifyPageRefreshed = () => {
@@ -71,14 +71,8 @@ describe('Dashboard Management', () => {
         }
 
         const interceptRefresh = () => {
-            cy.intercept({ method: 'POST', url: '**', times: 2 },
-                (req) => {
-                    req.continue(((res) => {
-                        // This is added because sometimes the list is refreshed
-                        // so quick we cannot verify the list has disappeared?
-                        res.setDelay(1000)
-                    }))
-                }).as(refreshPage);
+            cy.wait(250);
+            cy.intercept({ method: 'POST', url: '**', times: 2 }).as(refreshPage);
         }
 
         it('should refresh account balances (desktop)', () => {
@@ -91,7 +85,7 @@ describe('Dashboard Management', () => {
             })
         });
 
-        it('should refresh account balances (mobile)', () => {
+        it.only('should refresh account balances (mobile)', () => {
             cy.viewport('iphone-6');
             cy.wait(`@${loadInitialAccount}`).then(() => {
                 interceptRefresh();
