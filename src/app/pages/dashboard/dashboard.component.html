@@ -8,7 +8,7 @@
 <ng-template #statusBadges let-account="account">
     <blui-list-item-tag
         *ngIf="account.pending.length > 0"
-        label="Has Receivable"
+        [label]="vp.sm ? 'Receivable' : 'Has Receivable'"
         class="receivable-tag"
         style="margin-right: 16px"
         [backgroundColor]="colors.orange[500]"
@@ -256,14 +256,16 @@
                 </blui-list-item-tag>
 
                 <ng-container *ngIf="account.representative">
-                    {{ account.formattedBalance }}
-
                     <img
+                        *ngIf="!vp.sm"
+                        style="margin-left: 16px; margin-right: 4px"
                         src="assets/banano-mark.svg"
                         [width]="18"
                         [height]="18"
-                        [style.marginLeft.px]="vp.sm ? 6 : 8"
                     />
+                    <span>
+                        {{ account.formattedBalance }}
+                    </span>
                 </ng-container>
             </div>
         </blui-info-list-item>

@@ -86,11 +86,16 @@
     $height: calc(100vh - 420px);
     max-height: $height;
     &.repBanner {
-        max-height: calc($height - 50px);
+        max-height: calc($height - 40px);
     }
     @include fade;
     &.sm {
         max-height: calc(100vh - 56px - 104px - 64px);
         max-height: calc(var(--app-height) - 56px - 104px - 64px);
+        &.repBanner {
+            $mobileBannerHeight: 82px;
+            max-height: calc(100vh - 56px - 104px - 64px - $mobileBannerHeight);
+            max-height: calc(var(--app-height) - 56px - 104px - 64px - $mobileBannerHeight);
+        }
     }
 }
