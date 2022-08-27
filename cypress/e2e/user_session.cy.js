@@ -14,6 +14,16 @@ describe("User Session", () => {
         reload();
     });
 
+    const logInUsingSeedPasswordPair = (password = 'SamplePasswordTest123') => {
+        cy.get('[data-cy=enter-secret]').click();
+        cy.get('[data-cy=secret-input]').type(LOW_FUND_SEED);
+        cy.get('[data-cy=secret-next]').click();
+        cy.get('[data-cy=password-input]').type(password);
+        cy.get('[data-cy=secret-next]').click();
+        cy.get('[data-cy=secret-next]').should('not.exist');
+    }
+
+
     it("should login with just a seed (no password)", () => {
         cy.get('[data-cy=enter-secret]').click();
         cy.get('[data-cy=secret-input]').type(LOW_FUND_SEED);
@@ -31,13 +41,8 @@ describe("User Session", () => {
     });
 
     it("should login with a seed and password", () => {
-        const password = 'SamplePasswordTest123!'
-        cy.get('[data-cy=enter-secret]').click();
-        cy.get('[data-cy=secret-input]').type(LOW_FUND_SEED);
-        cy.get('[data-cy=secret-next]').click();
-        cy.get('[data-cy=password-input]').type(password);
-        cy.get('[data-cy=secret-next]').click();
-        cy.get('[data-cy=secret-next]').should('not.exist');
+        const password = 'UniquePasswordForTestingSpec';
+        logInUsingSeedPasswordPair(password);
         reload();
         cy.get('[data-cy=login-wrapper]');
         cy.get('[data-cy=active-wallet-password-input]').type(password);
@@ -46,14 +51,8 @@ describe("User Session", () => {
     });
 
     it("should not allow an incorrect password to login", () => {
-        const password = 'SamplePasswordTest123!'
         const incorrectPassword = 'SamplePasswordTest123!!'
-        cy.get('[data-cy=enter-secret]').click();
-        cy.get('[data-cy=secret-input]').type(LOW_FUND_SEED);
-        cy.get('[data-cy=secret-next]').click();
-        cy.get('[data-cy=password-input]').type(password);
-        cy.get('[data-cy=secret-next]').click();
-        cy.get('[data-cy=secret-next]').should('not.exist');
+        logInUsingSeedPasswordPair();
         reload();
         cy.get('[data-cy=login-wrapper]');
         cy.get('[data-cy=active-wallet-password-input]').type(incorrectPassword);
@@ -62,13 +61,7 @@ describe("User Session", () => {
     });
 
     it("should clear a user's encrypted secret", () => {
-        const password = 'SamplePasswordTest123!'
-        cy.get('[data-cy=enter-secret]').click();
-        cy.get('[data-cy=secret-input]').type(LOW_FUND_SEED);
-        cy.get('[data-cy=secret-next]').click();
-        cy.get('[data-cy=password-input]').type(password);
-        cy.get('[data-cy=secret-next]').click();
-        cy.get('[data-cy=secret-next]').should('not.exist');
+        logInUsingSeedPasswordPair();
 
         cy.window().then(
             (window) => {
@@ -81,6 +74,24 @@ describe("User Session", () => {
         cy.window().then(
             (window) => {
                 void expect(window.localStorage.getItem('bananostand_encryptedSeed')).to.not.be.ok;
+            }
+        );
+    });
+
+    it("should navigate user back to home screen when secret is cleared", () => {
+        logInUsingSeedPasswordPair();
+
+        cy.window().then(
+            (window) => {
+                cy.get('[data-cy=dashboard-wrapper]').should('exist');
+            }
+        );
+        cy.get('[data-cy=account-settings]').click();
+        cy.get('[data-cy=clear-data-button]').click();
+
+        cy.window().then(
+            (window) => {
+                cy.get('[data-cy=dashboard-wrapper]').should('not.exist');
             }
         );
     });

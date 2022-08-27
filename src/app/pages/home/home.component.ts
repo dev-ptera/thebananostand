@@ -46,9 +46,9 @@ export class HomeComponent implements OnInit {
     colors = Colors;
 
     isLoading = false;
-    isLoggedIn = false;
+    isLoggedInViaSecret = false;
     isCancelLogin = false;
-    isLedgerLoaded = false;
+    isLedgerUnlocked = false;
     isShowLedgerLoadHelperText = false;
 
     constructor(
@@ -62,10 +62,11 @@ export class HomeComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.isLoggedIn = this._secretService.isLocalSecretUnlocked();
-        if (this._accountService.accounts.length > 0) {
-            this.isLedgerLoaded = true;
-        }
+        this.isLoggedInViaSecret = this._secretService.isLocalSecretUnlocked();
+        this.isLedgerUnlocked = this._secretService.isLocalLedgerUnlocked();
+        this._secretService.secretCleared.subscribe(() => {
+            this.isLoggedInViaSecret = false;
+        });
     }
 
     isSmall(): boolean {
@@ -79,7 +80,7 @@ export class HomeComponent implements OnInit {
     openEnterSeedDialog(): void {
         const ref = this._dialog.open(EnterSecretDialogComponent);
         ref.afterClosed().subscribe((isNewWalletImported) => {
-            this.isLoggedIn = isNewWalletImported;
+            this.isLoggedInViaSecret = isNewWalletImported;
         });
     }
 
@@ -87,8 +88,8 @@ export class HomeComponent implements OnInit {
         this._transactionService
             .checkLedgerOrError()
             .then(() => {
-                this.isLedgerLoaded = true;
-                this._secretService.unlockedLocalLedger = true;
+                this.isLedgerUnlocked = true;
+                this._secretService.setLocalLedgerUnlocked(true);
             })
             .catch((err) => {
                 const snack = this._snackBar.openFromComponent(LedgerSnackbarErrorComponent, {
@@ -102,11 +103,16 @@ export class HomeComponent implements OnInit {
     }
 
     showDashboard(): boolean {
-        return !this.showLogin() && (this.isLedgerLoaded || this.isLoggedIn);
+        return !this.showLogin() && (this.isLedgerUnlocked || this.isLoggedInViaSecret);
     }
 
     showLogin(): boolean {
-        return !this.isLedgerLoaded && this._secretService.hasSecret() && !this.isLoggedIn && !this.isCancelLogin;
+        return (
+            !this.isLedgerUnlocked &&
+            this._secretService.hasSecret() &&
+            !this.isLoggedInViaSecret &&
+            !this.isCancelLogin
+        );
     }
 
     showHome(): boolean {
@@ -116,7 +122,7 @@ export class HomeComponent implements OnInit {
     openNewWalletDialog(): void {
         const ref = this._dialog.open(NewSeedDialogComponent);
         ref.afterClosed().subscribe((isNewWalletCreated) => {
-            this.isLoggedIn = isNewWalletCreated;
+            this.isLoggedInViaSecret = isNewWalletCreated;
         });
     }
 }
