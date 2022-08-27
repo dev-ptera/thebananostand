@@ -2,6 +2,7 @@
     width: 100%;
 }
 
+/* Update these styles if the row height must change. */
 .app-body {
     ::ng-deep .blui-info-list-item-content .mat-list-item-content,
     .mat-list-base .mat-list-item.blui-info-list-item-content .mat-list-item-content {
@@ -21,6 +22,9 @@
     display: flex;
     justify-content: space-between;
     padding: 4px 36px 4px 36px !important;
+    &.sm {
+        padding: 8px 12px 8px 20px !important;
+    }
     div {
         margin: 0;
         line-height: 22px;
@@ -81,6 +85,9 @@
     margin-right: -16px;
     $height: calc(100vh - 420px);
     max-height: $height;
+    &.repBanner {
+        max-height: calc($height - 50px);
+    }
     @include fade;
     &.sm {
         max-height: calc(100vh - 56px - 104px - 64px);

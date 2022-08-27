@@ -54,6 +54,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     hideTransactionFilters = false;
 
     bottomSheetDismissDelayMs = 100;
+    containerHeightClass = 'disable-contained-height';
 
     constructor(
         public util: UtilService,
@@ -76,6 +77,19 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this._disconnectDatasource(true);
+        this._enableContainerHeightRestrictions();
+    }
+
+    private _adjustContainerHeightSettings(): void {
+        if (this.isRepOffline()) {
+            this._ignoreContainerHeightRestrictions();
+        }
+    }
+
+    /** Called whenever a user wants to hide the Representative Offline message at the top of the screen. */
+    dismissRepOfflineBanner(): void {
+        this.warnBannerDismissed = true;
+        this._enableContainerHeightRestrictions();
     }
 
     /** Go back to dashboard. */
@@ -192,6 +206,7 @@ export class AccountComponent implements OnInit, OnDestroy {
         this._accountService.accounts.map((account) => {
             if (this.address === account.fullAddress) {
                 this.account = account;
+                this._adjustContainerHeightSettings();
                 this._ref.detectChanges();
             }
         });
@@ -281,8 +296,8 @@ export class AccountComponent implements OnInit, OnDestroy {
         }
     }
 
-    isRepOffline(address: string): boolean {
-        return !this._accountService.isRepOnline(address);
+    isRepOffline(): boolean {
+        return !this._accountService.isRepOnline(this.account?.representative);
     }
 
     /** Opens a link to show why changing rep is important. */
@@ -290,10 +305,12 @@ export class AccountComponent implements OnInit, OnDestroy {
         window.open('https://nanotools.github.io/Change-Nano-Representative/');
     }
 
+    /** Useful for alternating row colors. */
     isDark(): boolean {
         return this._themeService.isDark();
     }
 
+    /** Copies transaction sender, recipient, or new representative to clipboard. */
     copy(item: ConfirmedTx): void {
         void navigator.clipboard.writeText(item.address || item.newRepresentative);
         item.showCopiedIcon = true;
@@ -302,6 +319,7 @@ export class AccountComponent implements OnInit, OnDestroy {
         }, 700);
     }
 
+    /** If these numbers need adjusted, see the `account.component.scss` file since there are styles there that need to match. */
     getTransactionRowHeight(): number {
         return this.vp.sm ? 72 : 52;
     }
@@ -341,8 +359,19 @@ export class AccountComponent implements OnInit, OnDestroy {
         );
     }
 
-    isDataLoaded(): boolean {
-        return Boolean(this.ds && this.ds.firstPageLoaded);
+    /** Screen height & transaction container height is normally fixed height since we know the height of all elements... except Rep is Offline banner.
+     * To prevent the banner content from being overflowed, this method and class disables the full screen height restrictions.
+     * When the banner is dismissed, normal height restrictions are re-enabled.
+     * This means that whenever the Rep Offline Banner is present on the screen, some of the height calculations aren't 100% accurate anymore.
+     * This is a bug but I can live with it.  */
+    private _ignoreContainerHeightRestrictions(): void {
+        document.documentElement.classList.add(this.containerHeightClass);
+        document.body.classList.add(this.containerHeightClass);
+    }
+
+    private _enableContainerHeightRestrictions(): void {
+        document.documentElement.classList.remove(this.containerHeightClass);
+        document.body.classList.remove(this.containerHeightClass);
     }
 
     showProgressBar(): boolean {

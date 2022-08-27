@@ -13,7 +13,7 @@
     <app-login
         data-cy="login-wrapper"
         *ngIf="showLogin()"
-        (unlocked)="isLoggedIn = true"
+        (unlocked)="isLoggedInViaSecret = true"
         (cancel)="isCancelLogin = true"
     ></app-login>
 

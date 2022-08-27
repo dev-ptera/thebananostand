@@ -10,6 +10,11 @@ html * {
     box-sizing: border-box;
 }
 
+.disable-contained-height {
+    height: unset !important;
+    --app-height: unset !important;
+}
+
 html,
 body {
     margin: 0;

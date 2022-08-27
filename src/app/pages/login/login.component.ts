@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
 
     login(): void {
         this._seedService
-            .unlockWallet(this.password.value)
+            .unlockSecretWallet(this.password.value)
             .then(() => {
                 this.unlocked.emit();
             })

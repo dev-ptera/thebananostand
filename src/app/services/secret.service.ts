@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 /** Stores and encrypts a user's seed or mnemonic phrase. */
 export class SecretService {
-    unlockedLocalSecret = false;
-    unlockedLocalLedger = false;
+    private unlockedLocalSecret = false;
+    private unlockedLocalLedger = false;
 
     // Only used when a user does not provide a password.
     readonly DEFAULT_PASSWORD = 'default_password';
@@ -14,6 +15,9 @@ export class SecretService {
     /** The password used to unlock the wallet. */
     private walletPassword: string;
     private readonly localStorageSeedId = 'bananostand_encryptedSeed';
+
+    /** Emits an event whenever the secret has been cleared. */
+    secretCleared = new Subject<void>();
 
     async storeSecret(secret: string, walletPassword: string): Promise<void> {
         let password = walletPassword;
@@ -58,7 +62,7 @@ export class SecretService {
     }
 
     // Throws an error if the login attempt fails.
-    async unlockWallet(walletPassword: string): Promise<void> {
+    async unlockSecretWallet(walletPassword: string): Promise<void> {
         let password = walletPassword;
 
         if (password.length === 0) {
@@ -82,6 +86,10 @@ export class SecretService {
         return this.unlockedLocalLedger;
     }
 
+    setLocalLedgerUnlocked(unlocked: boolean): void {
+        this.unlockedLocalLedger = unlocked;
+    }
+
     hasSecret(): boolean {
         const secret = window.localStorage.getItem(this.localStorageSeedId);
         return Boolean(secret);
@@ -90,5 +98,7 @@ export class SecretService {
     clearSeed(): void {
         window.localStorage.removeItem(this.localStorageSeedId);
         this.walletPassword = undefined;
+        this.unlockedLocalSecret = false;
+        this.secretCleared.next();
     }
 }

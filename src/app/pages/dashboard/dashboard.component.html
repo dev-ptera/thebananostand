@@ -5,6 +5,24 @@
     ></blui-list-item-tag>
 </ng-template>
 
+<ng-template #statusBadges let-account="account">
+    <blui-list-item-tag
+        *ngIf="account.pending.length > 0"
+        label="Has Receivable"
+        class="receivable-tag"
+        style="margin-right: 16px"
+        [backgroundColor]="colors.orange[500]"
+    >
+    </blui-list-item-tag>
+    <blui-list-item-tag
+        *ngIf="showRepresentativeOffline(account.representative)"
+        label="Rep Offline"
+        class="rep-offline-tag"
+        [backgroundColor]="colors.red[500]"
+        style="margin-right: 16px"
+    ></blui-list-item-tag>
+</ng-template>
+
 <ng-template #accountActionsUserMenu>
     <blui-user-menu menuTitle="Wallet Actions" [(open)]="mobileUserMenuOpen" *ngIf="vp.sm">
         <mat-icon data-cy="show-dashboard-actions" blui-avatar>more_vert</mat-icon>
@@ -212,24 +230,21 @@
                 <ng-container *ngIf="!account.representative"> unopened account </ng-container>
             </div>
             <div blui-info *ngIf="vp.sm" style="margin-top: 4px">
-                <ng-template *ngTemplateOutlet="accountNumber; context: { account: this.account }"></ng-template>
+                <div style="display: flex">
+                    <div style="margin-right: 8px">
+                        <ng-template
+                            *ngTemplateOutlet="accountNumber; context: { account: this.account }"
+                        ></ng-template>
+                    </div>
+                    <div>
+                        <ng-template *ngTemplateOutlet="statusBadges; context: { account: this.account }"></ng-template>
+                    </div>
+                </div>
             </div>
             <div blui-right-content>
-                <blui-list-item-tag
-                    *ngIf="account.pending.length > 0"
-                    label="Has Receivable"
-                    class="receivable-tag"
-                    style="margin-right: 16px"
-                    [backgroundColor]="colors.orange[500]"
-                >
-                </blui-list-item-tag>
-                <blui-list-item-tag
-                    *ngIf="showRepresentativeOffline(account.representative)"
-                    label="Rep Offline"
-                    class="rep-offline-tag"
-                    [backgroundColor]="colors.red[500]"
-                    style="margin-right: 16px"
-                ></blui-list-item-tag>
+                <ng-container *ngIf="!vp.sm">
+                    <ng-template *ngTemplateOutlet="statusBadges; context: { account: this.account }"></ng-template>
+                </ng-container>
 
                 <blui-list-item-tag
                     *ngIf="!account.representative"
@@ -242,6 +257,13 @@
 
                 <ng-container *ngIf="account.representative">
                     {{ account.formattedBalance }}
+
+                    <img
+                        src="assets/banano-mark.svg"
+                        [width]="18"
+                        [height]="18"
+                        [style.marginLeft.px]="vp.sm ? 6 : 8"
+                    />
                 </ng-container>
             </div>
         </blui-info-list-item>

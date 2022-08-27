@@ -79,17 +79,18 @@
     </mat-toolbar>
     <mat-toolbar
         color="warn"
+        responsive
         class="mat-elevation-z2 app-toolbar rep-offline-banner"
-        *ngIf="isRepOffline(account?.representative) && !warnBannerDismissed"
+        *ngIf="isRepOffline() && !warnBannerDismissed"
     >
         <div class="mat-body-2">
-            Your current representative is <strong>offline</strong>. If this happens often, it is suggested that you use
-            the Change Representative button below to select a recommended rep.
+            Your current representative is <strong>offline</strong>. If this happens often, it is suggested that you
+            update to a recommended rep.
             <span class="link" style="color: unset" (click)="openChangeRepDocs()">Why is this important?</span>
         </div>
         <button
             mat-icon-button
-            (click)="warnBannerDismissed = true"
+            (click)="dismissRepOfflineBanner()"
             style="margin-left: 16px; height: 24px; width: 24px; line-height: 24px"
         >
             <mat-icon style="font-size: 16px">close</mat-icon>
@@ -220,6 +221,7 @@
                     data-cy="account-scroll-container"
                     [style.height.px]="countTotalDisplayableTxCount() * getTransactionRowHeight()"
                     class="scroll-container"
+                    [class.repBanner]="isRepOffline() && !warnBannerDismissed"
                     responsive
                 >
                     <div *cdkVirtualFor="let item of ds; let i = index; let even = even">
