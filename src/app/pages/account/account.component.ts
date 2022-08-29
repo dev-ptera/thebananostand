@@ -21,7 +21,7 @@ import { ReceiveDialogComponent } from '@app/overlays/dialogs/receive/receive-di
 import { FilterDialogComponent } from '@app/overlays/dialogs/filter/filter-dialog.component';
 import { SendBottomSheetComponent } from '@app/overlays/bottom-sheet/send/send-bottom-sheet.component';
 import { SendDialogComponent } from '@app/overlays/dialogs/send/send-dialog.component';
-import {ChangeRepBottomSheetComponent} from "@app/overlays/bottom-sheet/change-rep/change-rep-bottom-sheet.component";
+import { ChangeRepBottomSheetComponent } from '@app/overlays/bottom-sheet/change-rep/change-rep-bottom-sheet.component';
 
 @Component({
     selector: 'app-account',

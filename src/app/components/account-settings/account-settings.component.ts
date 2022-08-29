@@ -36,7 +36,7 @@ export class AppAccountSettingsComponent {
         this.hasRecentlyClearedSeed = true;
         setTimeout(() => {
             this.hasRecentlyClearedSeed = false;
-        }, 50)
+        }, 50);
         void this._router.navigate(['']);
     }
 

@@ -68,7 +68,7 @@ import { EnterSecretComponent } from '@app/overlays/actions/enter-secret/enter-s
 import { EnterSecretDialogComponent } from '@app/overlays/dialogs/enter-secret/enter-secret-dialog.component';
 import { EnterSecretBottomSheetComponent } from '@app/overlays/bottom-sheet/enter-secret/enter-secret-bottom-sheet.component';
 import { ChangeRepBottomSheetComponent } from '@app/overlays/bottom-sheet/change-rep/change-rep-bottom-sheet.component';
-import {ChangeRepDialogComponent} from "@app/overlays/dialogs/change-rep/change-rep-dialog.component";
+import { ChangeRepDialogComponent } from '@app/overlays/dialogs/change-rep/change-rep-dialog.component';
 
 @NgModule({
     declarations: [
