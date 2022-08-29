@@ -8,8 +8,10 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewportService } from '@app/services/viewport.service';
-import { AddIndexDialogComponent } from '@app/pages/dashboard/add-index/add-index.component';
 import { ThemeService } from '@app/services/theme.service';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { AddIndexDialogComponent } from '@app/overlays/dialogs/add-index/add-index-dialog.component';
+import { AddIndexBottomSheetComponent } from '@app/overlays/bottom-sheet/add-index/add-index-bottom-sheet.component';
 
 @Component({
     selector: 'app-dashboard',
@@ -33,6 +35,7 @@ export class DashboardComponent implements OnInit {
     constructor(
         private readonly _router: Router,
         private readonly _dialog: MatDialog,
+        private readonly _sheet: MatBottomSheet,
         private readonly _util: UtilService,
         private readonly _themeService: ThemeService,
         private readonly _accountService: AccountService,
@@ -78,7 +81,13 @@ export class DashboardComponent implements OnInit {
     }
 
     addAccountFromIndex(): void {
-        this._dialog.open(AddIndexDialogComponent);
+        if (this.vp.sm) {
+            setTimeout(() => {
+                this._sheet.open(AddIndexBottomSheetComponent);
+            }, 250);
+        } else {
+            this._dialog.open(AddIndexDialogComponent);
+        }
     }
 
     showRepresentativeOffline(address: string): boolean {

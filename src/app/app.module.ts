@@ -32,23 +32,17 @@ import { MatCardModule } from '@angular/material/card';
 import { AccountComponent } from './pages/account/account.component';
 import { AppRoutingModule } from './app-routing.module';
 import { QrDialogComponent } from './components/qr.component';
-import { SendDialogComponent } from './pages/account/dialogs/send/send-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ChangeRepDialogComponent } from './pages/account/dialogs/change-rep/change-rep-dialog.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { DashboardComponent } from '@app/pages/dashboard/dashboard.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { AddIndexDialogComponent } from '@app/pages/dashboard/add-index/add-index.component';
-import { ReceiveDialogComponent } from '@app/pages/account/dialogs/receive/receive-dialog.component';
 import { MatChipsModule } from '@angular/material/chips';
-import { FilterDialogComponent } from '@app/pages/account/dialogs/filter/filter-dialog.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { EnterSecretDialogComponent } from '@app/pages/home/enter-secret/enter-secret-dialog.component';
 import { ResponsiveDirective } from './directives/responsive.directive';
 import { LoginComponent } from '@app/pages/login/login.component';
 import { AppThemePickerComponent } from '@app/components/theme-picker/theme-picker.component';
@@ -56,15 +50,25 @@ import { AppAccountSettingsComponent } from '@app/components/account-settings/ac
 import { NewSeedDialogComponent } from '@app/pages/home/new-seed/new-seed-dialog.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ChangeRepBottomSheetComponent } from '@app/pages/account/bottom-sheet/change-rep/change-rep-bottom-sheet.component';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
-import { ChangeRepComponent } from '@app/pages/account/actions/change-rep/change-rep.component';
-import { SendComponent } from '@app/pages/account/actions/send/send.component';
-import { SendBottomSheetComponent } from '@app/pages/account/bottom-sheet/send/send-bottom-sheet.component';
-import { ReceiveComponent } from '@app/pages/account/actions/receive/receive.component';
-import { ReceiveBottomSheetComponent } from '@app/pages/account/bottom-sheet/receive/receive-bottom-sheet.component';
-import { FilterComponent } from '@app/pages/account/actions/filter/filter.component';
-import { FilterBottomSheetComponent } from '@app/pages/account/bottom-sheet/filter/filter-bottom-sheet.component';
+import { ChangeRepComponent } from '@app/overlays/actions/change-rep/change-rep.component';
+import { SendComponent } from '@app/overlays/actions/send/send.component';
+import { SendBottomSheetComponent } from '@app/overlays/bottom-sheet/send/send-bottom-sheet.component';
+import { FilterBottomSheetComponent } from '@app/overlays/bottom-sheet/filter/filter-bottom-sheet.component';
+import { AddIndexDialogComponent } from '@app/overlays/dialogs/add-index/add-index-dialog.component';
+import { ReceiveBottomSheetComponent } from '@app/overlays/bottom-sheet/receive/receive-bottom-sheet.component';
+import { AddIndexBottomSheetComponent } from '@app/overlays/bottom-sheet/add-index/add-index-bottom-sheet.component';
+import { ReceiveComponent } from '@app/overlays/actions/receive/receive.component';
+import { ReceiveDialogComponent } from '@app/overlays/dialogs/receive/receive-dialog.component';
+import { AddIndexOverlayComponent } from '@app/overlays/actions/add-index/add-index.component';
+import { FilterComponent } from '@app/overlays/actions/filter/filter.component';
+import { FilterDialogComponent } from '@app/overlays/dialogs/filter/filter-dialog.component';
+import { SendDialogComponent } from '@app/overlays/dialogs/send/send-dialog.component';
+import { EnterSecretComponent } from '@app/overlays/actions/enter-secret/enter-secret.component';
+import { EnterSecretDialogComponent } from '@app/overlays/dialogs/enter-secret/enter-secret-dialog.component';
+import { EnterSecretBottomSheetComponent } from '@app/overlays/bottom-sheet/enter-secret/enter-secret-bottom-sheet.component';
+import { ChangeRepBottomSheetComponent } from '@app/overlays/bottom-sheet/change-rep/change-rep-bottom-sheet.component';
+import {ChangeRepDialogComponent} from "@app/overlays/dialogs/change-rep/change-rep-dialog.component";
 
 @NgModule({
     declarations: [
@@ -79,7 +83,10 @@ import { FilterBottomSheetComponent } from '@app/pages/account/bottom-sheet/filt
         SendBottomSheetComponent,
         ReceiveComponent,
         ChangeRepBottomSheetComponent,
+        EnterSecretBottomSheetComponent,
         SendDialogComponent,
+        AddIndexOverlayComponent,
+        AddIndexBottomSheetComponent,
         AddIndexDialogComponent,
         ChangeRepDialogComponent,
         ReceiveDialogComponent,
@@ -92,6 +99,7 @@ import { FilterBottomSheetComponent } from '@app/pages/account/bottom-sheet/filt
         LoginComponent,
         AppAccountSettingsComponent,
         NewSeedDialogComponent,
+        EnterSecretComponent,
         LedgerSnackbarErrorComponent,
     ],
     imports: [

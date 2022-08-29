@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FilterOverlayData } from '@app/pages/account/actions/filter/filter.component';
+import { FilterOverlayData } from '@app/overlays/actions/filter/filter.component';
 
 @Component({
     selector: 'app-filter-dialog',

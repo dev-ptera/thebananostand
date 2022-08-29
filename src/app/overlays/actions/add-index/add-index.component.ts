@@ -1,13 +1,12 @@
-import { Component } from '@angular/core';
-import { AccountService } from '@app/services/account.service';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { AccountService } from '@app/services/account.service';
 
 @Component({
-    selector: 'app-add-index-dialog',
+    selector: 'app-add-index-overlay',
     styleUrls: ['add-index.component.scss'],
     template: `
-        <div class="add-index-dialog">
+        <div class="add-index-overlay">
             <h1 mat-dialog-title>Add Accounts</h1>
             <div mat-dialog-content style="margin-bottom: 32px;">
                 <div>Use the input field below to manually add accounts by their index number. e.g:</div>
@@ -26,13 +25,25 @@ import { MatDialogRef } from '@angular/material/dialog';
             </div>
             {{ errorMessage }}
             <blui-spacer></blui-spacer>
-            <mat-divider style="margin-left: -24px; margin-right: -24px"></mat-divider>
-            <div mat-dialog-actions style="display: flex; justify-content: space-between; margin-bottom: 0">
-                <button mat-stroked-button mat-dialog-close color="primary">Close</button>
+            <mat-divider style="margin-left: -48px; margin-right: -48px"></mat-divider>
+            <div
+                mat-dialog-actions
+                style="display: flex; justify-content: space-between; margin-bottom: 0; padding: 8px 0"
+            >
+                <button
+                    mat-stroked-button
+                    mat-dialog-close
+                    color="primary"
+                    (click)="close.emit()"
+                    style="width: 130px;"
+                >
+                    Close
+                </button>
                 <button
                     data-cy="add-account-overlay-button"
                     mat-flat-button
                     color="primary"
+                    style="width: 130px;"
                     [disabled]="loading || !indexFormControl.value"
                     (click)="addAccounts()"
                 >
@@ -42,15 +53,14 @@ import { MatDialogRef } from '@angular/material/dialog';
         </div>
     `,
 })
-export class AddIndexDialogComponent {
+export class AddIndexOverlayComponent {
     loading: boolean;
     indexFormControl = new FormControl('');
     errorMessage: string;
 
-    constructor(
-        public dialogRef: MatDialogRef<AddIndexDialogComponent>,
-        private readonly _accountService: AccountService
-    ) {}
+    @Output() close: EventEmitter<void> = new EventEmitter<void>();
+
+    constructor(private readonly _accountService: AccountService) {}
 
     async addAccounts(): Promise<void> {
         this.loading = true;
@@ -63,6 +73,6 @@ export class AddIndexDialogComponent {
             });
         }
         this.loading = false;
-        this.dialogRef.close();
+        this.close.emit();
     }
 }

@@ -6,22 +6,22 @@ import { MyDataSource } from '@app/pages/account/datasource';
 import { UtilService } from '@app/services/util.service';
 import { SpyglassService } from '@app/services/spyglass.service';
 import { AccountService } from '@app/services/account.service';
-import { SendDialogComponent } from './dialogs/send/send-dialog.component';
-import { ChangeRepDialogComponent } from './dialogs/change-rep/change-rep-dialog.component';
 import { AccountOverview } from '@app/types/AccountOverview';
-import { ReceiveDialogComponent } from '@app/pages/account/dialogs/receive/receive-dialog.component';
 import { ThemeService } from '@app/services/theme.service';
 import { ConfirmedTx } from '@app/types/ConfirmedTx';
 import { RpcService } from '@app/services/rpc.service';
 import { ViewportService } from '@app/services/viewport.service';
 import { environment } from '../../../environments/environment';
-import { FilterDialogComponent } from '@app/pages/account/dialogs/filter/filter-dialog.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { ChangeRepBottomSheetComponent } from '@app/pages/account/bottom-sheet/change-rep/change-rep-bottom-sheet.component';
-import { SendBottomSheetComponent } from '@app/pages/account/bottom-sheet/send/send-bottom-sheet.component';
-import { ReceiveBottomSheetComponent } from '@app/pages/account/bottom-sheet/receive/receive-bottom-sheet.component';
-import { FilterOverlayData } from '@app/pages/account/actions/filter/filter.component';
-import { FilterBottomSheetComponent } from '@app/pages/account/bottom-sheet/filter/filter-bottom-sheet.component';
+import { ChangeRepDialogComponent } from '@app/overlays/dialogs/change-rep/change-rep-dialog.component';
+import { FilterBottomSheetComponent } from '@app/overlays/bottom-sheet/filter/filter-bottom-sheet.component';
+import { FilterOverlayData } from '@app/overlays/actions/filter/filter.component';
+import { ReceiveBottomSheetComponent } from '@app/overlays/bottom-sheet/receive/receive-bottom-sheet.component';
+import { ReceiveDialogComponent } from '@app/overlays/dialogs/receive/receive-dialog.component';
+import { FilterDialogComponent } from '@app/overlays/dialogs/filter/filter-dialog.component';
+import { SendBottomSheetComponent } from '@app/overlays/bottom-sheet/send/send-bottom-sheet.component';
+import { SendDialogComponent } from '@app/overlays/dialogs/send/send-dialog.component';
+import {ChangeRepBottomSheetComponent} from "@app/overlays/bottom-sheet/change-rep/change-rep-bottom-sheet.component";
 
 @Component({
     selector: 'app-account',
@@ -115,7 +115,6 @@ export class AccountComponent implements OnInit, OnDestroy {
                 blocks: this.account.pending,
                 index: this.account.index,
             },
-            disableClose: true,
         };
         if (this.vp.sm) {
             setTimeout(() => {
@@ -136,7 +135,6 @@ export class AccountComponent implements OnInit, OnDestroy {
                 maxSendAmount: this.account.balance,
                 index: this.account.index,
             },
-            disableClose: true,
         };
         if (this.vp.sm) {
             setTimeout(() => {
@@ -157,7 +155,6 @@ export class AccountComponent implements OnInit, OnDestroy {
                 currentRep: this.account.representative,
                 index: this.account.index,
             },
-            disableClose: true,
         };
         if (this.vp.sm) {
             setTimeout(() => {
@@ -181,7 +178,6 @@ export class AccountComponent implements OnInit, OnDestroy {
     openFilterDialog(): void {
         const overlayData = {
             data: this.filterData,
-            disableClose: true,
         };
         const postFilterActions = (data: FilterOverlayData): void => {
             if (data.update) {

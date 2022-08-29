@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
-import { SendOverlayData } from '@app/pages/account/actions/send/send.component';
+import { SendOverlayData } from '@app/overlays/actions/send/send.component';
 
 @Component({
     selector: 'app-send-bottom-sheet',

@@ -17,6 +17,7 @@
             "@app/pages/*": ["app/pages/*"],
             "@app/services/*": ["app/services/*"],
             "@app/types/*": ["app/types/*"],
+            "@app/overlays/*": ["app/overlays/*"],
             "stream": ["node_modules/stream-browserify"]
         },
         "lib": ["es2018", "dom"]

@@ -26,16 +26,21 @@ import { SecretService } from '@app/services/secret.service';
 })
 export class AppAccountSettingsComponent {
     userMenuOpen = false;
+    hasRecentlyClearedSeed = false;
 
     constructor(private readonly _router: Router, private readonly _secretService: SecretService) {}
 
     clearData(): void {
         this._secretService.clearSeed();
-        void this._router.navigate(['']);
         this.userMenuOpen = false;
+        this.hasRecentlyClearedSeed = true;
+        setTimeout(() => {
+            this.hasRecentlyClearedSeed = false;
+        }, 50)
+        void this._router.navigate(['']);
     }
 
     show(): boolean {
-        return this._secretService.hasSecret();
+        return this._secretService.hasSecret() || this.hasRecentlyClearedSeed;
     }
 }
