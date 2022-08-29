@@ -10,12 +10,7 @@
         </div>
     </mat-toolbar>
 
-    <app-login
-        data-cy="login-wrapper"
-        *ngIf="showLogin()"
-        (unlocked)="isLoggedInViaSecret = true"
-        (cancel)="isCancelLogin = true"
-    ></app-login>
+    <app-login data-cy="login-wrapper" *ngIf="showLogin()" (cancel)="isCancelLogin = true"></app-login>
 
     <div class="app-body" *ngIf="showDashboard()" data-cy="dashboard-wrapper" responsive>
         <div class="app-body-content">

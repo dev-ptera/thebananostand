@@ -47,7 +47,6 @@ export class HomeComponent implements OnInit {
     colors = Colors;
 
     isLoading = false;
-    isLoggedInViaSecret = false;
     isCancelLogin = false;
     isLedgerUnlocked = false;
     isShowLedgerLoadHelperText = false;
@@ -64,11 +63,7 @@ export class HomeComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.isLoggedInViaSecret = this._secretService.isLocalSecretUnlocked();
         this.isLedgerUnlocked = this._secretService.isLocalLedgerUnlocked();
-        this._secretService.secretCleared.subscribe(() => {
-            this.isLoggedInViaSecret = false;
-        });
     }
 
     isSmall(): boolean {
@@ -81,16 +76,10 @@ export class HomeComponent implements OnInit {
 
     openEnterSeedDialog(): void {
         if (this.vp.sm) {
-            const ref = this._sheet.open(EnterSecretBottomSheetComponent);
-            ref.afterDismissed().subscribe((isNewWalletImported) => this._postLoginOverlayActions(isNewWalletImported));
+            this._sheet.open(EnterSecretBottomSheetComponent);
         } else {
-            const ref = this._dialog.open(EnterSecretDialogComponent);
-            ref.afterClosed().subscribe((isNewWalletImported) => this._postLoginOverlayActions(isNewWalletImported));
+            this._dialog.open(EnterSecretDialogComponent);
         }
-    }
-
-    private _postLoginOverlayActions(isNewWalletImported: boolean): void {
-        this.isLoggedInViaSecret = isNewWalletImported;
     }
 
     connectLedger(): void {
@@ -112,14 +101,14 @@ export class HomeComponent implements OnInit {
     }
 
     showDashboard(): boolean {
-        return !this.showLogin() && (this.isLedgerUnlocked || this.isLoggedInViaSecret);
+        return !this.showLogin() && (this.isLedgerUnlocked || this._secretService.isLocalSecretUnlocked());
     }
 
     showLogin(): boolean {
         return (
             !this.isLedgerUnlocked &&
             this._secretService.hasSecret() &&
-            !this.isLoggedInViaSecret &&
+            !this._secretService.isLocalSecretUnlocked() &&
             !this.isCancelLogin
         );
     }

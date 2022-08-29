@@ -74,7 +74,7 @@ import { SecretService } from '@app/services/secret.service';
     `,
 })
 export class EnterSecretComponent {
-    @Output() closeWithNewWallet = new EventEmitter<boolean>();
+    @Output() close = new EventEmitter<void>();
 
     secret = '';
     password = '';
@@ -94,7 +94,7 @@ export class EnterSecretComponent {
     ) {}
 
     closeOverlay(): void {
-        this.closeWithNewWallet.emit(false);
+        this.close.emit();
     }
 
     isValidSecret(): boolean {
@@ -130,7 +130,7 @@ export class EnterSecretComponent {
         this._secretService
             .storeSecret(this.secret, this.password)
             .then(() => {
-                this.closeWithNewWallet.emit(true);
+                this.close.emit();
             })
             .catch((err) => {
                 console.error(err);
