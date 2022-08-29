@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ReceiveOverlayData } from '@app/pages/account/actions/receive/receive.component';
+import { ReceiveOverlayData } from '@app/overlays/actions/receive/receive.component';
 
 @Component({
     selector: 'app-receive-dialog',

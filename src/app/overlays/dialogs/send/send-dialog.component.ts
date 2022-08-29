@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { SendOverlayData } from '@app/pages/account/actions/send/send.component';
+import { SendOverlayData } from '@app/overlays/actions/send/send.component';
 
 @Component({
     selector: 'app-change-rep-dialog',

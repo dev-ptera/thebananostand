@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { TransactionService } from '@app/services/transaction.service';
 import { AccountService } from '@app/services/account.service';
 import { SpyglassService } from '@app/services/spyglass.service';
@@ -7,10 +6,10 @@ import { UtilService } from '@app/services/util.service';
 import { SecretService } from '@app/services/secret.service';
 
 @Component({
-    selector: 'app-enter-secret-dialog',
-    styleUrls: ['enter-secret-dialog.component.scss'],
+    selector: 'app-enter-secret-overlay',
+    styleUrls: ['enter-secret.component.scss'],
     template: `
-        <div class="secret-dialog">
+        <div class="enter-secret-overlay">
             <h1 mat-dialog-title>Enter Seed / Mnemonic</h1>
             <div mat-dialog-content style="display: flex; flex: 1 1 0px; flex-direction: column">
                 <ng-container *ngIf="activeStep === 0">
@@ -74,29 +73,28 @@ import { SecretService } from '@app/services/secret.service';
         </div>
     `,
 })
-export class EnterSecretDialogComponent {
+export class EnterSecretComponent {
+    @Output() closeWithNewWallet = new EventEmitter<boolean>();
+
     secret = '';
     password = '';
     activeStep = 0;
     maxSteps = 2;
     lastStep = this.maxSteps - 1;
-
-    hasCreatedNewWallet = false;
     passwordVisible = false;
 
     error: string;
 
     constructor(
         public util: UtilService,
-        public dialogRef: MatDialogRef<EnterSecretDialogComponent>,
         private readonly _apiService: SpyglassService,
         private readonly _transactionService: TransactionService,
         private readonly _accountService: AccountService,
         private readonly _secretService: SecretService
     ) {}
 
-    closeDialog(): void {
-        this.dialogRef.close(this.hasCreatedNewWallet);
+    closeOverlay(): void {
+        this.closeWithNewWallet.emit(false);
     }
 
     isValidSecret(): boolean {
@@ -117,7 +115,7 @@ export class EnterSecretDialogComponent {
     back(): void {
         this.error = undefined;
         if (this.activeStep === 0) {
-            this.closeDialog();
+            this.closeOverlay();
         } else {
             this.activeStep--;
         }
@@ -132,8 +130,7 @@ export class EnterSecretDialogComponent {
         this._secretService
             .storeSecret(this.secret, this.password)
             .then(() => {
-                this.hasCreatedNewWallet = true;
-                this.dialogRef.close(this.hasCreatedNewWallet);
+                this.closeWithNewWallet.emit(true);
             })
             .catch((err) => {
                 console.error(err);

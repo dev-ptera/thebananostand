@@ -6,9 +6,10 @@ import { TransactionService } from '@app/services/transaction.service';
 import { MatDialog } from '@angular/material/dialog';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { SecretService } from '@app/services/secret.service';
-import { EnterSecretDialogComponent } from '@app/pages/home/enter-secret/enter-secret-dialog.component';
-import { NewSeedDialogComponent } from '@app/pages/home/new-seed/new-seed-dialog.component';
 import { MAT_SNACK_BAR_DATA, MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
+import { EnterSecretDialogComponent } from '@app/overlays/dialogs/enter-secret/enter-secret-dialog.component';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { EnterSecretBottomSheetComponent } from '@app/overlays/bottom-sheet/enter-secret/enter-secret-bottom-sheet.component';
 
 @Component({
     selector: 'ledger-snack-bar',
@@ -53,6 +54,7 @@ export class HomeComponent implements OnInit {
 
     constructor(
         private readonly _dialog: MatDialog,
+        private readonly _sheet: MatBottomSheet,
         private readonly _snackBar: MatSnackBar,
         private readonly _transactionService: TransactionService,
         private readonly _accountService: AccountService,
@@ -78,10 +80,17 @@ export class HomeComponent implements OnInit {
     }
 
     openEnterSeedDialog(): void {
-        const ref = this._dialog.open(EnterSecretDialogComponent);
-        ref.afterClosed().subscribe((isNewWalletImported) => {
-            this.isLoggedInViaSecret = isNewWalletImported;
-        });
+        if (this.vp.sm) {
+            const ref = this._sheet.open(EnterSecretBottomSheetComponent);
+            ref.afterDismissed().subscribe((isNewWalletImported) => this._postLoginOverlayActions(isNewWalletImported));
+        } else {
+            const ref = this._dialog.open(EnterSecretDialogComponent);
+            ref.afterClosed().subscribe((isNewWalletImported) => this._postLoginOverlayActions(isNewWalletImported));
+        }
+    }
+
+    private _postLoginOverlayActions(isNewWalletImported: boolean): void {
+        this.isLoggedInViaSecret = isNewWalletImported;
     }
 
     connectLedger(): void {
@@ -117,12 +126,5 @@ export class HomeComponent implements OnInit {
 
     showHome(): boolean {
         return !this.showLogin() && !this.showDashboard();
-    }
-
-    openNewWalletDialog(): void {
-        const ref = this._dialog.open(NewSeedDialogComponent);
-        ref.afterClosed().subscribe((isNewWalletCreated) => {
-            this.isLoggedInViaSecret = isNewWalletCreated;
-        });
     }
 }

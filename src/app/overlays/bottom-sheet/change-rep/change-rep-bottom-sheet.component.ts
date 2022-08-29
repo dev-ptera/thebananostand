@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
-import { ChangeRepOverlayData } from '@app/pages/account/actions/change-rep/change-rep.component';
+import { ChangeRepOverlayData } from '@app/overlays/actions/change-rep/change-rep.component';
 
 @Component({
     selector: 'app-change-rep-bottom-sheet',

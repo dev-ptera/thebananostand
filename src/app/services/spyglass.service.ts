@@ -4,8 +4,8 @@ import { ConfirmedTx } from '@app/types/ConfirmedTx';
 import { UtilService } from './util.service';
 import { KnownAccount } from '@app/types/KnownAccount';
 import { Subject } from 'rxjs';
-import { RepScore } from '@app/pages/account/actions/change-rep/change-rep.component';
-import { FilterOverlayData } from '@app/pages/account/actions/filter/filter.component';
+import { RepScore } from '@app/overlays/actions/change-rep/change-rep.component';
+import { FilterOverlayData } from '@app/overlays/actions/filter/filter.component';
 
 @Injectable({
     providedIn: 'root',
