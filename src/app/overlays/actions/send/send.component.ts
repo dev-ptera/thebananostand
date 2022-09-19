@@ -60,7 +60,8 @@ export type SendOverlayData = {
                     <ng-container *ngIf="activeStep === 0">
                         <div style="margin-bottom: 8px">You are attempting to withdraw funds from:</div>
                         <div
-                            style="word-break: break-all; font-family: monospace"
+                            class="mono"
+                            style="word-break: break-all"
                             [innerHTML]="util.formatHtmlAddress(data.address)"
                         ></div>
                     </ng-container>

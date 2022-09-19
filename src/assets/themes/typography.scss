@@ -28,3 +28,12 @@ $custom-typography: mat.define-typography-config(
     src: url(~assets/fonts/space-grotesk/SpaceGrotesk-Bold.ttf);
     font-weight: bold;
 }
+
+@font-face {
+    font-family: sourceCodePro;
+    src: url(~assets/fonts/source-code-pro/SourceCodePro-Regular.otf);
+}
+
+.mono {
+    font-family: sourceCodePro, monospace;
+}

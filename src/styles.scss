@@ -45,6 +45,7 @@ body,
 
 .blui-list-item-tag-content .blui-list-item-tag-label {
     text-transform: unset!important;
+    font-size: 11px!important;
 }
 
 .app-toolbar {
@@ -79,7 +80,7 @@ body,
     }
 
     .app-body-content {
-        max-width: 1200px;
+        max-width: 1000px;
         width: 100%;
         display: flex;
         flex-direction: column;

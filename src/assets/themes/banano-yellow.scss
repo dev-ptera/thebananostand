@@ -67,7 +67,7 @@ $banano-yellow: map-merge(
 
     .dashboard-account-list {
         .hovered {
-            .mat-list-text .blui-info-list-item-title-wrapper {
+            .mat-list-text .blui-info-list-item-title-wrapper, .account-number {
                 color: $primary!important;
             }
            .mat-list-item:hover {

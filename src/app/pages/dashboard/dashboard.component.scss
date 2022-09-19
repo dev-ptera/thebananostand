@@ -15,6 +15,21 @@
     }
 }
 
+.rename-wallet-button {
+    $buttonSize: 24px;
+    margin-left: 8px;
+    width: $buttonSize;
+    height: $buttonSize;
+    line-height: $buttonSize;
+    .mat-icon {
+        $iconSize: 14px;
+        height: $iconSize;
+        line-height: $iconSize;
+        font-size: $iconSize;
+        width: $iconSize;
+    }
+}
+
 ::ng-deep .blui-info-list-item-icon-wrapper {
     margin-right: 8px !important;
 }
