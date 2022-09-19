@@ -24,7 +24,7 @@
 </ng-template>
 
 <ng-template #accountActionsUserMenu>
-    <blui-user-menu menuTitle="Wallet Actions" [(open)]="mobileUserMenuOpen" *ngIf="vp.sm">
+    <blui-user-menu menuTitle="Wallet Actions" [(open)]="mobileUserMenuOpen">
         <mat-icon data-cy="show-dashboard-actions" blui-avatar>more_vert</mat-icon>
         <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
             <blui-info-list-item
@@ -78,7 +78,7 @@
 <div
     *ngIf="!vp.sm"
     style="
-        display: flex;
+        display: none;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 24px;
@@ -149,15 +149,15 @@
     </mat-slide-toggle>
 </div>
 
-<mat-card style="padding: 0; display: flex; flex-direction: column">
-    <div style="padding: 16px; display: flex; justify-content: space-between; align-items: center">
+<mat-card style="padding: 0; display: flex; flex-direction: column; overflow: hidden">
+    <div style="padding: 24px 24px 24px 24px; display: flex; justify-content: space-between; align-items: center" class="dashboard-header">
         <div style="width: 100%; display: flex; align-items: center">
 
             <mat-checkbox
                 color="warn"
                 *ngIf="isAdvancedView"
                 [disabled]="getAccounts().length === 0"
-                style="margin-right: 24px"
+                style="margin-right: 32px"
                 (change)="toggleAll($event)"
                 [indeterminate]="selectedItems.size < getAccounts().length && selectedItems.size > 0"
                 [checked]="selectedItems.size === getAccounts().length && selectedItems.size > 0"
@@ -182,9 +182,84 @@
                 <div>
                     <span class="mat-subheading-1" style="margin-right: 8px"> Accounts Balance: </span>
                     <span> {{ getBalance() }}</span>
+                    <ng-container *ngIf="!vp.sm"> BAN</ng-container>
                 </div>
             </div>
-
+            <blui-spacer></blui-spacer>
+            <!--
+            <div style="padding-left: 4px" *ngIf="!vp.sm">
+                <button
+                    mat-mini-fab
+                    data-cy="add-single-account-desktop-button"
+                    color="primary"
+                    (click)="addAccount()"
+                    [disabled]="loadingAccount"
+                    matTooltip="Add next account"
+                    matTooltipPosition="above"
+                >
+                    <mat-icon>add</mat-icon>
+                </button>
+                <button
+                    mat-mini-fab
+                    data-cy="add-specific-account-desktop-button"
+                    color="primary"
+                    style="margin-left: 16px"
+                    (click)="addAccountFromIndex()"
+                    [disabled]="loadingAccount"
+                    matTooltip="Add a specific account"
+                    matTooltipPosition="above"
+                >
+                    <mat-icon>manage_search</mat-icon>
+                </button>
+                <button
+                    mat-mini-fab
+                    data-cy="refresh-dashboard-desktop-button"
+                    color="primary"
+                    style="margin-left: 16px"
+                    (click)="refresh()"
+                    [disabled]="loadingAllAccounts"
+                    matTooltip="Refresh all displayed accounts"
+                    matTooltipPosition="above"
+                >
+                    <mat-icon>refresh</mat-icon>
+                </button>
+                <button
+                    mat-mini-fab
+                    color="primary"
+                    style="margin-left: 16px"
+                    (click)="isAdvancedView = !isAdvancedView"
+                    [disabled]="loadingAllAccounts"
+                    matTooltip="Select accounts to hide"
+                    matTooltipPosition="above"
+                >
+                    <mat-icon>check_box_outline_blank</mat-icon>
+                </button>
+                <button
+                    mat-mini-fab
+                    color="primary"
+                    style="margin-left: 16px"
+                    (click)="isAdvancedView = !isAdvancedView"
+                    [disabled]="loadingAllAccounts"
+                    matTooltip="Add new wallet"
+                    matTooltipPosition="above"
+                >
+                    <mat-icon>add_card</mat-icon>
+                </button>
+                <button
+                    *ngIf="isAdvancedView"
+                    mat-mini-fab
+                    color="warn"
+                    data-cy="remove-account-dashboard-desktop-button"
+                    style="margin-left: 16px"
+                    (click)="hideSelected()"
+                    [disabled]="selectedItems.size === 0"
+                    matTooltip="Hide selected accounts from view"
+                    matTooltipPosition="above"
+                >
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+                -->
         </div>
         <ng-template [ngTemplateOutlet]="accountActionsUserMenu"></ng-template>
     </div>

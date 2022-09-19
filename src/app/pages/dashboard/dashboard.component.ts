@@ -121,6 +121,7 @@ export class DashboardComponent implements OnInit {
         }
         this._accountService.saveAccountsInLocalStorage();
         this._accountService.updateTotalBalance();
+        this._accountService.saveAdvancedViewInLocalStorage(false);
         this.selectedItems.clear();
     }
 
