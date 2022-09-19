@@ -22,7 +22,8 @@ export class AppComponent {
     showBanana(): boolean {
         const unlocked = this._secretService.isLocalSecretUnlocked() || this._secretService.isLocalLedgerUnlocked();
         const isBigScreen = !this._vp.isSmall() && !this._vp.isMedium();
-        return !unlocked && isBigScreen;
+      //  return !unlocked && isBigScreen;
+        return false;
     }
 
     prepareRoute(outlet: RouterOutlet): Data {

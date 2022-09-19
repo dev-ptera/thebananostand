@@ -194,6 +194,9 @@
     >
         <blui-info-list-item
             *ngFor="let account of getAccounts(); let i = index; let even = even"
+            (mouseenter)="hoverRowNumber=i"
+            (mouseleave)="hoverRowNumber=undefined"
+            [class.hovered]="hoverRowNumber===i"
             [divider]="i === getAccounts().length - 1 ? undefined : 'partial'"
             [hidePadding]="true"
             (click)="openAccount(account.fullAddress)"
@@ -207,35 +210,44 @@
                     : colors.white[50]
             "
         >
-            <mat-checkbox
-                *ngIf="isAdvancedView"
-                blui-icon
-                color="warn"
-                style="margin-bottom: 6px"
-                (click)="$event.stopPropagation()"
-                (mouseenter)="disableRipple = true"
-                (mouseleave)="disableRipple = false"
-                [checked]="selectedItems.has(account.index)"
-                (change)="toggleCheck($event, account)"
-            >
-            </mat-checkbox>
-            <div blui-left-content [style.minWidth.px]="vp.sm ? 50 : 120" *ngIf="!vp.sm">
-                <ng-template *ngTemplateOutlet="accountNumber; context: { account: this.account }"></ng-template>
+            <div blui-left-content style="display: flex; align-items: center">
+                <mat-checkbox
+                    *ngIf="isAdvancedView"
+                    color="warn"
+                    style="margin-bottom: 6px; margin-right: 16px"
+                    (click)="$event.stopPropagation()"
+                    (mouseenter)="disableRipple = true"
+                    (mouseleave)="disableRipple = false"
+                    [checked]="selectedItems.has(account.index)"
+                    (change)="toggleCheck($event, account)"
+                >
+                </mat-checkbox>
+                <img [src]="getMonkeyUrl(account.fullAddress)" loading="lazy" height="72" />
+                <div class="account-number mat-hint">
+                    #{{_util.numberWithCommas(account.index)}}
+                </div>
+                <!--<div [style.minWidth.px]="vp.sm ? 50 : 120"  *ngIf="!vp.sm">
+                    <ng-template *ngTemplateOutlet="accountNumber; context: { account: this.account }"></ng-template>
+                </div> -->
             </div>
-            <div blui-title style="font-family: monospace">{{ account.shortAddress }}</div>
-            <div blui-subtitle *ngIf="!vp.sm">
+            <div blui-title style="font-family: monospace; padding: 1px 0">{{ account.shortAddress }}</div>
+            <div blui-subtitle *ngIf="!vp.sm" style="padding: 1px 0">
                 <ng-container *ngIf="account.representative">
                     represented by {{ formatRepresentative(account.representative) }}
                 </ng-container>
+                <!--
                 <ng-container *ngIf="!account.representative"> unopened account </ng-container>
+                -->
             </div>
             <div blui-info *ngIf="vp.sm" style="margin-top: 4px">
                 <div style="display: flex">
+                    <!--
                     <div style="margin-right: 8px">
                         <ng-template
                             *ngTemplateOutlet="accountNumber; context: { account: this.account }"
                         ></ng-template>
                     </div>
+                    -->
                     <div>
                         <ng-template *ngTemplateOutlet="statusBadges; context: { account: this.account }"></ng-template>
                     </div>

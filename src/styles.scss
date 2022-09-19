@@ -2,6 +2,7 @@
 @use 'assets/themes/banano-yellow';
 @use 'assets/themes/jungle-green';
 @use 'assets/themes/nano-blue';
+@use 'assets/themes/typography';
 
 // Again, why is this required for tooltips?
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
@@ -40,6 +41,10 @@ body,
 .blui-empty-state-description {
     font-size: 0.875rem !important;
     line-height: 1.57 !important;
+}
+
+.blui-list-item-tag-content .blui-list-item-tag-label {
+    text-transform: unset!important;
 }
 
 .app-toolbar {

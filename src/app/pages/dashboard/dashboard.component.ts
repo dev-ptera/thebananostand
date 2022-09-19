@@ -29,6 +29,7 @@ export class DashboardComponent implements OnInit {
     loadingAllAccounts: boolean;
     disableRipple = false;
     mobileUserMenuOpen = false;
+    hoverRowNumber: number;
 
     selectedItems: Set<number> = new Set();
 
@@ -88,6 +89,10 @@ export class DashboardComponent implements OnInit {
         } else {
             this._dialog.open(AddIndexDialogComponent);
         }
+    }
+
+    getMonkeyUrl(address: string): string {
+        return this._accountService.createMonKeyUrl(address);
     }
 
     showRepresentativeOffline(address: string): boolean {

@@ -123,7 +123,7 @@
                 <div style="display: flex; align-items: center">
                     <img
                         style="height: 150px; margin-top: -16px; width: 150px; margin-right: 16px; margin-left: -16px"
-                        src="https://monkey.banano.cc/api/v1/monkey/{{ account?.fullAddress }}"
+                        [src]="getMonkeyUrl()"
                     />
                     <div style="display: flex; flex-direction: column; justify-content: center; height: 150px">
                         <div class="mat-headline">

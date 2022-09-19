@@ -165,4 +165,9 @@ export class AccountService {
         const explorerBlockPage = 'https://www.yellowspyglass.com/hash';
         window.open(`${explorerBlockPage}/${hash}`);
     }
+
+    /** Given an address, returns a monKey API URL. */
+    createMonKeyUrl(address: string): string {
+        return `https://monkey.banano.cc/api/v1/monkey/${address}?svc=bananostand`;
+    }
 }

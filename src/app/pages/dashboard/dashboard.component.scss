@@ -32,6 +32,27 @@
 }
 
 .dashboard-account-list {
+    .account-number {
+        position: absolute;
+        top: 2px;
+        left: 8px;
+        font-size: 10px;
+        z-index: 3;
+    }
+    * {
+        transition: all 200ms;
+    }
+    blui-info-list-item {
+        overflow: hidden;
+    }
+    ::ng-deep .blui-info-list-item-icon-wrapper {
+        display: none!important;
+    }
+    .hovered {
+        ::ng-deep .blui-info-list-item-left-content-wrapper img {
+            transform: rotate(-5deg);
+        }
+    }
     max-height: calc(100vh - 300px);
     &.sm {
         max-height: calc(100vh - (56px + 74px + 1px)); // Don't forget the divider height. 1px
