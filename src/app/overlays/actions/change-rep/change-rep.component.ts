@@ -184,6 +184,7 @@ export type ChangeRepOverlayData = {
                             *ngIf="metadata.score > 80"
                             [label]="metadata.score < 90 ? 'Good' : 'Excellent'"
                             [backgroundColor]="colors.green[500]"
+                            [fontColor]="colors.black[900]"
                             style="margin-left: 16px"
                         >
                         </blui-list-item-tag>

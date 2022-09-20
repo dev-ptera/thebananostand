@@ -24,7 +24,7 @@
 </ng-template>
 
 <ng-template #currentWalletActions>
-    <blui-user-menu menuTitle="Wallet Actions" [(open)]="walletActionsUserMenuOpen">
+    <blui-user-menu menuTitle="Account Actions" [(open)]="walletActionsUserMenuOpen">
         <mat-icon data-cy="show-dashboard-actions" blui-avatar>more_vert</mat-icon>
         <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
             <blui-info-list-item
@@ -71,44 +71,90 @@
                 <mat-icon blui-icon>delete</mat-icon>
                 <div blui-title>Hide Selected Accounts</div>
             </blui-info-list-item>
-            <blui-info-list-item
-                [dense]="true"
-                (click)="hideSelected(); walletActionsUserMenuOpen = false"
-                data-cy="remove-account-mobile-button"
-            >
-                <mat-icon blui-icon>delete</mat-icon>
-                <div blui-title>DESTROY ACCOUNT</div>
-            </blui-info-list-item>
         </mat-nav-list>
     </blui-user-menu>
 </ng-template>
 
 <ng-template #switchWalletActions>
-    <blui-user-menu [(open)]="switchWalletUserMenuOpen">
-        <mat-icon data-cy="show-dashboard-actions" blui-avatar>arrow_drop_down</mat-icon>
+    <blui-user-menu [(open)]="switchWalletUserMenuOpen" class="switch-wallet-user-menu" menuTitle="Switch Wallet">
+        <mat-icon data-cy="show-dashboard-actions" blui-avatar matTooltip="Switch Wallet">arrow_drop_down</mat-icon>
+        <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
+            <div style="max-height: 180px; overflow: auto">
+                <blui-info-list-item
+                    [dense]="true"
+                    [hidePadding]="true"
+                    (click)="switchWalletUserMenuOpen = false"
+                >
+                    <div blui-title>Unnamed Wallet 2</div>
+                </blui-info-list-item>
+                <blui-info-list-item
+                    [dense]="true"
+                    [hidePadding]="true"
+                    (click)="switchWalletUserMenuOpen = false"
+                >
+                    <div blui-title>Unnamed Wallet 3</div>
+                </blui-info-list-item>
+                <blui-info-list-item
+                    [dense]="true"
+                    [hidePadding]="true"
+                    (click)="switchWalletUserMenuOpen = false"
+                >
+                    <div blui-title>Unnamed Wallet 3</div>
+                </blui-info-list-item>
+                <blui-info-list-item
+                    [dense]="true"
+                    [hidePadding]="true"
+                    (click)="switchWalletUserMenuOpen = false"
+                >
+                    <div blui-title>Unnamed Wallet 3</div>
+                </blui-info-list-item>
+                <blui-info-list-item
+                    [dense]="true"
+                    [hidePadding]="true"
+                    (click)="switchWalletUserMenuOpen = false"
+                >
+                    <div blui-title>Unnamed Wallet 3</div>
+                </blui-info-list-item>
+                <blui-info-list-item
+                    [dense]="true"
+                    [hidePadding]="true"
+                    (click)="switchWalletUserMenuOpen = false"
+                >
+                    <div blui-title>Unnamed Wallet 3</div>
+                </blui-info-list-item>
+            </div>
+        </mat-nav-list>
+    </blui-user-menu>
+</ng-template>
+
+
+
+<ng-template #manageWallet>
+    <blui-user-menu [(open)]="manageWalletUserMenuOpen" class="switch-wallet-user-menu" menuTitle="Edit Wallets">
+        <mat-icon data-cy="show-dashboard-actions" blui-avatar style="margin-left: 8px" matTooltip="Manage Accounts">
+            edit_note
+        </mat-icon>
         <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
             <blui-info-list-item
                 [dense]="true"
-                [hidePadding]="true"
-                divider="full"
-                (click)="addAccount(); switchWalletUserMenuOpen = false"
-            >
-                <div blui-title>Unnamed Wallet 2</div>
-            </blui-info-list-item>
-            <blui-info-list-item
-                [dense]="true"
-                [hidePadding]="true"
-                divider="full"
-                (click)="addAccount(); switchWalletUserMenuOpen = false"
-            >
-                <div blui-title>Unnamed Wallet 3</div>
-            </blui-info-list-item>
-            <blui-info-list-item
-                [dense]="true"
-                (click)="addAccount(); switchWalletUserMenuOpen = false"
+                (click)="openEnterSeedDialog(); switchWalletUserMenuOpen = false"
             >
                 <mat-icon blui-icon>add_circle</mat-icon>
                 <div blui-title>Add Wallet</div>
+            </blui-info-list-item>
+            <blui-info-list-item
+                [dense]="true"
+                (click)="openEnterSeedDialog(); switchWalletUserMenuOpen = false"
+            >
+                <mat-icon blui-icon>edit</mat-icon>
+                <div blui-title>Rename Wallet</div>
+            </blui-info-list-item>
+            <blui-info-list-item
+                [dense]="true"
+                (click)="openEnterSeedDialog(); switchWalletUserMenuOpen = false"
+            >
+                <mat-icon blui-icon>delete</mat-icon>
+                <div blui-title>Remove Wallet</div>
             </blui-info-list-item>
         </mat-nav-list>
     </blui-user-menu>
@@ -130,19 +176,13 @@
             >
             </mat-checkbox>
             <div>
+                <!--
                 <div style="display: flex; align-items: center; margin-bottom: 4px; width: 100%">
 
-                    <div class="blui-headline-5 primary" style="margin-bottom: 0">Unnamed Wallet 1</div>
-                    <ng-template [ngTemplateOutlet]="switchWalletActions"></ng-template>
-                   <!-- <mat-form-field appearance="fill" color="primary"
-                        style="padding-bottom: 0; margin-bottom: 0; height: 72px">
-                        <mat-label>Active Wallet</mat-label>
-                        <mat-select [(value)]="activeWallet">
-                            <mat-option value="option-1">Unnamed Wallet 1</mat-option>
-                            <mat-option value="option-2" (click)="openEnterSeedDialog()"><mat-icon>add</mat-icon> Add Wallet</mat-option>
-                        </mat-select>
-                    </mat-form-field> -->
-                </div>
+                    <div class="blui-headline-6 primary" style="margin: 0 8px 0 0">Unnamed Wallet 1</div>
+                    <ng-template [ngTemplateOutlet]="switchWalletActions" style="margin-right: 4px"></ng-template>
+                    <ng-template [ngTemplateOutlet]="manageWallet"></ng-template>
+                </div> -->
                 <div>
                     <span class="mat-subheading-1" style="margin-right: 8px"> Accounts Balance: </span>
                     <span> {{ getBalance() }}</span>
@@ -207,7 +247,7 @@
                     (change)="toggleCheck($event, account)"
                 >
                 </mat-checkbox>
-                <img [src]="getMonkeyUrl(account.fullAddress)" loading="lazy" height="72" />
+                <img [src]="getMonkeyUrl(account.fullAddress)" loading="lazy" [height]="vp.sm ? 64 : 72" />
                 <div class="account-number mat-hint">
                     #{{_util.numberWithCommas(account.index)}}
                 </div>
@@ -215,7 +255,10 @@
                     <ng-template *ngTemplateOutlet="accountNumber; context: { account: this.account }"></ng-template>
                 </div> -->
             </div>
-            <div blui-title class="mono" style="padding: 1px 0">{{ account.shortAddress }}</div>
+            <div blui-title class="mono" style="padding: 1px 0; z-index: 2"
+                 [style.fontSize.px]="vp.sm ? 15 : 'inherit'">
+                {{ account.shortAddress }}
+            </div>
             <div blui-subtitle *ngIf="!vp.sm" style="padding: 1px 0">
                 <ng-container *ngIf="account.representative">
                     represented by {{ formatRepresentative(account.representative) }}

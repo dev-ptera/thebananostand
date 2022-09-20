@@ -33,6 +33,7 @@ export class DashboardComponent implements OnInit {
     loadingAllAccounts: boolean;
     disableRipple = false;
     walletActionsUserMenuOpen = false;
+    manageWalletUserMenuOpen = false;
     switchWalletUserMenuOpen = false;
     hoverRowNumber: number;
 

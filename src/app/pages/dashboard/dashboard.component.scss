@@ -15,19 +15,32 @@
     }
 }
 
+.switch-wallet-user-menu ::ng-deep .blui-user-menu-avatar-content {
+    height: unset;
+    width: unset;
+    line-height: unset;
+}
+
 
 .rename-wallet-button {
     $buttonSize: 24px;
-    margin-left: 8px;
     width: $buttonSize;
     height: $buttonSize;
     line-height: $buttonSize;
     .mat-icon {
-        $iconSize: 14px;
+        $iconSize: 10px;
         height: $iconSize;
         line-height: $iconSize;
         font-size: $iconSize;
         width: $iconSize;
+        &.bigger {
+            $iconSize: 16px;
+            height: $iconSize;
+            line-height: $iconSize;
+            font-size: $iconSize;
+            width: $iconSize;
+
+        }
     }
 }
 
