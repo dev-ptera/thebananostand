@@ -36,4 +36,7 @@ $custom-typography: mat.define-typography-config(
 
 .mono {
     font-family: sourceCodePro, monospace;
+    * {
+        font-family: sourceCodePro, monospace;
+    }
 }

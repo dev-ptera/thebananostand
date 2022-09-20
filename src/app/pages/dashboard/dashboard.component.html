@@ -23,13 +23,13 @@
     ></blui-list-item-tag>
 </ng-template>
 
-<ng-template #accountActionsUserMenu>
-    <blui-user-menu menuTitle="Wallet Actions" [(open)]="mobileUserMenuOpen">
+<ng-template #currentWalletActions>
+    <blui-user-menu menuTitle="Wallet Actions" [(open)]="walletActionsUserMenuOpen">
         <mat-icon data-cy="show-dashboard-actions" blui-avatar>more_vert</mat-icon>
         <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
             <blui-info-list-item
                 [dense]="true"
-                (click)="addAccount(); mobileUserMenuOpen = false"
+                (click)="addAccount(); walletActionsUserMenuOpen = false"
                 data-cy="add-next-account-mobile-button"
             >
                 <mat-icon blui-icon>add</mat-icon>
@@ -37,7 +37,7 @@
             </blui-info-list-item>
             <blui-info-list-item
                 [dense]="true"
-                (click)="addAccountFromIndex(); mobileUserMenuOpen = false"
+                (click)="addAccountFromIndex(); walletActionsUserMenuOpen = false"
                 data-cy="add-specific-account-mobile-button"
             >
                 <mat-icon blui-icon>manage_search</mat-icon>
@@ -45,7 +45,7 @@
             </blui-info-list-item>
             <blui-info-list-item
                 [dense]="true"
-                (click)="refresh(); mobileUserMenuOpen = false"
+                (click)="refresh(); walletActionsUserMenuOpen = false"
                 data-cy="refresh-dashboard-mobile-button"
             >
                 <mat-icon blui-icon>refresh</mat-icon>
@@ -53,7 +53,7 @@
             </blui-info-list-item>
             <blui-info-list-item
                 [dense]="true"
-                (click)="isAdvancedView = !isAdvancedView; mobileUserMenuOpen = false"
+                (click)="isAdvancedView = !isAdvancedView; walletActionsUserMenuOpen = false"
                 data-cy="select-accounts-mobile-button"
             >
                 <mat-icon blui-icon>visibility</mat-icon>
@@ -65,91 +65,57 @@
             <blui-info-list-item
                 *ngIf="selectedItems.size > 0"
                 [dense]="true"
-                (click)="hideSelected(); mobileUserMenuOpen = false"
+                (click)="hideSelected(); walletActionsUserMenuOpen = false"
                 data-cy="remove-account-mobile-button"
             >
                 <mat-icon blui-icon>delete</mat-icon>
                 <div blui-title>Hide Selected Accounts</div>
             </blui-info-list-item>
+            <blui-info-list-item
+                [dense]="true"
+                (click)="hideSelected(); walletActionsUserMenuOpen = false"
+                data-cy="remove-account-mobile-button"
+            >
+                <mat-icon blui-icon>delete</mat-icon>
+                <div blui-title>DESTROY ACCOUNT</div>
+            </blui-info-list-item>
         </mat-nav-list>
     </blui-user-menu>
 </ng-template>
 
-<div
-    *ngIf="!vp.sm"
-    style="
-        display: none;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 24px;
-        height: 40px;
-        margin-top: 8px;
-    "
->
-    <div style="padding-left: 4px">
-        <button
-            mat-mini-fab
-            data-cy="add-single-account-desktop-button"
-            color="primary"
-            (click)="addAccount()"
-            [disabled]="loadingAccount"
-            matTooltip="Add next account"
-            matTooltipPosition="above"
-        >
-            <mat-icon>add</mat-icon>
-        </button>
-        <button
-            *ngIf="isAdvancedView"
-            mat-mini-fab
-            data-cy="add-specific-account-desktop-button"
-            color="primary"
-            style="margin-left: 16px"
-            (click)="addAccountFromIndex()"
-            [disabled]="loadingAccount"
-            matTooltip="Add a specific account"
-            matTooltipPosition="above"
-        >
-            <mat-icon>manage_search</mat-icon>
-        </button>
-        <button
-            *ngIf="isAdvancedView"
-            mat-mini-fab
-            data-cy="refresh-dashboard-desktop-button"
-            color="primary"
-            style="margin-left: 16px"
-            (click)="refresh()"
-            [disabled]="loadingAllAccounts"
-            matTooltip="Refresh all displayed accounts"
-            matTooltipPosition="above"
-        >
-            <mat-icon>refresh</mat-icon>
-        </button>
-        <button
-            *ngIf="isAdvancedView"
-            mat-mini-fab
-            color="warn"
-            data-cy="remove-account-dashboard-desktop-button"
-            style="margin-left: 16px"
-            (click)="hideSelected()"
-            [disabled]="selectedItems.size === 0"
-            matTooltip="Hide selected accounts from view"
-            matTooltipPosition="above"
-        >
-            <mat-icon>delete</mat-icon>
-        </button>
-    </div>
+<ng-template #switchWalletActions>
+    <blui-user-menu [(open)]="switchWalletUserMenuOpen">
+        <mat-icon data-cy="show-dashboard-actions" blui-avatar>arrow_drop_down</mat-icon>
+        <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
+            <blui-info-list-item
+                [dense]="true"
+                [hidePadding]="true"
+                divider="full"
+                (click)="addAccount(); switchWalletUserMenuOpen = false"
+            >
+                <div blui-title>Unnamed Wallet 2</div>
+            </blui-info-list-item>
+            <blui-info-list-item
+                [dense]="true"
+                [hidePadding]="true"
+                divider="full"
+                (click)="addAccount(); switchWalletUserMenuOpen = false"
+            >
+                <div blui-title>Unnamed Wallet 3</div>
+            </blui-info-list-item>
+            <blui-info-list-item
+                [dense]="true"
+                (click)="addAccount(); switchWalletUserMenuOpen = false"
+            >
+                <mat-icon blui-icon>add_circle</mat-icon>
+                <div blui-title>Add Wallet</div>
+            </blui-info-list-item>
+        </mat-nav-list>
+    </blui-user-menu>
+</ng-template>
 
-    <mat-slide-toggle
-        data-cy="advanced-toggle"
-        color="primary"
-        [(ngModel)]="isAdvancedView"
-        (change)="exitEdit($event)"
-    >
-        Advanced
-    </mat-slide-toggle>
-</div>
-
-<mat-card style="padding: 0; display: flex; flex-direction: column; overflow: hidden">
+<mat-card style="padding: 0; display: flex; flex-direction: column; overflow: hidden"
+    [style.marginTop.px]="vp.sm ? 0 : 16">
     <div style="padding: 16px 24px 16px 24px; display: flex; justify-content: space-between; align-items: center" class="dashboard-header">
         <div style="width: 100%; display: flex; align-items: center">
 
@@ -165,19 +131,17 @@
             </mat-checkbox>
             <div>
                 <div style="display: flex; align-items: center; margin-bottom: 4px; width: 100%">
-                    <div class="mat-title" style="margin-bottom: 0">Unnamed Wallet 1</div>
-                    <button mat-icon-button  matTooltip="Rename Wallet" class="rename-wallet-button">
-                        <mat-icon>edit</mat-icon>
-                    </button>
-                    <!--
-                    <blui-spacer></blui-spacer>
-                    <mat-form-field appearance="outline" blui-input style="height: 56px">
+
+                    <div class="blui-headline-5 primary" style="margin-bottom: 0">Unnamed Wallet 1</div>
+                    <ng-template [ngTemplateOutlet]="switchWalletActions"></ng-template>
+                   <!-- <mat-form-field appearance="fill" color="primary"
+                        style="padding-bottom: 0; margin-bottom: 0; height: 72px">
                         <mat-label>Active Wallet</mat-label>
-                        <mat-select>
-                            <mat-option value="wallet1">Unnamed Wallet 1</mat-option>
+                        <mat-select [(value)]="activeWallet">
+                            <mat-option value="option-1">Unnamed Wallet 1</mat-option>
+                            <mat-option value="option-2" (click)="openEnterSeedDialog()"><mat-icon>add</mat-icon> Add Wallet</mat-option>
                         </mat-select>
-                    </mat-form-field>
-                    -->
+                    </mat-form-field> -->
                 </div>
                 <div>
                     <span class="mat-subheading-1" style="margin-right: 8px"> Accounts Balance: </span>
@@ -185,83 +149,8 @@
                     <ng-container *ngIf="!vp.sm"> BAN</ng-container>
                 </div>
             </div>
-            <blui-spacer></blui-spacer>
-            <!--
-            <div style="padding-left: 4px" *ngIf="!vp.sm">
-                <button
-                    mat-mini-fab
-                    data-cy="add-single-account-desktop-button"
-                    color="primary"
-                    (click)="addAccount()"
-                    [disabled]="loadingAccount"
-                    matTooltip="Add next account"
-                    matTooltipPosition="above"
-                >
-                    <mat-icon>add</mat-icon>
-                </button>
-                <button
-                    mat-mini-fab
-                    data-cy="add-specific-account-desktop-button"
-                    color="primary"
-                    style="margin-left: 16px"
-                    (click)="addAccountFromIndex()"
-                    [disabled]="loadingAccount"
-                    matTooltip="Add a specific account"
-                    matTooltipPosition="above"
-                >
-                    <mat-icon>manage_search</mat-icon>
-                </button>
-                <button
-                    mat-mini-fab
-                    data-cy="refresh-dashboard-desktop-button"
-                    color="primary"
-                    style="margin-left: 16px"
-                    (click)="refresh()"
-                    [disabled]="loadingAllAccounts"
-                    matTooltip="Refresh all displayed accounts"
-                    matTooltipPosition="above"
-                >
-                    <mat-icon>refresh</mat-icon>
-                </button>
-                <button
-                    mat-mini-fab
-                    color="primary"
-                    style="margin-left: 16px"
-                    (click)="isAdvancedView = !isAdvancedView"
-                    [disabled]="loadingAllAccounts"
-                    matTooltip="Select accounts to hide"
-                    matTooltipPosition="above"
-                >
-                    <mat-icon>check_box_outline_blank</mat-icon>
-                </button>
-                <button
-                    mat-mini-fab
-                    color="primary"
-                    style="margin-left: 16px"
-                    (click)="isAdvancedView = !isAdvancedView"
-                    [disabled]="loadingAllAccounts"
-                    matTooltip="Add new wallet"
-                    matTooltipPosition="above"
-                >
-                    <mat-icon>add_card</mat-icon>
-                </button>
-                <button
-                    *ngIf="isAdvancedView"
-                    mat-mini-fab
-                    color="warn"
-                    data-cy="remove-account-dashboard-desktop-button"
-                    style="margin-left: 16px"
-                    (click)="hideSelected()"
-                    [disabled]="selectedItems.size === 0"
-                    matTooltip="Hide selected accounts from view"
-                    matTooltipPosition="above"
-                >
-                    <mat-icon>delete</mat-icon>
-                </button>
-            </div>
-                -->
         </div>
-        <ng-template [ngTemplateOutlet]="accountActionsUserMenu"></ng-template>
+        <ng-template [ngTemplateOutlet]="currentWalletActions"></ng-template>
     </div>
     <mat-divider style="position: relative" *ngIf="getAccounts().length > 0"></mat-divider>
 
