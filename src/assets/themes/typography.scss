@@ -1,6 +1,5 @@
 @use '@angular/material' as mat;
 
-
 // Custom Typography Sizes & Weights
 $custom-typography: mat.define-typography-config(
     $font-family: 'myFirstFont, "Open Sans", Arial, Helvetica, sans-serif;',

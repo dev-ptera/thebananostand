@@ -58,11 +58,9 @@
                 <mat-icon>arrow_back</mat-icon>
             </button>
             <div [style.marginLeft.px]="8" *ngIf="account" style="font-size: 1.125rem" class="mono">
-                <div  *ngIf="!vp.md && !vp.sm">
+                <div *ngIf="!vp.md && !vp.sm">
                     <span>{{ account?.fullAddress.substring(0, 12) }}</span>
-                    <span style="font-weight: 400; opacity: 0.75">{{
-                        account?.fullAddress.substring(12, 58)
-                    }}</span>
+                    <span style="font-weight: 400; opacity: 0.75">{{ account?.fullAddress.substring(12, 58) }}</span>
                     <span>{{ account?.fullAddress.substring(58, 64) }}</span>
                 </div>
                 <div *ngIf="vp.md || vp.sm">

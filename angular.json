@@ -40,10 +40,7 @@
                                 "output": "./assets/bip39"
                             }
                         ],
-                        "styles": [
-                            "./node_modules/@brightlayer-ui/angular-themes/theme.scss",
-                            "src/styles.scss"
-                        ],
+                        "styles": ["./node_modules/@brightlayer-ui/angular-themes/theme.scss", "src/styles.scss"],
                         "scripts": []
                     },
                     "configurations": {
@@ -106,10 +103,7 @@
                         "karmaConfig": "karma.conf.js",
                         "inlineStyleLanguage": "scss",
                         "assets": ["src/favicon.ico", "src/assets"],
-                        "styles": [
-                            "./node_modules/@brightlayer-ui/angular-themes/theme.scss",
-                            "src/styles.scss"
-                        ],
+                        "styles": ["./node_modules/@brightlayer-ui/angular-themes/theme.scss", "src/styles.scss"],
                         "scripts": []
                     }
                 }

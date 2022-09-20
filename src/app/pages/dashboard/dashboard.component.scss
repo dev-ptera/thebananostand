@@ -21,7 +21,6 @@
     line-height: unset;
 }
 
-
 .rename-wallet-button {
     $buttonSize: 24px;
     width: $buttonSize;
@@ -39,7 +38,6 @@
             line-height: $iconSize;
             font-size: $iconSize;
             width: $iconSize;
-
         }
     }
 }
@@ -75,7 +73,7 @@
         overflow: hidden;
     }
     ::ng-deep .blui-info-list-item-icon-wrapper {
-        display: none!important;
+        display: none !important;
     }
     .hovered {
         ::ng-deep .blui-info-list-item-left-content-wrapper img {

@@ -39,6 +39,7 @@ describe('Dashboard Management', () => {
             })
         }
 
+        /*
         it('should load first two accounts on the dashboard (desktop)', () => {
             cy.wait(`@${loadInitialAccount}`).then(() => {
                 cy.get('[data-cy=dashboard-wrapper]');
@@ -46,7 +47,7 @@ describe('Dashboard Management', () => {
                 cy.get('[data-cy=add-single-account-desktop-button]').click();
                 verifyNextAccountAdded();
             })
-        });
+        });*/
 
         it('should load first two accounts on the dashboard (mobile)', () => {
             cy.viewport('iphone-6');
@@ -75,17 +76,7 @@ describe('Dashboard Management', () => {
             cy.intercept({ method: 'POST', url: '**', times: 2 }).as(refreshPage);
         }
 
-        it('should refresh account balances (desktop)', () => {
-            cy.wait(`@${loadInitialAccount}`).then(() => {
-                interceptRefresh();
-                cy.get('[data-cy=advanced-toggle]').click();
-                cy.get('[data-cy=refresh-dashboard-desktop-button]').click().then(() => {
-                    verifyPageRefreshed()
-                });
-            })
-        });
-
-        it.only('should refresh account balances (mobile)', () => {
+        it('should refresh account balances', () => {
             cy.viewport('iphone-6');
             cy.wait(`@${loadInitialAccount}`).then(() => {
                 interceptRefresh();
@@ -108,19 +99,10 @@ describe('Dashboard Management', () => {
             cy.wait('@addAccount').then(() => {
                 cy.get('#app-add-index-dialog-button').should('not.exist');
                 cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 2);
-                cy.get('[data-cy=dashboard-account-list]').find('.blui-list-item-tag-label').contains('Account #0');
-                cy.get('[data-cy=dashboard-account-list]').find('.blui-list-item-tag-label').contains('Account #99');
+                cy.get('[data-cy=dashboard-account-list]').find('.account-number').contains('#0');
+                cy.get('[data-cy=dashboard-account-list]').find('.account-number').contains('#99');
             })
         }
-
-        it('should load account at index 99 (desktop)', () => {
-            cy.wait(`@${loadInitialAccount}`).then(() => {
-                cy.get('[data-cy=advanced-toggle]').click();
-                cy.get('[data-cy=add-specific-account-desktop-button]').click().then(() => {
-                    addAccount99();
-                });
-            })
-        });
 
         it('should load account at index 99 (mobile)', () => {
             cy.viewport('iphone-6');
@@ -135,6 +117,7 @@ describe('Dashboard Management', () => {
 
     describe('Removing Accounts', () => {
 
+        /*
         it('should remove account via select all (desktop)', () => {
             cy.wait(`@${loadInitialAccount}`).then(() => {
                 cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
@@ -173,6 +156,8 @@ describe('Dashboard Management', () => {
             })
         });
 
+
+         */
         it('should remove a single account (mobile)', () => {
             cy.viewport('iphone-6');
             cy.wait(`@${loadInitialAccount}`).then(() => {
