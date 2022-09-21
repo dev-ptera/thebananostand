@@ -90,6 +90,9 @@ export class DashboardComponent implements OnInit {
     }
 
     async addAccount(): Promise<void> {
+        if (this.loadingAccount) {
+            return;
+        }
         this.loadingAccount = true;
         await this._accountService.fetchAccount(this._accountService.findNextUnloadedIndex());
         this.loadingAccount = false;

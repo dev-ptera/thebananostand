@@ -65,6 +65,13 @@ $banano-yellow: map-merge(
         color: $primary;
     }
 
+    .mat-checkbox-indeterminate.mat-warn,
+    .mat-checkbox-checked.mat-warn {
+        .mat-checkbox-background {
+            background-color: map-get(blui.$blui-red, 200);
+        }
+    }
+
     .dashboard-account-list {
         .hovered {
             .mat-list-item:hover {
