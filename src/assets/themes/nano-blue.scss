@@ -57,6 +57,10 @@ $nano-blue: map-merge(
     @include fonts.bodyfont();
     @include typography.typography();
     @include common.common();
+    $primary: mat.get-color-from-palette($material-theme-primary, 500);
+    .primary {
+        color: $primary;
+    }
     .app-toolbar .blui-user-menu-avatar {
         color: map-get(blui.$blui-white, 500) !important;
     }

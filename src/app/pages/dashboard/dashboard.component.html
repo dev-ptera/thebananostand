@@ -217,7 +217,9 @@
                 >
                 </mat-checkbox>
                 <img [src]="getMonkeyUrl(account.fullAddress)" loading="lazy" [height]="vp.sm ? 64 : 72" />
-                <div class="account-number mat-hint">#{{ _util.numberWithCommas(account.index) }}</div>
+                <div class="account-number mat-hint" [class.primary]="hoverRowNumber === i">
+                    #{{ _util.numberWithCommas(account.index) }}
+                </div>
                 <!--<div [style.minWidth.px]="vp.sm ? 50 : 120"  *ngIf="!vp.sm">
                     <ng-template *ngTemplateOutlet="accountNumber; context: { account: this.account }"></ng-template>
                 </div> -->
@@ -225,6 +227,7 @@
             <div
                 blui-title
                 class="mono"
+                [class.primary]="hoverRowNumber === i"
                 style="padding: 1px 0; z-index: 2"
                 [style.fontSize.px]="vp.sm ? 15 : 'inherit'"
             >

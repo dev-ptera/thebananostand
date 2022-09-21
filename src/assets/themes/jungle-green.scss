@@ -91,7 +91,10 @@ $jungle-green-theme: map-merge(
     @include fonts.bodyfont();
     @include typography.typography();
     @include common.common();
-
+    $primary: mat.get-color-from-palette($material-theme-primary, 500);
+    .primary {
+        color: $primary;
+    }
     .non-special-address-chars {
         color: #b5b5b5;
     }
