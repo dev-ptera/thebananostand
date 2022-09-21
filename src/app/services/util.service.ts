@@ -30,7 +30,7 @@ export class UtilService {
         const first7 = addr.substring(4, 12);
         const middle = addr.substring(12, addr.length - 7);
         const last6 = addr.substring(addr.length - 7, addr.length);
-        return `${ban}<strong>${first7}</strong>${middle}<strong>${last6}</strong>`;
+        return `${ban}<strong class="primary">${first7}</strong>${middle}<strong class="primary">${last6}</strong>`;
     }
 
     isValidAddress(address: string): boolean {

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -15,9 +14,6 @@ export class SecretService {
     /** The password used to unlock the wallet. */
     private walletPassword: string;
     private readonly localStorageSeedId = 'bananostand_encryptedSeed';
-
-    /** Emits an event whenever the secret has been cleared. */
-    secretCleared = new Subject<void>();
 
     async storeSecret(secret: string, walletPassword: string): Promise<void> {
         let password = walletPassword;
@@ -99,6 +95,5 @@ export class SecretService {
         window.localStorage.removeItem(this.localStorageSeedId);
         this.walletPassword = undefined;
         this.unlockedLocalSecret = false;
-        this.secretCleared.next();
     }
 }

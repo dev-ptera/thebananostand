@@ -97,6 +97,10 @@ export class AccountComponent implements OnInit, OnDestroy {
         void this._router.navigate(['/']);
     }
 
+    getMonkeyUrl(): string {
+        return this._accountService.createMonKeyUrl(this.address);
+    }
+
     /** Open link in an explorer, defaults to YellowSpyglass. */
     openLink(hash: string): void {
         this._accountService.showBlockInExplorer(hash);

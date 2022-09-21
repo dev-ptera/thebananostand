@@ -23,9 +23,9 @@ export class ThemeService {
     constructor() {
         this.currentTheme = localStorage.getItem(this.themeLocalStorageId) as Theme;
 
-        // Use jungle green theme by default.
+        // Use dark theme by default.
         if (!this.currentTheme) {
-            this.currentTheme = JUNGLE_GREEN;
+            this.currentTheme = BANANO_YELLOW;
         }
         this.setTheme(this.currentTheme);
     }

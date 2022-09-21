@@ -16,9 +16,9 @@ $banano-yellow: map-merge(
     mat.define-dark-theme($material-theme-primary, $material-theme-warn, $material-theme-warn),
     (
         foreground: (
-            text: map-get(blui.$blui-black, 50),
-            secondary-text: map-get(blui.$blui-black, 200),
-            hint-text: map-get(blui.$blui-gray, 300),
+            text: map-get(blui.$blui-black, 100),
+            secondary-text: map-get(blui.$blui-black, 300),
+            hint-text: map-get(blui.$blui-gray, 400),
             base: map-get(blui.$blui-white, 50),
             divider: $divider,
             dividers: $divider,
@@ -60,8 +60,24 @@ $banano-yellow: map-merge(
     @include typography.typography();
     @include common.common();
 
+    $primary: mat.get-color-from-palette($material-theme-primary, 500);
     .primary {
-        color: mat.get-color-from-palette($material-theme-primary, 500);
+        color: $primary;
+    }
+
+    .mat-checkbox-indeterminate.mat-warn,
+    .mat-checkbox-checked.mat-warn {
+        .mat-checkbox-background {
+            background-color: map-get(blui.$blui-red, 200);
+        }
+    }
+
+    .dashboard-account-list {
+        .hovered {
+            .mat-list-item:hover {
+                background-color: rgba($primary, 0.05);
+            }
+        }
     }
 
     .add-accounts-example {

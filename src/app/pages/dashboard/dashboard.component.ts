@@ -12,6 +12,8 @@ import { ThemeService } from '@app/services/theme.service';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { AddIndexDialogComponent } from '@app/overlays/dialogs/add-index/add-index-dialog.component';
 import { AddIndexBottomSheetComponent } from '@app/overlays/bottom-sheet/add-index/add-index-bottom-sheet.component';
+import { EnterSecretBottomSheetComponent } from '@app/overlays/bottom-sheet/enter-secret/enter-secret-bottom-sheet.component';
+import { EnterSecretDialogComponent } from '@app/overlays/dialogs/enter-secret/enter-secret-dialog.component';
 
 @Component({
     selector: 'app-dashboard',
@@ -28,7 +30,12 @@ export class DashboardComponent implements OnInit {
     loadingAccount: boolean;
     loadingAllAccounts: boolean;
     disableRipple = false;
-    mobileUserMenuOpen = false;
+    walletActionsUserMenuOpen = false;
+    manageWalletUserMenuOpen = false;
+    switchWalletUserMenuOpen = false;
+    hoverRowNumber: number;
+
+    activeWallet = 'option-1';
 
     selectedItems: Set<number> = new Set();
 
@@ -54,6 +61,14 @@ export class DashboardComponent implements OnInit {
         }
     }
 
+    openEnterSeedDialog(): void {
+        if (this.vp.sm) {
+            this._sheet.open(EnterSecretBottomSheetComponent);
+        } else {
+            this._dialog.open(EnterSecretDialogComponent);
+        }
+    }
+
     async loadAccounts(): Promise<void> {
         this.fade = true;
         this.loadingAllAccounts = true;
@@ -75,6 +90,9 @@ export class DashboardComponent implements OnInit {
     }
 
     async addAccount(): Promise<void> {
+        if (this.loadingAccount) {
+            return;
+        }
         this.loadingAccount = true;
         await this._accountService.fetchAccount(this._accountService.findNextUnloadedIndex());
         this.loadingAccount = false;
@@ -88,6 +106,10 @@ export class DashboardComponent implements OnInit {
         } else {
             this._dialog.open(AddIndexDialogComponent);
         }
+    }
+
+    getMonkeyUrl(address: string): string {
+        return this._accountService.createMonKeyUrl(address);
     }
 
     showRepresentativeOffline(address: string): boolean {
@@ -116,6 +138,7 @@ export class DashboardComponent implements OnInit {
         }
         this._accountService.saveAccountsInLocalStorage();
         this._accountService.updateTotalBalance();
+        this._accountService.saveAdvancedViewInLocalStorage(false);
         this.selectedItems.clear();
     }
 

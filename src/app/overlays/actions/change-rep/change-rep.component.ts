@@ -83,7 +83,8 @@ export type ChangeRepOverlayData = {
                     <ng-container *ngIf="activeStep === 0">
                         <div>Your current representative is:</div>
                         <div
-                            style="word-break: break-all; font-family: monospace"
+                            class="mono"
+                            style="word-break: break-all"
                             [innerHTML]="util.formatHtmlAddress(data.currentRep)"
                         ></div>
                         <div class="first-page-rep-metadata">
@@ -183,6 +184,7 @@ export type ChangeRepOverlayData = {
                             *ngIf="metadata.score > 80"
                             [label]="metadata.score < 90 ? 'Good' : 'Excellent'"
                             [backgroundColor]="colors.green[500]"
+                            [fontColor]="colors.black[900]"
                             style="margin-left: 16px"
                         >
                         </blui-list-item-tag>

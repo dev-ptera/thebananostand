@@ -8,7 +8,41 @@
 @use 'node_modules/@brightlayer-ui/angular-themes/typography';
 @use 'node_modules/@brightlayer-ui/angular-themes/common';
 
-$material-theme-primary: mat.define-palette(blui.$blui-green, 700);
+/* For use in src/lib/core/theming/_palette.scss */
+$greenPalette: (
+    50: #e5f1e6,
+    100: #bdddc0,
+    200: #92c696,
+    300: #66af6c,
+    400: #459e4d,
+    500: #248d2d,
+    600: #208528,
+    700: #1b7a22,
+    800: #16701c,
+    900: #0d5d11,
+    A100: #92ff95,
+    A200: #5fff64,
+    A400: #2cff32,
+    A700: #13ff19,
+    contrast: (
+        50: #000000,
+        100: #000000,
+        200: #000000,
+        300: #000000,
+        400: #ffffff,
+        500: #ffffff,
+        600: #ffffff,
+        700: #ffffff,
+        800: #ffffff,
+        900: #ffffff,
+        A100: #000000,
+        A200: #000000,
+        A400: #000000,
+        A700: #000000,
+    ),
+);
+
+$material-theme-primary: mat.define-palette($greenPalette, 700);
 $material-theme-accent: mat.define-palette(blui.$blui-green, 900);
 $material-theme-warn: mat.define-palette(blui.$blui-red, 500);
 $jungle-green-theme: map-merge(
@@ -57,7 +91,10 @@ $jungle-green-theme: map-merge(
     @include fonts.bodyfont();
     @include typography.typography();
     @include common.common();
-
+    $primary: mat.get-color-from-palette($material-theme-primary, 500);
+    .primary {
+        color: $primary;
+    }
     .non-special-address-chars {
         color: #b5b5b5;
     }
