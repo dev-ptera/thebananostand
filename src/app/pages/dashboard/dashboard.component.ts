@@ -14,6 +14,8 @@ import { AddIndexDialogComponent } from '@app/overlays/dialogs/add-index/add-ind
 import { AddIndexBottomSheetComponent } from '@app/overlays/bottom-sheet/add-index/add-index-bottom-sheet.component';
 import { EnterSecretBottomSheetComponent } from '@app/overlays/bottom-sheet/enter-secret/enter-secret-bottom-sheet.component';
 import { EnterSecretDialogComponent } from '@app/overlays/dialogs/enter-secret/enter-secret-dialog.component';
+import { ACTIVE_WALLET_ID } from '@app/services/transaction.service';
+import { LocalStorageWallet, WalletStorageService } from '@app/services/wallet-storage.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -35,17 +37,19 @@ export class DashboardComponent implements OnInit {
     switchWalletUserMenuOpen = false;
     hoverRowNumber: number;
 
-    activeWallet = 'option-1';
+    activeWallet: LocalStorageWallet;
+    alternativeWallets: LocalStorageWallet[];
 
     selectedItems: Set<number> = new Set();
 
     constructor(
         private readonly _router: Router,
         private readonly _dialog: MatDialog,
-        private readonly _sheet: MatBottomSheet,
         private readonly _util: UtilService,
+        private readonly _sheet: MatBottomSheet,
         private readonly _themeService: ThemeService,
         private readonly _accountService: AccountService,
+        private readonly _walletStorageService: WalletStorageService,
         public vp: ViewportService
     ) {}
 
@@ -59,6 +63,7 @@ export class DashboardComponent implements OnInit {
             this._accountService.fetchRepresentativeAliases();
             this._accountService.fetchKnownAccounts();
         }
+        this._readWalletLocalStorageData();
     }
 
     openEnterSeedDialog(): void {
@@ -69,6 +74,7 @@ export class DashboardComponent implements OnInit {
         }
     }
 
+    /** Loads individual accounts per wallet. */
     async loadAccounts(): Promise<void> {
         this.fade = true;
         this.loadingAllAccounts = true;
@@ -165,5 +171,21 @@ export class DashboardComponent implements OnInit {
         } else {
             this.selectedItems.delete(account.index);
         }
+    }
+
+    private _readWalletLocalStorageData(): void {
+        this.activeWallet = this._walletStorageService.getActiveWallet();
+        this.alternativeWallets = [];
+        this._walletStorageService.getWallets().map((wallet) => {
+            if (wallet.walletId !== this.activeWallet.walletId) {
+                this.alternativeWallets.push(wallet);
+            }
+        });
+    }
+
+    changeActiveWallet(walletId: number): void {
+        this._walletStorageService.setActiveWalletId(walletId);
+        this._readWalletLocalStorageData();
+        void this.loadAccounts();
     }
 }
