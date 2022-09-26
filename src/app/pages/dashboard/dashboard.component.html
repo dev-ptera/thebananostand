@@ -20,7 +20,7 @@
 <!-- Is shown whenever a seed is loaded, but no individual addresses are shown yet. -->
 <ng-template #noAccountsLoaded>
     <blui-empty-state
-        *ngIf="getAccounts().length === 0 && !loadingAllAccounts"
+        *ngIf="getAccounts().length === 0 && !loadingAccount"
         style="margin: 64px 0 48px 0"
         title="No Accounts Displayed"
         description="Use the buttons above to add an account."
@@ -133,18 +133,25 @@
 </ng-template>
 
 <ng-template #switchWalletActions>
-    <blui-user-menu [(open)]="switchWalletUserMenuOpen" class="switch-wallet-user-menu" menuTitle="Switch Wallet">
+    <blui-user-menu
+        *ngIf="hasAlternativeWallets()"
+        [(open)]="switchWalletUserMenuOpen"
+        class="switch-wallet-user-menu"
+        menuTitle="Switch Wallet"
+    >
         <mat-icon data-cy="show-dashboard-actions" blui-avatar>arrow_drop_down</mat-icon>
         <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
             <div style="max-height: 180px; overflow: auto">
-                <blui-info-list-item
-                    *ngFor="let wallet of alternativeWallets"
-                    [dense]="true"
-                    [hidePadding]="true"
-                    (click)="changeActiveWallet(wallet.walletId); switchWalletUserMenuOpen = false"
-                >
-                    <div blui-title>{{ wallet.name }}</div>
-                </blui-info-list-item>
+                <ng-container *ngFor="let wallet of getWallets()">
+                    <blui-info-list-item
+                        *ngIf="getActiveWallet().walletId !== wallet.walletId"
+                        [dense]="true"
+                        [hidePadding]="true"
+                        (click)="changeActiveWallet(wallet); switchWalletUserMenuOpen = false"
+                    >
+                        <div blui-title>{{ wallet.name }}</div>
+                    </blui-info-list-item>
+                </ng-container>
             </div>
         </mat-nav-list>
     </blui-user-menu>
@@ -162,15 +169,15 @@
             edit_note
         </mat-icon>
         <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
-            <blui-info-list-item [dense]="true" (click)="openEnterSeedDialog(); switchWalletUserMenuOpen = false">
+            <blui-info-list-item [dense]="true" (click)="openEnterSeedDialog(); manageWalletUserMenuOpen = false">
                 <mat-icon blui-icon>add_circle</mat-icon>
                 <div blui-title>Add Wallet</div>
             </blui-info-list-item>
-            <blui-info-list-item [dense]="true" (click)="openEnterSeedDialog(); switchWalletUserMenuOpen = false">
+            <blui-info-list-item [dense]="true" (click)="openEnterSeedDialog(); manageWalletUserMenuOpen = false">
                 <mat-icon blui-icon>edit</mat-icon>
                 <div blui-title>Rename Wallet</div>
             </blui-info-list-item>
-            <blui-info-list-item [dense]="true" (click)="openEnterSeedDialog(); switchWalletUserMenuOpen = false">
+            <blui-info-list-item [dense]="true" (click)="removeWallet(); manageWalletUserMenuOpen = false">
                 <mat-icon blui-icon>delete</mat-icon>
                 <div blui-title>Remove Wallet</div>
             </blui-info-list-item>
@@ -200,13 +207,18 @@
             <div>
                 <!-- Wallet Name & Selector -->
                 <div style="display: flex; align-items: center; margin-bottom: 4px; width: 100%">
-                    <div style="cursor: pointer; display: flex" matTooltip="Change Wallet" matTooltipPosition="right">
+                    <div
+                        style="display: flex"
+                        [matTooltip]="hasAlternativeWallets() ? 'Change Wallet' : undefined"
+                        matTooltipPosition="right"
+                        [class.clickable-header]="hasAlternativeWallets()"
+                    >
                         <div
                             class="blui-headline-6 primary"
                             style="margin: 0 8px 0 0"
                             (click)="switchWalletUserMenuOpen = true"
                         >
-                            {{ activeWallet.name }}
+                            {{ getActiveWallet()?.name }}
                         </div>
                         <ng-template [ngTemplateOutlet]="switchWalletActions" style="margin-right: 4px"></ng-template>
                     </div>
@@ -221,8 +233,8 @@
         </div>
         <ng-template *ngIf="vp.sm; else desktopAccountActions" [ngTemplateOutlet]="mobileAccountActions"></ng-template>
     </div>
-    <mat-divider style="position: relative" *ngIf="!loadingAccount"></mat-divider>
-    <mat-progress-bar *ngIf="loadingAccount" color="primary" mode="indeterminate"> </mat-progress-bar>
+    <mat-divider style="position: relative"></mat-divider>
+    <mat-progress-bar *ngIf="loadingAccount" color="primary" mode="indeterminate" style="position: absolute"> </mat-progress-bar>
     <ng-template [ngTemplateOutlet]="noAccountsLoaded"></ng-template>
     <mat-nav-list
         responsive

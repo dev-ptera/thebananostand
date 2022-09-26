@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LocalStorageWallet, WalletStorageService } from '@app/services/wallet-storage.service';
+import { WalletEventsService } from '@app/services/wallet-events.service';
 
 @Injectable({
     providedIn: 'root',
@@ -15,7 +16,10 @@ export class SecretService {
     /** The password used to unlock the wallet. */
     private walletPassword: string;
 
-    constructor(private readonly _walletStorageService: WalletStorageService) {}
+    constructor(
+        private readonly _walletStorageService: WalletStorageService,
+        private readonly _walletEventService: WalletEventsService
+    ) {}
 
     async storeSecret(secret: string, walletPassword: string): Promise<void> {
         let password = walletPassword;
@@ -36,7 +40,7 @@ export class SecretService {
     }
 
     /** Saves a seed in localstorage, encrypting it using a user-provided password. */
-    private async _storeSeed(seed: string, walletPassword: string): Promise<void> {
+    private async _storeSeed(seed: string, walletPassword: string): Promise<LocalStorageWallet> {
         let password = walletPassword;
 
         if (password.length === 0) {
@@ -54,10 +58,13 @@ export class SecretService {
 
         const numberOfWallets = this._walletStorageService.getNumberOfWallets();
         const walletId = numberOfWallets + 1;
-        const newEntry: LocalStorageWallet = { walletId, name: `Wallet No. ${numberOfWallets}`, encryptedSeed };
-
-        this._walletStorageService.storeWalletDetails(newEntry);
-        this._walletStorageService.setActiveWalletId(walletId);
+        const newEntry: LocalStorageWallet = {
+            walletId,
+            name: `Wallet No. ${walletId}`,
+            encryptedSeed,
+            loadedIndexes: [0],
+        };
+        this._walletEventService.addWallet.next(newEntry);
     }
 
     async getSecret(id: number): Promise<string> {
@@ -83,6 +90,7 @@ export class SecretService {
         await window.bananocoin.passwordUtils.decryptData(encryptedSeed, password); // Error is thrown here.
         this.walletPassword = password;
         this.unlockedLocalSecret = true;
+        this._walletEventService.walletUnlocked.next();
     }
 
     isLocalSecretUnlocked(): boolean {

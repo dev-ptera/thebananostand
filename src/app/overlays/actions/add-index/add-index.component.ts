@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { AccountService } from '@app/services/account.service';
+import { WalletEventsService } from '@app/services/wallet-events.service';
 
 @Component({
     selector: 'app-add-index-overlay',
@@ -44,7 +45,7 @@ import { AccountService } from '@app/services/account.service';
                     mat-flat-button
                     color="primary"
                     style="width: 130px;"
-                    [disabled]="loading || !indexFormControl.value"
+                    [disabled]="!indexFormControl.value"
                     (click)="addAccounts()"
                 >
                     Add Accounts
@@ -54,25 +55,20 @@ import { AccountService } from '@app/services/account.service';
     `,
 })
 export class AddIndexOverlayComponent {
-    loading: boolean;
     indexFormControl = new FormControl('');
     errorMessage: string;
 
     @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
-    constructor(private readonly _accountService: AccountService) {}
+    constructor(private readonly _walletEventService: WalletEventsService) {}
 
-    async addAccounts(): Promise<void> {
-        this.loading = true;
+    addAccounts(): void {
         this.errorMessage = undefined;
-        const indexes = this.indexFormControl.value.split(',');
-        for await (const index of indexes) {
-            await this._accountService.fetchAccount(Number(index)).catch((err) => {
-                console.error(err);
-                this.errorMessage = err;
-            });
+        const stringIndexes = this.indexFormControl.value.split(',');
+
+        for (const index of stringIndexes) {
+            this._walletEventService.addIndex.next(Number(index));
         }
-        this.loading = false;
         this.close.emit();
     }
 }

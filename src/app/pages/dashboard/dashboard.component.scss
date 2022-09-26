@@ -21,6 +21,10 @@
     line-height: unset;
 }
 
+.clickable-header {
+    cursor: pointer;
+}
+
 .rename-wallet-button {
     $buttonSize: 24px;
     width: $buttonSize;

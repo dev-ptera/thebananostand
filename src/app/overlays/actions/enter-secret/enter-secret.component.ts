@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { ACTIVE_WALLET_ID, TransactionService } from '@app/services/transaction.service';
 import { AccountService } from '@app/services/account.service';
 import { SpyglassService } from '@app/services/spyglass.service';
@@ -73,14 +73,14 @@ import { SecretService } from '@app/services/secret.service';
         </div>
     `,
 })
-export class EnterSecretComponent {
+export class EnterSecretComponent implements OnInit {
     @Output() close = new EventEmitter<void>();
 
     secret = '';
     password = '';
     activeStep = 0;
-    maxSteps = 2;
-    lastStep = this.maxSteps - 1;
+    maxSteps: number;
+    lastStep: number;
     passwordVisible = false;
 
     error: string;
@@ -92,6 +92,12 @@ export class EnterSecretComponent {
         private readonly _accountService: AccountService,
         private readonly _secretService: SecretService
     ) {}
+
+    ngOnInit(): void {
+        this.maxSteps = this._secretService.isLocalSecretUnlocked() ? 1 : 2;
+        this.lastStep = this.maxSteps - 1;
+
+    }
 
     closeOverlay(): void {
         this.close.emit();

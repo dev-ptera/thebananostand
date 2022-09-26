@@ -36,4 +36,8 @@ export class UtilService {
     isValidAddress(address: string): boolean {
         return address && address.length === 64 && address.startsWith('ban_');
     }
+
+    matches(a: number, b: number): boolean {
+        return Number(a) === Number(b);
+    }
 }

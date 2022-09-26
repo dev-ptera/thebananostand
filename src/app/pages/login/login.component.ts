@@ -9,7 +9,6 @@ import { FormControl } from '@angular/forms';
     styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-    @Output() unlocked: EventEmitter<void> = new EventEmitter();
     @Output() cancel: EventEmitter<void> = new EventEmitter();
 
     useCard: boolean;
@@ -53,17 +52,12 @@ export class LoginComponent implements OnInit {
     }
 
     login(): void {
-        this._seedService
-            .unlockSecretWallet(this.password.value)
-            .then(() => {
-                this.unlocked.emit();
-            })
-            .catch((err) => {
-                console.error(err);
-                this.hasIncorrectPassword = true;
-                this.password.setErrors({ password: 'incorrect' });
-                this.passwordInput.focus();
-                this.password.markAsTouched();
-            });
+        this._seedService.unlockSecretWallet(this.password.value).catch((err) => {
+            console.error(err);
+            this.hasIncorrectPassword = true;
+            this.password.setErrors({ password: 'incorrect' });
+            this.passwordInput.focus();
+            this.password.markAsTouched();
+        });
     }
 }
