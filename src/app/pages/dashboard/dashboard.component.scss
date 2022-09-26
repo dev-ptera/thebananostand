@@ -90,4 +90,7 @@
         max-height: calc(100vh - (56px + $headerHeight + 1px)); // Don't forget the divider height. 1px
         max-height: calc(var(--app-height) - (56px + $headerHeight + 1px));
     }
+    .unopened-account-tag.sm {
+        margin: 4px 0;
+    }
 }

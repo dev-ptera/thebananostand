@@ -20,6 +20,7 @@
 <!-- Indicates an account has not yet received any transactions -->
 <ng-template #unopenedTag>
     <blui-list-item-tag
+        responsive
         label="Unopened Account"
         class="unopened-account-tag"
         [fontColor]="colors.black[500]"
@@ -42,7 +43,6 @@
 
 <!-- Actions to manage active wallet's accounts on desktop view -->
 <ng-template #desktopAccountActions>
-    <ng-template [ngTemplateOutlet]="manageWallet" style="margin-right: 8px"></ng-template>
     <button
         mat-icon-button
         matTooltip="Refresh balances"
@@ -169,7 +169,7 @@
 </ng-template>
 
 <ng-template #manageWallet>
-    <blui-user-menu [(open)]="manageWalletUserMenuOpen">
+    <blui-user-menu [(open)]="manageWalletUserMenuOpen" [menuTitle]="vp.sm ? 'Manage Wallet' : ''">
         <mat-icon
             data-cy="show-dashboard-actions"
             blui-avatar
@@ -245,6 +245,8 @@
                 </div>
             </div>
         </div>
+
+        <ng-template [ngTemplateOutlet]="manageWallet" style="margin-right: 8px"></ng-template>
         <ng-template *ngIf="vp.sm; else desktopAccountActions" [ngTemplateOutlet]="mobileAccountActions"></ng-template>
     </div>
 </ng-template>
@@ -269,7 +271,7 @@
                 (change)="toggleCheck($event, account)"
             >
             </mat-checkbox>
-            <img [src]="getMonkeyUrl(account.fullAddress)" loading="lazy" [height]="vp.sm ? 64 : 72" />
+            <img [src]="getMonkeyUrl(account.fullAddress)" loading="lazy" [height]="72" />
             <div class="account-number mat-hint" [class.primary]="hoverRowNumber === i">
                 #{{ _util.numberWithCommas(account.index) }}
             </div>

@@ -10,7 +10,7 @@ import { SecretService } from '@app/services/secret.service';
     styleUrls: ['enter-secret.component.scss'],
     template: `
         <div class="enter-secret-overlay">
-            <h1 mat-dialog-title>Enter Seed / Mnemonic</h1>
+            <h1 mat-dialog-title>Enter Seed or Mnemonic</h1>
             <div mat-dialog-content style="display: flex; flex: 1 1 0px; flex-direction: column">
                 <ng-container *ngIf="activeStep === 0">
                     <div style="margin-bottom: 24px">Your secret phrase never leaves this website.</div>

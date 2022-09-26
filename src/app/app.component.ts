@@ -3,6 +3,8 @@ import { Data, RouterOutlet } from '@angular/router';
 import { slideInAnimation } from './animation';
 import { ViewportService } from '@app/services/viewport.service';
 import { SecretService } from '@app/services/secret.service';
+import { WalletEventsService } from '@app/services/wallet-events.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-root',
@@ -10,13 +12,22 @@ import { SecretService } from '@app/services/secret.service';
     animations: [slideInAnimation],
 })
 export class AppComponent {
-    constructor(private readonly _vp: ViewportService, private readonly _secretService: SecretService) {
+    constructor(
+        private readonly _vp: ViewportService,
+        private readonly _secretService: SecretService,
+        private readonly _snackbar: MatSnackBar,
+        private readonly _walletEventService: WalletEventsService
+    ) {
         const appHeight = (): void => {
             const doc = document.documentElement;
             doc.style.setProperty(`--app-height`, `${window.innerHeight}px`);
         };
         window.addEventListener(`resize`, appHeight);
         appHeight();
+
+        this._walletEventService.removeWallet.subscribe(() => {
+            this._snackbar.open('Removed Wallet', 'Dismiss', { duration: 5000 });
+        });
     }
 
     showBanana(): boolean {
