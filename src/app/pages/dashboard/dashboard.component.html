@@ -91,6 +91,7 @@
 <!-- Actions to manage active wallet's accounts on mobile view -->
 <ng-template #mobileAccountActions>
     <blui-user-menu
+        style="margin-right: -12px"
         menuTitle="Account Actions"
         [(open)]="walletActionsUserMenuOpen"
         [matTooltip]="vp.sm ? '' : 'More actions'"
@@ -150,7 +151,7 @@
         class="switch-wallet-user-menu"
         menuTitle="Switch Wallet"
     >
-        <mat-icon data-cy="show-dashboard-actions" blui-avatar>arrow_drop_down</mat-icon>
+        <mat-icon blui-avatar>arrow_drop_down</mat-icon>
         <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
             <div style="max-height: 180px; overflow: auto">
                 <ng-container *ngFor="let wallet of getWallets()">
@@ -169,14 +170,12 @@
 </ng-template>
 
 <ng-template #manageWallet>
-    <blui-user-menu [(open)]="manageWalletUserMenuOpen" [menuTitle]="vp.sm ? 'Manage Wallet' : ''">
-        <mat-icon
-            data-cy="show-dashboard-actions"
-            blui-avatar
-            style="margin-left: 8px"
-            matTooltip="Manage Wallets"
-            matTooltipPosition="below"
-        >
+    <blui-user-menu
+        [(open)]="manageWalletUserMenuOpen"
+        [menuTitle]="vp.sm ? 'Manage Wallet' : ''"
+        data-cy="wallet-actions-menu"
+    >
+        <mat-icon blui-avatar style="margin-left: 8px" matTooltip="Manage Wallets" matTooltipPosition="below">
             edit_note
         </mat-icon>
         <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
@@ -189,6 +188,7 @@
                 <div blui-title>Rename Wallet</div>
             </blui-info-list-item>
             <blui-info-list-item
+                data-cy="remove-wallet-button"
                 longPress
                 [dense]="true"
                 (mouseLongPress)="removeWallet(); manageWalletUserMenuOpen = false"
