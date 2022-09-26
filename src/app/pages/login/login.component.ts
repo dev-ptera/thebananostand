@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
 
     ngAfterViewInit(): void {
         this.passwordInput = document.getElementById('active-wallet-password-input');
+        this.passwordInput.focus();
     }
 
     togglePasswordVisibility(): void {

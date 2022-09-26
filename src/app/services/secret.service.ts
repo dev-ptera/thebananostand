@@ -112,8 +112,8 @@ export class SecretService {
         return encryptedWallets && encryptedWallets.length > 0;
     }
 
-    clearSeed(id: number): void {
-        /*
+    /*
+    clearSeed(): void {
         const wallets = this._walletStorageService.getWallets();
         const updatedWallets: LocalStorageWallet[] = [];
         for (const wallet of wallets) {
@@ -128,6 +128,6 @@ export class SecretService {
             window.localStorage.removeItem(this.ENCRYPTED_WALLETS);
             this.walletPassword = undefined;
             this.unlockedLocalSecret = false;
-        }*/
-    }
+        }
+    }*/
 }

@@ -14,4 +14,5 @@ export class WalletEventsService {
     accountLoading = new Subject<boolean>();
     refreshIndexes = new Subject<void>();
     removeWallet = new Subject<void>();
+    renameWallet = new Subject<string>();
 }

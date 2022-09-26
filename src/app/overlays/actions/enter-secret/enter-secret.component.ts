@@ -1,5 +1,5 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import { ACTIVE_WALLET_ID, TransactionService } from '@app/services/transaction.service';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { TransactionService } from '@app/services/transaction.service';
 import { AccountService } from '@app/services/account.service';
 import { SpyglassService } from '@app/services/spyglass.service';
 import { UtilService } from '@app/services/util.service';
@@ -21,6 +21,7 @@ import { SecretService } from '@app/services/secret.service';
                             matInput
                             placeholder="Secret Phrase"
                             [(ngModel)]="secret"
+                            (keyup.enter)="next()"
                             style="min-height: 120px; resize: none"
                         ></textarea>
                     </mat-form-field>
@@ -34,9 +35,11 @@ import { SecretService } from '@app/services/secret.service';
                     <mat-form-field style="width: 100%;" appearance="fill" (keyup.enter)="next()">
                         <mat-label>Password (optional)</mat-label>
                         <input
+                            #passwordInput
                             matInput
                             [type]="passwordVisible ? 'text' : 'password'"
                             [(ngModel)]="password"
+                            (keyup.enter)="next()"
                             data-cy="password-input"
                         />
                         <button mat-icon-button matSuffix (click)="togglePasswordVisibility()">
@@ -76,6 +79,8 @@ import { SecretService } from '@app/services/secret.service';
 export class EnterSecretComponent implements OnInit {
     @Output() close = new EventEmitter<void>();
 
+    @ViewChild('passwordInput') passwordInput: ElementRef;
+
     secret = '';
     password = '';
     activeStep = 0;
@@ -90,13 +95,13 @@ export class EnterSecretComponent implements OnInit {
         private readonly _apiService: SpyglassService,
         private readonly _transactionService: TransactionService,
         private readonly _accountService: AccountService,
-        private readonly _secretService: SecretService
+        private readonly _secretService: SecretService,
+        private readonly _ref: ChangeDetectorRef
     ) {}
 
     ngOnInit(): void {
         this.maxSteps = this._secretService.isLocalSecretUnlocked() ? 1 : 2;
         this.lastStep = this.maxSteps - 1;
-
     }
 
     closeOverlay(): void {
@@ -115,6 +120,8 @@ export class EnterSecretComponent implements OnInit {
             void this.addSeed();
         } else {
             this.activeStep++;
+            this._ref.detectChanges();
+            this.passwordInput.nativeElement.focus();
         }
     }
 
@@ -133,6 +140,8 @@ export class EnterSecretComponent implements OnInit {
 
     addSeed(): void {
         this.error = undefined;
+        this.secret = this.secret.trim();
+
         this._secretService
             .storeSecret(this.secret, this.password)
             .then(() => {

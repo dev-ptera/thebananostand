@@ -23,7 +23,6 @@ export class WalletStorageService {
     wallets: LocalStorageWallet[];
 
     constructor(private readonly _util: UtilService, private readonly _walletEventsService: WalletEventsService) {
-
         this._walletEventsService.walletUnlocked.subscribe(() => {
             this._updateState();
         });
@@ -51,11 +50,18 @@ export class WalletStorageService {
             const newActiveWallet = this.getActiveWallet();
             this._updateState();
             this._walletEventsService.activeWalletChange.next(newActiveWallet);
-        })
+        });
 
         /** Each time an account is removed, localstorage is updated. */
         this._walletEventsService.removeIndex.subscribe((removedIndex: number) => {
             this._removeIndexFromLocalStorage(removedIndex);
+            this._updateState();
+        });
+
+        this._walletEventsService.renameWallet.subscribe((newWalletName: string) => {
+            const wallet = this.getActiveWallet();
+            wallet.name = newWalletName;
+            this._makeWalletActive(wallet);
             this._updateState();
         });
     }
@@ -158,5 +164,4 @@ export class WalletStorageService {
         this.activeWallet = this.getActiveWallet();
         this.wallets = this.getWallets();
     }
-
 }

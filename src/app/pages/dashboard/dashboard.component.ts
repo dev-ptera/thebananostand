@@ -16,6 +16,8 @@ import { EnterSecretDialogComponent } from '@app/overlays/dialogs/enter-secret/e
 import { LocalStorageWallet, WalletStorageService } from '@app/services/wallet-storage.service';
 import { Subscription } from 'rxjs';
 import { WalletEventsService } from '@app/services/wallet-events.service';
+import { RenameWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/rename-wallet/rename-wallet-bottom-sheet.component';
+import { RenameWalletDialogComponent } from '@app/overlays/dialogs/rename-wallet/rename-wallet-dialog.component';
 
 @Component({
     selector: 'app-dashboard',
@@ -36,12 +38,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     switchWalletUserMenuOpen = false;
     hoverRowNumber: number;
 
-
     selectedItems: Set<number> = new Set();
 
-    newWalletListener: Subscription;
-    removeWalletListener: Subscription;
     loadingAccountListener: Subscription;
+    bottomSheetOpenDelayMs = 250;
 
     constructor(
         private readonly _router: Router,
@@ -56,7 +56,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-
         // Initial Load
         if (this.getAccounts().length === 0) {
             this.loadingAccount = true;
@@ -69,18 +68,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
             this.loadingAccount = false;
         }
 
-        // Listen for new wallet events
-        /*
-        this.newWalletListener = this._walletEventsService.activeWalletChange.subscribe(() => {
-            this._readWalletLocalStorageData();
-        }); */
-
-        // Listen for new wallet events
-        /*
-        this.newWalletListener = this._walletEventsService.activeWalletChange.subscribe(() => {
-            this._readWalletLocalStorageData();
-        }); */
-
         this.loadingAccountListener = this._walletEventsService.accountLoading.subscribe((loading) => {
             setTimeout(() => {
                 this.loadingAccount = loading;
@@ -89,16 +76,38 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if (this.newWalletListener) {
-            this.newWalletListener.unsubscribe();
+        if (this.loadingAccountListener) {
+            this.loadingAccountListener.unsubscribe();
         }
     }
 
-    openEnterSeedDialog(): void {
+    openEnterSeedOverlay(): void {
         if (this.vp.sm) {
-            this._sheet.open(EnterSecretBottomSheetComponent);
+            setTimeout(() => {
+                this._sheet.open(EnterSecretBottomSheetComponent);
+            }, this.bottomSheetOpenDelayMs);
         } else {
             this._dialog.open(EnterSecretDialogComponent);
+        }
+    }
+
+    openRenameWalletOverlay(): void {
+        if (this.vp.sm) {
+            setTimeout(() => {
+                this._sheet.open(RenameWalletBottomSheetComponent);
+            }, this.bottomSheetOpenDelayMs);
+        } else {
+            this._dialog.open(RenameWalletDialogComponent);
+        }
+    }
+
+    addAccountFromIndex(): void {
+        if (this.vp.sm) {
+            setTimeout(() => {
+                this._sheet.open(AddIndexBottomSheetComponent);
+            }, this.bottomSheetOpenDelayMs);
+        } else {
+            this._dialog.open(AddIndexDialogComponent);
         }
     }
 
@@ -106,39 +115,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this._walletEventsService.removeWallet.next();
     }
 
-    isDark(): boolean {
-        return this._themeService.isDark();
-    }
-
     refresh(): void {
         this._walletEventsService.refreshIndexes.next();
-        // this._accountService.accounts = [];
-        // void this.loadAccounts();
     }
 
-    async addAccount(): Promise<void> {
+    addAccount(): void {
         if (this.loadingAccount) {
             return;
         }
         const nextIndex = this._accountService.findNextUnloadedIndex();
         this._walletEventsService.addIndex.next(nextIndex);
-        /*
-
-        this.loadingAccount = true;
-        await this._accountService.fetchAccount(this._accountService.findNextUnloadedIndex());
-        this.loadingAccount = false;
-
-         */
     }
 
-    addAccountFromIndex(): void {
-        if (this.vp.sm) {
-            setTimeout(() => {
-                this._sheet.open(AddIndexBottomSheetComponent);
-            }, 250);
-        } else {
-            this._dialog.open(AddIndexDialogComponent);
-        }
+    isDark(): boolean {
+        return this._themeService.isDark();
     }
 
     getMonkeyUrl(address: string): string {

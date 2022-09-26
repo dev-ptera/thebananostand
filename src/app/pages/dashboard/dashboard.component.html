@@ -17,6 +17,17 @@
     ></blui-list-item-tag>
 </ng-template>
 
+<!-- Indicates an account has not yet received any transactions -->
+<ng-template #unopenedTag>
+    <blui-list-item-tag
+        label="Unopened Account"
+        class="unopened-account-tag"
+        [fontColor]="colors.black[500]"
+        [backgroundColor]="colors.gray[100]"
+    >
+    </blui-list-item-tag>
+</ng-template>
+
 <!-- Is shown whenever a seed is loaded, but no individual addresses are shown yet. -->
 <ng-template #noAccountsLoaded>
     <blui-empty-state
@@ -169,11 +180,11 @@
             edit_note
         </mat-icon>
         <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
-            <blui-info-list-item [dense]="true" (click)="openEnterSeedDialog(); manageWalletUserMenuOpen = false">
+            <blui-info-list-item [dense]="true" (click)="openEnterSeedOverlay(); manageWalletUserMenuOpen = false">
                 <mat-icon blui-icon>add_circle</mat-icon>
                 <div blui-title>Add Wallet</div>
             </blui-info-list-item>
-            <blui-info-list-item [dense]="true" (click)="openEnterSeedDialog(); manageWalletUserMenuOpen = false">
+            <blui-info-list-item [dense]="true" (click)="openRenameWalletOverlay(); manageWalletUserMenuOpen = false">
                 <mat-icon blui-icon>edit</mat-icon>
                 <div blui-title>Rename Wallet</div>
             </blui-info-list-item>
@@ -234,7 +245,8 @@
         <ng-template *ngIf="vp.sm; else desktopAccountActions" [ngTemplateOutlet]="mobileAccountActions"></ng-template>
     </div>
     <mat-divider style="position: relative"></mat-divider>
-    <mat-progress-bar *ngIf="loadingAccount" color="primary" mode="indeterminate" style="position: absolute"> </mat-progress-bar>
+    <mat-progress-bar *ngIf="loadingAccount" color="primary" mode="indeterminate" style="position: absolute">
+    </mat-progress-bar>
     <ng-template [ngTemplateOutlet]="noAccountsLoaded"></ng-template>
     <mat-nav-list
         responsive
@@ -297,13 +309,14 @@
             >
                 {{ account.shortAddress }}
             </div>
-            <div blui-subtitle *ngIf="!vp.sm" style="padding: 1px 0">
-                <ng-container *ngIf="account.representative">
+            <div blui-subtitle style="padding: 1px 0">
+                <ng-container *ngIf="!vp.sm && account.representative">
                     represented by {{ formatRepresentative(account.representative) }}
                 </ng-container>
-                <!--
-                <ng-container *ngIf="!account.representative"> unopened account </ng-container>
-                -->
+
+                <ng-container *ngIf="account.representative; else unopenedTag">
+                    <span> {{ account.formattedBalance }} BAN </span>
+                </ng-container>
             </div>
             <div blui-info *ngIf="vp.sm" style="margin-top: 4px">
                 <div style="display: flex">
@@ -319,21 +332,9 @@
                     </div>
                 </div>
             </div>
-            <div blui-right-content>
-                <ng-container *ngIf="!vp.sm">
-                    <ng-template *ngTemplateOutlet="statusBadges; context: { account: this.account }"></ng-template>
-                </ng-container>
-
-                <blui-list-item-tag
-                    *ngIf="!account.representative"
-                    [label]="vp.sm ? 'Unopened' : 'Unopened Account'"
-                    class="unopened-account-tag"
-                    [fontColor]="colors.black[500]"
-                    [backgroundColor]="colors.gray[100]"
-                >
-                </blui-list-item-tag>
-
-                <ng-container *ngIf="account.representative">
+            <div blui-right-content *ngIf="!vp.sm">
+                <ng-template *ngTemplateOutlet="statusBadges; context: { account: this.account }"></ng-template>
+                <ng-container *ngIf="account.representative; else unopenedTag">
                     <!--
                     <img
                         *ngIf="!vp.sm"

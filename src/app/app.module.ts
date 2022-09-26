@@ -69,6 +69,9 @@ import { EnterSecretDialogComponent } from '@app/overlays/dialogs/enter-secret/e
 import { EnterSecretBottomSheetComponent } from '@app/overlays/bottom-sheet/enter-secret/enter-secret-bottom-sheet.component';
 import { ChangeRepBottomSheetComponent } from '@app/overlays/bottom-sheet/change-rep/change-rep-bottom-sheet.component';
 import { ChangeRepDialogComponent } from '@app/overlays/dialogs/change-rep/change-rep-dialog.component';
+import { RenameWalletComponent } from '@app/overlays/actions/rename-wallet/rename-wallet.component';
+import { RenameWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/rename-wallet/rename-wallet-bottom-sheet.component';
+import { RenameWalletDialogComponent } from '@app/overlays/dialogs/rename-wallet/rename-wallet-dialog.component';
 
 @NgModule({
     declarations: [
@@ -101,6 +104,9 @@ import { ChangeRepDialogComponent } from '@app/overlays/dialogs/change-rep/chang
         NewSeedDialogComponent,
         EnterSecretComponent,
         LedgerSnackbarErrorComponent,
+        RenameWalletComponent,
+        RenameWalletBottomSheetComponent,
+        RenameWalletDialogComponent,
     ],
     imports: [
         AppRoutingModule,
