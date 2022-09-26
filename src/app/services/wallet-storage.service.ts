@@ -48,6 +48,9 @@ export class WalletStorageService {
         this._walletEventsService.removeWallet.subscribe(() => {
             this._removeActiveWallet();
             const newActiveWallet = this.getActiveWallet();
+            if (!newActiveWallet) {
+                this._walletEventsService.walletLocked.next();
+            }
             this._updateState();
             this._walletEventsService.activeWalletChange.next(newActiveWallet);
         });
@@ -103,8 +106,10 @@ export class WalletStorageService {
     }
 
     private _makeWalletActive(wallet: LocalStorageWallet): void {
-        this._storeWalletDetails(wallet);
-        this._setActiveWalletId(wallet.walletId);
+        if (wallet) {
+            this._storeWalletDetails(wallet);
+            this._setActiveWalletId(wallet.walletId);
+        }
     }
 
     private _setDisplayedAccountIndexes(indexes: number[]): void {
@@ -151,11 +156,12 @@ export class WalletStorageService {
                 remainingWallets.push(wallet);
             }
         }
-        window.localStorage.setItem(this.ENCRYPTED_WALLETS, JSON.stringify(remainingWallets));
         if (remainingWallets[0]) {
+            window.localStorage.setItem(this.ENCRYPTED_WALLETS, JSON.stringify(remainingWallets));
             const activeId = remainingWallets[0].walletId;
             this._setActiveWalletId(activeId);
         } else {
+            window.localStorage.removeItem(this.ENCRYPTED_WALLETS);
             window.localStorage.removeItem(ACTIVE_WALLET_ID);
         }
     }

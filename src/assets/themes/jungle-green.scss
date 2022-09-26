@@ -108,4 +108,16 @@ $jungle-green-theme: map-merge(
     .account-mobile-footer {
         background-color: map-get(blui.$blui-white, 50);
     }
+
+    .warn * {
+        color: map-get($material-theme-warn, 500);
+    }
+
+    .dashboard-account-list {
+        .hovered {
+            .mat-list-item:hover {
+                background-color: rgba($primary, 0.05);
+            }
+        }
+    }
 }

@@ -19,7 +19,12 @@ export class SecretService {
     constructor(
         private readonly _walletStorageService: WalletStorageService,
         private readonly _walletEventService: WalletEventsService
-    ) {}
+    ) {
+        this._walletEventService.walletLocked.subscribe(() => {
+            this.unlockedLocalSecret = false;
+            this.walletPassword = undefined;
+        });
+    }
 
     async storeSecret(secret: string, walletPassword: string): Promise<void> {
         let password = walletPassword;

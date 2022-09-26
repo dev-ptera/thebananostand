@@ -11,7 +11,7 @@
 $material-theme-primary: mat.define-palette(blui.$blui-blue, 500);
 $material-theme-accent: mat.define-palette(blui.$blui-blue, 800);
 $material-theme-warn: mat.define-palette(blui.$blui-red, 500);
-$nano-blue: map-merge(
+$nano-blue-theme: map-merge(
     mat.define-light-theme($material-theme-primary, $material-theme-accent, $material-theme-warn),
     (
         foreground: (
@@ -51,13 +51,14 @@ $nano-blue: map-merge(
 );
 
 .nano-blue {
-    @include mat.all-component-themes($nano-blue);
-    @include blui-component-theme.blui-components-theme($nano-blue);
-    @include blueTheme.bluetheme($nano-blue);
+    @include mat.all-component-themes($nano-blue-theme);
+    @include blui-component-theme.blui-components-theme($nano-blue-theme);
+    @include blueTheme.bluetheme($nano-blue-theme);
     @include fonts.bodyfont();
     @include typography.typography();
     @include common.common();
     $primary: mat.get-color-from-palette($material-theme-primary, 500);
+    $foreground: map-get($nano-blue-theme, foreground);
     .primary {
         color: $primary;
     }
@@ -67,7 +68,21 @@ $nano-blue: map-merge(
     .non-special-address-chars {
         color: #b5b5b5;
     }
+    .blui-user-menu-avatar {
+        color: map-get($foreground, secondary-text);
+    }
     .account-mobile-footer {
         background-color: map-get(blui.$blui-white, 50);
+    }
+
+    .warn * {
+        color: map-get($material-theme-warn, 500);
+    }
+    .dashboard-account-list {
+        .hovered {
+            .mat-list-item:hover {
+                background-color: rgba($primary, 0.05);
+            }
+        }
     }
 }

@@ -61,6 +61,7 @@ $banano-yellow: map-merge(
     @include common.common();
 
     $primary: mat.get-color-from-palette($material-theme-primary, 500);
+    $foreground: map-get($banano-yellow, foreground);
     .primary {
         color: $primary;
     }
@@ -70,6 +71,10 @@ $banano-yellow: map-merge(
         .mat-checkbox-background {
             background-color: map-get(blui.$blui-red, 200);
         }
+    }
+
+    .warn * {
+        color: map-get($material-theme-warn, 300);
     }
 
     .dashboard-account-list {
@@ -125,6 +130,10 @@ $banano-yellow: map-merge(
 
     .accounts-hash-link {
         color: map-get(blui.$blui-black, 200);
+    }
+
+    input::placeholder {
+        color: map-get($foreground, secondary-text) !important;
     }
 
     .rep-offline-banner {

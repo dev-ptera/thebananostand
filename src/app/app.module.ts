@@ -72,6 +72,7 @@ import { ChangeRepDialogComponent } from '@app/overlays/dialogs/change-rep/chang
 import { RenameWalletComponent } from '@app/overlays/actions/rename-wallet/rename-wallet.component';
 import { RenameWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/rename-wallet/rename-wallet-bottom-sheet.component';
 import { RenameWalletDialogComponent } from '@app/overlays/dialogs/rename-wallet/rename-wallet-dialog.component';
+import { LongPressDirective } from '@app/components/long-press/long-press.directive';
 
 @NgModule({
     declarations: [
@@ -107,6 +108,7 @@ import { RenameWalletDialogComponent } from '@app/overlays/dialogs/rename-wallet
         RenameWalletComponent,
         RenameWalletBottomSheetComponent,
         RenameWalletDialogComponent,
+        LongPressDirective,
     ],
     imports: [
         AppRoutingModule,

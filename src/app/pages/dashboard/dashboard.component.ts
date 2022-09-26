@@ -27,12 +27,9 @@ import { RenameWalletDialogComponent } from '@app/overlays/dialogs/rename-wallet
 export class DashboardComponent implements OnInit, OnDestroy {
     colors = Colors;
 
-    manualAddIndex: number;
-
     fade = true;
     isAdvancedView = false;
     loadingAccount = true;
-    disableRipple = false;
     walletActionsUserMenuOpen = false;
     manageWalletUserMenuOpen = false;
     switchWalletUserMenuOpen = false;
@@ -194,5 +191,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     changeActiveWallet(wallet: LocalStorageWallet): void {
         this._walletEventsService.activeWalletChange.next(wallet);
+    }
+
+    getItemBackgroundColor(even: boolean): string {
+        return even
+            ? this.isDark()
+                ? this.colors.darkBlack[300]
+                : this.colors.white[100]
+            : this.isDark()
+            ? this.colors.darkBlack[200]
+            : this.colors.white[50];
     }
 }

@@ -2,7 +2,7 @@
 
 // Custom Typography Sizes & Weights
 $custom-typography: mat.define-typography-config(
-    $font-family: 'myFirstFont, "Open Sans", Arial, Helvetica, sans-serif;',
+    $font-family: 'spaceGrotesk, "Open Sans", Arial, Helvetica, sans-serif;',
     $display-4: mat.define-typography-level(6rem, 1.167, 300),
     $display-2: mat.define-typography-level(3rem, 1.167, 400),
     $display-1: mat.define-typography-level(2.125rem, 1.235, 400),
@@ -19,11 +19,11 @@ $custom-typography: mat.define-typography-config(
 @include mat.core($custom-typography);
 
 @font-face {
-    font-family: myFirstFont;
+    font-family: spaceGrotesk;
     src: url(~assets/fonts/space-grotesk/SpaceGrotesk-Regular.ttf);
 }
 @font-face {
-    font-family: myFirstFont;
+    font-family: spaceGrotesk;
     src: url(~assets/fonts/space-grotesk/SpaceGrotesk-Bold.ttf);
     font-weight: bold;
 }
@@ -33,9 +33,11 @@ $custom-typography: mat.define-typography-config(
     src: url(~assets/fonts/source-code-pro/SourceCodePro-Regular.otf);
 }
 
-.mono {
-    font-family: sourceCodePro, monospace;
+.mono,
+input::placeholder,
+.mat-input-element {
+    font-family: sourceCodePro, monospace !important;
     * {
-        font-family: sourceCodePro, monospace;
+        font-family: sourceCodePro, monospace !important;
     }
 }
