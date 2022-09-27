@@ -6,7 +6,7 @@ import { LocalStorageWallet } from '@app/services/wallet-storage.service';
     providedIn: 'root',
 })
 export class WalletEventsService {
-    walletUnlocked = new Subject<void>();
+    walletUnlocked = new Subject<{ isLedger: boolean }>();
     walletLocked = new Subject<void>();
     addWallet = new Subject<LocalStorageWallet>();
     activeWalletChange = new Subject<LocalStorageWallet>();

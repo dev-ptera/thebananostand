@@ -171,6 +171,7 @@
 
 <ng-template #manageWallet>
     <blui-user-menu
+        *ngIf="!isLedgerDevice()"
         [(open)]="manageWalletUserMenuOpen"
         [menuTitle]="vp.sm ? 'Manage Wallet' : ''"
         data-cy="wallet-actions-menu"

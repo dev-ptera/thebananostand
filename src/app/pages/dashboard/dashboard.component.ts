@@ -18,6 +18,7 @@ import { Subscription } from 'rxjs';
 import { WalletEventsService } from '@app/services/wallet-events.service';
 import { RenameWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/rename-wallet/rename-wallet-bottom-sheet.component';
 import { RenameWalletDialogComponent } from '@app/overlays/dialogs/rename-wallet/rename-wallet-dialog.component';
+import { SecretService } from '@app/services/secret.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -49,22 +50,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
         private readonly _accountService: AccountService,
         private readonly _walletStorageService: WalletStorageService,
         private readonly _walletEventsService: WalletEventsService,
+        private readonly _secretService: SecretService,
         public vp: ViewportService
     ) {}
 
     ngOnInit(): void {
         // Initial Load
-        if (this.getAccounts().length === 0) {
-            this.loadingAccount = true;
-
-            // Supplemental information loaded on dashboard init.
-            this._accountService.fetchOnlineRepresentatives();
-            this._accountService.fetchRepresentativeAliases();
-            this._accountService.fetchKnownAccounts();
-        } else {
-            this.loadingAccount = false;
-        }
-
+        this.loadingAccount = this.getAccounts().length === 0;
         this.loadingAccountListener = this._walletEventsService.accountLoading.subscribe((loading) => {
             setTimeout(() => {
                 this.loadingAccount = loading;
@@ -201,5 +193,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
             : this.isDark()
             ? this.colors.darkBlack[200]
             : this.colors.white[50];
+    }
+
+    isLedgerDevice(): boolean {
+        return this._secretService.isLocalLedgerUnlocked();
     }
 }
