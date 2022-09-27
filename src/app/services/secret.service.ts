@@ -95,7 +95,7 @@ export class SecretService {
         await window.bananocoin.passwordUtils.decryptData(encryptedSeed, password); // Error is thrown here.
         this.walletPassword = password;
         this.unlockedLocalSecret = true;
-        this._walletEventService.walletUnlocked.next();
+        this._walletEventService.walletUnlocked.next({ isLedger: false });
     }
 
     isLocalSecretUnlocked(): boolean {
@@ -110,29 +110,13 @@ export class SecretService {
 
     setLocalLedgerUnlocked(unlocked: boolean): void {
         this.unlockedLocalLedger = unlocked;
+        if (unlocked) {
+            this._walletEventService.walletUnlocked.next({ isLedger: true });
+        }
     }
 
     hasSecret(): boolean {
         const encryptedWallets = this._walletStorageService.getWallets();
         return encryptedWallets && encryptedWallets.length > 0;
     }
-
-    /*
-    clearSeed(): void {
-        const wallets = this._walletStorageService.getWallets();
-        const updatedWallets: LocalStorageWallet[] = [];
-        for (const wallet of wallets) {
-            if (wallet.walletId !== id) {
-                updatedWallets.push(wallet);
-            }
-        }
-
-        if (updatedWallets.length > 0) {
-            window.localStorage.setItem(this.ENCRYPTED_WALLETS, JSON.stringify(updatedWallets));
-        } else {
-            window.localStorage.removeItem(this.ENCRYPTED_WALLETS);
-            this.walletPassword = undefined;
-            this.unlockedLocalSecret = false;
-        }
-    }*/
 }

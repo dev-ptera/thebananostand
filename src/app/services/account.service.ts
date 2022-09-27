@@ -28,7 +28,7 @@ export class AccountService {
     /** Aggregate balance of all loaded accounts. */
     totalBalance: string;
 
-    localStorageAdvancedViewKey = 'HW_WALLET_POC_ADVANCED_VIEW';
+    isLedger: boolean;
 
     constructor(
         private readonly _spyglassApi: SpyglassService,
@@ -45,8 +45,12 @@ export class AccountService {
             }
         });
 
-        this._walletEventService.walletUnlocked.subscribe(() => {
+        this._walletEventService.walletUnlocked.subscribe((data) => {
+            this.isLedger = data.isLedger;
             this._refreshBalances();
+            this.fetchOnlineRepresentatives();
+            this.fetchRepresentativeAliases();
+            this.fetchKnownAccounts();
         });
 
         this._walletEventService.removeIndex.subscribe((index: number) => {
@@ -71,8 +75,12 @@ export class AccountService {
 
     private _refreshBalances(): void {
         this.accounts = [];
-        const indexesToLoad = this._walletStorageService.getActiveWallet().loadedIndexes;
-        void this.populateAccountsViaIndex(indexesToLoad);
+        const indexesToLoad = this._walletStorageService.getLoadedIndexes();
+        if (!indexesToLoad || indexesToLoad.length === 0) {
+            this._walletEventService.addIndex.next(0);
+        } else {
+            void this.populateAccountsViaIndex(indexesToLoad);
+        }
     }
 
     fetchOnlineRepresentatives(): void {
