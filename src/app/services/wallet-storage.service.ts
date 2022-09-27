@@ -30,20 +30,28 @@ export class WalletStorageService {
             this._updateState();
         });
 
-        /** Updated displayed wallet identifier. */
         this._walletEventsService.addWallet.subscribe((wallet: LocalStorageWallet) => {
-            this._makeWalletActive(wallet);
-            this._updateState();
             this._walletEventsService.activeWalletChange.next(wallet);
         });
 
-        /** When a new account is added, save the index in local storage so that we can remember which accounts were loaded per wallet. */
+        this._walletEventsService.activeWalletChange.subscribe((wallet: LocalStorageWallet) => {
+            this._makeWalletActive(wallet);
+            this._updateState();
+        });
+
         this._walletEventsService.addIndex.subscribe((addedIndex) => {
             this._addIndexToLocalStorage(addedIndex);
             this._updateState();
         });
 
-        this._walletEventsService.activeWalletChange.subscribe((wallet: LocalStorageWallet) => {
+        this._walletEventsService.removeIndex.subscribe((removedIndex: number) => {
+            this._removeIndexFromLocalStorage(removedIndex);
+            this._updateState();
+        });
+
+        this._walletEventsService.renameWallet.subscribe((newWalletName: string) => {
+            const wallet = this.getActiveWallet();
+            wallet.name = newWalletName;
             this._makeWalletActive(wallet);
             this._updateState();
         });
@@ -56,19 +64,6 @@ export class WalletStorageService {
             }
             this._updateState();
             this._walletEventsService.activeWalletChange.next(newActiveWallet);
-        });
-
-        /** Each time an account is removed, localstorage is updated. */
-        this._walletEventsService.removeIndex.subscribe((removedIndex: number) => {
-            this._removeIndexFromLocalStorage(removedIndex);
-            this._updateState();
-        });
-
-        this._walletEventsService.renameWallet.subscribe((newWalletName: string) => {
-            const wallet = this.getActiveWallet();
-            wallet.name = newWalletName;
-            this._makeWalletActive(wallet);
-            this._updateState();
         });
     }
 
