@@ -28,6 +28,13 @@ body,
     height: 100vh;
     height: var(--app-height);
 }
+
+// Input overrides.
+textarea.mat-input-element,
+.mat-input-element {
+    margin: 0 !important;
+}
+
 .app-root {
     display: flex;
     flex-direction: column;
@@ -80,7 +87,7 @@ body,
     }
 
     .app-body-content {
-        max-width: 1000px;
+        max-width: 1050px;
         width: 100%;
         display: flex;
         flex-direction: column;

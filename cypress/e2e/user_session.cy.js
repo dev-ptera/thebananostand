@@ -60,39 +60,34 @@ describe("User Session", () => {
         cy.get('[data-cy=login-wrapper]');
     });
 
+    const removeWallet = () => {
+        cy.get('[data-cy=wallet-actions-menu]').click();
+        cy.get('[data-cy=remove-wallet-button]').trigger('mousedown', { button: 0 });
+        cy.wait(2000);
+    }
+
     it("should clear a user's encrypted secret", () => {
         logInUsingSeedPasswordPair();
-
-        cy.window().then(
-            (window) => {
-               void expect(window.localStorage.getItem('bananostand_encryptedSeed')).to.be.ok;
-            }
-        );
-        cy.get('[data-cy=account-settings]').click();
-        cy.get('[data-cy=clear-data-button]').click();
-
-        cy.window().then(
-            (window) => {
-                void expect(window.localStorage.getItem('bananostand_encryptedSeed')).to.not.be.ok;
-            }
-        );
+        cy.window().then((window) => {
+           void expect(window.localStorage.getItem('bananostand_encryptedWallets')).to.be.ok;
+        });
+        removeWallet();
+        cy.window().then((window) => {
+            void expect(window.localStorage.getItem('bananostand_encryptedWallets')).to.not.be.ok;
+        });
     });
 
-    it("should navigate user back to home screen when secret is cleared", () => {
+    it("should navigate user back to home screen & display snackbar when secret is cleared", () => {
         logInUsingSeedPasswordPair();
 
-        cy.window().then(
-            (window) => {
-                cy.get('[data-cy=dashboard-wrapper]').should('exist');
-            }
-        );
-        cy.get('[data-cy=account-settings]').click();
-        cy.get('[data-cy=clear-data-button]').click();
+        cy.window().then(() => {
+            cy.get('[data-cy=dashboard-wrapper]').should('exist');
+        });
+        removeWallet();
+        cy.window().then(() => {
+            cy.get('[data-cy=dashboard-wrapper]').should('not.exist');
+            cy.get('.mat-snack-bar-container').contains('Removed Wallet');
+        });
 
-        cy.window().then(
-            (window) => {
-                cy.get('[data-cy=dashboard-wrapper]').should('not.exist');
-            }
-        );
     });
 });

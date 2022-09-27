@@ -31,7 +31,7 @@ export class AppAccountSettingsComponent {
     constructor(private readonly _router: Router, private readonly _secretService: SecretService) {}
 
     clearData(): void {
-        this._secretService.clearSeed();
+        //this._secretService.clearSeed(); // TODO FIX
         this.userMenuOpen = false;
         this.hasRecentlyClearedSeed = true;
         setTimeout(() => {

@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
 import { Router } from '@angular/router';
 import { UtilService } from '@app/services/util.service';
 import { AccountService } from '@app/services/account.service';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewportService } from '@app/services/viewport.service';
 import { ThemeService } from '@app/services/theme.service';
@@ -14,102 +13,135 @@ import { AddIndexDialogComponent } from '@app/overlays/dialogs/add-index/add-ind
 import { AddIndexBottomSheetComponent } from '@app/overlays/bottom-sheet/add-index/add-index-bottom-sheet.component';
 import { EnterSecretBottomSheetComponent } from '@app/overlays/bottom-sheet/enter-secret/enter-secret-bottom-sheet.component';
 import { EnterSecretDialogComponent } from '@app/overlays/dialogs/enter-secret/enter-secret-dialog.component';
+import { LocalStorageWallet, WalletStorageService } from '@app/services/wallet-storage.service';
+import { Subscription } from 'rxjs';
+import { WalletEventsService } from '@app/services/wallet-events.service';
+import { RenameWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/rename-wallet/rename-wallet-bottom-sheet.component';
+import { RenameWalletDialogComponent } from '@app/overlays/dialogs/rename-wallet/rename-wallet-dialog.component';
 
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
     colors = Colors;
 
-    manualAddIndex: number;
-
-    fade: boolean;
-    isAdvancedView: boolean;
-    loadingAccount: boolean;
-    loadingAllAccounts: boolean;
-    disableRipple = false;
+    fade = true;
+    isAdvancedView = false;
+    loadingAccount = true;
     walletActionsUserMenuOpen = false;
     manageWalletUserMenuOpen = false;
     switchWalletUserMenuOpen = false;
     hoverRowNumber: number;
 
-    activeWallet = 'option-1';
-
     selectedItems: Set<number> = new Set();
+
+    loadingAccountListener: Subscription;
+    bottomSheetOpenDelayMs = 250;
 
     constructor(
         private readonly _router: Router,
         private readonly _dialog: MatDialog,
-        private readonly _sheet: MatBottomSheet,
         private readonly _util: UtilService,
+        private readonly _sheet: MatBottomSheet,
         private readonly _themeService: ThemeService,
         private readonly _accountService: AccountService,
+        private readonly _walletStorageService: WalletStorageService,
+        private readonly _walletEventsService: WalletEventsService,
         public vp: ViewportService
     ) {}
 
     ngOnInit(): void {
-        this.isAdvancedView = this._accountService.isAdvancedView();
-        if (this._accountService.accounts.length === 0) {
-            void this.loadAccounts();
+        // Initial Load
+        if (this.getAccounts().length === 0) {
+            this.loadingAccount = true;
 
             // Supplemental information loaded on dashboard init.
             this._accountService.fetchOnlineRepresentatives();
             this._accountService.fetchRepresentativeAliases();
             this._accountService.fetchKnownAccounts();
+        } else {
+            this.loadingAccount = false;
+        }
+
+        this.loadingAccountListener = this._walletEventsService.accountLoading.subscribe((loading) => {
+            setTimeout(() => {
+                this.loadingAccount = loading;
+            });
+        });
+    }
+
+    ngOnDestroy(): void {
+        if (this.loadingAccountListener) {
+            this.loadingAccountListener.unsubscribe();
         }
     }
 
-    openEnterSeedDialog(): void {
+    openEnterSeedOverlay(): void {
         if (this.vp.sm) {
-            this._sheet.open(EnterSecretBottomSheetComponent);
+            setTimeout(() => {
+                this._sheet.open(EnterSecretBottomSheetComponent);
+            }, this.bottomSheetOpenDelayMs);
         } else {
             this._dialog.open(EnterSecretDialogComponent);
         }
     }
 
-    async loadAccounts(): Promise<void> {
-        this.fade = true;
-        this.loadingAllAccounts = true;
-        this.loadingAccount = true;
-        await this._accountService.populateAccountsFromLocalStorage();
-        this.manualAddIndex = this._accountService.findNextUnloadedIndex();
-        this.loadingAccount = false;
-        this.loadingAllAccounts = false;
-        this.fade = false;
-    }
-
-    isDark(): boolean {
-        return this._themeService.isDark();
-    }
-
-    refresh(): void {
-        this._accountService.accounts = [];
-        void this.loadAccounts();
-    }
-
-    async addAccount(): Promise<void> {
-        if (this.loadingAccount) {
-            return;
+    openRenameWalletOverlay(): void {
+        if (this.vp.sm) {
+            setTimeout(() => {
+                this._sheet.open(RenameWalletBottomSheetComponent);
+            }, this.bottomSheetOpenDelayMs);
+        } else {
+            this._dialog.open(RenameWalletDialogComponent);
         }
-        this.loadingAccount = true;
-        await this._accountService.fetchAccount(this._accountService.findNextUnloadedIndex());
-        this.loadingAccount = false;
     }
 
     addAccountFromIndex(): void {
         if (this.vp.sm) {
             setTimeout(() => {
                 this._sheet.open(AddIndexBottomSheetComponent);
-            }, 250);
+            }, this.bottomSheetOpenDelayMs);
         } else {
             this._dialog.open(AddIndexDialogComponent);
         }
     }
 
+    removeWallet(): void {
+        this._walletEventsService.removeWallet.next();
+    }
+
+    refresh(): void {
+        this._walletEventsService.refreshIndexes.next();
+    }
+
+    addAccount(): void {
+        if (this.loadingAccount) {
+            return;
+        }
+        const nextIndex = this._accountService.findNextUnloadedIndex();
+        this._walletEventsService.addIndex.next(nextIndex);
+    }
+
+    isDark(): boolean {
+        return this._themeService.isDark();
+    }
+
     getMonkeyUrl(address: string): string {
         return this._accountService.createMonKeyUrl(address);
+    }
+
+    getActiveWallet(): LocalStorageWallet {
+        return this._walletStorageService.activeWallet;
+    }
+
+    getWallets(): LocalStorageWallet[] {
+        return this._walletStorageService.wallets;
+    }
+
+    hasAlternativeWallets(): boolean {
+        return this._walletStorageService.wallets && this._walletStorageService.wallets.length >= 2;
     }
 
     showRepresentativeOffline(address: string): boolean {
@@ -134,19 +166,9 @@ export class DashboardComponent implements OnInit {
 
     hideSelected(): void {
         for (const index of Array.from(this.selectedItems.values())) {
-            this._accountService.removeAccount(index);
+            this._walletEventsService.removeIndex.next(index);
         }
-        this._accountService.saveAccountsInLocalStorage();
-        this._accountService.updateTotalBalance();
-        this._accountService.saveAdvancedViewInLocalStorage(false);
         this.selectedItems.clear();
-    }
-
-    exitEdit(e: MatSlideToggleChange): void {
-        if (!e.checked) {
-            this.selectedItems.clear();
-        }
-        this._accountService.saveAdvancedViewInLocalStorage(e.checked);
     }
 
     toggleAll(e: MatCheckboxChange): void {
@@ -165,5 +187,19 @@ export class DashboardComponent implements OnInit {
         } else {
             this.selectedItems.delete(account.index);
         }
+    }
+
+    changeActiveWallet(wallet: LocalStorageWallet): void {
+        this._walletEventsService.activeWalletChange.next(wallet);
+    }
+
+    getItemBackgroundColor(even: boolean): string {
+        return even
+            ? this.isDark()
+                ? this.colors.darkBlack[300]
+                : this.colors.white[100]
+            : this.isDark()
+            ? this.colors.darkBlack[200]
+            : this.colors.white[50];
     }
 }

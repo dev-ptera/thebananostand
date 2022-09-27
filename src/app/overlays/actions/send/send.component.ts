@@ -105,7 +105,13 @@ export type SendOverlayData = {
                 <blui-spacer></blui-spacer>
                 <mat-divider style="margin-left: -48px; margin-right: -48px"></mat-divider>
                 <blui-mobile-stepper [activeStep]="activeStep" [steps]="maxSteps">
-                    <button mat-stroked-button blui-back-button color="primary" (click)="back()">
+                    <button
+                        mat-stroked-button
+                        blui-back-button
+                        color="primary"
+                        (click)="back()"
+                        data-cy="send-close-button"
+                    >
                         <ng-container *ngIf="activeStep === 0">Close</ng-container>
                         <ng-container *ngIf="activeStep > 0">Back</ng-container>
                     </button>

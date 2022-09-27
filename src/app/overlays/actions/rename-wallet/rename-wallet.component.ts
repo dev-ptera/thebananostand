@@ -1,30 +1,29 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { WalletEventsService } from '@app/services/wallet-events.service';
+import { WalletStorageService } from '@app/services/wallet-storage.service';
 
 @Component({
-    selector: 'app-add-index-overlay',
-    styleUrls: ['add-index.component.scss'],
+    selector: 'app-rename-wallet-overlay',
+    styleUrls: ['rename-wallet.component.scss'],
     template: `
         <div class="add-index-overlay">
-            <h1 mat-dialog-title>Add Accounts</h1>
+            <h1 mat-dialog-title>Rename Wallet</h1>
             <div mat-dialog-content style="margin-bottom: 32px;">
-                <div>Use the input field below to manually add accounts by their index number. e.g:</div>
-                <span class="add-accounts-example">1028, 1029, 1030</span>
+                <div>Rename "{{ currentWalletName }}" to something else?</div>
                 <form style="margin-top: 32px">
                     <mat-form-field style="width: 100%" appearance="fill">
-                        <mat-label>Indexes</mat-label>
+                        <mat-label>New Wallet Name</mat-label>
                         <input
                             type="text"
                             matInput
-                            (keyup.enter)="addAccounts()"
-                            [formControl]="indexFormControl"
-                            data-cy="add-specific-account-input"
+                            [formControl]="walletNameFormControl"
+                            (keyup.enter)="renameWallet()"
+                            data-cy="add-rename-wallet-input"
                         />
                     </mat-form-field>
                 </form>
             </div>
-            {{ errorMessage }}
             <blui-spacer></blui-spacer>
             <mat-divider style="margin-left: -48px; margin-right: -48px"></mat-divider>
             <div
@@ -46,37 +45,40 @@ import { WalletEventsService } from '@app/services/wallet-events.service';
                     color="primary"
                     style="width: 130px;"
                     [disabled]="isDisabled()"
-                    (click)="addAccounts()"
+                    (click)="renameWallet()"
                 >
-                    Add Accounts
+                    Rename
                 </button>
             </div>
         </div>
     `,
 })
-export class AddIndexOverlayComponent {
-    indexFormControl = new FormControl('');
-    errorMessage: string;
+export class RenameWalletComponent implements OnInit {
+    walletNameFormControl = new FormControl('');
+
+    currentWalletName: string;
 
     @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
-    constructor(private readonly _walletEventService: WalletEventsService) {}
+    constructor(
+        private readonly _walletEventService: WalletEventsService,
+        private readonly _walletStorageService: WalletStorageService
+    ) {}
 
-    isDisabled(): boolean {
-        return !this.indexFormControl.value;
+    ngOnInit(): void {
+        this.currentWalletName = this._walletStorageService.getActiveWallet().name;
     }
 
-    addAccounts(): void {
+    isDisabled(): boolean {
+        return !this.walletNameFormControl.value;
+    }
+
+    renameWallet(): void {
         if (this.isDisabled()) {
             return;
         }
-
-        this.errorMessage = undefined;
-        const stringIndexes = this.indexFormControl.value.split(',');
-
-        for (const index of stringIndexes) {
-            this._walletEventService.addIndex.next(Number(index));
-        }
+        const newName = this.walletNameFormControl.value;
+        this._walletEventService.renameWallet.next(newName);
         this.close.emit();
     }
 }

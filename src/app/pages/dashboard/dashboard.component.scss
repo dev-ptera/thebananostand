@@ -21,6 +21,10 @@
     line-height: unset;
 }
 
+.clickable-header {
+    cursor: pointer;
+}
+
 .rename-wallet-button {
     $buttonSize: 24px;
     width: $buttonSize;
@@ -80,9 +84,13 @@
             transform: rotate(-5deg);
         }
     }
-    max-height: calc(100vh - 300px);
+    max-height: calc(100vh - 250px);
     &.sm {
-        max-height: calc(100vh - (56px + 74px + 1px)); // Don't forget the divider height. 1px
-        max-height: calc(var(--app-height) - (56px + 74px + 1px));
+        $headerHeight: 93px;
+        max-height: calc(100vh - (56px + $headerHeight + 1px)); // Don't forget the divider height. 1px
+        max-height: calc(var(--app-height) - (56px + $headerHeight + 1px));
+    }
+    .unopened-account-tag.sm {
+        margin: 4px 0;
     }
 }

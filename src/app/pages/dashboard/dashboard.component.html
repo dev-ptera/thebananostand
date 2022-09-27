@@ -17,10 +17,22 @@
     ></blui-list-item-tag>
 </ng-template>
 
+<!-- Indicates an account has not yet received any transactions -->
+<ng-template #unopenedTag>
+    <blui-list-item-tag
+        responsive
+        label="Unopened Account"
+        class="unopened-account-tag"
+        [fontColor]="colors.black[500]"
+        [backgroundColor]="colors.gray[100]"
+    >
+    </blui-list-item-tag>
+</ng-template>
+
 <!-- Is shown whenever a seed is loaded, but no individual addresses are shown yet. -->
 <ng-template #noAccountsLoaded>
     <blui-empty-state
-        *ngIf="getAccounts().length === 0 && !loadingAllAccounts"
+        *ngIf="getAccounts().length === 0 && !loadingAccount"
         style="margin: 64px 0 48px 0"
         title="No Accounts Displayed"
         description="Use the buttons above to add an account."
@@ -29,8 +41,57 @@
     </blui-empty-state>
 </ng-template>
 
-<ng-template #accountActions>
+<!-- Actions to manage active wallet's accounts on desktop view -->
+<ng-template #desktopAccountActions>
+    <button
+        mat-icon-button
+        matTooltip="Refresh balances"
+        (click)="refresh()"
+        data-cy="refresh-dashboard-desktop-button"
+    >
+        <mat-icon blui-icon>refresh</mat-icon>
+    </button>
+    <button
+        mat-icon-button
+        matTooltip="Add next account"
+        (click)="addAccount()"
+        data-cy="add-single-account-desktop-button"
+    >
+        <mat-icon>add</mat-icon>
+    </button>
+    <button
+        mat-icon-button
+        matTooltip="Add specific account"
+        (click)="addAccountFromIndex()"
+        data-cy="add-specific-account-desktop-button"
+    >
+        <mat-icon>manage_search</mat-icon>
+    </button>
+    <button
+        *ngIf="selectedItems.size === 0"
+        mat-icon-button
+        matTooltip="Toggle edit accounts"
+        data-cy="edit-account-dashboard-desktop-button"
+        (click)="isAdvancedView = !isAdvancedView"
+    >
+        <mat-icon blui-icon>{{ isAdvancedView ? 'edit_off' : 'edit' }}</mat-icon>
+    </button>
+    <button
+        *ngIf="selectedItems.size !== 0"
+        mat-icon-button
+        matTooltip="Hide selected accounts"
+        color="warn"
+        data-cy="remove-account-dashboard-desktop-button"
+        (click)="hideSelected()"
+    >
+        <mat-icon blui-icon>delete</mat-icon>
+    </button>
+</ng-template>
+
+<!-- Actions to manage active wallet's accounts on mobile view -->
+<ng-template #mobileAccountActions>
     <blui-user-menu
+        style="margin-right: -12px"
         menuTitle="Account Actions"
         [(open)]="walletActionsUserMenuOpen"
         [matTooltip]="vp.sm ? '' : 'More actions'"
@@ -84,59 +145,64 @@
 </ng-template>
 
 <ng-template #switchWalletActions>
-    <blui-user-menu [(open)]="switchWalletUserMenuOpen" class="switch-wallet-user-menu" menuTitle="Switch Wallet">
-        <mat-icon data-cy="show-dashboard-actions" blui-avatar matTooltip="Switch Wallet">arrow_drop_down</mat-icon>
+    <blui-user-menu
+        *ngIf="hasAlternativeWallets()"
+        [(open)]="switchWalletUserMenuOpen"
+        class="switch-wallet-user-menu"
+        menuTitle="Switch Wallet"
+    >
+        <mat-icon blui-avatar>arrow_drop_down</mat-icon>
         <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
             <div style="max-height: 180px; overflow: auto">
-                <blui-info-list-item [dense]="true" [hidePadding]="true" (click)="switchWalletUserMenuOpen = false">
-                    <div blui-title>Unnamed Wallet 2</div>
-                </blui-info-list-item>
-                <blui-info-list-item [dense]="true" [hidePadding]="true" (click)="switchWalletUserMenuOpen = false">
-                    <div blui-title>Unnamed Wallet 3</div>
-                </blui-info-list-item>
-                <blui-info-list-item [dense]="true" [hidePadding]="true" (click)="switchWalletUserMenuOpen = false">
-                    <div blui-title>Unnamed Wallet 3</div>
-                </blui-info-list-item>
-                <blui-info-list-item [dense]="true" [hidePadding]="true" (click)="switchWalletUserMenuOpen = false">
-                    <div blui-title>Unnamed Wallet 3</div>
-                </blui-info-list-item>
-                <blui-info-list-item [dense]="true" [hidePadding]="true" (click)="switchWalletUserMenuOpen = false">
-                    <div blui-title>Unnamed Wallet 3</div>
-                </blui-info-list-item>
-                <blui-info-list-item [dense]="true" [hidePadding]="true" (click)="switchWalletUserMenuOpen = false">
-                    <div blui-title>Unnamed Wallet 3</div>
-                </blui-info-list-item>
+                <ng-container *ngFor="let wallet of getWallets()">
+                    <blui-info-list-item
+                        *ngIf="getActiveWallet().walletId !== wallet.walletId"
+                        [dense]="true"
+                        [hidePadding]="true"
+                        (click)="changeActiveWallet(wallet); switchWalletUserMenuOpen = false"
+                    >
+                        <div blui-title>{{ wallet.name }}</div>
+                    </blui-info-list-item>
+                </ng-container>
             </div>
         </mat-nav-list>
     </blui-user-menu>
 </ng-template>
 
 <ng-template #manageWallet>
-    <blui-user-menu [(open)]="manageWalletUserMenuOpen" class="switch-wallet-user-menu" menuTitle="Edit Wallets">
-        <mat-icon data-cy="show-dashboard-actions" blui-avatar style="margin-left: 8px" matTooltip="Manage Accounts">
+    <blui-user-menu
+        [(open)]="manageWalletUserMenuOpen"
+        [menuTitle]="vp.sm ? 'Manage Wallet' : ''"
+        data-cy="wallet-actions-menu"
+    >
+        <mat-icon blui-avatar style="margin-left: 8px" matTooltip="Manage Wallets" matTooltipPosition="below">
             edit_note
         </mat-icon>
         <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
-            <blui-info-list-item [dense]="true" (click)="openEnterSeedDialog(); switchWalletUserMenuOpen = false">
+            <blui-info-list-item [dense]="true" (click)="openEnterSeedOverlay(); manageWalletUserMenuOpen = false">
                 <mat-icon blui-icon>add_circle</mat-icon>
                 <div blui-title>Add Wallet</div>
             </blui-info-list-item>
-            <blui-info-list-item [dense]="true" (click)="openEnterSeedDialog(); switchWalletUserMenuOpen = false">
+            <blui-info-list-item [dense]="true" (click)="openRenameWalletOverlay(); manageWalletUserMenuOpen = false">
                 <mat-icon blui-icon>edit</mat-icon>
                 <div blui-title>Rename Wallet</div>
             </blui-info-list-item>
-            <blui-info-list-item [dense]="true" (click)="openEnterSeedDialog(); switchWalletUserMenuOpen = false">
+            <blui-info-list-item
+                data-cy="remove-wallet-button"
+                longPress
+                [dense]="true"
+                (mouseLongPress)="removeWallet(); manageWalletUserMenuOpen = false"
+                class="warn"
+            >
                 <mat-icon blui-icon>delete</mat-icon>
                 <div blui-title>Remove Wallet</div>
+                <div blui-info>(Long Press)</div>
             </blui-info-list-item>
         </mat-nav-list>
     </blui-user-menu>
 </ng-template>
 
-<mat-card
-    style="padding: 0; display: flex; flex-direction: column; overflow: hidden"
-    [style.marginTop.px]="vp.sm ? 0 : 16"
->
+<ng-template #dashboardHeader>
     <div
         style="padding: 16px 24px 16px 24px; display: flex; justify-content: space-between; align-items: center"
         class="dashboard-header"
@@ -153,13 +219,25 @@
             >
             </mat-checkbox>
             <div>
-                <!--
+                <!-- Wallet Name & Selector -->
                 <div style="display: flex; align-items: center; margin-bottom: 4px; width: 100%">
-
-                    <div class="blui-headline-6 primary" style="margin: 0 8px 0 0">Unnamed Wallet 1</div>
-                    <ng-template [ngTemplateOutlet]="switchWalletActions" style="margin-right: 4px"></ng-template>
-                    <ng-template [ngTemplateOutlet]="manageWallet"></ng-template>
-                </div> -->
+                    <div
+                        style="display: flex"
+                        [matTooltip]="hasAlternativeWallets() ? 'Change Wallet' : undefined"
+                        matTooltipPosition="right"
+                        [class.clickable-header]="hasAlternativeWallets()"
+                    >
+                        <div
+                            class="blui-headline-6 primary"
+                            style="margin: 0 8px 0 0"
+                            (click)="switchWalletUserMenuOpen = true"
+                        >
+                            {{ getActiveWallet()?.name }}
+                        </div>
+                        <ng-template [ngTemplateOutlet]="switchWalletActions" style="margin-right: 4px"></ng-template>
+                    </div>
+                </div>
+                <!-- Account Balance -->
                 <div>
                     <span class="mat-subheading-1" style="margin-right: 8px"> Accounts Balance: </span>
                     <span> {{ getBalance() }}</span>
@@ -167,168 +245,103 @@
                 </div>
             </div>
         </div>
-        <ng-container *ngIf="!vp.sm">
-            <button
-                mat-icon-button
-                matTooltip="Refresh balances"
-                (click)="refresh()"
-                data-cy="refresh-dashboard-desktop-button"
-            >
-                <mat-icon blui-icon>refresh</mat-icon>
-            </button>
-            <button
-                mat-icon-button
-                matTooltip="Add next account"
-                (click)="addAccount()"
-                data-cy="add-single-account-desktop-button"
-            >
-                <mat-icon>add</mat-icon>
-            </button>
-            <button
-                mat-icon-button
-                matTooltip="Add specific account"
-                (click)="addAccountFromIndex()"
-                data-cy="add-specific-account-desktop-button"
-            >
-                <mat-icon>manage_search</mat-icon>
-            </button>
 
-            <button
-                *ngIf="selectedItems.size === 0"
-                mat-icon-button
-                matTooltip="Toggle edit accounts"
-                data-cy="edit-account-dashboard-desktop-button"
-                (click)="isAdvancedView = !isAdvancedView"
-            >
-                <mat-icon blui-icon>{{ isAdvancedView ? 'edit_off' : 'edit' }}</mat-icon>
-            </button>
-            <button
-                *ngIf="selectedItems.size !== 0"
-                mat-icon-button
-                matTooltip="Hide selected accounts"
-                color="warn"
-                data-cy="remove-account-dashboard-desktop-button"
-                (click)="hideSelected()"
-            >
-                <mat-icon blui-icon>delete</mat-icon>
-            </button>
-        </ng-container>
-        <ng-template *ngIf="vp.sm" [ngTemplateOutlet]="accountActions"></ng-template>
+        <ng-template [ngTemplateOutlet]="manageWallet" style="margin-right: 8px"></ng-template>
+        <ng-template *ngIf="vp.sm; else desktopAccountActions" [ngTemplateOutlet]="mobileAccountActions"></ng-template>
     </div>
-    <mat-divider style="position: relative" *ngIf="getAccounts().length > 0"></mat-divider>
+</ng-template>
 
+<ng-template #accounts>
+    <blui-info-list-item
+        *ngFor="let account of getAccounts(); let i = index; let even = even"
+        (mouseenter)="hoverRowNumber = i"
+        (mouseleave)="hoverRowNumber = undefined"
+        [class.hovered]="hoverRowNumber === i"
+        [divider]="i === getAccounts().length - 1 ? undefined : 'partial'"
+        [style.backgroundColor]="getItemBackgroundColor(even)"
+        (click)="openAccount(account.fullAddress)"
+    >
+        <div blui-left-content style="display: flex; align-items: center">
+            <mat-checkbox
+                *ngIf="isAdvancedView"
+                color="warn"
+                style="margin-bottom: 6px; margin-right: 16px"
+                (click)="$event.stopPropagation()"
+                [checked]="selectedItems.has(account.index)"
+                (change)="toggleCheck($event, account)"
+            >
+            </mat-checkbox>
+            <img [src]="getMonkeyUrl(account.fullAddress)" loading="lazy" [height]="72" />
+            <div class="account-number mat-hint" [class.primary]="hoverRowNumber === i">
+                #{{ _util.numberWithCommas(account.index) }}
+            </div>
+        </div>
+        <div
+            blui-title
+            class="mono"
+            [class.primary]="hoverRowNumber === i"
+            style="padding: 1px 0; z-index: 2"
+            [style.fontSize.px]="vp.sm ? 15 : 'inherit'"
+        >
+            {{ account.shortAddress }}
+        </div>
+        <div blui-subtitle style="padding: 1px 0; display: flex; align-items: center">
+            <ng-container *ngIf="!vp.sm && account.representative">
+                represented by {{ formatRepresentative(account.representative) }}
+            </ng-container>
+
+            <ng-container *ngIf="vp.sm">
+                <ng-container *ngIf="account.representative; else unopenedTag">
+                    <span> {{ account.formattedBalance }} BAN </span>
+                </ng-container>
+            </ng-container>
+        </div>
+        <div blui-info *ngIf="vp.sm" style="margin-top: 4px">
+            <div style="display: flex">
+                <div>
+                    <ng-template *ngTemplateOutlet="statusBadges; context: { account: this.account }"></ng-template>
+                </div>
+            </div>
+        </div>
+        <div blui-right-content *ngIf="!vp.sm">
+            <ng-template *ngTemplateOutlet="statusBadges; context: { account: this.account }"></ng-template>
+            <ng-container *ngIf="account.representative; else unopenedTag">
+                <!--
+                <img
+                    *ngIf="!vp.sm"
+                    style="margin-left: 16px; margin-right: 8px"
+                    src="assets/banano-mark.svg"
+                    [width]="18"
+                    [height]="18"
+                /> -->
+                <span> {{ account.formattedBalance }} BAN </span>
+            </ng-container>
+        </div>
+    </blui-info-list-item>
+</ng-template>
+
+<!-- Page Layout -->
+<mat-card
+    style="padding: 0; display: flex; flex-direction: column; overflow: hidden"
+    [style.marginTop.px]="vp.sm ? 0 : 16"
+>
+    <ng-template [ngTemplateOutlet]="dashboardHeader"></ng-template>
+    <mat-divider style="position: relative"></mat-divider>
+    <mat-progress-bar *ngIf="loadingAccount" color="primary" mode="indeterminate" style="position: absolute">
+    </mat-progress-bar>
     <ng-template [ngTemplateOutlet]="noAccountsLoaded"></ng-template>
-
     <mat-nav-list
         responsive
+        *ngIf="getAccounts().length > 0"
         data-cy="dashboard-account-list"
-        class="dashboard-account-list"
+        class="dashboard-account-list fade"
         style="
             overflow: auto;
             padding-top: 0;
             border-top-right-radius: 0 !important;
             border-top-left-radius: 0 !important;
         "
-        *ngIf="getAccounts().length > 0"
-        [class.fade]="fade"
-        [disableRipple]="disableRipple"
     >
-        <blui-info-list-item
-            *ngFor="let account of getAccounts(); let i = index; let even = even"
-            (mouseenter)="hoverRowNumber = i"
-            (mouseleave)="hoverRowNumber = undefined"
-            [class.hovered]="hoverRowNumber === i"
-            [divider]="i === getAccounts().length - 1 ? undefined : 'partial'"
-            [hidePadding]="true"
-            (click)="openAccount(account.fullAddress)"
-            [style.backgroundColor]="
-                even
-                    ? isDark()
-                        ? colors.darkBlack[300]
-                        : colors.white[100]
-                    : isDark()
-                    ? colors.darkBlack[200]
-                    : colors.white[50]
-            "
-        >
-            <div blui-left-content style="display: flex; align-items: center">
-                <mat-checkbox
-                    *ngIf="isAdvancedView"
-                    color="warn"
-                    style="margin-bottom: 6px; margin-right: 16px"
-                    (click)="$event.stopPropagation()"
-                    (mouseenter)="disableRipple = true"
-                    (mouseleave)="disableRipple = false"
-                    [checked]="selectedItems.has(account.index)"
-                    (change)="toggleCheck($event, account)"
-                >
-                </mat-checkbox>
-                <img [src]="getMonkeyUrl(account.fullAddress)" loading="lazy" [height]="vp.sm ? 64 : 72" />
-                <div class="account-number mat-hint" [class.primary]="hoverRowNumber === i">
-                    #{{ _util.numberWithCommas(account.index) }}
-                </div>
-                <!--<div [style.minWidth.px]="vp.sm ? 50 : 120"  *ngIf="!vp.sm">
-                    <ng-template *ngTemplateOutlet="accountNumber; context: { account: this.account }"></ng-template>
-                </div> -->
-            </div>
-            <div
-                blui-title
-                class="mono"
-                [class.primary]="hoverRowNumber === i"
-                style="padding: 1px 0; z-index: 2"
-                [style.fontSize.px]="vp.sm ? 15 : 'inherit'"
-            >
-                {{ account.shortAddress }}
-            </div>
-            <div blui-subtitle *ngIf="!vp.sm" style="padding: 1px 0">
-                <ng-container *ngIf="account.representative">
-                    represented by {{ formatRepresentative(account.representative) }}
-                </ng-container>
-                <!--
-                <ng-container *ngIf="!account.representative"> unopened account </ng-container>
-                -->
-            </div>
-            <div blui-info *ngIf="vp.sm" style="margin-top: 4px">
-                <div style="display: flex">
-                    <!--
-                    <div style="margin-right: 8px">
-                        <ng-template
-                            *ngTemplateOutlet="accountNumber; context: { account: this.account }"
-                        ></ng-template>
-                    </div>
-                    -->
-                    <div>
-                        <ng-template *ngTemplateOutlet="statusBadges; context: { account: this.account }"></ng-template>
-                    </div>
-                </div>
-            </div>
-            <div blui-right-content>
-                <ng-container *ngIf="!vp.sm">
-                    <ng-template *ngTemplateOutlet="statusBadges; context: { account: this.account }"></ng-template>
-                </ng-container>
-
-                <blui-list-item-tag
-                    *ngIf="!account.representative"
-                    [label]="vp.sm ? 'Unopened' : 'Unopened Account'"
-                    class="unopened-account-tag"
-                    [fontColor]="colors.black[500]"
-                    [backgroundColor]="colors.gray[100]"
-                >
-                </blui-list-item-tag>
-
-                <ng-container *ngIf="account.representative">
-                    <img
-                        *ngIf="!vp.sm"
-                        style="margin-left: 16px; margin-right: 8px"
-                        src="assets/banano-mark.svg"
-                        [width]="18"
-                        [height]="18"
-                    />
-                    <span>
-                        {{ account.formattedBalance }}
-                    </span>
-                </ng-container>
-            </div>
-        </blui-info-list-item>
+        <ng-template [ngTemplateOutlet]="accounts"></ng-template>
     </mat-nav-list>
 </mat-card>

@@ -27,10 +27,19 @@ describe('Account Actions', () => {
     })
 
     describe('Change Representative', () => {
-        it('should close the change representative overlay', () => {
-            cy.get('[data-cy=change-action-desktop]').click();
+        it('should close the change representative overlay (desktop)', () => {
+            cy.get('[data-cy=change-action]').click();
             cy.get('.change-rep-overlay');
             cy.get('[data-cy=change-close-button]').click();
+            cy.get('.change-rep-overlay').should('not.exist');
+        });
+    })
+
+    describe('Send', () => {
+        it('should close the send overlay (desktop)', () => {
+            cy.get('[data-cy=send-action]').click();
+            cy.get('.send-overlay');
+            cy.get('[data-cy=send-close-button]').click();
             cy.get('.change-rep-overlay').should('not.exist');
         });
     })

@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { LocalStorageWallet, WalletStorageService } from '@app/services/wallet-storage.service';
+import { WalletEventsService } from '@app/services/wallet-events.service';
 
 @Injectable({
     providedIn: 'root',
@@ -13,7 +15,16 @@ export class SecretService {
 
     /** The password used to unlock the wallet. */
     private walletPassword: string;
-    private readonly localStorageSeedId = 'bananostand_encryptedSeed';
+
+    constructor(
+        private readonly _walletStorageService: WalletStorageService,
+        private readonly _walletEventService: WalletEventsService
+    ) {
+        this._walletEventService.walletLocked.subscribe(() => {
+            this.unlockedLocalSecret = false;
+            this.walletPassword = undefined;
+        });
+    }
 
     async storeSecret(secret: string, walletPassword: string): Promise<void> {
         let password = walletPassword;
@@ -33,7 +44,8 @@ export class SecretService {
         this.unlockedLocalSecret = true;
     }
 
-    private async _storeSeed(seed: string, walletPassword: string): Promise<void> {
+    /** Saves a seed in localstorage, encrypting it using a user-provided password. */
+    private async _storeSeed(seed: string, walletPassword: string): Promise<LocalStorageWallet> {
         let password = walletPassword;
 
         if (password.length === 0) {
@@ -47,11 +59,23 @@ export class SecretService {
         }
         // @ts-ignore
         const encryptedSeed = await window.bananocoin.passwordUtils.encryptData(seed, password);
-        window.localStorage.setItem(this.localStorageSeedId, encryptedSeed);
+        //window.localStorage.setItem(this.localStorageSeedId, encryptedSeed);
+
+        const numberOfWallets = this._walletStorageService.getNumberOfWallets();
+        const walletId = numberOfWallets + 1;
+        const newEntry: LocalStorageWallet = {
+            walletId,
+            name: `Wallet No. ${walletId}`,
+            encryptedSeed,
+            loadedIndexes: [0],
+        };
+        this._walletEventService.addWallet.next(newEntry);
     }
 
-    async getSecret(): Promise<string> {
-        const encryptedSeed = window.localStorage.getItem(this.localStorageSeedId);
+    async getSecret(id: number): Promise<string> {
+        const wallet = this._walletStorageService.getWalletFromId(id);
+        const encryptedSeed = wallet.encryptedSeed;
+
         // @ts-ignore
         const seed = await window.bananocoin.passwordUtils.decryptData(encryptedSeed, this.walletPassword);
         return seed;
@@ -65,11 +89,13 @@ export class SecretService {
             password = this.DEFAULT_PASSWORD;
         }
 
-        const encryptedSeed = window.localStorage.getItem(this.localStorageSeedId);
+        const encryptedWallets = this._walletStorageService.getWallets();
+        const encryptedSeed = encryptedWallets[0].encryptedSeed;
         // @ts-ignore
-        await window.bananocoin.passwordUtils.decryptData(encryptedSeed, password);
+        await window.bananocoin.passwordUtils.decryptData(encryptedSeed, password); // Error is thrown here.
         this.walletPassword = password;
         this.unlockedLocalSecret = true;
+        this._walletEventService.walletUnlocked.next();
     }
 
     isLocalSecretUnlocked(): boolean {
@@ -87,13 +113,26 @@ export class SecretService {
     }
 
     hasSecret(): boolean {
-        const secret = window.localStorage.getItem(this.localStorageSeedId);
-        return Boolean(secret);
+        const encryptedWallets = this._walletStorageService.getWallets();
+        return encryptedWallets && encryptedWallets.length > 0;
     }
 
+    /*
     clearSeed(): void {
-        window.localStorage.removeItem(this.localStorageSeedId);
-        this.walletPassword = undefined;
-        this.unlockedLocalSecret = false;
-    }
+        const wallets = this._walletStorageService.getWallets();
+        const updatedWallets: LocalStorageWallet[] = [];
+        for (const wallet of wallets) {
+            if (wallet.walletId !== id) {
+                updatedWallets.push(wallet);
+            }
+        }
+
+        if (updatedWallets.length > 0) {
+            window.localStorage.setItem(this.ENCRYPTED_WALLETS, JSON.stringify(updatedWallets));
+        } else {
+            window.localStorage.removeItem(this.ENCRYPTED_WALLETS);
+            this.walletPassword = undefined;
+            this.unlockedLocalSecret = false;
+        }
+    }*/
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { TransactionService } from '@app/services/transaction.service';
 import { AccountService } from '@app/services/account.service';
 import { SpyglassService } from '@app/services/spyglass.service';
@@ -10,7 +10,7 @@ import { SecretService } from '@app/services/secret.service';
     styleUrls: ['enter-secret.component.scss'],
     template: `
         <div class="enter-secret-overlay">
-            <h1 mat-dialog-title>Enter Seed / Mnemonic</h1>
+            <h1 mat-dialog-title>Enter Seed or Mnemonic</h1>
             <div mat-dialog-content style="display: flex; flex: 1 1 0px; flex-direction: column">
                 <ng-container *ngIf="activeStep === 0">
                     <div style="margin-bottom: 24px">Your secret phrase never leaves this website.</div>
@@ -21,6 +21,7 @@ import { SecretService } from '@app/services/secret.service';
                             matInput
                             placeholder="Secret Phrase"
                             [(ngModel)]="secret"
+                            (keyup.enter)="next()"
                             style="min-height: 120px; resize: none"
                         ></textarea>
                     </mat-form-field>
@@ -34,9 +35,11 @@ import { SecretService } from '@app/services/secret.service';
                     <mat-form-field style="width: 100%;" appearance="fill" (keyup.enter)="next()">
                         <mat-label>Password (optional)</mat-label>
                         <input
+                            #passwordInput
                             matInput
                             [type]="passwordVisible ? 'text' : 'password'"
                             [(ngModel)]="password"
+                            (keyup.enter)="next()"
                             data-cy="password-input"
                         />
                         <button mat-icon-button matSuffix (click)="togglePasswordVisibility()">
@@ -73,14 +76,16 @@ import { SecretService } from '@app/services/secret.service';
         </div>
     `,
 })
-export class EnterSecretComponent {
+export class EnterSecretComponent implements OnInit {
     @Output() close = new EventEmitter<void>();
+
+    @ViewChild('passwordInput') passwordInput: ElementRef;
 
     secret = '';
     password = '';
     activeStep = 0;
-    maxSteps = 2;
-    lastStep = this.maxSteps - 1;
+    maxSteps: number;
+    lastStep: number;
     passwordVisible = false;
 
     error: string;
@@ -90,8 +95,14 @@ export class EnterSecretComponent {
         private readonly _apiService: SpyglassService,
         private readonly _transactionService: TransactionService,
         private readonly _accountService: AccountService,
-        private readonly _secretService: SecretService
+        private readonly _secretService: SecretService,
+        private readonly _ref: ChangeDetectorRef
     ) {}
+
+    ngOnInit(): void {
+        this.maxSteps = this._secretService.isLocalSecretUnlocked() ? 1 : 2;
+        this.lastStep = this.maxSteps - 1;
+    }
 
     closeOverlay(): void {
         this.close.emit();
@@ -109,6 +120,8 @@ export class EnterSecretComponent {
             void this.addSeed();
         } else {
             this.activeStep++;
+            this._ref.detectChanges();
+            this.passwordInput.nativeElement.focus();
         }
     }
 
@@ -127,6 +140,8 @@ export class EnterSecretComponent {
 
     addSeed(): void {
         this.error = undefined;
+        this.secret = this.secret.trim();
+
         this._secretService
             .storeSecret(this.secret, this.password)
             .then(() => {

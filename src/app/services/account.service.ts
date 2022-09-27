@@ -4,6 +4,8 @@ import { SpyglassService } from './spyglass.service';
 import { UtilService } from './util.service';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { RpcService } from '@app/services/rpc.service';
+import { LocalStorageWallet, WalletStorageService } from '@app/services/wallet-storage.service';
+import { WalletEventsService } from '@app/services/wallet-events.service';
 
 @Injectable({
     providedIn: 'root',
@@ -26,15 +28,52 @@ export class AccountService {
     /** Aggregate balance of all loaded accounts. */
     totalBalance: string;
 
-    localStorageAccountIndexesKey = 'HW_WALLET_POC_ACCOUNT_INDEXES';
     localStorageAdvancedViewKey = 'HW_WALLET_POC_ADVANCED_VIEW';
 
     constructor(
         private readonly _spyglassApi: SpyglassService,
         private readonly _util: UtilService,
         private readonly _rpcService: RpcService,
-        private readonly _transactionService: TransactionService
-    ) {}
+        private readonly _transactionService: TransactionService,
+        private readonly _walletEventService: WalletEventsService,
+        private readonly _walletStorageService: WalletStorageService
+    ) {
+        this._walletEventService.activeWalletChange.subscribe((wallet: LocalStorageWallet) => {
+            this.accounts = [];
+            if (wallet) {
+                void this.populateAccountsViaIndex(wallet.loadedIndexes);
+            }
+        });
+
+        this._walletEventService.walletUnlocked.subscribe(() => {
+            this._refreshBalances();
+        });
+
+        this._walletEventService.removeIndex.subscribe((index: number) => {
+            this.removeAccount(index);
+        });
+
+        this._walletEventService.addIndex.subscribe((index) => {
+            this._walletEventService.accountLoading.next(true);
+            this.fetchAccount(index)
+                .then(() => {
+                    this._walletEventService.accountLoading.next(false);
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        });
+
+        this._walletEventService.refreshIndexes.subscribe(() => {
+            this._refreshBalances();
+        });
+    }
+
+    private _refreshBalances(): void {
+        this.accounts = [];
+        const indexesToLoad = this._walletStorageService.getActiveWallet().loadedIndexes;
+        void this.populateAccountsViaIndex(indexesToLoad);
+    }
 
     fetchOnlineRepresentatives(): void {
         this._spyglassApi
@@ -91,8 +130,7 @@ export class AccountService {
             .then((overview) => {
                 this.accounts.push(overview);
                 this.accounts.sort((a, b) => (a.index > b.index ? 1 : -1));
-                this.saveAccountsInLocalStorage();
-                this.updateTotalBalance();
+                this._updateTotalBalance();
                 return Promise.resolve();
             })
             .catch((err) => {
@@ -101,58 +139,35 @@ export class AccountService {
     }
 
     /** Call this function to remove a specified index from the list of accounts. */
-    removeAccount(index: number): void {
-        const nonPrunedAccounts = [];
-        this.accounts.map((account) => {
-            if (account.index !== index) {
-                nonPrunedAccounts.push(account);
-            }
-        });
-        this.accounts = nonPrunedAccounts;
+    removeAccount(removedIndex: number): void {
+        this.accounts = this.accounts.filter((account) => !this._util.matches(account.index, removedIndex));
+        this._updateTotalBalance();
     }
 
     findNextUnloadedIndex(): number {
         let currIndex = 0;
         this.accounts.map((account) => {
-            if (account.index === currIndex) {
+            if (this._util.matches(account.index, currIndex)) {
                 currIndex++;
             }
         });
         return currIndex;
     }
 
-    saveAccountsInLocalStorage(): void {
-        const loadedIndexes = [];
-        this.accounts.map((account) => {
-            loadedIndexes.push(account.index);
-        });
-        loadedIndexes.sort((a, b) => a - b);
-        window.localStorage.setItem(this.localStorageAccountIndexesKey, loadedIndexes.toString());
-    }
-
-    saveAdvancedViewInLocalStorage(isAdvancedView: boolean): void {
-        window.localStorage.setItem(this.localStorageAdvancedViewKey, String(isAdvancedView));
-    }
-
-    isAdvancedView(): boolean {
-        return window.localStorage.getItem(this.localStorageAdvancedViewKey) === 'true';
-    }
-
     /** Reading local storage, fetches account information for each managed account.
      *  If there are no accounts found in local storage, fetches account #0.  */
-    async populateAccountsFromLocalStorage(): Promise<void> {
-        const indexesString = window.localStorage.getItem(this.localStorageAccountIndexesKey);
-        if (!indexesString) {
-            return this.fetchAccount(0);
-        }
-        const indexes = indexesString.split(',');
+    async populateAccountsViaIndex(indexes: number[]): Promise<void> {
+        this.accounts = [];
+        indexes.sort((a, b) => a - b);
+        this._walletEventService.accountLoading.next(true);
         for await (const index of indexes) {
             await this.fetchAccount(Number(index));
         }
+        this._walletEventService.accountLoading.next(false);
     }
 
     /** Iterates through each loaded account and aggregates the total confirmed balance. */
-    updateTotalBalance(): void {
+    private _updateTotalBalance(): void {
         let balance = 0;
         this.accounts.map((account) => {
             balance += account.balance;

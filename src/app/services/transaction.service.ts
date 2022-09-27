@@ -4,6 +4,9 @@ import { UtilService } from './util.service';
 import { environment } from '../../environments/environment';
 import { NanoClientService } from '@app/services/nano-client.service';
 import { SecretService } from '@app/services/secret.service';
+import { WalletStorageService } from '@app/services/wallet-storage.service';
+
+export const ACTIVE_WALLET_ID = 'activeWalletID';
 
 @Injectable({
     providedIn: 'root',
@@ -13,6 +16,7 @@ export class TransactionService {
     constructor(
         private readonly _util: UtilService,
         private readonly _secretService: SecretService,
+        private readonly _walletStorageService: WalletStorageService,
         private readonly _nanoClientService: NanoClientService
     ) {}
 
@@ -21,7 +25,7 @@ export class TransactionService {
         api.setAuth(environment.token);
     }
 
-    /** Attempts a withdraw.  On success, returns transaction hash. */
+    /** Attempts a withdrawal.  On success, returns transaction hash. */
     async withdraw(recipient: string, withdrawAmount: number, accountIndex: number): Promise<string> {
         const accountSigner = await this.getAccountSigner(accountIndex);
         const bananodeApi = window.bananocoinBananojs.bananodeApi;
@@ -116,7 +120,7 @@ export class TransactionService {
     /** Given an index, reads ledger device & returns an address. */
     async getAccountFromIndex(accountIndex: number): Promise<string> {
         if (this._secretService.isLocalSecretUnlocked()) {
-            const seed = await this._secretService.getSecret();
+            const seed = await this._secretService.getSecret(this.getActiveWalletId());
             /** LocalMobile **/
             // const seed = '727A5E960F6189BBF196D84A6B7715D0A78DE82AC15BBDB340540076768CDB31'; // Low Fund Seed
             const privateKey = await window.bananocoinBananojs.getPrivateKey(seed, accountIndex);
@@ -129,9 +133,13 @@ export class TransactionService {
         return account;
     }
 
+    getActiveWalletId(): number {
+        return this._walletStorageService.getActiveWalletId();
+    }
+
     async getAccountSigner(index: number): any {
         if (this._secretService.isLocalSecretUnlocked()) {
-            const seed = await this._secretService.getSecret();
+            const seed = await this._secretService.getSecret(this.getActiveWalletId());
             return await window.bananocoinBananojs.getPrivateKey(seed, index);
         }
         return await window.bananocoin.bananojsHw.getLedgerAccountSigner(index);

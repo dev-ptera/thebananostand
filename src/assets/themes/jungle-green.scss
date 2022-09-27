@@ -92,6 +92,7 @@ $jungle-green-theme: map-merge(
     @include typography.typography();
     @include common.common();
     $primary: mat.get-color-from-palette($material-theme-primary, 500);
+    $foreground: map-get($jungle-green-theme, foreground);
     .primary {
         color: $primary;
     }
@@ -101,7 +102,22 @@ $jungle-green-theme: map-merge(
     .app-toolbar .blui-user-menu-avatar {
         color: map-get(blui.$blui-white, 500) !important;
     }
+    .blui-user-menu-avatar {
+        color: map-get($foreground, secondary-text);
+    }
     .account-mobile-footer {
         background-color: map-get(blui.$blui-white, 50);
+    }
+
+    .warn * {
+        color: map-get($material-theme-warn, 500);
+    }
+
+    .dashboard-account-list {
+        .hovered {
+            .mat-list-item:hover {
+                background-color: rgba($primary, 0.05);
+            }
+        }
     }
 }

@@ -72,7 +72,7 @@
         </div>
         <div style="display: flex">
             <app-theme-picker></app-theme-picker>
-            <app-account-settings></app-account-settings>
+            <!--<app-account-settings></app-account-settings>-->
         </div>
     </mat-toolbar>
     <mat-toolbar
@@ -133,7 +133,7 @@
                             <button
                                 blui-inline
                                 mat-flat-button
-                                data-cy="change-action-desktop"
+                                data-cy="change-action"
                                 color="primary"
                                 (click)="changeRep()"
                                 [disabled]="!account.representative"
