@@ -21,6 +21,9 @@ export class WalletEventsService {
     /** A new address (index) has been added to the dashboard. */
     addIndex = new Subject<number>();
 
+    /** New addresses (index) has been added to the dashboard. */
+    addIndexes = new Subject<number[]>();
+
     /** An address (index) has been removed from the dashboard. */
     removeIndex = new Subject<number>();
 
@@ -35,4 +38,7 @@ export class WalletEventsService {
 
     /** A wallet has been given an alias. */
     renameWallet = new Subject<string>();
+
+    /** Update wallet password */
+    reencryptWalletSecret = new Subject<LocalStorageWallet>();
 }

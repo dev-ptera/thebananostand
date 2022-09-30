@@ -73,10 +73,12 @@ export class AddIndexOverlayComponent {
 
         this.errorMessage = undefined;
         const stringIndexes = this.indexFormControl.value.split(',');
+        const numberIndexes = [];
 
         for (const index of stringIndexes) {
-            this._walletEventService.addIndex.next(Number(index));
+            numberIndexes.push(Number(index));
         }
+        this._walletEventService.addIndexes.next(numberIndexes);
         this.close.emit();
     }
 }

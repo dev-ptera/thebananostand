@@ -39,10 +39,7 @@ export class AccountService {
         private readonly _walletStorageService: WalletStorageService
     ) {
         this._walletEventService.activeWalletChange.subscribe((wallet: LocalStorageWallet) => {
-            this.accounts = [];
-            if (wallet) {
-                void this.populateAccountsViaIndex(wallet.loadedIndexes);
-            }
+            void this._refreshDashboardUsingIndexes(wallet.loadedIndexes);
         });
 
         this._walletEventService.walletUnlocked.subscribe((data) => {
@@ -54,33 +51,27 @@ export class AccountService {
         });
 
         this._walletEventService.removeIndex.subscribe((index: number) => {
-            this.removeAccount(index);
+            this._removeAccount(index);
         });
 
-        this._walletEventService.addIndex.subscribe((index) => {
+        this._walletEventService.addIndex.subscribe(async (index) => {
             this._walletEventService.accountLoading.next(true);
-            this.fetchAccount(index)
-                .then(() => {
-                    this._walletEventService.accountLoading.next(false);
-                })
-                .catch((err) => {
-                    console.error(err);
-                });
+            await this._addIndex(index);
+            this._walletEventService.accountLoading.next(false);
+        });
+
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        this._walletEventService.addIndexes.subscribe(async (indexes) => {
+            this._walletEventService.accountLoading.next(true);
+            for await (const index of indexes) {
+                await this._addIndex(index);
+            }
+            this._walletEventService.accountLoading.next(false);
         });
 
         this._walletEventService.refreshIndexes.subscribe(() => {
             this._refreshBalances();
         });
-    }
-
-    private _refreshBalances(): void {
-        this.accounts = [];
-        const indexesToLoad = this._walletStorageService.getLoadedIndexes();
-        if (!indexesToLoad || indexesToLoad.length === 0) {
-            this._walletEventService.addIndex.next(0);
-        } else {
-            void this.populateAccountsViaIndex(indexesToLoad);
-        }
     }
 
     fetchOnlineRepresentatives(): void {
@@ -132,7 +123,7 @@ export class AccountService {
 
     /** Fetches RPC account_info and stores response in a list sorted by account number. */
     fetchAccount(index: number): Promise<void> {
-        this.removeAccount(index);
+        this._removeAccount(index);
         return this._rpcService
             .getAccountInfo(index)
             .then((overview) => {
@@ -146,12 +137,6 @@ export class AccountService {
             });
     }
 
-    /** Call this function to remove a specified index from the list of accounts. */
-    removeAccount(removedIndex: number): void {
-        this.accounts = this.accounts.filter((account) => !this._util.matches(account.index, removedIndex));
-        this._updateTotalBalance();
-    }
-
     findNextUnloadedIndex(): number {
         let currIndex = 0;
         this.accounts.map((account) => {
@@ -162,9 +147,24 @@ export class AccountService {
         return currIndex;
     }
 
-    /** Reading local storage, fetches account information for each managed account.
-     *  If there are no accounts found in local storage, fetches account #0.  */
-    async populateAccountsViaIndex(indexes: number[]): Promise<void> {
+    /** Opens a hash in an explorer. */
+    showBlockInExplorer(hash: string): void {
+        const explorerBlockPage = 'https://www.yellowspyglass.com/hash';
+        window.open(`${explorerBlockPage}/${hash}`);
+    }
+
+    /** Given an address, returns a monKey API URL. */
+    createMonKeyUrl(address: string): string {
+        return `https://monkey.banano.cc/api/v1/monkey/${address}?svc=bananostand`;
+    }
+
+    /** Call this function to remove a specified index from the list of accounts. */
+    private _removeAccount(removedIndex: number): void {
+        this.accounts = this.accounts.filter((account) => !this._util.matches(account.index, removedIndex));
+        this._updateTotalBalance();
+    }
+
+    private async _refreshDashboardUsingIndexes(indexes: number[]): Promise<void> {
         this.accounts = [];
         indexes.sort((a, b) => a - b);
         this._walletEventService.accountLoading.next(true);
@@ -183,14 +183,20 @@ export class AccountService {
         this.totalBalance = this._util.numberWithCommas(balance, 6);
     }
 
-    /** Opens a hash in an explorer. */
-    showBlockInExplorer(hash: string): void {
-        const explorerBlockPage = 'https://www.yellowspyglass.com/hash';
-        window.open(`${explorerBlockPage}/${hash}`);
+    /** Reloads the dashboard, keeps previously-loaded accounts. */
+    private _refreshBalances(): void {
+        this.accounts = [];
+        const indexesToLoad = this._walletStorageService.getLoadedIndexes();
+        if (!indexesToLoad || indexesToLoad.length === 0) {
+            this._walletEventService.addIndex.next(0);
+        } else {
+            void this._refreshDashboardUsingIndexes(indexesToLoad);
+        }
     }
 
-    /** Given an address, returns a monKey API URL. */
-    createMonKeyUrl(address: string): string {
-        return `https://monkey.banano.cc/api/v1/monkey/${address}?svc=bananostand`;
+    private async _addIndex(index: number): Promise<void> {
+        await this.fetchAccount(index).catch((err) => {
+            console.error(err);
+        });
     }
 }

@@ -13,7 +13,6 @@ import { RpcService } from '@app/services/rpc.service';
 import { ViewportService } from '@app/services/viewport.service';
 import { environment } from '../../../environments/environment';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { ChangeRepDialogComponent } from '@app/overlays/dialogs/change-rep/change-rep-dialog.component';
 import { FilterBottomSheetComponent } from '@app/overlays/bottom-sheet/filter/filter-bottom-sheet.component';
 import { FilterOverlayData } from '@app/overlays/actions/filter/filter.component';
 import { ReceiveBottomSheetComponent } from '@app/overlays/bottom-sheet/receive/receive-bottom-sheet.component';
@@ -22,6 +21,7 @@ import { FilterDialogComponent } from '@app/overlays/dialogs/filter/filter-dialo
 import { SendBottomSheetComponent } from '@app/overlays/bottom-sheet/send/send-bottom-sheet.component';
 import { SendDialogComponent } from '@app/overlays/dialogs/send/send-dialog.component';
 import { ChangeRepBottomSheetComponent } from '@app/overlays/bottom-sheet/change-rep/change-rep-bottom-sheet.component';
+import { ChangeRepDialogComponent } from '@app/overlays/dialogs/change-rep/change-rep-dialog.component';
 
 @Component({
     selector: 'app-account',
