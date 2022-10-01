@@ -54,23 +54,26 @@ export class AccountService {
             this._removeAccount(index);
         });
 
-        this._walletEventService.addIndex.subscribe(async (index) => {
-            this._walletEventService.accountLoading.next(true);
-            await this._addIndex(index);
-            this._walletEventService.accountLoading.next(false);
-        });
-
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        this._walletEventService.addIndexes.subscribe(async (indexes) => {
-            this._walletEventService.accountLoading.next(true);
-            for await (const index of indexes) {
-                await this._addIndex(index);
-            }
-            this._walletEventService.accountLoading.next(false);
-        });
-
         this._walletEventService.refreshIndexes.subscribe(() => {
             this._refreshBalances();
+        });
+
+        this._walletEventService.addIndex.subscribe((index: number) => {
+            void (async (): Promise<void> => {
+                this._walletEventService.accountLoading.next(true);
+                await this._addIndex(index);
+                this._walletEventService.accountLoading.next(false);
+            })();
+        });
+
+        this._walletEventService.addIndexes.subscribe((indexes: number[]) => {
+            void (async (): Promise<void> => {
+                this._walletEventService.accountLoading.next(true);
+                for await (const index of indexes) {
+                    await this._addIndex(index);
+                }
+                this._walletEventService.accountLoading.next(false);
+            })();
         });
     }
 

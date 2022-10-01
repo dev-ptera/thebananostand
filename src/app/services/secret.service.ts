@@ -92,8 +92,7 @@ export class SecretService {
                 this._walletEventService.reencryptWalletSecret.next(wallet);
             }
         }
-
-        this.walletPassword = newUserPassword;
+        this._walletEventService.walletLocked.next();
     }
 
     matchesCurrentPassword(currentPasswordUserInput: string): boolean {

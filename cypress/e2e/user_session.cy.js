@@ -88,6 +88,23 @@ describe("User Session", () => {
             cy.get('[data-cy=dashboard-wrapper]').should('not.exist');
             cy.get('.mat-snack-bar-container').contains('Removed Wallet');
         });
+    });
 
+    it("should log a user out after changing password", () => {
+        logInUsingSeedPasswordPair();
+
+        cy.window().then(() => {
+            cy.get('[data-cy=dashboard-wrapper]').should('exist');
+        });
+        // TODO
+    });
+
+    it("should, after changing password, require new password to view accounts ", () => {
+        logInUsingSeedPasswordPair();
+
+        cy.window().then(() => {
+            cy.get('[data-cy=dashboard-wrapper]').should('exist');
+        });
+        // TODO
     });
 });
