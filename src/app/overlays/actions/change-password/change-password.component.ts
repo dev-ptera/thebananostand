@@ -23,7 +23,7 @@ import { SecretService } from '@app/services/secret.service';
                             autocomplete="off"
                             [type]="isCurrentPasswordVisible ? 'text' : 'password'"
                             [formControl]="currentPasswordFormControl"
-                            data-cy="add-specific-account-input"
+                            data-cy="current-password-input"
                         />
                         <button
                             type="button"
@@ -42,7 +42,7 @@ import { SecretService } from '@app/services/secret.service';
                             matInput
                             [type]="isNewPasswordVisible ? 'text' : 'password'"
                             [formControl]="newPasswordFormControl"
-                            data-cy="add-specific-account-input"
+                            data-cy="new-password-input"
                         />
                         <button
                             type="button"
@@ -61,7 +61,7 @@ import { SecretService } from '@app/services/secret.service';
                             (keyup.enter)="changePassword()"
                             [type]="isConfirmPasswordVisible ? 'text' : 'password'"
                             [formControl]="confirmPasswordFormControl"
-                            data-cy="add-specific-account-input"
+                            data-cy="confirm-password-input"
                         />
                         <button
                             type="button"
@@ -102,7 +102,7 @@ import { SecretService } from '@app/services/secret.service';
                     Close
                 </button>
                 <button
-                    data-cy="add-account-overlay-button"
+                    data-cy="confirm-change-password-button"
                     mat-flat-button
                     color="primary"
                     style="width: 130px;"

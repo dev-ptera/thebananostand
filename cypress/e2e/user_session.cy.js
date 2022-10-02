@@ -2,6 +2,8 @@ describe("User Session", () => {
 
     const LOW_FUND_SEED = '727A5E960F6189BBF196D84A6B7715D0A78DE82AC15BBDB340540076768CDB31';
     const root = 'http://localhost:4200'
+    const defaultPasswordForTesting = 'SamplePasswordTest123';
+
 
     const reload = () => {
         cy.intercept(root).as('home');
@@ -14,11 +16,15 @@ describe("User Session", () => {
         reload();
     });
 
-    const logInUsingSeedPasswordPair = (password = 'SamplePasswordTest123') => {
+    const logInUsingSeedPasswordPair = (password) => {
+        let userPassword = password;
+        if (!password) {
+            userPassword = defaultPasswordForTesting;
+        }
         cy.get('[data-cy=enter-secret]').click();
         cy.get('[data-cy=secret-input]').type(LOW_FUND_SEED);
         cy.get('[data-cy=secret-next]').click();
-        cy.get('[data-cy=password-input]').type(password);
+        cy.get('[data-cy=password-input]').type(userPassword);
         cy.get('[data-cy=secret-next]').click();
         cy.get('[data-cy=secret-next]').should('not.exist');
     }
@@ -95,16 +101,50 @@ describe("User Session", () => {
 
         cy.window().then(() => {
             cy.get('[data-cy=dashboard-wrapper]').should('exist');
-        });
-        // TODO
+            cy.get('[data-cy=session-settings]').click();
+            cy.get('[data-cy=change-password-button]').click()
+            cy.get('.change-password-overlay').should('exist');
+            const newPassword = 'ABD123XYZ';
+            const overlayRenderDelay = 500;
+            cy.wait(overlayRenderDelay);
+            cy.get('[data-cy=current-password-input]').type(defaultPasswordForTesting);
+            cy.get('[data-cy=new-password-input]').type(newPassword);
+            cy.get('[data-cy=confirm-password-input]').type(newPassword);
+            cy.get('[data-cy=confirm-change-password-button]').click();
+            cy.get('[data-cy=dashboard-wrapper]').should('not.exist');
+            cy.get('.change-password-overlay').should('not.exist');
+            cy.get('[data-cy=login-wrapper]');
+        })
     });
 
-    it("should, after changing password, require new password to view accounts ", () => {
+    it.only("should, after changing password, require new password to view accounts ", () => {
         logInUsingSeedPasswordPair();
+        const newPassword = 'ABD123XYZ';
+        const incorrectPassword = 'ABC123XYZ';
 
         cy.window().then(() => {
             cy.get('[data-cy=dashboard-wrapper]').should('exist');
-        });
-        // TODO
+            cy.get('[data-cy=session-settings]').click();
+            cy.get('[data-cy=change-password-button]').click();
+            const overlayRenderDelay = 500;
+            cy.wait(overlayRenderDelay);
+
+            // Change Password
+            cy.get('[data-cy=current-password-input]').type(defaultPasswordForTesting);
+            cy.get('[data-cy=new-password-input]').type(newPassword);
+            cy.get('[data-cy=confirm-password-input]').type(newPassword);
+            cy.get('[data-cy=confirm-change-password-button]').click();
+
+            // Log In
+            cy.get('[data-cy=active-wallet-password-input]').type(incorrectPassword);
+            cy.get('[data-cy=account-unlock-button]').click();
+            cy.get('[data-cy=login-wrapper]');
+            cy.get('[data-cy=active-wallet-password-input]').clear();
+            cy.get('[data-cy=active-wallet-password-input]').type(newPassword);
+            cy.get('[data-cy=account-unlock-button]').click();
+
+            // Confirm account loads
+            cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
+        })
     });
 });

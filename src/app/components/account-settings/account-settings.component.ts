@@ -10,7 +10,7 @@ import { ChangePasswordBottomSheetComponent } from '@app/overlays/bottom-sheet/c
 @Component({
     selector: 'app-account-settings',
     template: `
-        <blui-user-menu *ngIf="show()" data-cy="account-settings" menuTitle="Account" [(open)]="userMenuOpen">
+        <blui-user-menu *ngIf="show()" data-cy="session-settings" menuTitle="Settings" [(open)]="userMenuOpen">
             <mat-icon blui-avatar>settings</mat-icon>
             <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
                 <blui-info-list-item
