@@ -189,6 +189,22 @@
                 <div blui-title>Rename Wallet</div>
             </blui-info-list-item>
             <blui-info-list-item
+                [dense]="true"
+                (click)="copyWalletSeed(); manageWalletUserMenuOpen = false"
+                data-cy="copy-seed-button"
+            >
+                <mat-icon blui-icon>lock</mat-icon>
+                <div blui-title>Copy Seed</div>
+            </blui-info-list-item>
+            <blui-info-list-item
+                [dense]="true"
+                (click)="copyWalletMnemonic(); manageWalletUserMenuOpen = false"
+                data-cy="copy-mnemonic-button"
+            >
+                <mat-icon blui-icon>lock</mat-icon>
+                <div blui-title>Copy Mnemonic</div>
+            </blui-info-list-item>
+            <blui-info-list-item
                 data-cy="remove-wallet-button"
                 longPress
                 [dense]="true"

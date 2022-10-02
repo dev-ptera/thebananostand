@@ -28,6 +28,31 @@ export class AppComponent {
         this._walletEventService.removeWallet.subscribe(() => {
             this._snackbar.open('Removed Wallet', 'Dismiss', { duration: 5000 });
         });
+
+        this._walletEventService.backupSeed.subscribe((seed) => {
+            this._copyToClipboard(seed);
+            this._snackbar.open('Wallet Seed Copied!', 'Dismiss', { duration: 5000 });
+        });
+
+        this._walletEventService.backupMnemonic.subscribe((mnemonic) => {
+            this._copyToClipboard(mnemonic);
+            this._snackbar.open('Wallet Mnemonic Phrase Copied!', 'Dismiss', { duration: 5000 });
+        });
+    }
+
+    private _copyToClipboard(text: string): void {
+        window.focus();
+        setTimeout(() => {
+            navigator.clipboard
+                .writeText(text)
+                .then(() => {
+                    // eslint-disable-next-line no-console
+                    console.log('Text Copied');
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        });
     }
 
     showBanana(): boolean {
