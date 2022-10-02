@@ -117,7 +117,7 @@ describe("User Session", () => {
         })
     });
 
-    it.only("should, after changing password, require new password to view accounts ", () => {
+    it("should, after changing password, require new password to view accounts ", () => {
         logInUsingSeedPasswordPair();
         const newPassword = 'ABD123XYZ';
         const incorrectPassword = 'ABC123XYZ';
