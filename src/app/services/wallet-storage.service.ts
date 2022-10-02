@@ -39,8 +39,18 @@ export class WalletStorageService {
             this._updateState();
         });
 
+        this._walletEventsService.reencryptWalletSecret.subscribe((wallet: LocalStorageWallet) => {
+            this._storeWalletDetails(wallet);
+            this._updateState();
+        });
+
         this._walletEventsService.addIndex.subscribe((addedIndex) => {
             this._addIndexToLocalStorage(addedIndex);
+            this._updateState();
+        });
+
+        this._walletEventsService.addIndexes.subscribe((addedIndexes) => {
+            addedIndexes.map((addedIndex) => this._addIndexToLocalStorage(addedIndex));
             this._updateState();
         });
 

@@ -68,11 +68,14 @@ import { EnterSecretComponent } from '@app/overlays/actions/enter-secret/enter-s
 import { EnterSecretDialogComponent } from '@app/overlays/dialogs/enter-secret/enter-secret-dialog.component';
 import { EnterSecretBottomSheetComponent } from '@app/overlays/bottom-sheet/enter-secret/enter-secret-bottom-sheet.component';
 import { ChangeRepBottomSheetComponent } from '@app/overlays/bottom-sheet/change-rep/change-rep-bottom-sheet.component';
-import { ChangeRepDialogComponent } from '@app/overlays/dialogs/change-rep/change-rep-dialog.component';
 import { RenameWalletComponent } from '@app/overlays/actions/rename-wallet/rename-wallet.component';
 import { RenameWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/rename-wallet/rename-wallet-bottom-sheet.component';
 import { RenameWalletDialogComponent } from '@app/overlays/dialogs/rename-wallet/rename-wallet-dialog.component';
 import { LongPressDirective } from '@app/components/long-press/long-press.directive';
+import { ChangePasswordOverlayComponent } from '@app/overlays/actions/change-password/change-password.component';
+import { ChangePasswordDialogComponent } from '@app/overlays/dialogs/change-password/change-password-dialog.component';
+import { ChangeRepDialogComponent } from '@app/overlays/dialogs/change-rep/change-rep-dialog.component';
+import { ChangePasswordBottomSheetComponent } from '@app/overlays/bottom-sheet/change-password/change-password-bottom-sheet.component';
 
 @NgModule({
     declarations: [
@@ -92,8 +95,8 @@ import { LongPressDirective } from '@app/components/long-press/long-press.direct
         AddIndexOverlayComponent,
         AddIndexBottomSheetComponent,
         AddIndexDialogComponent,
-        ChangeRepDialogComponent,
         ReceiveDialogComponent,
+        ChangeRepDialogComponent,
         FilterDialogComponent,
         FilterComponent,
         FilterBottomSheetComponent,
@@ -109,6 +112,9 @@ import { LongPressDirective } from '@app/components/long-press/long-press.direct
         RenameWalletBottomSheetComponent,
         RenameWalletDialogComponent,
         LongPressDirective,
+        ChangePasswordOverlayComponent,
+        ChangePasswordDialogComponent,
+        ChangePasswordBottomSheetComponent,
     ],
     imports: [
         AppRoutingModule,

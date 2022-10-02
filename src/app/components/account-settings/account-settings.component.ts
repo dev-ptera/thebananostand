@@ -1,22 +1,25 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { SecretService } from '@app/services/secret.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { ChangePasswordDialogComponent } from '@app/overlays/dialogs/change-password/change-password-dialog.component';
+import { ViewportService } from '@app/services/viewport.service';
+import { ChangePasswordBottomSheetComponent } from '@app/overlays/bottom-sheet/change-password/change-password-bottom-sheet.component';
 
 @Component({
     selector: 'app-account-settings',
     template: `
-        <blui-user-menu
-            data-cy="account-settings"
-            class="app-theme-picker"
-            menuTitle="Account"
-            [(open)]="userMenuOpen"
-            *ngIf="show()"
-        >
+        <blui-user-menu *ngIf="show()" data-cy="session-settings" menuTitle="Settings" [(open)]="userMenuOpen">
             <mat-icon blui-avatar>settings</mat-icon>
             <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
-                <blui-info-list-item [dense]="true" (click)="clearData()" data-cy="clear-data-button">
-                    <mat-icon blui-icon>delete</mat-icon>
-                    <div blui-title>Clear Local Data</div>
+                <blui-info-list-item
+                    [dense]="true"
+                    (click)="openChangePasswordOverlay()"
+                    data-cy="change-password-button"
+                >
+                    <mat-icon blui-icon>lock</mat-icon>
+                    <div blui-title>Change Password</div>
                 </blui-info-list-item>
             </mat-nav-list>
         </blui-user-menu>
@@ -26,21 +29,28 @@ import { SecretService } from '@app/services/secret.service';
 })
 export class AppAccountSettingsComponent {
     userMenuOpen = false;
-    hasRecentlyClearedSeed = false;
+    bottomSheetOpenDelayMs = 250;
 
-    constructor(private readonly _router: Router, private readonly _secretService: SecretService) {}
+    constructor(
+        private readonly _router: Router,
+        public vp: ViewportService,
+        private readonly _dialog: MatDialog,
+        private readonly _sheet: MatBottomSheet,
+        private readonly _secretService: SecretService
+    ) {}
 
-    clearData(): void {
-        //this._secretService.clearSeed(); // TODO FIX
+    openChangePasswordOverlay(): void {
         this.userMenuOpen = false;
-        this.hasRecentlyClearedSeed = true;
-        setTimeout(() => {
-            this.hasRecentlyClearedSeed = false;
-        }, 50);
-        void this._router.navigate(['']);
+        if (this.vp.sm) {
+            setTimeout(() => {
+                this._sheet.open(ChangePasswordBottomSheetComponent);
+            }, this.bottomSheetOpenDelayMs);
+        } else {
+            this._dialog.open(ChangePasswordDialogComponent);
+        }
     }
 
     show(): boolean {
-        return this._secretService.hasSecret() || this.hasRecentlyClearedSeed;
+        return this._secretService.hasSecret() && this._secretService.isLocalSecretUnlocked();
     }
 }

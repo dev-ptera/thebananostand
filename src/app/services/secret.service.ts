@@ -59,8 +59,6 @@ export class SecretService {
         }
         // @ts-ignore
         const encryptedSeed = await window.bananocoin.passwordUtils.encryptData(seed, password);
-        //window.localStorage.setItem(this.localStorageSeedId, encryptedSeed);
-
         const numberOfWallets = this._walletStorageService.getNumberOfWallets();
         const walletId = numberOfWallets + 1;
         const newEntry: LocalStorageWallet = {
@@ -71,6 +69,48 @@ export class SecretService {
         };
         this._walletEventService.addWallet.next(newEntry);
     }
+
+    async changePassword(currentPasswordInput: string, newPasswordInput: string): Promise<void> {
+        const currentUserPassword = currentPasswordInput || this.DEFAULT_PASSWORD;
+        const newUserPassword = newPasswordInput || this.DEFAULT_PASSWORD;
+
+        if (!this.matchesCurrentPassword(currentUserPassword)) {
+            throw new Error('Passwords do not match');
+        }
+
+        for await (const wallet of this._walletStorageService.getWallets()) {
+            if (wallet.encryptedSeed) {
+                const encryptedSeed = wallet.encryptedSeed;
+                // @ts-ignore
+                const decryptedSeed = await window.bananocoin.passwordUtils.decryptData(
+                    encryptedSeed,
+                    currentUserPassword
+                );
+                // @ts-ignore
+                const reencryptSeed = await window.bananocoin.passwordUtils.encryptData(decryptedSeed, newUserPassword);
+                wallet.encryptedSeed = reencryptSeed;
+                this._walletEventService.reencryptWalletSecret.next(wallet);
+            }
+        }
+        this._walletEventService.walletLocked.next();
+    }
+
+    matchesCurrentPassword(currentPasswordUserInput: string): boolean {
+        const userPassword = currentPasswordUserInput || this.DEFAULT_PASSWORD;
+        return userPassword === this.walletPassword;
+    }
+
+    //  convertToMnemonic(): Promise<void> {
+    /*
+
+seed-> menomimc
+  const seed = window.bananocoinBananojs.bananoUtil.bytesToHex(seedBytes);
+  const mnemonic = window.bip39.entropyToMnemonic(seed);
+
+  // Mneominc-seed
+  const seed = window.bip39.mnemonicToEntropy(mnemonic);
+         */
+    // }
 
     async getSecret(id: number): Promise<string> {
         const wallet = this._walletStorageService.getWalletFromId(id);
