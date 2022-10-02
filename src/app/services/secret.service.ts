@@ -112,13 +112,25 @@ seed-> menomimc
          */
     // }
 
-    async getSecret(id: number): Promise<string> {
-        const wallet = this._walletStorageService.getWalletFromId(id);
+    async getSecret(walletId: number): Promise<string> {
+        const wallet = this._walletStorageService.getWalletFromId(walletId);
         const encryptedSeed = wallet.encryptedSeed;
 
         // @ts-ignore
         const seed = await window.bananocoin.passwordUtils.decryptData(encryptedSeed, this.walletPassword);
         return seed;
+    }
+
+    async backupWalletSecret(walletId: number): Promise<void> {
+        const seed = await this.getSecret(walletId);
+        this._walletEventService.backupSeed.next(seed);
+    }
+
+    async backupWalletMnemonic(walletId: number): Promise<void> {
+        const seed = await this.getSecret(walletId);
+        // @ts-ignore
+        const mnemonic = window.bip39.entropyToMnemonic(seed);
+        this._walletEventService.backupMnemonic.next(mnemonic);
     }
 
     // Throws an error if the login attempt fails.

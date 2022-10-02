@@ -185,6 +185,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this._walletEventsService.activeWalletChange.next(wallet);
     }
 
+    copyWalletSeed(): void {
+        const activeWalletId = this._walletStorageService.getActiveWalletId();
+        void this._secretService.backupWalletSecret(activeWalletId);
+    }
+
+    copyWalletMnemonic(): void {
+        const activeWalletId = this._walletStorageService.getActiveWalletId();
+        void this._secretService.backupWalletMnemonic(activeWalletId);
+    }
+
     getItemBackgroundColor(even: boolean): string {
         return even
             ? this.isDark()

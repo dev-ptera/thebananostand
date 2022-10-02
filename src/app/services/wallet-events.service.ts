@@ -41,4 +41,10 @@ export class WalletEventsService {
 
     /** Update wallet password */
     reencryptWalletSecret = new Subject<LocalStorageWallet>();
+
+    /** Backup wallet seed to clipboard  */
+    backupSeed = new Subject<string>();
+
+    /** Backup Mnemonic Phrase to clipboard */
+    backupMnemonic = new Subject<string>();
 }

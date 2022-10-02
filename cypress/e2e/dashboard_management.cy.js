@@ -1,6 +1,8 @@
 describe('Dashboard Management', () => {
 
     const LOW_FUND_SEED = '727A5E960F6189BBF196D84A6B7715D0A78DE82AC15BBDB340540076768CDB31';
+    const LOW_FUND_MNEMONIC = 'include spray pitch burst blush target shock swallow engine forum shell pattern juice village prison clock sad old bench abstract guess edit holiday casual';
+
     const root = 'http://localhost:4200'
     const loadInitialAccount = 'loadInitialAccount';
 
@@ -39,7 +41,6 @@ describe('Dashboard Management', () => {
             })
         }
 
-        /*
         it('should load first two accounts on the dashboard (desktop)', () => {
             cy.wait(`@${loadInitialAccount}`).then(() => {
                 cy.get('[data-cy=dashboard-wrapper]');
@@ -47,7 +48,7 @@ describe('Dashboard Management', () => {
                 cy.get('[data-cy=add-single-account-desktop-button]').click();
                 verifyNextAccountAdded();
             })
-        });*/
+        });
 
         it('should load first two accounts on the dashboard (mobile)', () => {
             cy.viewport('iphone-6');
@@ -60,6 +61,36 @@ describe('Dashboard Management', () => {
             })
         });
     })
+
+    /* https://dev.to/walmyrlimaesilv/testing-copy-to-clipboard-with-cypress-1414 */
+    Cypress.Commands.add('assertValueCopiedToClipboard', value => {
+        cy.window().then(win => {
+            win.navigator.clipboard.readText().then(text => {
+                expect(text).to.eq(value)
+            })
+        })
+    })
+
+    describe('Backup Secret', () => {
+
+        it('should copy wallet seed to clipboard', () => {
+            cy.wait(`@${loadInitialAccount}`).then(() => {
+                cy.get('[data-cy=wallet-actions-menu]').click();
+                cy.get('[data-cy=copy-seed-button]').click();
+                cy.assertValueCopiedToClipboard(LOW_FUND_SEED)
+                cy.get('.mat-snack-bar-container').contains('Seed Copied');
+            })
+        });
+
+        it('should copy wallet mnemonic to clipboard', () => {
+            cy.wait(`@${loadInitialAccount}`).then(() => {
+                cy.get('[data-cy=wallet-actions-menu]').click();
+                cy.get('[data-cy=copy-mnemonic-button]').click();
+                cy.assertValueCopiedToClipboard(LOW_FUND_MNEMONIC);
+                cy.get('.mat-snack-bar-container').contains('Mnemonic Phrase Copied');
+            })
+        });
+    });
 
     describe('Refresh Balances', () => {
 
