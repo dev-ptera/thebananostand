@@ -10,6 +10,10 @@ import { MAT_SNACK_BAR_DATA, MatSnackBar, MatSnackBarRef } from '@angular/materi
 import { EnterSecretDialogComponent } from '@app/overlays/dialogs/enter-secret/enter-secret-dialog.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { EnterSecretBottomSheetComponent } from '@app/overlays/bottom-sheet/enter-secret/enter-secret-bottom-sheet.component';
+import {
+    CreateWalletBottomSheetComponent
+} from "@app/overlays/bottom-sheet/create-wallet/create-wallet-bottom-sheet.component";
+import {CreateWalletDialogComponent} from "@app/overlays/dialogs/create-wallet/create-wallet-dialog.component";
 
 @Component({
     selector: 'ledger-snack-bar',
@@ -98,6 +102,15 @@ export class HomeComponent implements OnInit {
                     this.isShowLedgerLoadHelperText = true;
                 });
             });
+    }
+
+    openNewWalletDialog(): void {
+        const newWalletSecret = this._secretService.createNewWallet();
+        if (this.vp.sm) {
+            this._sheet.open(CreateWalletBottomSheetComponent,  { data: newWalletSecret });
+        } else {
+            this._dialog.open(CreateWalletDialogComponent, { data: newWalletSecret });
+        }
     }
 
     showDashboard(): boolean {

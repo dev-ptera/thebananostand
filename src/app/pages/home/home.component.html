@@ -36,14 +36,11 @@
                     </mat-icon>
                     The Banano Stand
                 </div>
-                <div class="mat-body-1" style="width: 100%; padding: 0 24px" [style.marginBottom.px]="vp.sm ? 16 : 8">
+                <div class="mat-body-1" style="width: 100%; padding: 0 24px" [style.marginBottom.px]="16">
                     The Banano Stand is an online wallet used to send or receive Banano.
                 </div>
             </div>
 
-            <!--
-            <div style="margin-top: 24px" class="mat-caption">New acccount? <span class="link" (click)="openNewWalletDialog()">Get started</span></div>
-            -->
 
             <div style="display: flex; flex-wrap: wrap; justify-content: center">
                 <mat-card>
@@ -86,18 +83,20 @@
                 </mat-card>
             </div>
 
+            <div style="margin-top: 16px">New wallet? <span class="link" style="margin-left: 4px" (click)="openNewWalletDialog()">Make me one!</span></div>
+
             <mat-card class="ledger-error-card" *ngIf="isShowLedgerLoadHelperText" [@fade]="'active'">
                 <div style="margin-bottom: 16px">Follow these steps for help connecting your Ledger device:</div>
                 <div class="mat-body-2 instructions">
                     <div><strong>#1</strong> Connect your Ledger Device via USB.</div>
                     <div>
-                        <strong>#2</strong> Ensure the BANANO app is installed and the version is up-to-date (>v1.2.6).
+                        <strong>#2</strong> Ensure the Banano app is installed and the version is up-to-date (>v1.2.6).
                     </div>
                     <div>
                         <strong>#3</strong> Ensure no other wallet software is attempting to access your ledger device.
                     </div>
                     <div><strong>#4</strong> Open this web page in Brave, Chrome, or Edge Browser.</div>
-                    <div><strong>#5</strong> Open the BANANO app on your Ledger.</div>
+                    <div><strong>#5</strong> Open the Banano app on your Ledger.</div>
                     <div><strong>#6</strong> Click the "Load Accounts" button above.</div>
                 </div>
             </mat-card>

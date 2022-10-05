@@ -112,6 +112,19 @@ seed-> menomimc
          */
     // }
 
+    createNewWallet(): { seed: string; mnemonic: string } {
+        const seedBytes = new Uint8Array(32);
+        window.crypto.getRandomValues(seedBytes);
+        // @ts-ignore
+        const newSeed = window.bananocoinBananojs.bananoUtil.bytesToHex(seedBytes);
+        // @ts-ignore
+        const newMnemonic = window.bip39.entropyToMnemonic(newSeed);
+        return {
+            seed: newSeed,
+            mnemonic: newMnemonic
+        }
+    }
+
     async getSecret(walletId: number): Promise<string> {
         const wallet = this._walletStorageService.getWalletFromId(walletId);
         const encryptedSeed = wallet.encryptedSeed;
