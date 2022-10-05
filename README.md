@@ -1,6 +1,6 @@
 # TheBananoStand
 
-This is a wallet that allows users to self-manage funds via a Ledger hardware wallet.
+This is a wallet that allows users to self-manage funds via a Ledger hardware wallet or imported wallet. 
 
 [https://thebananostand.com](https://thebananostand.com/)
 
