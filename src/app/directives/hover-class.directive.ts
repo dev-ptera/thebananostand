@@ -1,11 +1,10 @@
 import { Directive, HostListener, ElementRef, Input } from '@angular/core';
 
 @Directive({
-    selector: '[hover-class]'
+    selector: '[hover-class]',
 })
 export class HoverClassDirective {
-
-    constructor(public elementRef:ElementRef) { }
+    constructor(public elementRef: ElementRef) {}
     @Input('hover-class') hoverClass: string;
 
     @HostListener('mouseenter') onMouseEnter() {
@@ -19,5 +18,4 @@ export class HoverClassDirective {
             this.elementRef.nativeElement.classList.remove(className);
         }
     }
-
 }
