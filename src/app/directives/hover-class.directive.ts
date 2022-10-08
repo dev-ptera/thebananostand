@@ -7,13 +7,13 @@ export class HoverClassDirective {
     constructor(public elementRef: ElementRef) {}
     @Input('hover-class') hoverClass: string;
 
-    @HostListener('mouseenter') onMouseEnter() {
+    @HostListener('mouseenter') onMouseEnter(): void {
         for (const className of this.hoverClass.split(' ')) {
             this.elementRef.nativeElement.classList.add(className);
         }
     }
 
-    @HostListener('mouseleave') onMouseLeave() {
+    @HostListener('mouseleave') onMouseLeave(): void {
         for (const className of this.hoverClass.split(' ')) {
             this.elementRef.nativeElement.classList.remove(className);
         }
