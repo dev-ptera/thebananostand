@@ -59,7 +59,7 @@ $nano-blue-theme: map-merge(
     @include common.common();
     $primary: mat.get-color-from-palette($material-theme-primary, 500);
     $foreground: map-get($nano-blue-theme, foreground);
-    .primary {
+    .primary, .primary * {
         color: $primary;
     }
     .app-toolbar .blui-user-menu-avatar {
@@ -86,7 +86,12 @@ $nano-blue-theme: map-merge(
         }
     }
 
-    .blui-toolbar-menu-label {
+    .mat-expansion-panel-header-title, .mat-expansion-indicator::after {
         color: $primary;
     }
+
+
+    /*.blui-toolbar-menu-label {
+        color: $primary;
+    }*/
 }

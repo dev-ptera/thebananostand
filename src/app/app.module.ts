@@ -81,6 +81,7 @@ import { CreateWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/cre
 import { CreateWalletDialogComponent } from '@app/overlays/dialogs/create-wallet/create-wallet-dialog.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatMenuModule } from '@angular/material/menu';
+import {HoverClassDirective} from "./directives/hover-class.directive";
 
 @NgModule({
     declarations: [
@@ -122,6 +123,7 @@ import { MatMenuModule } from '@angular/material/menu';
         ChangePasswordOverlayComponent,
         ChangePasswordDialogComponent,
         ChangePasswordBottomSheetComponent,
+        HoverClassDirective,
     ],
     imports: [
         ToolbarMenuModule,

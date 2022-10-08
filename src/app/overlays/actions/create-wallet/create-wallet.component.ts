@@ -49,39 +49,17 @@ import { ViewportService } from '@app/services/viewport.service';
                     </mat-expansion-panel>
                 </mat-accordion>
 
-                <!--
-                <div class="title-row">
-                    <div class="mat-title">Seed</div>
-                    <button mat-icon-button (click)="copySeed()">
-                        <mat-icon>content_copy</mat-icon>
-                    </button>
-                </div>
-                <div style="word-break: break-all">{{ data.seed }}</div>
-
                 <mat-divider style="margin: 16px 0"></mat-divider>
-
-                <div class="title-row">
-                    <div class="mat-title">Mnemonic Phrase</div>
-                    <button mat-icon-button (click)="copyMnemonic()">
-                        <mat-icon>content_copy</mat-icon>
-                    </button>
-                </div>
-                <div style="display: flex; flex-wrap: wrap">
-                    <div *ngFor="let word of mnemonicWords; let i = index" style="width: 50%">
-                        #{{ i+1 }} - {{ word }}
-                    </div>
-                </div>
-                -->
-
-                <mat-divider style="margin: 16px 0"></mat-divider>
-                <div><strong>Save your secret phrase in a secure place & don't lose it!</strong></div>
                 <div class="mat-body-2">
-                    This secret text allows you to access your Banano using any wallet. Losing this secret means losing
-                    access to your accounts.
+                    This secret text allows you to access your Banano using any wallet, such as
+                    <a href="https://kalium.banano.cc/" target="_blank">Kalium</a> or
+                    <a href="https://vault.banano.cc/" target="_blank">Banano Vault</a>.
+                    Losing this secret means losing access to your accounts.
+                    <strong>Save your secret phrase in a secure place & don't lose it!</strong>
                 </div>
-                <mat-checkbox style="margin: 16px 0" [(ngModel)]="hasConfirmedBackup"
-                    >I have saved my secret</mat-checkbox
-                >
+                <mat-checkbox style="margin: 16px 0" [(ngModel)]="hasConfirmedBackup">
+                    I have saved my secret
+                </mat-checkbox>
             </div>
             <blui-spacer></blui-spacer>
             <mat-divider style="margin-left: -48px; margin-right: -48px"></mat-divider>

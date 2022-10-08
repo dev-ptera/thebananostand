@@ -79,6 +79,10 @@ textarea.mat-input-element,
     font-weight: 600 !important;
 }
 
+.transition, .transition * {
+    transition: all 250ms;
+}
+
 .app-body {
     display: flex;
     flex-direction: column;

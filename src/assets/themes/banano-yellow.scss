@@ -62,13 +62,14 @@ $banano-yellow: map-merge(
 
     $primary: mat.get-color-from-palette($material-theme-primary, 500);
     $foreground: map-get($banano-yellow, foreground);
-    .primary {
+    .primary, .primary * {
         color: $primary;
     }
 
-    .blui-toolbar-menu-label {
+
+    /*.blui-toolbar-menu-label {
         color: $primary;
-    }
+    }*/
 
     .mat-checkbox-indeterminate.mat-warn,
     .mat-checkbox-checked.mat-warn {
@@ -79,6 +80,10 @@ $banano-yellow: map-merge(
 
     .warn * {
         color: map-get($material-theme-warn, 300);
+    }
+
+    .mat-expansion-panel-header-title, .mat-expansion-indicator::after {
+        color: $primary;
     }
 
     .dashboard-account-list {
