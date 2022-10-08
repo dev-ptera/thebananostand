@@ -29,14 +29,18 @@ export class AppComponent {
             this._snackbar.open('Removed Wallet', 'Dismiss', { duration: 5000 });
         });
 
-        this._walletEventService.backupSeed.subscribe((seed) => {
-            this._copyToClipboard(seed);
-            this._snackbar.open('Wallet Seed Copied!', 'Dismiss', { duration: 5000 });
+        this._walletEventService.backupSeed.subscribe((data: { seed: string; openSnackbar: boolean }) => {
+            this._copyToClipboard(data.seed);
+            if (data.openSnackbar) {
+                this._snackbar.open('Wallet Seed Copied!', 'Dismiss', { duration: 5000 });
+            }
         });
 
-        this._walletEventService.backupMnemonic.subscribe((mnemonic) => {
-            this._copyToClipboard(mnemonic);
-            this._snackbar.open('Wallet Mnemonic Phrase Copied!', 'Dismiss', { duration: 5000 });
+        this._walletEventService.backupMnemonic.subscribe((data: { mnemonic: string; openSnackbar: boolean }) => {
+            this._copyToClipboard(data.mnemonic);
+            if (data.openSnackbar) {
+                this._snackbar.open('Wallet Mnemonic Phrase Copied!', 'Dismiss', { duration: 5000 });
+            }
         });
     }
 

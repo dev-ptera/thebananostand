@@ -1,0 +1,36 @@
+.create-wallet-overlay {
+    max-width: 340px;
+    width: 340px;
+    max-height: 590px;
+    display: flex;
+    flex-direction: column;
+    .mat-title {
+        margin-bottom: 0;
+    }
+    ::ng-deep .mat-expansion-panel-body {
+        padding-top: 16px;
+    }
+    .title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        * {
+            margin-bottom: 0;
+        }
+        button {
+            margin-left: 8px;
+        }
+        mat-icon {
+            $size: 16px;
+            font-size: $size;
+            width: $size;
+            height: $size;
+            line-height: $size;
+        }
+        .mat-icon-button {
+            height: 32px;
+            width: 32px;
+            line-height: 32px;
+        }
+    }
+}

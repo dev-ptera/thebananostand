@@ -46,6 +46,7 @@ describe('Dashboard Management', () => {
             cy.wait(`@${loadInitialAccount}`).then(() => {
                 cy.get('[data-cy=dashboard-wrapper]');
                 cy.intercept({ method: 'POST', url: '**' }).as(loadNextAccount);
+                cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
                 cy.get('[data-cy=add-single-account-desktop-button]').click();
                 verifyNextAccountAdded();
             })
@@ -56,6 +57,7 @@ describe('Dashboard Management', () => {
             cy.wait(`@${loadInitialAccount}`).then(() => {
                 cy.get('[data-cy=dashboard-wrapper]');
                 cy.intercept({ method: 'POST', url: '**' }).as(loadNextAccount);
+                cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
                 cy.get('[data-cy=show-dashboard-actions]').click();
                 cy.get('[data-cy=add-next-account-mobile-button]').click();
                 verifyNextAccountAdded();

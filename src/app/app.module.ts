@@ -47,7 +47,6 @@ import { ResponsiveDirective } from './directives/responsive.directive';
 import { LoginComponent } from '@app/pages/login/login.component';
 import { AppThemePickerComponent } from '@app/components/theme-picker/theme-picker.component';
 import { AppAccountSettingsComponent } from '@app/components/account-settings/account-settings.component';
-import { NewSeedDialogComponent } from '@app/pages/home/new-seed/new-seed-dialog.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
@@ -76,6 +75,10 @@ import { ChangePasswordOverlayComponent } from '@app/overlays/actions/change-pas
 import { ChangePasswordDialogComponent } from '@app/overlays/dialogs/change-password/change-password-dialog.component';
 import { ChangeRepDialogComponent } from '@app/overlays/dialogs/change-rep/change-rep-dialog.component';
 import { ChangePasswordBottomSheetComponent } from '@app/overlays/bottom-sheet/change-password/change-password-bottom-sheet.component';
+import { CreateWalletOverlayComponent } from '@app/overlays/actions/create-wallet/create-wallet.component';
+import { CreateWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/create-wallet/create-wallet-bottom-sheet.component';
+import { CreateWalletDialogComponent } from '@app/overlays/dialogs/create-wallet/create-wallet-dialog.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
     declarations: [
@@ -101,11 +104,13 @@ import { ChangePasswordBottomSheetComponent } from '@app/overlays/bottom-sheet/c
         FilterComponent,
         FilterBottomSheetComponent,
         EnterSecretDialogComponent,
+        CreateWalletOverlayComponent,
+        CreateWalletBottomSheetComponent,
+        CreateWalletDialogComponent,
         ResponsiveDirective,
         ReceiveBottomSheetComponent,
         LoginComponent,
         AppAccountSettingsComponent,
-        NewSeedDialogComponent,
         EnterSecretComponent,
         LedgerSnackbarErrorComponent,
         RenameWalletComponent,
@@ -149,6 +154,7 @@ import { ChangePasswordBottomSheetComponent } from '@app/overlays/bottom-sheet/c
         MatChipsModule,
         MatProgressBarModule,
         MatTooltipModule,
+        MatExpansionModule,
     ],
     providers: [],
     bootstrap: [AppComponent],

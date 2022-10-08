@@ -112,6 +112,19 @@ seed-> menomimc
          */
     // }
 
+    createNewWallet(): { seed: string; mnemonic: string } {
+        const seedBytes = new Uint8Array(32);
+        window.crypto.getRandomValues(seedBytes);
+        // @ts-ignore
+        const newSeed = window.bananocoinBananojs.bananoUtil.bytesToHex(seedBytes);
+        // @ts-ignore
+        const newMnemonic = window.bip39.entropyToMnemonic(newSeed);
+        return {
+            seed: newSeed,
+            mnemonic: newMnemonic,
+        };
+    }
+
     async getSecret(walletId: number): Promise<string> {
         const wallet = this._walletStorageService.getWalletFromId(walletId);
         const encryptedSeed = wallet.encryptedSeed;
@@ -123,14 +136,14 @@ seed-> menomimc
 
     async backupWalletSecret(walletId: number): Promise<void> {
         const seed = await this.getSecret(walletId);
-        this._walletEventService.backupSeed.next(seed);
+        this._walletEventService.backupSeed.next({ seed, openSnackbar: true });
     }
 
     async backupWalletMnemonic(walletId: number): Promise<void> {
         const seed = await this.getSecret(walletId);
         // @ts-ignore
         const mnemonic = window.bip39.entropyToMnemonic(seed);
-        this._walletEventService.backupMnemonic.next(mnemonic);
+        this._walletEventService.backupMnemonic.next({ mnemonic, openSnackbar: true });
     }
 
     // Throws an error if the login attempt fails.
