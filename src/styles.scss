@@ -74,6 +74,16 @@ textarea.mat-input-element,
     background-color: unset !important;
 }
 
+.blui-toolbar-menu-label {
+    font-size: 20px !important;
+    font-weight: 600 !important;
+}
+
+.transition,
+.transition * {
+    transition: all 250ms;
+}
+
 .app-body {
     display: flex;
     flex-direction: column;

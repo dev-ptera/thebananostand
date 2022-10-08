@@ -91,8 +91,8 @@
 <!-- Actions to manage active wallet's accounts on mobile view -->
 <ng-template #mobileAccountActions>
     <blui-user-menu
-        style="margin-right: -12px"
-        menuTitle="Account Actions"
+        style="margin-right: -16px; margin-left: 4px"
+        menuTitle="Manage Accounts"
         [(open)]="walletActionsUserMenuOpen"
         [matTooltip]="vp.sm ? '' : 'More actions'"
     >
@@ -148,6 +148,7 @@
     <blui-user-menu
         *ngIf="hasAlternativeWallets()"
         [(open)]="switchWalletUserMenuOpen"
+        [positions]="switchAccountMenuPosition"
         class="switch-wallet-user-menu"
         menuTitle="Switch Wallet"
     >
@@ -175,10 +176,10 @@
         [(open)]="manageWalletUserMenuOpen"
         [menuTitle]="vp.sm ? 'Manage Wallet' : ''"
         data-cy="wallet-actions-menu"
+        [matTooltipPosition]="vp.sm ? 'below' : 'right'"
+        matTooltip="Manage Wallets"
     >
-        <mat-icon blui-avatar style="margin-left: 8px" matTooltip="Manage Wallets" matTooltipPosition="below">
-            edit_note
-        </mat-icon>
+        <mat-icon blui-avatar style="margin-left: 8px">account_balance_wallet</mat-icon>
         <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
             <blui-info-list-item [dense]="true" (click)="openEnterSeedOverlay(); manageWalletUserMenuOpen = false">
                 <mat-icon blui-icon>add_circle</mat-icon>
@@ -220,10 +221,7 @@
 </ng-template>
 
 <ng-template #dashboardHeader>
-    <div
-        style="padding: 16px 24px 16px 24px; display: flex; justify-content: space-between; align-items: center"
-        class="dashboard-header"
-    >
+    <div class="dashboard-header" responsive>
         <div style="width: 100%; display: flex; align-items: center">
             <mat-checkbox
                 color="warn"
@@ -237,23 +235,42 @@
             </mat-checkbox>
             <div>
                 <!-- Wallet Name & Selector -->
-                <div style="display: flex; align-items: center; margin-bottom: 4px; width: 100%">
-                    <div
-                        style="display: flex"
-                        [matTooltip]="hasAlternativeWallets() ? 'Change Wallet' : undefined"
-                        matTooltipPosition="right"
-                        [class.clickable-header]="hasAlternativeWallets()"
-                    >
+                <div style="display: flex; align-items: center; width: 100%">
+                    <div style="display: flex; align-items: center" [class.clickable-header]="hasAlternativeWallets()">
                         <div
                             class="blui-headline-6 primary"
-                            style="margin: 0 8px 0 0"
+                            style="margin: 0; padding-right: 0px"
                             (click)="switchWalletUserMenuOpen = true"
                         >
                             {{ getActiveWallet()?.name }}
                         </div>
                         <ng-template [ngTemplateOutlet]="switchWalletActions" style="margin-right: 4px"></ng-template>
                     </div>
+
+                    <!-- Toolbar Menu
+                    <blui-toolbar-menu [label]="getActiveWallet()?.name" *ngIf="getWallets().length > 1">
+                        <ng-container blui-toolbar-menu-items>
+                            <ng-container *ngFor="let wallet of getWallets()">
+                                <button
+                                    mat-menu-item
+                                    *ngIf="getActiveWallet().walletId !== wallet.walletId"
+                                    (click)="changeActiveWallet(wallet)"
+                                >
+                                    {{ wallet.name }}
+                                </button>
+                            </ng-container>
+                        </ng-container>
+                    </blui-toolbar-menu>
+                    <div
+                        *ngIf="getWallets().length === 1"
+                        class="blui-headline-6 primary"
+                        style="margin: 0; padding-right: 8px"
+                    >
+                        {{ getActiveWallet()?.name }}
+                    </div> -->
+                    <ng-template *ngIf="!vp.sm" [ngTemplateOutlet]="manageWallet"></ng-template>
                 </div>
+
                 <!-- Account Balance -->
                 <div>
                     <span class="mat-subheading-1" style="margin-right: 8px"> Accounts Balance: </span>
@@ -263,7 +280,7 @@
             </div>
         </div>
 
-        <ng-template [ngTemplateOutlet]="manageWallet" style="margin-right: 8px"></ng-template>
+        <ng-template *ngIf="vp.sm" [ngTemplateOutlet]="manageWallet" style="margin-right: 8px"></ng-template>
         <ng-template *ngIf="vp.sm; else desktopAccountActions" [ngTemplateOutlet]="mobileAccountActions"></ng-template>
     </div>
 </ng-template>
@@ -278,7 +295,7 @@
         [style.backgroundColor]="getItemBackgroundColor(even)"
         (click)="openAccount(account.fullAddress)"
     >
-        <div blui-left-content style="display: flex; align-items: center">
+        <div blui-left-content style="display: flex; align-items: center; min-width: 72px">
             <mat-checkbox
                 *ngIf="isAdvancedView"
                 color="warn"
