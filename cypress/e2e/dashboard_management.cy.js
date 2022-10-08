@@ -33,7 +33,7 @@ describe('Dashboard Management', () => {
         })
     });
 
-    describe.only('Add Next Account', () => {
+    describe('Add Next Account', () => {
 
         const loadNextAccount = 'loadNextAccount';
         const verifyNextAccountAdded = () => {
