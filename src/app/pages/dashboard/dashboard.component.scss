@@ -62,6 +62,16 @@
     height: 6rem !important;
 }
 
+$headerHeight: 90px;
+.dashboard-header {
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    &.sm {
+        height: $headerHeight;
+    }
+}
 .dashboard-account-list {
     .account-number {
         position: absolute;
@@ -86,7 +96,6 @@
     }
     max-height: calc(100vh - 250px);
     &.sm {
-        $headerHeight: 93px;
         max-height: calc(100vh - (56px + $headerHeight + 1px)); // Don't forget the divider height. 1px
         max-height: calc(var(--app-height) - (56px + $headerHeight + 1px));
     }

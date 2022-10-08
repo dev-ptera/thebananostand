@@ -222,10 +222,7 @@
 </ng-template>
 
 <ng-template #dashboardHeader>
-    <div
-        style="padding: 16px 24px 16px 24px; display: flex; justify-content: space-between; align-items: center"
-        class="dashboard-header"
-    >
+    <div class="dashboard-header" responsive>
         <div style="width: 100%; display: flex; align-items: center">
             <mat-checkbox
                 color="warn"
@@ -239,7 +236,7 @@
             </mat-checkbox>
             <div>
                 <!-- Wallet Name & Selector -->
-                <div style="display: flex; align-items: center; margin-bottom: 4px; width: 100%">
+                <div style="display: flex; align-items: center; width: 100%">
                     <!--
                     <div
                         style="display: flex; align-items: center;"
