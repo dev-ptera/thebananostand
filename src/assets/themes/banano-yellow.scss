@@ -62,10 +62,10 @@ $banano-yellow: map-merge(
 
     $primary: mat.get-color-from-palette($material-theme-primary, 500);
     $foreground: map-get($banano-yellow, foreground);
-    .primary, .primary * {
+    .primary,
+    .primary * {
         color: $primary;
     }
-
 
     /*.blui-toolbar-menu-label {
         color: $primary;
@@ -82,7 +82,8 @@ $banano-yellow: map-merge(
         color: map-get($material-theme-warn, 300);
     }
 
-    .mat-expansion-panel-header-title, .mat-expansion-indicator::after {
+    .mat-expansion-panel-header-title,
+    .mat-expansion-indicator::after {
         color: $primary;
     }
 

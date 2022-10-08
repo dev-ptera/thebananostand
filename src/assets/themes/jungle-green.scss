@@ -93,7 +93,8 @@ $jungle-green-theme: map-merge(
     @include common.common();
     $primary: mat.get-color-from-palette($material-theme-primary, 500);
     $foreground: map-get($jungle-green-theme, foreground);
-    .primary, .primary * {
+    .primary,
+    .primary * {
         color: $primary;
     }
     .non-special-address-chars {
@@ -121,7 +122,8 @@ $jungle-green-theme: map-merge(
         }
     }
 
-    .mat-expansion-panel-header-title, .mat-expansion-indicator::after {
+    .mat-expansion-panel-header-title,
+    .mat-expansion-indicator::after {
         color: $primary;
     }
 

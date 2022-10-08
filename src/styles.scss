@@ -79,7 +79,8 @@ textarea.mat-input-element,
     font-weight: 600 !important;
 }
 
-.transition, .transition * {
+.transition,
+.transition * {
     transition: all 250ms;
 }
 

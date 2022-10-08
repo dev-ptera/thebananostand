@@ -91,7 +91,7 @@
 <!-- Actions to manage active wallet's accounts on mobile view -->
 <ng-template #mobileAccountActions>
     <blui-user-menu
-        style="margin-right: -16px; margin-left: 4px;"
+        style="margin-right: -16px; margin-left: 4px"
         menuTitle="Manage Accounts"
         [(open)]="walletActionsUserMenuOpen"
         [matTooltip]="vp.sm ? '' : 'More actions'"
@@ -236,9 +236,7 @@
             <div>
                 <!-- Wallet Name & Selector -->
                 <div style="display: flex; align-items: center; width: 100%">
-                    <div
-                        style="display: flex; align-items: center;"
-                        [class.clickable-header]="hasAlternativeWallets()">
+                    <div style="display: flex; align-items: center" [class.clickable-header]="hasAlternativeWallets()">
                         <div
                             class="blui-headline-6 primary"
                             style="margin: 0; padding-right: 0px"

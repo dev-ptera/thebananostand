@@ -53,8 +53,8 @@ import { ViewportService } from '@app/services/viewport.service';
                 <div class="mat-body-2">
                     This secret text allows you to access your Banano using any wallet, such as
                     <a href="https://kalium.banano.cc/" target="_blank">Kalium</a> or
-                    <a href="https://vault.banano.cc/" target="_blank">Banano Vault</a>.
-                    Losing this secret means losing access to your accounts.
+                    <a href="https://vault.banano.cc/" target="_blank">Banano Vault</a>. Losing this secret means losing
+                    access to your accounts.
                     <strong>Save your secret phrase in a secure place & don't lose it!</strong>
                 </div>
                 <mat-checkbox style="margin: 16px 0" [(ngModel)]="hasConfirmedBackup">
