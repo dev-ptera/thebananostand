@@ -66,6 +66,10 @@ $banano-yellow: map-merge(
         color: $primary;
     }
 
+    .blui-toolbar-menu-label {
+        color: $primary;
+    }
+
     .mat-checkbox-indeterminate.mat-warn,
     .mat-checkbox-checked.mat-warn {
         .mat-checkbox-background {

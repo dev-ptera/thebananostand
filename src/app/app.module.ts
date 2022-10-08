@@ -26,6 +26,7 @@ import {
     ListItemTagModule,
     MobileStepperModule,
     SpacerModule,
+    ToolbarMenuModule,
     UserMenuModule,
 } from '@brightlayer-ui/angular-components';
 import { MatCardModule } from '@angular/material/card';
@@ -79,6 +80,7 @@ import { CreateWalletOverlayComponent } from '@app/overlays/actions/create-walle
 import { CreateWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/create-wallet/create-wallet-bottom-sheet.component';
 import { CreateWalletDialogComponent } from '@app/overlays/dialogs/create-wallet/create-wallet-dialog.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
     declarations: [
@@ -122,6 +124,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
         ChangePasswordBottomSheetComponent,
     ],
     imports: [
+        ToolbarMenuModule,
+        MatMenuModule,
         AppRoutingModule,
         BrowserAnimationsModule,
         BrowserModule,

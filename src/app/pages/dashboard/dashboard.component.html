@@ -91,7 +91,7 @@
 <!-- Actions to manage active wallet's accounts on mobile view -->
 <ng-template #mobileAccountActions>
     <blui-user-menu
-        style="margin-right: -12px"
+        style="margin-right: -16px"
         menuTitle="Account Actions"
         [(open)]="walletActionsUserMenuOpen"
         [matTooltip]="vp.sm ? '' : 'More actions'"
@@ -144,6 +144,7 @@
     </blui-user-menu>
 </ng-template>
 
+<!--
 <ng-template #switchWalletActions>
     <blui-user-menu
         *ngIf="hasAlternativeWallets()"
@@ -168,6 +169,7 @@
         </mat-nav-list>
     </blui-user-menu>
 </ng-template>
+-->
 
 <ng-template #manageWallet>
     <blui-user-menu
@@ -177,7 +179,7 @@
         data-cy="wallet-actions-menu"
     >
         <mat-icon blui-avatar style="margin-left: 8px" matTooltip="Manage Wallets" matTooltipPosition="below">
-            edit_note
+            manage_accounts
         </mat-icon>
         <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
             <blui-info-list-item [dense]="true" (click)="openEnterSeedOverlay(); manageWalletUserMenuOpen = false">
@@ -238,21 +240,42 @@
             <div>
                 <!-- Wallet Name & Selector -->
                 <div style="display: flex; align-items: center; margin-bottom: 4px; width: 100%">
+                    <!--
                     <div
-                        style="display: flex"
+                        style="display: flex; align-items: center;"
                         [matTooltip]="hasAlternativeWallets() ? 'Change Wallet' : undefined"
-                        matTooltipPosition="right"
-                        [class.clickable-header]="hasAlternativeWallets()"
-                    >
+                        [class.clickable-header]="hasAlternativeWallets()">
                         <div
                             class="blui-headline-6 primary"
-                            style="margin: 0 8px 0 0"
+                            style="margin: 0; padding-right: 8px"
                             (click)="switchWalletUserMenuOpen = true"
                         >
                             {{ getActiveWallet()?.name }}
                         </div>
                         <ng-template [ngTemplateOutlet]="switchWalletActions" style="margin-right: 4px"></ng-template>
+                    </div> -->
+
+                    <blui-toolbar-menu [label]="getActiveWallet()?.name" *ngIf="getWallets().length > 1">
+                        <ng-container blui-toolbar-menu-items>
+                            <ng-container *ngFor="let wallet of getWallets()">
+                                <button
+                                    mat-menu-item
+                                    *ngIf="getActiveWallet().walletId !== wallet.walletId"
+                                    (click)="changeActiveWallet(wallet)"
+                                >
+                                    {{ wallet.name }}
+                                </button>
+                            </ng-container>
+                        </ng-container>
+                    </blui-toolbar-menu>
+                    <div
+                        *ngIf="getWallets().length === 1"
+                        class="blui-headline-6 primary"
+                        style="margin: 0; padding-right: 8px"
+                    >
+                        {{ getActiveWallet()?.name }}
                     </div>
+                    <ng-template *ngIf="!vp.sm" [ngTemplateOutlet]="manageWallet"></ng-template>
                 </div>
                 <!-- Account Balance -->
                 <div>
@@ -263,7 +286,7 @@
             </div>
         </div>
 
-        <ng-template [ngTemplateOutlet]="manageWallet" style="margin-right: 8px"></ng-template>
+        <ng-template *ngIf="vp.sm" [ngTemplateOutlet]="manageWallet" style="margin-right: 8px"></ng-template>
         <ng-template *ngIf="vp.sm; else desktopAccountActions" [ngTemplateOutlet]="mobileAccountActions"></ng-template>
     </div>
 </ng-template>
@@ -278,7 +301,7 @@
         [style.backgroundColor]="getItemBackgroundColor(even)"
         (click)="openAccount(account.fullAddress)"
     >
-        <div blui-left-content style="display: flex; align-items: center">
+        <div blui-left-content style="display: flex; align-items: center; min-width: 72px">
             <mat-checkbox
                 *ngIf="isAdvancedView"
                 color="warn"
