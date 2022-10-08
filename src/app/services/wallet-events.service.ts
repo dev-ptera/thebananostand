@@ -43,8 +43,8 @@ export class WalletEventsService {
     reencryptWalletSecret = new Subject<LocalStorageWallet>();
 
     /** Backup wallet seed to clipboard  */
-    backupSeed = new Subject<string>();
+    backupSeed = new Subject<{ seed: string; openSnackbar: boolean }>();
 
     /** Backup Mnemonic Phrase to clipboard */
-    backupMnemonic = new Subject<string>();
+    backupMnemonic = new Subject<{ mnemonic: string; openSnackbar: boolean }>();
 }

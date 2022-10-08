@@ -41,7 +41,6 @@
                 </div>
             </div>
 
-
             <div style="display: flex; flex-wrap: wrap; justify-content: center">
                 <mat-card>
                     <blui-empty-state>
@@ -83,7 +82,10 @@
                 </mat-card>
             </div>
 
-            <div style="margin-top: 16px">New wallet? <span class="link" style="margin-left: 4px" (click)="openNewWalletDialog()">Make me one!</span></div>
+            <div style="margin-top: 16px">
+                New wallet?
+                <span class="link" style="margin-left: 4px" (click)="openNewWalletDialog()">Make me one!</span>
+            </div>
 
             <mat-card class="ledger-error-card" *ngIf="isShowLedgerLoadHelperText" [@fade]="'active'">
                 <div style="margin-bottom: 16px">Follow these steps for help connecting your Ledger device:</div>
