@@ -25,7 +25,7 @@ export class SecretService {
             this.walletPassword = undefined;
         });
 
-        this._walletEventService.addSecret.subscribe((data: { secret: string, password: string }) => {
+        this._walletEventService.addSecret.subscribe((data: { secret: string; password: string }) => {
             void this._storeSecret(data.secret, data.password);
         });
     }

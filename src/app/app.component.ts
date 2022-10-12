@@ -48,7 +48,7 @@ export class AppComponent {
         window.focus();
         setTimeout(() => {
             try {
-               void navigator.clipboard.writeText(text)
+                void navigator.clipboard.writeText(text);
             } catch (err) {
                 const el = document.createElement('textarea');
                 el.value = text;

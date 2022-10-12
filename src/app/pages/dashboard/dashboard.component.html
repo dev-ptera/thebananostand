@@ -12,10 +12,7 @@
             </ng-template>
             <ng-template #switchWalletsMenu>
                 <ng-container>
-                    <button  *ngFor="let wallet of getWallets()"
-                        mat-menu-item
-                        (click)="changeActiveWallet(wallet)"
-                    >
+                    <button *ngFor="let wallet of getWallets()" mat-menu-item (click)="changeActiveWallet(wallet)">
                         {{ wallet.name }} 123
                     </button>
                 </ng-container>
@@ -110,12 +107,7 @@
         </button>
     </ng-template>
     <ng-template #walletActionsDesktopTrigger>
-        <button
-            mat-stroked-button
-            blui-inline
-            style="margin-right: 16px"
-            data-cy="wallet-actions-desktop-menu"
-        >
+        <button mat-stroked-button blui-inline style="margin-right: 16px" data-cy="wallet-actions-desktop-menu">
             <span>Wallet</span>
             <mat-icon>arrow_drop_down</mat-icon>
         </button>
@@ -153,11 +145,7 @@
         </button>
     </ng-template>
     <ng-template #accountActionsDesktopTrigger>
-        <button
-            mat-stroked-button
-            blui-inline
-            data-cy="wallet-actions-desktop-menu"
-        >
+        <button mat-stroked-button blui-inline data-cy="wallet-actions-desktop-menu">
             <span>Account</span>
             <mat-icon>arrow_drop_down</mat-icon>
         </button>

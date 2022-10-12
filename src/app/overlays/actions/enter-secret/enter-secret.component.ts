@@ -4,7 +4,7 @@ import { AccountService } from '@app/services/account.service';
 import { SpyglassService } from '@app/services/spyglass.service';
 import { UtilService } from '@app/services/util.service';
 import { SecretService } from '@app/services/secret.service';
-import {WalletEventsService} from "@app/services/wallet-events.service";
+import { WalletEventsService } from '@app/services/wallet-events.service';
 
 @Component({
     selector: 'app-enter-secret-overlay',
@@ -98,7 +98,7 @@ export class EnterSecretComponent implements OnInit {
         private readonly _secretService: SecretService,
         private readonly _accountService: AccountService,
         private readonly _transactionService: TransactionService,
-        private readonly _walletEventService: WalletEventsService,
+        private readonly _walletEventService: WalletEventsService
     ) {}
 
     ngOnInit(): void {

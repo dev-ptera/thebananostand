@@ -37,7 +37,8 @@ import { MatMenuTrigger } from '@angular/material/menu';
 
         <ng-template #menuTrigger>
             <ng-template *ngIf="disabled" [ngTemplateOutlet]="desktopTrigger"></ng-template>
-            <div *ngIf="!disabled"
+            <div
+                *ngIf="!disabled"
                 [matMenuTriggerFor]="menuOverlay"
                 #responsiveMenuTrigger="matMenuTrigger"
                 (onMenuClose)="checkCloseMenu()"
