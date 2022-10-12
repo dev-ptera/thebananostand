@@ -29,12 +29,11 @@ import { ConnectionPositionPair } from '@angular/cdk/overlay';
 export class DashboardComponent implements OnInit, OnDestroy {
     colors = Colors;
 
-    fade = true;
-    isAdvancedView = false;
-    loadingAccount = true;
-    walletActionsUserMenuOpen = false;
-    manageWalletUserMenuOpen = false;
-    switchWalletUserMenuOpen = false;
+    hasHideAccountToggle = false;
+    isLoadingAccount = true;
+    accountActionsOverlayOpen = false;
+    walletActionsOverlayOpen = false;
+    switchWalletOverlayOpen = false;
     hoverRowNumber: number;
 
     selectedItems: Set<number> = new Set();
@@ -42,29 +41,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
     loadingAccountListener: Subscription;
     bottomSheetOpenDelayMs = 250;
 
-    switchAccountMenuPosition = [
-        new ConnectionPositionPair({ originX: 'end', originY: 'bottom' }, { overlayX: 'end', overlayY: 'center' }),
-    ];
-
     constructor(
         private readonly _router: Router,
         private readonly _dialog: MatDialog,
         private readonly _util: UtilService,
         private readonly _sheet: MatBottomSheet,
         private readonly _themeService: ThemeService,
+        private readonly _secretService: SecretService,
         private readonly _accountService: AccountService,
         private readonly _walletStorageService: WalletStorageService,
         private readonly _walletEventsService: WalletEventsService,
-        private readonly _secretService: SecretService,
         public vp: ViewportService
     ) {}
 
     ngOnInit(): void {
         // Initial Load
-        this.loadingAccount = this.getAccounts().length === 0;
+        this.isLoadingAccount = this.getAccounts().length === 0;
         this.loadingAccountListener = this._walletEventsService.accountLoading.subscribe((loading) => {
             setTimeout(() => {
-                this.loadingAccount = loading;
+                this.isLoadingAccount = loading;
             });
         });
     }
@@ -75,6 +70,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
     }
 
+    /** Wallet Actions [START] */
     openEnterSeedOverlay(): void {
         if (this.vp.sm) {
             setTimeout(() => {
@@ -83,6 +79,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         } else {
             this._dialog.open(EnterSecretDialogComponent);
         }
+        this.walletActionsOverlayOpen = false;
     }
 
     openRenameWalletOverlay(): void {
@@ -93,6 +90,41 @@ export class DashboardComponent implements OnInit, OnDestroy {
         } else {
             this._dialog.open(RenameWalletDialogComponent);
         }
+        this.walletActionsOverlayOpen = false;
+    }
+
+    removeWallet(): void {
+        this._walletEventsService.removeWallet.next();
+        this.walletActionsOverlayOpen = false;
+    }
+
+    copyWalletSeed(): void {
+        const activeWalletId = this._walletStorageService.getActiveWalletId();
+        void this._secretService.backupWalletSecret(activeWalletId);
+        this.walletActionsOverlayOpen = false;
+    }
+
+    copyWalletMnemonic(): void {
+        const activeWalletId = this._walletStorageService.getActiveWalletId();
+        void this._secretService.backupWalletMnemonic(activeWalletId);
+        this.walletActionsOverlayOpen = false;
+    }
+    /** Wallet Actions [END] */
+
+    /** Account Actions [START] **/
+    refresh(): void {
+        this._walletEventsService.refreshIndexes.next();
+        this.isLoadingAccount = true;
+        this.accountActionsOverlayOpen = false;
+    }
+
+    addAccount(): void {
+        if (this.isLoadingAccount) {
+            return;
+        }
+        const nextIndex = this._accountService.findNextUnloadedIndex();
+        this._walletEventsService.addIndex.next(nextIndex);
+        this.accountActionsOverlayOpen = false;
     }
 
     addAccountFromIndex(): void {
@@ -103,23 +135,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
         } else {
             this._dialog.open(AddIndexDialogComponent);
         }
+        this.accountActionsOverlayOpen = false;
     }
-
-    removeWallet(): void {
-        this._walletEventsService.removeWallet.next();
-    }
-
-    refresh(): void {
-        this._walletEventsService.refreshIndexes.next();
-    }
-
-    addAccount(): void {
-        if (this.loadingAccount) {
-            return;
-        }
-        const nextIndex = this._accountService.findNextUnloadedIndex();
-        this._walletEventsService.addIndex.next(nextIndex);
-    }
+    /** Account Actions [END] **/
 
     isDark(): boolean {
         return this._themeService.isDark();
@@ -161,6 +179,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
         return this._accountService.accounts;
     }
 
+    toggleSelectAccounts(): void {
+        this.hasHideAccountToggle = !this.hasHideAccountToggle;
+        this.accountActionsOverlayOpen = false;
+        this.selectedItems.clear();
+    }
+
     hideSelected(): void {
         for (const index of Array.from(this.selectedItems.values())) {
             this._walletEventsService.removeIndex.next(index);
@@ -188,16 +212,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     changeActiveWallet(wallet: LocalStorageWallet): void {
         this._walletEventsService.activeWalletChange.next(wallet);
-    }
-
-    copyWalletSeed(): void {
-        const activeWalletId = this._walletStorageService.getActiveWalletId();
-        void this._secretService.backupWalletSecret(activeWalletId);
-    }
-
-    copyWalletMnemonic(): void {
-        const activeWalletId = this._walletStorageService.getActiveWalletId();
-        void this._secretService.backupWalletMnemonic(activeWalletId);
+        this.switchWalletOverlayOpen = false;
     }
 
     getItemBackgroundColor(even: boolean): string {

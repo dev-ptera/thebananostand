@@ -35,7 +35,7 @@ import { WalletStorageService } from '@app/services/wallet-storage.service';
                     mat-dialog-close
                     color="primary"
                     (click)="close.emit()"
-                    style="width: 130px;"
+                    style="width: 100px;"
                 >
                     Close
                 </button>
@@ -43,7 +43,7 @@ import { WalletStorageService } from '@app/services/wallet-storage.service';
                     data-cy="add-account-overlay-button"
                     mat-flat-button
                     color="primary"
-                    style="width: 130px;"
+                    style="width: 100px;"
                     [disabled]="isDisabled()"
                     (click)="renameWallet()"
                 >

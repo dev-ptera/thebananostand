@@ -13,6 +13,9 @@ export class WalletEventsService {
     walletLocked = new Subject<void>();
 
     /** A new secret has been provided */
+    addSecret = new Subject<{ secret: string, password: string }>();
+
+    /** A new encrypted wallet has been created. */
     addWallet = new Subject<LocalStorageWallet>();
 
     /** The actively displayed wallet on the dashboard has changed. */

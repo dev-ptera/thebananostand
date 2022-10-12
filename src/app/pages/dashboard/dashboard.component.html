@@ -1,3 +1,50 @@
+<!-- Displays wallet name & gives an option to change wallets. -->
+<ng-template #walletNameDropdown>
+    <div style="display: flex; align-items: center; width: 100%">
+        <div style="display: flex; align-items: center" [class.clickable-header]="hasAlternativeWallets()">
+            <ng-template #switchWalletNameTrigger>
+                <div style="display: flex; align-items: center">
+                    <div responsive-trigger class="blui-headline-6 primary" style="margin: 0">
+                        {{ getActiveWallet()?.name }}
+                    </div>
+                    <mat-icon *ngIf="getWallets().length > 1">arrow_drop_down</mat-icon>
+                </div>
+            </ng-template>
+            <ng-template #switchWalletsMenu>
+                <ng-container>
+                    <button  *ngFor="let wallet of getWallets()"
+                        mat-menu-item
+                        (click)="changeActiveWallet(wallet)"
+                    >
+                        {{ wallet.name }} 123
+                    </button>
+                </ng-container>
+            </ng-template>
+            <responsive-menu
+                menuTitle="Switch Wallet"
+                [(open)]="switchWalletOverlayOpen"
+                [menu]="switchWalletsMenu"
+                [disabled]="getWallets().length === 1"
+                [desktopTrigger]="switchWalletNameTrigger"
+                [mobileTrigger]="switchWalletNameTrigger"
+            >
+            </responsive-menu>
+        </div>
+    </div>
+</ng-template>
+
+<!-- Indicates an account has not yet received any transactions -->
+<ng-template #unopenedAccountTag>
+    <blui-list-item-tag
+        responsive
+        label="Unopened Account"
+        class="unopened-account-tag"
+        [fontColor]="colors.black[500]"
+        [backgroundColor]="colors.gray[100]"
+    >
+    </blui-list-item-tag>
+</ng-template>
+
 <!-- Statuses that are shown beneath an address.  Includes "Rep Offline" & "Has Receivable" information. -->
 <ng-template #statusBadges let-account="account">
     <blui-list-item-tag
@@ -17,22 +64,10 @@
     ></blui-list-item-tag>
 </ng-template>
 
-<!-- Indicates an account has not yet received any transactions -->
-<ng-template #unopenedTag>
-    <blui-list-item-tag
-        responsive
-        label="Unopened Account"
-        class="unopened-account-tag"
-        [fontColor]="colors.black[500]"
-        [backgroundColor]="colors.gray[100]"
-    >
-    </blui-list-item-tag>
-</ng-template>
-
 <!-- Is shown whenever a seed is loaded, but no individual addresses are shown yet. -->
-<ng-template #noAccountsLoaded>
+<ng-template #noAccountsEmptyState>
     <blui-empty-state
-        *ngIf="getAccounts().length === 0 && !loadingAccount"
+        *ngIf="getAccounts().length === 0 && !isLoadingAccount"
         style="margin: 64px 0 48px 0"
         title="No Accounts Displayed"
         description="Use the buttons above to add an account."
@@ -41,183 +76,103 @@
     </blui-empty-state>
 </ng-template>
 
-<!-- Actions to manage active wallet's accounts on desktop view -->
-<ng-template #desktopAccountActions>
-    <button
-        mat-icon-button
-        matTooltip="Refresh balances"
-        (click)="refresh()"
-        data-cy="refresh-dashboard-desktop-button"
-    >
-        <mat-icon blui-icon>refresh</mat-icon>
-    </button>
-    <button
-        mat-icon-button
-        matTooltip="Add next account"
-        (click)="addAccount()"
-        data-cy="add-single-account-desktop-button"
-    >
-        <mat-icon>add</mat-icon>
-    </button>
-    <button
-        mat-icon-button
-        matTooltip="Add specific account"
-        (click)="addAccountFromIndex()"
-        data-cy="add-specific-account-desktop-button"
-    >
-        <mat-icon>manage_search</mat-icon>
-    </button>
-    <button
-        *ngIf="selectedItems.size === 0"
-        mat-icon-button
-        matTooltip="Toggle edit accounts"
-        data-cy="edit-account-dashboard-desktop-button"
-        (click)="isAdvancedView = !isAdvancedView"
-    >
-        <mat-icon blui-icon>{{ isAdvancedView ? 'edit_off' : 'edit' }}</mat-icon>
-    </button>
-    <button
-        *ngIf="selectedItems.size !== 0"
-        mat-icon-button
-        matTooltip="Hide selected accounts"
-        color="warn"
-        data-cy="remove-account-dashboard-desktop-button"
-        (click)="hideSelected()"
-    >
-        <mat-icon blui-icon>delete</mat-icon>
-    </button>
-</ng-template>
-
-<!-- Actions to manage active wallet's accounts on mobile view -->
-<ng-template #mobileAccountActions>
-    <blui-user-menu
-        style="margin-right: -16px; margin-left: 4px"
-        menuTitle="Manage Accounts"
-        [(open)]="walletActionsUserMenuOpen"
-        [matTooltip]="vp.sm ? '' : 'More actions'"
-    >
-        <mat-icon data-cy="show-dashboard-actions" blui-avatar>more_vert</mat-icon>
-        <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
-            <blui-info-list-item
-                *ngIf="vp.sm"
-                [dense]="true"
-                (click)="addAccount(); walletActionsUserMenuOpen = false"
-                data-cy="add-next-account-mobile-button"
-            >
-                <mat-icon blui-icon>add</mat-icon>
-                <div blui-title>Add Account</div>
-            </blui-info-list-item>
-            <blui-info-list-item
-                [dense]="true"
-                (click)="addAccountFromIndex(); walletActionsUserMenuOpen = false"
-                data-cy="add-specific-account-mobile-button"
-            >
-                <mat-icon blui-icon>manage_search</mat-icon>
-                <div blui-title>Add Specific Account</div>
-            </blui-info-list-item>
-            <blui-info-list-item
-                [dense]="true"
-                (click)="refresh(); walletActionsUserMenuOpen = false"
-                data-cy="refresh-dashboard-mobile-button"
-            >
-                <mat-icon blui-icon>refresh</mat-icon>
-                <div blui-title>Refresh Balances</div>
-            </blui-info-list-item>
-            <blui-info-list-item
-                [dense]="true"
-                (click)="isAdvancedView = !isAdvancedView; walletActionsUserMenuOpen = false; selectedItems.clear()"
-                data-cy="select-accounts-mobile-button"
-            >
-                <mat-icon blui-icon>visibility</mat-icon>
-                <div blui-title>Toggle Hide Accounts</div>
-            </blui-info-list-item>
-            <blui-info-list-item
-                *ngIf="selectedItems.size > 0"
-                [dense]="true"
-                (click)="hideSelected(); walletActionsUserMenuOpen = false"
-                data-cy="remove-account-mobile-button"
-            >
-                <mat-icon blui-icon>delete</mat-icon>
-                <div blui-title>Hide Selected Accounts</div>
-            </blui-info-list-item>
-        </mat-nav-list>
-    </blui-user-menu>
-</ng-template>
-
-<ng-template #switchWalletActions>
-    <blui-user-menu
-        *ngIf="hasAlternativeWallets()"
-        [(open)]="switchWalletUserMenuOpen"
-        [positions]="switchAccountMenuPosition"
-        class="switch-wallet-user-menu"
-        menuTitle="Switch Wallet"
-    >
-        <mat-icon blui-avatar>arrow_drop_down</mat-icon>
-        <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
-            <div style="max-height: 180px; overflow: auto">
-                <ng-container *ngFor="let wallet of getWallets()">
-                    <blui-info-list-item
-                        *ngIf="getActiveWallet().walletId !== wallet.walletId"
-                        [dense]="true"
-                        [hidePadding]="true"
-                        (click)="changeActiveWallet(wallet); switchWalletUserMenuOpen = false"
-                    >
-                        <div blui-title>{{ wallet.name }}</div>
-                    </blui-info-list-item>
-                </ng-container>
+<!-- Wallet-level actions -->
+<ng-template #walletActions>
+    <ng-template #walletActionsMenu>
+        <div class="mat-overline" style="padding-left: 16px">Actions</div>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="openEnterSeedOverlay()">
+            <mat-icon>add_circle_outline</mat-icon>
+            Import
+        </button>
+        <button mat-menu-item (click)="openRenameWalletOverlay()">
+            <mat-icon>drive_file_rename_outline</mat-icon>
+            Rename
+        </button>
+        <button mat-menu-item longPress (mouseLongPress)="removeWallet()" data-cy="remove-wallet-button">
+            <div style="display: flex; align-items: center">
+                <mat-icon color="warn">clear</mat-icon>
+                <div style="display: flex; flex-direction: column">
+                    <div style="height: 20px; line-height: 20px">Remove</div>
+                    <div style="height: 20px; line-height: 20px; font-size: 12px">(Long Press)</div>
+                </div>
             </div>
-        </mat-nav-list>
-    </blui-user-menu>
+        </button>
+        <div class="mat-overline" style="margin-top: 24px; padding-left: 16px">Backup</div>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="copyWalletSeed()" data-cy="copy-seed-button">
+            <mat-icon>content_copy</mat-icon>
+            Copy Seed
+        </button>
+        <button mat-menu-item (click)="copyWalletMnemonic()" data-cy="copy-mnemonic-button">
+            <mat-icon>content_copy</mat-icon>
+            Copy Mnemonic
+        </button>
+    </ng-template>
+    <ng-template #walletActionsDesktopTrigger>
+        <button
+            mat-stroked-button
+            blui-inline
+            style="margin-right: 16px"
+            data-cy="wallet-actions-desktop-menu"
+        >
+            <span>Wallet</span>
+            <mat-icon>arrow_drop_down</mat-icon>
+        </button>
+    </ng-template>
+    <ng-template #walletActionsMobileTrigger>
+        <mat-icon blui-avatar style="margin-left: 8px">account_balance_wallet</mat-icon>
+    </ng-template>
+    <responsive-menu
+        menuTitle="Wallet Actions"
+        [(open)]="walletActionsOverlayOpen"
+        [menu]="walletActionsMenu"
+        [desktopTrigger]="walletActionsDesktopTrigger"
+        [mobileTrigger]="walletActionsMobileTrigger"
+    >
+    </responsive-menu>
 </ng-template>
 
-<ng-template #manageWallet>
-    <blui-user-menu
-        *ngIf="!isLedgerDevice()"
-        [(open)]="manageWalletUserMenuOpen"
-        [menuTitle]="vp.sm ? 'Manage Wallet' : ''"
-        data-cy="wallet-actions-menu"
-        [matTooltipPosition]="vp.sm ? 'below' : 'right'"
-        matTooltip="Manage Wallets"
+<!-- Account-level actions -->
+<ng-template #accountActions>
+    <ng-template #accountActionsMenu>
+        <button mat-menu-item (click)="refresh()" data-cy="refresh-dashboard-button">
+            <mat-icon blui-icon>refresh</mat-icon>Refresh
+        </button>
+        <div class="mat-overline" style="margin-top: 24px; padding-left: 16px">Show / Hide</div>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="addAccount()" data-cy="add-next-account-button">
+            <mat-icon blui-icon>add_circle_outline</mat-icon>Add Account
+        </button>
+        <button mat-menu-item (click)="addAccountFromIndex()" data-cy="add-specific-account-button">
+            <mat-icon blui-icon>pin</mat-icon>Add Specific
+        </button>
+        <button mat-menu-item (click)="toggleSelectAccounts()" data-cy="select-accounts-button">
+            <mat-icon blui-icon>{{ hasHideAccountToggle ? 'visibility_off' : 'visibility' }}</mat-icon
+            >Toggle Hide
+        </button>
+    </ng-template>
+    <ng-template #accountActionsDesktopTrigger>
+        <button
+            mat-stroked-button
+            blui-inline
+            data-cy="wallet-actions-desktop-menu"
+        >
+            <span>Account</span>
+            <mat-icon>arrow_drop_down</mat-icon>
+        </button>
+    </ng-template>
+    <ng-template #accountActionsMobileTrigger>
+        <mat-icon style="margin: 0 -8px 0 16px">more_vert</mat-icon>
+    </ng-template>
+    <responsive-menu
+        menuTitle="Account Actions"
+        [(open)]="accountActionsOverlayOpen"
+        [menu]="accountActionsMenu"
+        [desktopTrigger]="accountActionsDesktopTrigger"
+        [mobileTrigger]="accountActionsMobileTrigger"
     >
-        <mat-icon blui-avatar style="margin-left: 8px">account_balance_wallet</mat-icon>
-        <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
-            <blui-info-list-item [dense]="true" (click)="openEnterSeedOverlay(); manageWalletUserMenuOpen = false">
-                <mat-icon blui-icon>add_circle</mat-icon>
-                <div blui-title>Add Wallet</div>
-            </blui-info-list-item>
-            <blui-info-list-item [dense]="true" (click)="openRenameWalletOverlay(); manageWalletUserMenuOpen = false">
-                <mat-icon blui-icon>edit</mat-icon>
-                <div blui-title>Rename Wallet</div>
-            </blui-info-list-item>
-            <blui-info-list-item
-                [dense]="true"
-                (click)="copyWalletSeed(); manageWalletUserMenuOpen = false"
-                data-cy="copy-seed-button"
-            >
-                <mat-icon blui-icon>lock</mat-icon>
-                <div blui-title>Copy Seed</div>
-            </blui-info-list-item>
-            <blui-info-list-item
-                [dense]="true"
-                (click)="copyWalletMnemonic(); manageWalletUserMenuOpen = false"
-                data-cy="copy-mnemonic-button"
-            >
-                <mat-icon blui-icon>lock</mat-icon>
-                <div blui-title>Copy Mnemonic</div>
-            </blui-info-list-item>
-            <blui-info-list-item
-                data-cy="remove-wallet-button"
-                longPress
-                [dense]="true"
-                (mouseLongPress)="removeWallet(); manageWalletUserMenuOpen = false"
-                class="warn"
-            >
-                <mat-icon blui-icon>delete</mat-icon>
-                <div blui-title>Remove Wallet</div>
-                <div blui-info>(Long Press)</div>
-            </blui-info-list-item>
-        </mat-nav-list>
-    </blui-user-menu>
+    </responsive-menu>
 </ng-template>
 
 <ng-template #dashboardHeader>
@@ -225,7 +180,7 @@
         <div style="width: 100%; display: flex; align-items: center">
             <mat-checkbox
                 color="warn"
-                *ngIf="isAdvancedView"
+                *ngIf="hasHideAccountToggle"
                 [disabled]="getAccounts().length === 0"
                 style="margin-right: 32px; margin-left: -8px"
                 (change)="toggleAll($event)"
@@ -235,42 +190,7 @@
             </mat-checkbox>
             <div>
                 <!-- Wallet Name & Selector -->
-                <div style="display: flex; align-items: center; width: 100%">
-                    <div style="display: flex; align-items: center" [class.clickable-header]="hasAlternativeWallets()">
-                        <div
-                            class="blui-headline-6 primary"
-                            style="margin: 0; padding-right: 0px"
-                            (click)="switchWalletUserMenuOpen = true"
-                        >
-                            {{ getActiveWallet()?.name }}
-                        </div>
-                        <ng-template [ngTemplateOutlet]="switchWalletActions" style="margin-right: 4px"></ng-template>
-                    </div>
-
-                    <!-- Toolbar Menu
-                    <blui-toolbar-menu [label]="getActiveWallet()?.name" *ngIf="getWallets().length > 1">
-                        <ng-container blui-toolbar-menu-items>
-                            <ng-container *ngFor="let wallet of getWallets()">
-                                <button
-                                    mat-menu-item
-                                    *ngIf="getActiveWallet().walletId !== wallet.walletId"
-                                    (click)="changeActiveWallet(wallet)"
-                                >
-                                    {{ wallet.name }}
-                                </button>
-                            </ng-container>
-                        </ng-container>
-                    </blui-toolbar-menu>
-                    <div
-                        *ngIf="getWallets().length === 1"
-                        class="blui-headline-6 primary"
-                        style="margin: 0; padding-right: 8px"
-                    >
-                        {{ getActiveWallet()?.name }}
-                    </div> -->
-                    <ng-template *ngIf="!vp.sm" [ngTemplateOutlet]="manageWallet"></ng-template>
-                </div>
-
+                <ng-template [ngTemplateOutlet]="walletNameDropdown"></ng-template>
                 <!-- Account Balance -->
                 <div>
                     <span class="mat-subheading-1" style="margin-right: 8px"> Accounts Balance: </span>
@@ -279,9 +199,19 @@
                 </div>
             </div>
         </div>
-
-        <ng-template *ngIf="vp.sm" [ngTemplateOutlet]="manageWallet" style="margin-right: 8px"></ng-template>
-        <ng-template *ngIf="vp.sm; else desktopAccountActions" [ngTemplateOutlet]="mobileAccountActions"></ng-template>
+        <ng-template [ngTemplateOutlet]="walletActions" *ngIf="!isLedgerDevice()"></ng-template>
+        <ng-template [ngTemplateOutlet]="accountActions"></ng-template>
+        <button
+            style="margin-left: 16px; margin-right: -16px"
+            *ngIf="selectedItems.size !== 0"
+            mat-icon-button
+            matTooltip="Hide selected accounts"
+            color="warn"
+            data-cy="remove-account-dashboard-button"
+            (click)="hideSelected()"
+        >
+            <mat-icon blui-icon>delete</mat-icon>
+        </button>
     </div>
 </ng-template>
 
@@ -297,7 +227,7 @@
     >
         <div blui-left-content style="display: flex; align-items: center; min-width: 72px">
             <mat-checkbox
-                *ngIf="isAdvancedView"
+                *ngIf="hasHideAccountToggle"
                 color="warn"
                 style="margin-bottom: 6px; margin-right: 16px"
                 (click)="$event.stopPropagation()"
@@ -325,7 +255,7 @@
             </ng-container>
 
             <ng-container *ngIf="vp.sm">
-                <ng-container *ngIf="account.representative; else unopenedTag">
+                <ng-container *ngIf="account.representative; else unopenedAccountTag">
                     <span> {{ account.formattedBalance }} BAN </span>
                 </ng-container>
             </ng-container>
@@ -339,15 +269,7 @@
         </div>
         <div blui-right-content *ngIf="!vp.sm">
             <ng-template *ngTemplateOutlet="statusBadges; context: { account: this.account }"></ng-template>
-            <ng-container *ngIf="account.representative; else unopenedTag">
-                <!--
-                <img
-                    *ngIf="!vp.sm"
-                    style="margin-left: 16px; margin-right: 8px"
-                    src="assets/banano-mark.svg"
-                    [width]="18"
-                    [height]="18"
-                /> -->
+            <ng-container *ngIf="account.representative; else unopenedAccountTag">
                 <span> {{ account.formattedBalance }} BAN </span>
             </ng-container>
         </div>
@@ -360,10 +282,10 @@
     [style.marginTop.px]="vp.sm ? 0 : 16"
 >
     <ng-template [ngTemplateOutlet]="dashboardHeader"></ng-template>
-    <mat-divider style="position: relative"></mat-divider>
-    <mat-progress-bar *ngIf="loadingAccount" color="primary" mode="indeterminate" style="position: absolute">
+    <mat-divider *ngIf="getAccounts().length !== 0" style="position: relative"></mat-divider>
+    <mat-progress-bar *ngIf="isLoadingAccount" color="primary" mode="indeterminate" style="position: absolute">
     </mat-progress-bar>
-    <ng-template [ngTemplateOutlet]="noAccountsLoaded"></ng-template>
+    <ng-template [ngTemplateOutlet]="noAccountsEmptyState"></ng-template>
     <mat-nav-list
         responsive
         *ngIf="getAccounts().length > 0"

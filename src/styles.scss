@@ -84,6 +84,40 @@ textarea.mat-input-element,
     transition: all 250ms;
 }
 
+/** Apply styles to a mat menu item outside of a menu context. */
+.mat-menu-item {
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    -webkit-tap-highlight-color: transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    line-height: 48px;
+    height: 48px;
+    padding: 0 16px;
+    text-align: left;
+    text-decoration: none;
+    width: 100%;
+    position: relative;
+}
+.mat-menu-item .mat-icon {
+    margin-right: 16px;
+    vertical-align: middle;
+}
+.mat-menu-item .mat-menu-ripple {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
 .app-body {
     display: flex;
     flex-direction: column;

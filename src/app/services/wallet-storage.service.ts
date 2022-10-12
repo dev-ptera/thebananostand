@@ -5,7 +5,7 @@ import { UtilService } from '@app/services/util.service';
 
 export type LocalStorageWallet = {
     encryptedSeed: string;
-    walletId: number;
+    walletId: string;
     name: string;
     loadedIndexes: number[];
 };
@@ -77,14 +77,15 @@ export class WalletStorageService {
         });
     }
 
-    getActiveWalletId(): number {
+    getActiveWalletId(): string {
         if (!this.isLedger) {
             // Ledger wallets do not have an active id.
-            return Number(window.localStorage.getItem(ACTIVE_WALLET_ID));
+            return String(window.localStorage.getItem(ACTIVE_WALLET_ID));
         }
+        console.error('Ledger Account is Loaded, attempted to getActiveWalletId');
     }
 
-    getLedgerWallet(): LocalStorageWallet {
+    private _getLedgerWallet(): LocalStorageWallet {
         return {
             encryptedSeed: undefined,
             walletId: undefined,
@@ -93,14 +94,9 @@ export class WalletStorageService {
         };
     }
 
-    getNumberOfWallets(): number {
-        const wallets = this.getWallets();
-        return wallets.length;
-    }
-
-    getWallets(): LocalStorageWallet[] {
+    readWalletsFromLocalStorage(): LocalStorageWallet[] {
         if (this.isLedger) {
-            return [this.getLedgerWallet()];
+            return [this._getLedgerWallet()];
         }
 
         try {
@@ -116,7 +112,7 @@ export class WalletStorageService {
 
     getActiveWallet(): LocalStorageWallet {
         if (this.isLedger) {
-            return this.getLedgerWallet();
+            return this._getLedgerWallet();
         }
         const id = this.getActiveWalletId();
         return this.getWalletFromId(id);
@@ -131,12 +127,16 @@ export class WalletStorageService {
         return wallet.loadedIndexes;
     }
 
-    getWalletFromId(id: number): LocalStorageWallet {
-        for (const wallet of this.getWallets()) {
-            if (this._util.matches(wallet.walletId, id)) {
+    getWalletFromId(id: string): LocalStorageWallet {
+        for (const wallet of this.readWalletsFromLocalStorage()) {
+            if (this._walletIdsMatch(id, wallet.walletId)) {
                 return wallet;
             }
         }
+    }
+
+    private _walletIdsMatch(s1: string, s2: string): boolean {
+        return String(s1) === String(s2);
     }
 
     private _makeWalletActive(wallet: LocalStorageWallet): void {
@@ -160,10 +160,10 @@ export class WalletStorageService {
 
     /** Used to store or update wallet details in localStorage. */
     private _storeWalletDetails(newWallet: LocalStorageWallet): void {
-        const oldWallets = this.getWallets();
+        const oldWallets = this.readWalletsFromLocalStorage();
         const newWallets = [newWallet];
         for (const wallet of oldWallets) {
-            if (!this._util.matches(wallet.walletId, newWallet.walletId)) {
+            if (this._walletIdsMatch(wallet.walletId, newWallet.walletId)) {
                 newWallets.push(wallet);
             }
         }
@@ -171,7 +171,7 @@ export class WalletStorageService {
         window.localStorage.setItem(ENCRYPTED_WALLETS, JSON.stringify(newWallets));
     }
 
-    private _setActiveWalletId(walletId: number): void {
+    private _setActiveWalletId(walletId: string): void {
         window.localStorage.setItem(ACTIVE_WALLET_ID, String(walletId));
         this.activeWallet = this.getActiveWallet();
     }
@@ -191,8 +191,8 @@ export class WalletStorageService {
     private _removeActiveWallet(): void {
         const activeWallet = this.getActiveWallet();
         const remainingWallets = [];
-        for (const wallet of this.getWallets()) {
-            if (!this._util.matches(activeWallet.walletId, wallet.walletId)) {
+        for (const wallet of this.readWalletsFromLocalStorage()) {
+            if (this._walletIdsMatch(activeWallet.walletId, wallet.walletId)) {
                 remainingWallets.push(wallet);
             }
         }
@@ -208,6 +208,6 @@ export class WalletStorageService {
 
     private _updateState(): void {
         this.activeWallet = this.getActiveWallet();
-        this.wallets = this.getWallets();
+        this.wallets = this.readWalletsFromLocalStorage();
     }
 }

@@ -67,7 +67,7 @@ describe("User Session", () => {
     });
 
     const removeWallet = () => {
-        cy.get('[data-cy=wallet-actions-menu]').click();
+        cy.get('[data-cy=wallet-actions-desktop-menu]').click();
         cy.get('[data-cy=remove-wallet-button]').trigger('mousedown', { button: 0 });
         cy.wait(2000);
     }

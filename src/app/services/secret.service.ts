@@ -24,9 +24,13 @@ export class SecretService {
             this.unlockedLocalSecret = false;
             this.walletPassword = undefined;
         });
+
+        this._walletEventService.addSecret.subscribe((data: { secret: string, password: string }) => {
+            void this._storeSecret(data.secret, data.password);
+        });
     }
 
-    async storeSecret(secret: string, walletPassword: string): Promise<void> {
+    private async _storeSecret(secret: string, walletPassword: string): Promise<void> {
         let password = walletPassword;
 
         if (password.length === 0) {
@@ -59,8 +63,7 @@ export class SecretService {
         }
         // @ts-ignore
         const encryptedSeed = await window.bananocoin.passwordUtils.encryptData(seed, password);
-        const numberOfWallets = this._walletStorageService.getNumberOfWallets();
-        const walletId = numberOfWallets + 1;
+        const walletId = encryptedSeed.substring(0, 10);
         const newEntry: LocalStorageWallet = {
             walletId,
             name: `Wallet No. ${walletId}`,
@@ -78,7 +81,7 @@ export class SecretService {
             throw new Error('Passwords do not match');
         }
 
-        for await (const wallet of this._walletStorageService.getWallets()) {
+        for await (const wallet of this._walletStorageService.readWalletsFromLocalStorage()) {
             if (wallet.encryptedSeed) {
                 const encryptedSeed = wallet.encryptedSeed;
                 // @ts-ignore
@@ -125,7 +128,7 @@ seed-> menomimc
         };
     }
 
-    async getSecret(walletId: number): Promise<string> {
+    async getSecret(walletId: string): Promise<string> {
         const wallet = this._walletStorageService.getWalletFromId(walletId);
         const encryptedSeed = wallet.encryptedSeed;
 
@@ -134,12 +137,12 @@ seed-> menomimc
         return seed;
     }
 
-    async backupWalletSecret(walletId: number): Promise<void> {
+    async backupWalletSecret(walletId: string): Promise<void> {
         const seed = await this.getSecret(walletId);
         this._walletEventService.backupSeed.next({ seed, openSnackbar: true });
     }
 
-    async backupWalletMnemonic(walletId: number): Promise<void> {
+    async backupWalletMnemonic(walletId: string): Promise<void> {
         const seed = await this.getSecret(walletId);
         // @ts-ignore
         const mnemonic = window.bip39.entropyToMnemonic(seed);
@@ -154,7 +157,8 @@ seed-> menomimc
             password = this.DEFAULT_PASSWORD;
         }
 
-        const encryptedWallets = this._walletStorageService.getWallets();
+        const encryptedWallets = this._walletStorageService.readWalletsFromLocalStorage();
+        console.log(encryptedWallets);
         const encryptedSeed = encryptedWallets[0].encryptedSeed;
         // @ts-ignore
         await window.bananocoin.passwordUtils.decryptData(encryptedSeed, password); // Error is thrown here.
@@ -181,7 +185,7 @@ seed-> menomimc
     }
 
     hasSecret(): boolean {
-        const encryptedWallets = this._walletStorageService.getWallets();
+        const encryptedWallets = this._walletStorageService.readWalletsFromLocalStorage();
         return encryptedWallets && encryptedWallets.length > 0;
     }
 }
