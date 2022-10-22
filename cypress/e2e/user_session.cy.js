@@ -6,14 +6,12 @@ describe("User Session", () => {
 
 
     const reload = () => {
-        cy.reload();
         cy.intercept(root).as('home');
         cy.visit(root);
         cy.wait('@home'); // once the route resolves, cy.wait will resolve as well
     }
 
     beforeEach(() => {
-        Cypress.config('defaultCommandTimeout', 20000);
         cy.clearLocalStorage();
         reload();
     });
@@ -30,7 +28,6 @@ describe("User Session", () => {
         cy.get('[data-cy=secret-next]').click();
         cy.get('[data-cy=secret-next]').should('not.exist');
     }
-
 
     it("should login with just a seed (no password)", () => {
         cy.get('[data-cy=enter-secret]').click();
