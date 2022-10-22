@@ -22,6 +22,7 @@ import { SendBottomSheetComponent } from '@app/overlays/bottom-sheet/send/send-b
 import { SendDialogComponent } from '@app/overlays/dialogs/send/send-dialog.component';
 import { ChangeRepBottomSheetComponent } from '@app/overlays/bottom-sheet/change-rep/change-rep-bottom-sheet.component';
 import { ChangeRepDialogComponent } from '@app/overlays/dialogs/change-rep/change-rep-dialog.component';
+import { WalletEventsService } from '@app/services/wallet-events.service';
 
 @Component({
     selector: 'app-account',
@@ -47,11 +48,12 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     accountHeight: number;
 
-    mobileUserMenuOpen = false;
+    isAccountActionsMobileMenuOpen = false;
     unopenedAccount = false;
     isLoadingHeight = false;
     warnBannerDismissed = false;
     hideTransactionFilters = false;
+    hasCopiedAccountAddress = false;
 
     bottomSheetDismissDelayMs = 100;
     containerHeightClass = 'disable-contained-height';
@@ -66,6 +68,7 @@ export class AccountComponent implements OnInit, OnDestroy {
         private readonly _rpcService: RpcService,
         private readonly _themeService: ThemeService,
         private readonly _accountService: AccountService,
+        private readonly _walletEventService: WalletEventsService,
         private readonly _spyglassService: SpyglassService
     ) {}
 
@@ -153,6 +156,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     /** Opens dialog to change account representative. */
     changeRep(): void {
+        this.isAccountActionsMobileMenuOpen = false;
         const overlayData = {
             data: {
                 address: this.account.fullAddress,
@@ -180,6 +184,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     openFilterDialog(): void {
+        this.isAccountActionsMobileMenuOpen = false;
         const overlayData = {
             data: this.filterData,
         };
@@ -311,12 +316,25 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     /** Copies transaction sender, recipient, or new representative to clipboard. */
-    copy(item: ConfirmedTx): void {
-        void navigator.clipboard.writeText(item.address || item.newRepresentative);
+    copyTransactionAddress(item: ConfirmedTx): void {
+        this.util.clipboardCopy(item.address || item.newRepresentative);
         item.showCopiedIcon = true;
         setTimeout(() => {
             item.showCopiedIcon = false;
         }, 700);
+    }
+
+    copyAccountAddressDesktop(): void {
+        this.util.clipboardCopy(this.address);
+        this.hasCopiedAccountAddress = true;
+        setTimeout(() => {
+            this.hasCopiedAccountAddress = false;
+        }, 700);
+    }
+
+    copyAccountAddressMobile(): void {
+        this._walletEventService.copiedAddress.next({ address: this.address });
+        this.isAccountActionsMobileMenuOpen = false;
     }
 
     /** If these numbers need adjusted, see the `account.component.scss` file since there are styles there that need to match. */
@@ -328,6 +346,7 @@ export class AccountComponent implements OnInit, OnDestroy {
      *  Fetches blockcount, account info, pending blocks, insights & then confirmed tx. */
     refreshCurrentAccountInfo(): void {
         this.unopenedAccount = false;
+        this.isAccountActionsMobileMenuOpen = false;
         this._disconnectDatasource();
         if (this.isLoadingHeight) {
             return;

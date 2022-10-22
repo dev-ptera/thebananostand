@@ -50,4 +50,7 @@ export class WalletEventsService {
 
     /** Backup active wallet Mnemonic Phrase to clipboard */
     backupMnemonic = new Subject<{ mnemonic: string; openSnackbar: boolean }>();
+
+    /** User has copied account address to clipboard. */
+    copiedAddress = new Subject<{ address: string }>();
 }

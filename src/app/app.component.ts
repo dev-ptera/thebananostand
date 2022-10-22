@@ -5,6 +5,7 @@ import { ViewportService } from '@app/services/viewport.service';
 import { SecretService } from '@app/services/secret.service';
 import { WalletEventsService } from '@app/services/wallet-events.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UtilService } from '@app/services/util.service';
 
 @Component({
     selector: 'app-root',
@@ -16,8 +17,11 @@ export class AppComponent {
         private readonly _vp: ViewportService,
         private readonly _secretService: SecretService,
         private readonly _snackbar: MatSnackBar,
+        private readonly _util: UtilService,
         private readonly _walletEventService: WalletEventsService
     ) {
+        const duration = 3000;
+        const closeActionText = 'Dismiss';
         const appHeight = (): void => {
             const doc = document.documentElement;
             doc.style.setProperty(`--app-height`, `${window.innerHeight}px`);
@@ -26,44 +30,27 @@ export class AppComponent {
         appHeight();
 
         this._walletEventService.removeWallet.subscribe(() => {
-            this._snackbar.open('Removed Wallet', 'Dismiss', { duration: 5000 });
+            this._snackbar.open('Removed Wallet', closeActionText, { duration });
         });
 
         this._walletEventService.backupSeed.subscribe((data: { seed: string; openSnackbar: boolean }) => {
-            this._copyToClipboard(data.seed);
+            this._util.clipboardCopy(data.seed);
             if (data.openSnackbar) {
-                this._snackbar.open('Wallet Seed Copied!', 'Dismiss', { duration: 5000 });
+                this._snackbar.open('Wallet Seed Copied!', closeActionText, { duration });
             }
         });
 
         this._walletEventService.backupMnemonic.subscribe((data: { mnemonic: string; openSnackbar: boolean }) => {
-            this._copyToClipboard(data.mnemonic);
+            this._util.clipboardCopy(data.mnemonic);
             if (data.openSnackbar) {
-                this._snackbar.open('Wallet Mnemonic Phrase Copied!', 'Dismiss', { duration: 5000 });
+                this._snackbar.open('Wallet Mnemonic Phrase Copied!', closeActionText, { duration });
             }
         });
-    }
 
-    private _copyToClipboard(text: string): void {
-        window.focus();
-
-        setTimeout(() => {
-            try {
-                // Attempt 1
-                void navigator.clipboard.writeText(text);
-            } catch (err1) {
-                // Attempt 2
-                try {
-                    console.error(err1);
-                    const el = document.createElement('textarea');
-                    el.value = text;
-                    document.body.appendChild(el);
-                    el.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(el);
-                } catch (err2) {
-                    console.error(err2);
-                }
+        this._walletEventService.copiedAddress.subscribe((data: { address: string }) => {
+            this._util.clipboardCopy(data.address);
+            if (data.address) {
+                this._snackbar.open('Address Copied!', closeActionText, { duration });
             }
         });
     }

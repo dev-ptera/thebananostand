@@ -1,21 +1,33 @@
-<ng-template #accountActionsUserMenu>
-    <blui-user-menu menuTitle="Account Actions" [(open)]="mobileUserMenuOpen" style="margin-right: -8px">
-        <mat-icon blui-avatar>more_vert</mat-icon>
-        <mat-nav-list blui-menu-body [style.paddingTop.px]="0">
-            <blui-info-list-item [dense]="true" (click)="openFilterDialog(); mobileUserMenuOpen = false">
-                <mat-icon blui-icon>filter_list</mat-icon>
-                <div blui-title>Filter Transactions</div>
-            </blui-info-list-item>
-            <blui-info-list-item [dense]="true" (click)="changeRep(); mobileUserMenuOpen = false">
-                <mat-icon blui-icon>how_to_vote</mat-icon>
-                <div blui-title>Change Representative</div>
-            </blui-info-list-item>
-            <blui-info-list-item [dense]="true" (click)="refreshCurrentAccountInfo(); mobileUserMenuOpen = false">
-                <mat-icon blui-icon>refresh</mat-icon>
-                <div blui-title>Refresh Account</div>
-            </blui-info-list-item>
-        </mat-nav-list>
-    </blui-user-menu>
+<ng-template #accountActions>
+    <ng-template #accountActionsMenu>
+        <button mat-menu-item (click)="copyAccountAddressMobile()">
+            <mat-icon>content_copy</mat-icon>
+            <span>Copy Address</span>
+        </button>
+        <button mat-menu-item (click)="openFilterDialog()">
+            <mat-icon>filter_list</mat-icon>
+            <span>Filter Transactions</span>
+        </button>
+        <button mat-menu-item (click)="changeRep()">
+            <mat-icon>how_to_vote</mat-icon>
+            <span>Change Representative</span>
+        </button>
+        <button mat-menu-item (click)="refreshCurrentAccountInfo()">
+            <mat-icon>refresh</mat-icon>
+            <span>Refresh Account</span>
+        </button>
+    </ng-template>
+    <ng-template #accountActionsTrigger>
+        <mat-icon style="margin-left: 16px">more_vert</mat-icon>
+    </ng-template>
+    <responsive-menu
+        menuTitle="Account Actions"
+        [(open)]="isAccountActionsMobileMenuOpen"
+        [menu]="accountActionsMenu"
+        [desktopTrigger]="accountActionsTrigger"
+        [mobileTrigger]="accountActionsTrigger"
+    >
+    </responsive-menu>
 </ng-template>
 
 <ng-template #receiveButton>
@@ -57,7 +69,12 @@
             <button mat-icon-button (click)="goHome()">
                 <mat-icon>arrow_back</mat-icon>
             </button>
-            <div [style.marginLeft.px]="8" *ngIf="account" style="font-size: 1.125rem" class="mono">
+            <div
+                [style.marginLeft.px]="8"
+                *ngIf="account"
+                style="font-size: 1.125rem; display: flex; align-items: center"
+                class="mono"
+            >
                 <div *ngIf="!vp.md && !vp.sm">
                     <span>{{ account?.fullAddress.substring(0, 12) }}</span>
                     <span style="font-weight: 400; opacity: 0.75">{{ account?.fullAddress.substring(12, 58) }}</span>
@@ -68,6 +85,12 @@
                     <span>...</span>
                     <span>{{ account?.fullAddress.substring(58, 64) }}</span>
                 </div>
+
+                <button mat-icon-button (click)="copyAccountAddressDesktop()" style="margin-left: 8px" *ngIf="!vp.sm">
+                    <mat-icon>
+                        {{ hasCopiedAccountAddress ? 'check_circle' : 'content_copy' }}
+                    </mat-icon>
+                </button>
             </div>
         </div>
         <div style="display: flex">
@@ -102,7 +125,7 @@
                     <div class="mat-subheading-2" style="margin-bottom: 0">
                         <strong>{{ account.formattedBalance }} BAN </strong>Balance
                     </div>
-                    <ng-template [ngTemplateOutlet]="accountActionsUserMenu"></ng-template>
+                    <ng-template [ngTemplateOutlet]="accountActions"></ng-template>
                 </div>
                 <div class="mat-overline" style="margin-top: 8px; margin-bottom: -8px">Transactions</div>
             </mat-card>
@@ -268,7 +291,7 @@
                                     <button
                                         mat-icon-button
                                         *ngIf="item.hover"
-                                        (click)="copy(item)"
+                                        (click)="copyTransactionAddress(item)"
                                         style="
                                             cursor: pointer;
                                             margin-left: 8px;
@@ -278,7 +301,7 @@
                                         "
                                     >
                                         <mat-icon style="font-size: 16px">{{
-                                            item.showCopiedIcon ? 'check_circle' : 'copy_all'
+                                            item.showCopiedIcon ? 'check_circle' : 'content_copy'
                                         }}</mat-icon>
                                     </button>
                                 </div>
