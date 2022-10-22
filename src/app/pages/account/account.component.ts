@@ -315,11 +315,6 @@ export class AccountComponent implements OnInit, OnDestroy {
         return this._themeService.isDark();
     }
 
-    copyAddress(): void {
-        this._walletEventService.copiedAddress.next({ address: this.address });
-        this.isAccountActionsMobileMenuOpen = false;
-    }
-
     /** Copies transaction sender, recipient, or new representative to clipboard. */
     copyTransactionAddress(item: ConfirmedTx): void {
         this.util.clipboardCopy(item.address || item.newRepresentative);
@@ -329,12 +324,17 @@ export class AccountComponent implements OnInit, OnDestroy {
         }, 700);
     }
 
-    copyAccountAddress(): void {
+    copyAccountAddressDesktop(): void {
         this.util.clipboardCopy(this.address);
         this.hasCopiedAccountAddress = true;
         setTimeout(() => {
             this.hasCopiedAccountAddress = false;
         }, 700);
+    }
+
+    copyAccountAddressMobile(): void {
+        this._walletEventService.copiedAddress.next({ address: this.address });
+        this.isAccountActionsMobileMenuOpen = false;
     }
 
     /** If these numbers need adjusted, see the `account.component.scss` file since there are styles there that need to match. */

@@ -1,6 +1,6 @@
 <ng-template #accountActions>
     <ng-template #accountActionsMenu>
-        <button mat-menu-item (click)="copyAddress()">
+        <button mat-menu-item (click)="copyAccountAddressMobile()">
             <mat-icon>content_copy</mat-icon>
             <span>Copy Address</span>
         </button>
@@ -86,7 +86,7 @@
                     <span>{{ account?.fullAddress.substring(58, 64) }}</span>
                 </div>
 
-                <button mat-icon-button (click)="copyAccountAddress()" style="margin-left: 8px" *ngIf="!vp.sm">
+                <button mat-icon-button (click)="copyAccountAddressDesktop()" style="margin-left: 8px" *ngIf="!vp.sm">
                     <mat-icon>
                         {{ hasCopiedAccountAddress ? 'check_circle' : 'content_copy' }}
                     </mat-icon>
