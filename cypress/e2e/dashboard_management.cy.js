@@ -11,6 +11,7 @@ describe('Dashboard Management', () => {
         // so we must tell it to visit our website with the `cy.visit()` command.
         // Since we want to visit the same URL at the start of all our tests,
         // we include it in our beforeEach function so that it runs before each test
+        cy.reload();
         Cypress.config('defaultCommandTimeout', 10000);
         cy.intercept(root).as('home');
         cy.visit(root);
@@ -20,6 +21,7 @@ describe('Dashboard Management', () => {
         cy.get('[data-cy=secret-next]').click();
         cy.intercept({ method: 'POST', url: '**', times: 3 }).as(loadInitialAccount);
         cy.get('[data-cy=secret-next]').click();
+        cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
     })
 
 
@@ -47,7 +49,8 @@ describe('Dashboard Management', () => {
                 cy.get('[data-cy=dashboard-wrapper]');
                 cy.intercept({ method: 'POST', url: '**' }).as(loadNextAccount);
                 cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
-                cy.get('[data-cy=add-single-account-desktop-button]').click();
+                cy.get('[data-cy=account-actions-desktop-menu]').click();
+                cy.get('[data-cy=add-next-account-button]').click();
                 verifyNextAccountAdded();
             })
         });
@@ -58,8 +61,8 @@ describe('Dashboard Management', () => {
                 cy.get('[data-cy=dashboard-wrapper]');
                 cy.intercept({ method: 'POST', url: '**' }).as(loadNextAccount);
                 cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
-                cy.get('[data-cy=show-dashboard-actions]').click();
-                cy.get('[data-cy=add-next-account-mobile-button]').click();
+                cy.get('[data-cy=account-actions-mobile-menu]').click();
+                cy.get('[data-cy=add-next-account-button]').click();
                 verifyNextAccountAdded();
             })
         });
@@ -78,7 +81,7 @@ describe('Dashboard Management', () => {
 
         it('should copy wallet seed to clipboard', () => {
             cy.wait(`@${loadInitialAccount}`).then(() => {
-                cy.get('[data-cy=wallet-actions-menu]').click();
+                cy.get('[data-cy=wallet-actions-desktop-menu]').click();
                 cy.get('[data-cy=copy-seed-button]').click();
                 cy.assertValueCopiedToClipboard(LOW_FUND_SEED)
                 cy.get('.mat-snack-bar-container').contains('Seed Copied');
@@ -87,7 +90,7 @@ describe('Dashboard Management', () => {
 
         it('should copy wallet mnemonic to clipboard', () => {
             cy.wait(`@${loadInitialAccount}`).then(() => {
-                cy.get('[data-cy=wallet-actions-menu]').click();
+                cy.get('[data-cy=wallet-actions-desktop-menu]').click();
                 cy.get('[data-cy=copy-mnemonic-button]').click();
                 cy.assertValueCopiedToClipboard(LOW_FUND_MNEMONIC);
                 cy.get('.mat-snack-bar-container').contains('Mnemonic Phrase Copied');
@@ -113,8 +116,8 @@ describe('Dashboard Management', () => {
         it('should refresh account balances (desktop)', () => {
             cy.wait(`@${loadInitialAccount}`).then(() => {
                 interceptRefresh();
-                cy.get('[data-cy=edit-account-dashboard-desktop-button]').click();
-                cy.get('[data-cy=refresh-dashboard-desktop-button]').click().then(() => {
+                cy.get('[data-cy=account-actions-desktop-menu]').click();
+                cy.get('[data-cy=refresh-dashboard-button]').click().then(() => {
                     verifyPageRefreshed()
                 });
             })
@@ -124,8 +127,8 @@ describe('Dashboard Management', () => {
             cy.viewport('iphone-6');
             cy.wait(`@${loadInitialAccount}`).then(() => {
                 interceptRefresh();
-                cy.get('[data-cy=show-dashboard-actions]').click();
-                cy.get('[data-cy=refresh-dashboard-mobile-button]').click().then(() => {
+                cy.get('[data-cy=account-actions-mobile-menu]').click();
+                cy.get('[data-cy=refresh-dashboard-button]').click().then(() => {
                     verifyPageRefreshed();
                 })
             })
@@ -148,11 +151,20 @@ describe('Dashboard Management', () => {
             })
         }
 
+        it('should load account at index 99 (desktop)', () => {
+            cy.wait(`@${loadInitialAccount}`).then(() => {
+                cy.get('[data-cy=account-actions-desktop-menu]').click();
+                cy.get('[data-cy=add-specific-account-button]').click().then(() => {
+                    addAccount99();
+                });
+            })
+        });
+
         it('should load account at index 99 (mobile)', () => {
             cy.viewport('iphone-6');
             cy.wait(`@${loadInitialAccount}`).then(() => {
-                cy.get('[data-cy=show-dashboard-actions]').click();
-                cy.get('[data-cy=add-specific-account-mobile-button]').click().then(() => {
+                cy.get('[data-cy=account-actions-mobile-menu]').click();
+                cy.get('[data-cy=add-specific-account-button]').click().then(() => {
                     addAccount99();
                 });
             })
@@ -164,9 +176,10 @@ describe('Dashboard Management', () => {
         it('should remove account via select all (desktop)', () => {
             cy.wait(`@${loadInitialAccount}`).then(() => {
                 cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
-                cy.get('[data-cy=edit-account-dashboard-desktop-button]').click();
+                cy.get('[data-cy=account-actions-desktop-menu]').click();
+                cy.get('[data-cy=select-accounts-button]').click();
                 cy.get('.mat-checkbox').first().click();
-                cy.get('[data-cy=remove-account-dashboard-desktop-button]').click().then(() => {
+                cy.get('[data-cy=remove-account-dashboard-button]').click().then(() => {
                     cy.get('[data-cy=dashboard-account-list]').should('not.exist');
                 })
             })
@@ -175,43 +188,45 @@ describe('Dashboard Management', () => {
         it('should remove account via select single (desktop)', () => {
             cy.wait(`@${loadInitialAccount}`).then(() => {
                 cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
-                cy.get('[data-cy=edit-account-dashboard-desktop-button]').click();
+                cy.get('[data-cy=account-actions-desktop-menu]').click();
+                cy.get('[data-cy=select-accounts-button]').click();
                 cy.get('.mat-checkbox').last().click();
-                cy.get('[data-cy=remove-account-dashboard-desktop-button]').click().then(() => {
+                cy.get('[data-cy=remove-account-dashboard-button]').click().then(() => {
                     cy.get('[data-cy=dashboard-account-list]').should('not.exist');
                 })
             })
         });
 
-        it('should remove a single account (desktop)', () => {
+        it('should add & then remove a single account (desktop)', () => {
             cy.wait(`@${loadInitialAccount}`).then(() => {
                 const loadNextAccount = 'loadNextAccount';
                 cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
                 cy.intercept({ method: 'POST', url: '**', times: 2 }).as(loadNextAccount);
-                cy.get('[data-cy=add-single-account-desktop-button]').click();
+                cy.get('[data-cy=account-actions-desktop-menu]').click();
+                cy.get('[data-cy=add-next-account-button]').click();
                 cy.wait(`@${loadNextAccount}`).then(() => {
                     cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 2);
-                    cy.get('[data-cy=edit-account-dashboard-desktop-button]').click();
+                    cy.get('[data-cy=account-actions-desktop-menu]').click();
+                    cy.get('[data-cy=select-accounts-button]').click();
                     cy.get('.mat-checkbox').last().click();
-                    cy.get('[data-cy=remove-account-dashboard-desktop-button]').click().then(() => {
+                    cy.get('[data-cy=remove-account-dashboard-button]').click().then(() => {
                         cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
                     })
                 })
             })
         });
 
-        it('should remove a single account (mobile)', () => {
+        it('should add & then remove a single account (mobile)', () => {
             cy.viewport('iphone-6');
             cy.wait(`@${loadInitialAccount}`).then(() => {
                 const dismissBottomSheetTime = 350;
-                cy.get('[data-cy=show-dashboard-actions]').click();
-                cy.get('[data-cy=select-accounts-mobile-button]').click();
+                cy.get('[data-cy=account-actions-mobile-menu]').click();
+                cy.get('[data-cy=select-accounts-button]').click();
                 cy.wait(dismissBottomSheetTime);
                 cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
                 cy.get('.mat-checkbox').last().click();
-                cy.get('[data-cy=show-dashboard-actions]').click();
                 cy.wait(dismissBottomSheetTime);
-                cy.get('[data-cy=remove-account-mobile-button]').click().then(() => {
+                cy.get('[data-cy=remove-account-dashboard-button]').click().then(() => {
                     cy.get('[data-cy=dashboard-account-list]').should('not.exist');
                 })
             })

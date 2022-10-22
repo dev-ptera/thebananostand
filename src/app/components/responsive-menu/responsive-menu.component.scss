@@ -1,0 +1,17 @@
+$size: 2.5rem;
+
+//@include scale-icon-content();
+.cdk-overlay-backdrop-showing {
+    &.responsive-menu-overlay-backdrop {
+        background-color: unset;
+    }
+    &.responsive-menu-bottomsheet-backdrop {
+        background-color: #424e54;
+        opacity: 0.5;
+    }
+}
+
+.cdk-overlay-backdrop.responsive-menu-bottomsheet-backdrop,
+.cdk-overlay-backdrop.responsive-menu-overlay-backdrop {
+    transition: all 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}

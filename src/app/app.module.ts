@@ -80,6 +80,8 @@ import { CreateWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/cre
 import { CreateWalletDialogComponent } from '@app/overlays/dialogs/create-wallet/create-wallet-dialog.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { HoverClassDirective } from './directives/hover-class.directive';
+import { MatMenuModule } from '@angular/material/menu';
+import { ResponsiveMenuModule } from '@app/components/responsive-menu/responsive-menu.module';
 
 @NgModule({
     declarations: [
@@ -157,6 +159,8 @@ import { HoverClassDirective } from './directives/hover-class.directive';
         MatProgressBarModule,
         MatTooltipModule,
         MatExpansionModule,
+        MatMenuModule,
+        ResponsiveMenuModule,
     ],
     providers: [],
     bootstrap: [AppComponent],

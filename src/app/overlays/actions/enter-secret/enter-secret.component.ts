@@ -4,6 +4,7 @@ import { AccountService } from '@app/services/account.service';
 import { SpyglassService } from '@app/services/spyglass.service';
 import { UtilService } from '@app/services/util.service';
 import { SecretService } from '@app/services/secret.service';
+import { WalletEventsService } from '@app/services/wallet-events.service';
 
 @Component({
     selector: 'app-enter-secret-overlay',
@@ -92,11 +93,12 @@ export class EnterSecretComponent implements OnInit {
 
     constructor(
         public util: UtilService,
+        private readonly _ref: ChangeDetectorRef,
         private readonly _apiService: SpyglassService,
-        private readonly _transactionService: TransactionService,
-        private readonly _accountService: AccountService,
         private readonly _secretService: SecretService,
-        private readonly _ref: ChangeDetectorRef
+        private readonly _accountService: AccountService,
+        private readonly _transactionService: TransactionService,
+        private readonly _walletEventService: WalletEventsService
     ) {}
 
     ngOnInit(): void {
@@ -141,15 +143,7 @@ export class EnterSecretComponent implements OnInit {
     addSeed(): void {
         this.error = undefined;
         this.secret = this.secret.trim();
-
-        this._secretService
-            .storeSecret(this.secret, this.password)
-            .then(() => {
-                this.close.emit();
-            })
-            .catch((err) => {
-                console.error(err);
-                this.error = err;
-            });
+        this._walletEventService.addSecret.next({ secret: this.secret, password: this.password });
+        this.close.emit();
     }
 }

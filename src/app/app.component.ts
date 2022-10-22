@@ -46,16 +46,25 @@ export class AppComponent {
 
     private _copyToClipboard(text: string): void {
         window.focus();
+
         setTimeout(() => {
-            navigator.clipboard
-                .writeText(text)
-                .then(() => {
-                    // eslint-disable-next-line no-console
-                    console.log('Text Copied');
-                })
-                .catch((err) => {
-                    console.error(err);
-                });
+            try {
+                // Attempt 1
+                void navigator.clipboard.writeText(text);
+            } catch (err1) {
+                // Attempt 2
+                try {
+                    console.error(err1);
+                    const el = document.createElement('textarea');
+                    el.value = text;
+                    document.body.appendChild(el);
+                    el.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(el);
+                } catch (err2) {
+                    console.error(err2);
+                }
+            }
         });
     }
 

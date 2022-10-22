@@ -27,8 +27,8 @@ describe("User Session", () => {
         cy.get('[data-cy=password-input]').type(userPassword);
         cy.get('[data-cy=secret-next]').click();
         cy.get('[data-cy=secret-next]').should('not.exist');
+        cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
     }
-
 
     it("should login with just a seed (no password)", () => {
         cy.get('[data-cy=enter-secret]').click();
@@ -67,7 +67,7 @@ describe("User Session", () => {
     });
 
     const removeWallet = () => {
-        cy.get('[data-cy=wallet-actions-menu]').click();
+        cy.get('[data-cy=wallet-actions-desktop-menu]').click();
         cy.get('[data-cy=remove-wallet-button]').trigger('mousedown', { button: 0 });
         cy.wait(2000);
     }

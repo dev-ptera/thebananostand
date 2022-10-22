@@ -12,7 +12,7 @@ import { ViewportService } from '@app/services/viewport.service';
     template: `
         <div class="create-wallet-overlay">
             <div mat-dialog-title>
-                <h1>Create a new wallet?</h1>
+                <h1 id="create-new-wallet">Create a new wallet?</h1>
                 <mat-divider></mat-divider>
             </div>
             <div mat-dialog-content style="margin-bottom: 16px; overflow: auto">
@@ -52,9 +52,9 @@ import { ViewportService } from '@app/services/viewport.service';
                 <mat-divider style="margin: 16px 0"></mat-divider>
                 <div class="mat-body-2">
                     This secret text allows you to access your Banano using any wallet, such as
-                    <a href="https://kalium.banano.cc/" target="_blank">Kalium</a> or
-                    <a href="https://vault.banano.cc/" target="_blank">Banano Vault</a>. Losing this secret means losing
-                    access to your accounts.
+                    <a href="https://kalium.banano.cc/" target="_blank" class="link">Kalium</a> or
+                    <a href="https://vault.banano.cc/" target="_blank" class="link">Banano Vault</a>. Losing this secret
+                    means losing access to your accounts.
                     <strong>Save your secret phrase in a secure place & don't lose it!</strong>
                 </div>
                 <mat-checkbox style="margin: 16px 0" [(ngModel)]="hasConfirmedBackup">
