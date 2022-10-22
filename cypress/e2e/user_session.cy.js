@@ -13,7 +13,7 @@ describe("User Session", () => {
     }
 
     beforeEach(() => {
-        Cypress.config('defaultCommandTimeout', 10000);
+        Cypress.config('defaultCommandTimeout', 20000);
         cy.clearLocalStorage();
         reload();
     });
