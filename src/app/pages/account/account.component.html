@@ -69,7 +69,9 @@
             <button mat-icon-button (click)="goHome()">
                 <mat-icon>arrow_back</mat-icon>
             </button>
-            <div [style.marginLeft.px]="8" *ngIf="account" style="font-size: 1.125rem" class="mono">
+            <div [style.marginLeft.px]="8" *ngIf="account"
+                 style="font-size: 1.125rem; display: flex; align-items: center" class="mono">
+
                 <div *ngIf="!vp.md && !vp.sm">
                     <span>{{ account?.fullAddress.substring(0, 12) }}</span>
                     <span style="font-weight: 400; opacity: 0.75">{{ account?.fullAddress.substring(12, 58) }}</span>
@@ -80,6 +82,13 @@
                     <span>...</span>
                     <span>{{ account?.fullAddress.substring(58, 64) }}</span>
                 </div>
+
+                <button mat-icon-button (click)="copyAccountAddress()" style="margin-left: 8px" *ngIf="!vp.sm">
+                    <mat-icon>
+                        {{ hasCopiedAccountAddress ? 'check_circle' : 'content_copy' }}
+                    </mat-icon>
+                </button>
+
             </div>
         </div>
         <div style="display: flex">
@@ -280,7 +289,7 @@
                                     <button
                                         mat-icon-button
                                         *ngIf="item.hover"
-                                        (click)="copy(item)"
+                                        (click)="copyTransactionAddress(item)"
                                         style="
                                             cursor: pointer;
                                             margin-left: 8px;
@@ -290,7 +299,7 @@
                                         "
                                     >
                                         <mat-icon style="font-size: 16px">{{
-                                            item.showCopiedIcon ? 'check_circle' : 'copy_all'
+                                            item.showCopiedIcon ? 'check_circle' : 'content_copy'
                                         }}</mat-icon>
                                     </button>
                                 </div>

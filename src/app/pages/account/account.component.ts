@@ -53,6 +53,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     isLoadingHeight = false;
     warnBannerDismissed = false;
     hideTransactionFilters = false;
+    hasCopiedAccountAddress = false;
 
     bottomSheetDismissDelayMs = 100;
     containerHeightClass = 'disable-contained-height';
@@ -320,11 +321,19 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     /** Copies transaction sender, recipient, or new representative to clipboard. */
-    copy(item: ConfirmedTx): void {
-        void navigator.clipboard.writeText(item.address || item.newRepresentative);
+    copyTransactionAddress(item: ConfirmedTx): void {
+        this.util.clipboardCopy(item.address || item.newRepresentative);
         item.showCopiedIcon = true;
         setTimeout(() => {
             item.showCopiedIcon = false;
+        }, 700);
+    }
+
+    copyAccountAddress(): void {
+        this.util.clipboardCopy(this.address);
+        this.hasCopiedAccountAddress = true;
+        setTimeout(() => {
+            this.hasCopiedAccountAddress = false;
         }, 700);
     }
 
