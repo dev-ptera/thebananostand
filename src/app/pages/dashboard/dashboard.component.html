@@ -11,9 +11,13 @@
                 </div>
             </ng-template>
             <ng-template #switchWalletsMenu>
-                <ng-container>
-                    <button *ngFor="let wallet of getWallets()" mat-menu-item (click)="changeActiveWallet(wallet)">
-                        {{ wallet.name }} 123
+                <ng-container *ngFor="let wallet of getWallets()">
+                    <button
+                        mat-menu-item
+                        *ngIf="getActiveWallet()?.walletId !== wallet.walletId"
+                        (click)="changeActiveWallet(wallet)"
+                    >
+                        {{ wallet.name }}
                     </button>
                 </ng-container>
             </ng-template>
@@ -113,7 +117,9 @@
         </button>
     </ng-template>
     <ng-template #walletActionsMobileTrigger>
-        <mat-icon blui-avatar style="margin-left: 8px">account_balance_wallet</mat-icon>
+        <mat-icon blui-avatar data-cy="wallet-actions-mobile-menu" style="margin-left: 8px"
+            >account_balance_wallet</mat-icon
+        >
     </ng-template>
     <responsive-menu
         menuTitle="Wallet Actions"
@@ -145,13 +151,13 @@
         </button>
     </ng-template>
     <ng-template #accountActionsDesktopTrigger>
-        <button mat-stroked-button blui-inline data-cy="wallet-actions-desktop-menu">
+        <button mat-stroked-button blui-inline data-cy="account-actions-desktop-menu">
             <span>Account</span>
             <mat-icon>arrow_drop_down</mat-icon>
         </button>
     </ng-template>
     <ng-template #accountActionsMobileTrigger>
-        <mat-icon style="margin: 0 -8px 0 16px">more_vert</mat-icon>
+        <mat-icon data-cy="account-actions-mobile-menu" style="margin: 0 -8px 0 16px">more_vert</mat-icon>
     </ng-template>
     <responsive-menu
         menuTitle="Account Actions"

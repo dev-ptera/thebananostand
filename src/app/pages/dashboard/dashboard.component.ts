@@ -19,7 +19,6 @@ import { WalletEventsService } from '@app/services/wallet-events.service';
 import { RenameWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/rename-wallet/rename-wallet-bottom-sheet.component';
 import { RenameWalletDialogComponent } from '@app/overlays/dialogs/rename-wallet/rename-wallet-dialog.component';
 import { SecretService } from '@app/services/secret.service';
-import { ConnectionPositionPair } from '@angular/cdk/overlay';
 
 @Component({
     selector: 'app-dashboard',

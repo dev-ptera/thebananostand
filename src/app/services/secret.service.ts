@@ -41,7 +41,7 @@ export class SecretService {
             await this._storeSeed(secret, password);
         } else {
             // @ts-ignore
-            const seed = window.bip39.mnemonicToEntropy(secret);
+            const seed = window.bip39.mnemonicToEntropy(secret); // Mnemonic phrase is covered to seed, then stored.
             await this._storeSeed(seed, password);
         }
         this.walletPassword = password;
@@ -64,9 +64,10 @@ export class SecretService {
         // @ts-ignore
         const encryptedSeed = await window.bananocoin.passwordUtils.encryptData(seed, password);
         const walletId = encryptedSeed.substring(0, 10);
+
         const newEntry: LocalStorageWallet = {
             walletId,
-            name: `Wallet No. ${walletId}`,
+            name: this._walletStorageService.createNewWalletName(),
             encryptedSeed,
             loadedIndexes: [0],
         };
@@ -158,7 +159,6 @@ seed-> menomimc
         }
 
         const encryptedWallets = this._walletStorageService.readWalletsFromLocalStorage();
-        console.log(encryptedWallets);
         const encryptedSeed = encryptedWallets[0].encryptedSeed;
         // @ts-ignore
         await window.bananocoin.passwordUtils.decryptData(encryptedSeed, password); // Error is thrown here.
@@ -167,6 +167,7 @@ seed-> menomimc
         this._walletEventService.walletUnlocked.next({ isLedger: false });
     }
 
+    /** Alter this method to trick the app into thinking we have unlocked the wallet already; useful for local mobile testing. */
     isLocalSecretUnlocked(): boolean {
         return this.unlockedLocalSecret;
         /** LocalMobile **/

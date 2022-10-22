@@ -36,18 +36,18 @@ export class WalletEventsService {
     /** User has requested that all loaded indexes be refreshed, checking for receivable transactions and updating account balances. */
     refreshIndexes = new Subject<void>();
 
-    /** A wallet has been removed. */
+    /** The active wallet has been removed. */
     removeWallet = new Subject<void>();
 
-    /** A wallet has been given an alias. */
+    /** The active wallet has been given an alias. */
     renameWallet = new Subject<string>();
 
-    /** Update wallet password */
+    /** Update active wallet password */
     reencryptWalletSecret = new Subject<LocalStorageWallet>();
 
-    /** Backup wallet seed to clipboard  */
+    /** Backup active wallet seed to clipboard  */
     backupSeed = new Subject<{ seed: string; openSnackbar: boolean }>();
 
-    /** Backup Mnemonic Phrase to clipboard */
+    /** Backup active wallet Mnemonic Phrase to clipboard */
     backupMnemonic = new Subject<{ mnemonic: string; openSnackbar: boolean }>();
 }
