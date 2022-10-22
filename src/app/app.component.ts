@@ -5,7 +5,7 @@ import { ViewportService } from '@app/services/viewport.service';
 import { SecretService } from '@app/services/secret.service';
 import { WalletEventsService } from '@app/services/wallet-events.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {UtilService} from "@app/services/util.service";
+import { UtilService } from '@app/services/util.service';
 
 @Component({
     selector: 'app-root',
