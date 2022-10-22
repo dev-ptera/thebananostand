@@ -19,6 +19,7 @@ export class AppComponent {
         private readonly _walletEventService: WalletEventsService
     ) {
         const duration = 3000;
+        const closeActionText = 'Dismiss';
         const appHeight = (): void => {
             const doc = document.documentElement;
             doc.style.setProperty(`--app-height`, `${window.innerHeight}px`);
@@ -27,27 +28,27 @@ export class AppComponent {
         appHeight();
 
         this._walletEventService.removeWallet.subscribe(() => {
-            this._snackbar.open('Removed Wallet', 'Dismiss', { duration });
+            this._snackbar.open('Removed Wallet', closeActionText, { duration });
         });
 
         this._walletEventService.backupSeed.subscribe((data: { seed: string; openSnackbar: boolean }) => {
             this._copyToClipboard(data.seed);
             if (data.openSnackbar) {
-                this._snackbar.open('Wallet Seed Copied!', 'Dismiss', { duration });
+                this._snackbar.open('Wallet Seed Copied!', closeActionText, { duration });
             }
         });
 
         this._walletEventService.backupMnemonic.subscribe((data: { mnemonic: string; openSnackbar: boolean }) => {
             this._copyToClipboard(data.mnemonic);
             if (data.openSnackbar) {
-                this._snackbar.open('Wallet Mnemonic Phrase Copied!', 'Dismiss', { duration });
+                this._snackbar.open('Wallet Mnemonic Phrase Copied!', closeActionText, { duration });
             }
         });
 
         this._walletEventService.copiedAddress.subscribe((data: { address: string }) => {
             this._copyToClipboard(data.address);
             if (data.address) {
-                this._snackbar.open('Address Copied', 'Dismiss', { duration });
+                this._snackbar.open('Address Copied!', closeActionText, { duration });
             }
         });
     }
