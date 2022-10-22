@@ -39,7 +39,9 @@ export class AccountService {
         private readonly _walletStorageService: WalletStorageService
     ) {
         this._walletEventService.activeWalletChange.subscribe((wallet: LocalStorageWallet) => {
-            void this._refreshDashboardUsingIndexes(wallet.loadedIndexes);
+            if (wallet) {
+                void this._refreshDashboardUsingIndexes(wallet.loadedIndexes);
+            }
         });
 
         this._walletEventService.walletUnlocked.subscribe((data) => {
