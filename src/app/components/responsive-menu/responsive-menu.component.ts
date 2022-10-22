@@ -52,13 +52,17 @@ import { MatMenuTrigger } from '@angular/material/menu';
         </ng-template>
 
         <mat-menu #menuOverlay="matMenu">
-            <ng-template [ngTemplateOutlet]="menu"></ng-template>
+            <div class="responsive-menu-overlay">
+                <ng-template [ngTemplateOutlet]="menu"></ng-template>
+            </div>
         </mat-menu>
 
         <ng-template #bottomSheetOverlay>
             <div class="mat-title" style="padding: 0 1rem">{{ menuTitle }}</div>
             <mat-divider></mat-divider>
-            <ng-template [ngTemplateOutlet]="menu"></ng-template>
+            <div class="responsive-menu-overlay responsive-menu-bottomsheet">
+                <ng-template [ngTemplateOutlet]="menu"></ng-template>
+            </div>
         </ng-template>
     `,
     host: {

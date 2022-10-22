@@ -15,3 +15,7 @@ $size: 2.5rem;
 .cdk-overlay-backdrop.responsive-menu-overlay-backdrop {
     transition: all 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
 }
+
+.responsive-menu-overlay.responsive-menu-bottomsheet .mat-icon {
+    margin-right: 24px;
+}
