@@ -27,6 +27,7 @@ describe("User Session", () => {
         cy.get('[data-cy=password-input]').type(userPassword);
         cy.get('[data-cy=secret-next]').click();
         cy.get('[data-cy=secret-next]').should('not.exist');
+        cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
     }
 
     it("should login with just a seed (no password)", () => {
