@@ -18,9 +18,10 @@
         </button>
     </ng-template>
     <ng-template #accountActionsTrigger>
-        <mat-icon style="margin-left: 16px">more_vert</mat-icon>
+        <mat-icon>more_vert</mat-icon>
     </ng-template>
     <responsive-menu
+        style="margin-right: -8px"
         menuTitle="Account Actions"
         [(open)]="isAccountActionsMobileMenuOpen"
         [menu]="accountActionsMenu"

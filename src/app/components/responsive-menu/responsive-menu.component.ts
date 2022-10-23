@@ -28,7 +28,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['responsive-menu.component.scss'],
     template: `
-        <div (click)="triggerChange()" style="display: flex; align-items: center">
+        <div (click)="triggerChange()" class="responsive-menu-trigger-wrapper">
             <ng-template
                 *ngIf="shouldUseBottomSheet(); else menuTrigger"
                 [ngTemplateOutlet]="bottomSheetTrigger"
