@@ -93,8 +93,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     removeWallet(): void {
-        this._walletEventsService.removeWallet.next();
         this.walletActionsOverlayOpen = false;
+        // Wait a moment to dismiss the menu before deleting wallet.
+        setTimeout(() => {
+            this._walletEventsService.removeWallet.next();
+        }, 100);
     }
 
     copyWalletSeed(): void {
