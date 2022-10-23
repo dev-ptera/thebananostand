@@ -117,7 +117,7 @@
         </button>
     </ng-template>
     <ng-template #walletActionsMobileTrigger>
-        <mat-icon blui-avatar data-cy="wallet-actions-mobile-menu" style="margin-left: 8px">
+        <mat-icon blui-avatar data-cy="wallet-actions-mobile-menu">
             account_balance_wallet
         </mat-icon>
     </ng-template>
@@ -157,10 +157,11 @@
         </button>
     </ng-template>
     <ng-template #accountActionsMobileTrigger>
-        <mat-icon data-cy="account-actions-mobile-menu" style="margin: 0 -8px 0 16px">more_vert</mat-icon>
+        <mat-icon data-cy="account-actions-mobile-menu">more_vert</mat-icon>
     </ng-template>
     <responsive-menu
         menuTitle="Account Actions"
+        style="margin-right: -16px"
         [(open)]="accountActionsOverlayOpen"
         [menu]="accountActionsMenu"
         [desktopTrigger]="accountActionsDesktopTrigger"

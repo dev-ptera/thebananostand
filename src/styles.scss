@@ -84,6 +84,10 @@ textarea.mat-input-element,
     transition: all 250ms;
 }
 
+textarea {
+    min-height: 64px;
+}
+
 /** Apply styles to a mat menu item outside of a menu context. */
 .mat-menu-item {
     -webkit-user-select: none;
