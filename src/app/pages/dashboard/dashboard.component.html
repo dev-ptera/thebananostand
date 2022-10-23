@@ -159,7 +159,7 @@
     </ng-template>
     <responsive-menu
         menuTitle="Account Actions"
-        style="margin-right: -16px"
+        [style.marginRight.px]="vp.sm ? -16 : 0"
         [(open)]="accountActionsOverlayOpen"
         [menu]="accountActionsMenu"
         [desktopTrigger]="accountActionsDesktopTrigger"
