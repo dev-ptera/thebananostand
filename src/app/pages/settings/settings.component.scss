@@ -1,3 +1,23 @@
 .mat-card {
     width: 100%;
 }
+
+.mat-checkbox {
+    margin: 8px 0;
+}
+
+.mono {
+    font-size: 12px;
+}
+
+.app-settings-page {
+    ::ng-deep .mat-checkbox-label {
+        white-space: pre-wrap;
+        word-break: break-all;
+        padding-left: 8px;
+        * {
+            display: flex;
+            align-items: center;
+        }
+    }
+}

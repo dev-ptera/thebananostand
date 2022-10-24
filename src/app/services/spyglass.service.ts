@@ -3,81 +3,27 @@ import { HttpClient } from '@angular/common/http';
 import { ConfirmedTx } from '@app/types/ConfirmedTx';
 import { UtilService } from './util.service';
 import { KnownAccount } from '@app/types/KnownAccount';
-import { Subject } from 'rxjs';
 import { RepScore } from '@app/overlays/actions/change-rep/change-rep.component';
 import { FilterOverlayData } from '@app/overlays/actions/filter/filter.component';
+import { DatasourceService } from '@app/services/datasource.service';
 
 @Injectable({
     providedIn: 'root',
 })
 
 /**
- * SpyglassService is a supplemental service that provides a filtered transaction history, online representatives, aliases, known accounts, scores, etc.
+ * SpyglassService is a supplemental service that provides a filtered transaction history, online representatives, aliases, known accounts, & representative scores.
  *
  *  Basically any functionality that a RPC call cannot provide will be provided by this service.
  *
  *  Documentation for interacting with Spyglass API can be found here: https://spyglass-api.web.app/
  * */
 export class SpyglassService {
-    httpApi: string;
-    api1 = 'https://api.spyglass.pw/banano';
-    api2 = 'https://api.creeper.banano.cc/banano';
-    apiToUseSubject = new Subject<string>();
-
-    constructor(private readonly _http: HttpClient, private readonly _util: UtilService) {
-        this.apiToUseSubject.subscribe((fastestApi) => {
-            this.httpApi = fastestApi;
-        });
-        this._pingServers();
-    }
-
-    /** On app load, pings 2 separate APIs to see which one is faster.  Use that one for this session. */
-    private _pingServers(): void {
-        const req1 = new Promise((resolve) => {
-            this._http
-                .get<any>(`${this.api1}/v1/representatives/online`)
-                .toPromise()
-                .then(() => resolve(this.api1))
-                .catch((err) => {
-                    console.error('Spyglass API is inaccessible, using Creeper instead.');
-                    console.error(err);
-                    resolve(this.api2); // If error, resolve the opposite api.
-                });
-        });
-
-        const req2 = new Promise((resolve) => {
-            this._http
-                .get<any>(`${this.api2}/v1/representatives/online`)
-                .toPromise()
-                .then(() => resolve(this.api2))
-                .catch((err) => {
-                    console.error(err);
-                    resolve(this.api1);
-                });
-        });
-
-        Promise.race([req1, req2])
-            .then((faster: string) => {
-                this.apiToUseSubject.next(faster);
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-    }
-
-    /** Resolves after the API to use has been set. */
-    private _hasPingedApi(): Promise<void> {
-        return new Promise((resolve) => {
-            if (this.httpApi) {
-                resolve();
-            } else {
-                this.apiToUseSubject.subscribe((fastestApi) => {
-                    this.httpApi = fastestApi;
-                    resolve();
-                });
-            }
-        });
-    }
+    constructor(
+        private readonly _http: HttpClient,
+        private readonly _util: UtilService,
+        private readonly _datasource: DatasourceService
+    ) {}
 
     async getConfirmedTransactions(
         address: string,
@@ -85,34 +31,34 @@ export class SpyglassService {
         offset: number,
         filters?: FilterOverlayData
     ): Promise<ConfirmedTx[]> {
-        await this._hasPingedApi();
-        const url = `${this.httpApi}/v1/account/confirmed-transactions`;
+        const source = await this._datasource.getSpyglassApiSource();
+        const url = `${source.url}/v1/account/confirmed-transactions`;
         const filterAddresses =
             filters && filters.filterAddresses ? filters.filterAddresses.split(',').map((x) => x.trim()) : [];
         return this._http.post<ConfirmedTx[]>(url, { address, size, offset, ...filters, filterAddresses }).toPromise();
     }
 
     async getRepresentativeAliases(): Promise<KnownAccount[]> {
-        await this._hasPingedApi();
-        const url = `${this.httpApi}/v1/representatives/aliases`;
+        const source = await this._datasource.getSpyglassApiSource();
+        const url = `${source.url}/v1/representatives/aliases`;
         return this._http.get<KnownAccount[]>(url).toPromise();
     }
 
     async getAllKnownAccounts(): Promise<KnownAccount[]> {
-        await this._hasPingedApi();
-        const url = `${this.httpApi}/v1/known/accounts`;
+        const source = await this._datasource.getSpyglassApiSource();
+        const url = `${source.url}/v1/known/accounts`;
         return this._http.post<KnownAccount[]>(url, {}).toPromise();
     }
 
     async getOnlineReps(): Promise<string[]> {
-        await this._hasPingedApi();
-        const url = `${this.httpApi}/v1/representatives/online`;
+        const source = await this._datasource.getSpyglassApiSource();
+        const url = `${source.url}/v1/representatives/online`;
         return this._http.get<string[]>(url).toPromise();
     }
 
     async getRepresentativeScores(): Promise<RepScore[]> {
-        await this._hasPingedApi();
-        const url = `${this.httpApi}/v1/representatives/scores`;
+        const source = await this._datasource.getSpyglassApiSource();
+        const url = `${source.url}/v1/representatives/scores`;
         return this._http.get<RepScore[]>(url).toPromise();
     }
 }

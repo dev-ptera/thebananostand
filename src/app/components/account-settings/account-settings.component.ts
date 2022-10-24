@@ -6,7 +6,7 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ChangePasswordDialogComponent } from '@app/overlays/dialogs/change-password/change-password-dialog.component';
 import { ViewportService } from '@app/services/viewport.service';
 import { ChangePasswordBottomSheetComponent } from '@app/overlays/bottom-sheet/change-password/change-password-bottom-sheet.component';
-import {ThemeService} from "@app/services/theme.service";
+import { ThemeService } from '@app/services/theme.service';
 
 @Component({
     selector: 'app-account-settings',
@@ -52,7 +52,6 @@ import {ThemeService} from "@app/services/theme.service";
             data-cy="change-password-button"
         >
         </responsive-menu>
-
 
         <!--
                 <blui-user-menu *ngIf="show()" data-cy="session-settings" menuTitle="Settings" [(open)]="userMenuOpen">
@@ -106,17 +105,6 @@ export class AppAccountSettingsComponent {
         setTimeout(() => {
             void this._router.navigate(['/settings']);
         }, 100);
-    }
-
-    openChangePasswordOverlay(): void {
-        this.userMenuOpen = false;
-        if (this.vp.sm) {
-            setTimeout(() => {
-                this._sheet.open(ChangePasswordBottomSheetComponent);
-            }, this.bottomSheetOpenDelayMs);
-        } else {
-            this._dialog.open(ChangePasswordDialogComponent);
-        }
     }
 
     isUserLoggedIn(): boolean {

@@ -81,7 +81,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { MatMenuModule } from '@angular/material/menu';
 import { ResponsiveMenuModule } from '@app/components/responsive-menu/responsive-menu.module';
-import {SettingsPageComponent} from "@app/pages/settings/settings.component";
+import { SettingsPageComponent } from '@app/pages/settings/settings.component';
 
 @NgModule({
     declarations: [
@@ -123,7 +123,7 @@ import {SettingsPageComponent} from "@app/pages/settings/settings.component";
         ChangePasswordDialogComponent,
         ChangePasswordBottomSheetComponent,
         HoverClassDirective,
-        SettingsPageComponent
+        SettingsPageComponent,
     ],
     imports: [
         AppRoutingModule,
