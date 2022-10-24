@@ -32,16 +32,18 @@ export class DatasourceService {
     ];
 
     availableRpcDataSources = [
+        /* { alias: 'Vault', url: 'https://vault.banano.cc/api/node-api', isAccessible: false, isSelected: false }, */
+        /* { alias: 'Jungle TV', url: 'https://public.node.jungletv.live/rpc', isAccessible: false, isSelected: false }, */
         { alias: 'Booster', url: 'https://booster.dev-ptera.com/banano-rpc', isAccessible: false, isSelected: false },
         { alias: 'Kalium', url: 'https://kaliumapi.appditto.com/api', isAccessible: false, isSelected: false },
     ];
 
-    private RpcNode: NanoClient;
+    private rpcNode: NanoClient;
     private rpcSource: Datasource;
-    private rpcSourceLoadedSubject = new Subject<Datasource>();
+    private readonly rpcSourceLoadedSubject = new Subject<Datasource>();
 
     private spyglassApiSource: Datasource;
-    private spyglassSourceLoadedSubject = new Subject<Datasource>();
+    private readonly spyglassSourceLoadedSubject = new Subject<Datasource>();
 
     constructor(http: HttpClient) {
         const handleError = (err, url): void => {
@@ -84,6 +86,9 @@ export class DatasourceService {
         }
         source.isSelected = true;
         this.rpcSource = source;
+        this.rpcNode = new NanoClient({
+            url: source.url,
+        });
     }
 
     setSpyglassApiSource(source: Datasource): void {
@@ -95,8 +100,8 @@ export class DatasourceService {
     }
 
     async getRpcNode(): Promise<NanoClient> {
-        if (this.RpcNode) {
-            return Promise.resolve(this.RpcNode);
+        if (this.rpcNode) {
+            return Promise.resolve(this.rpcNode);
         }
         const source = await this._getRpcSource();
         return new NanoClient({

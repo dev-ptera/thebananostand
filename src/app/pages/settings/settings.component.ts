@@ -35,7 +35,7 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
                                 color="primary"
                                 (click)="openChangePasswordOverlay()"
                                 data-cy="change-password-button"
-                                style="min-width: 160px;"
+                                style="min-width: 160px; margin-left: 16px"
                             >
                                 Change Password
                             </button>
@@ -65,7 +65,7 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
                         </div>
                         <div class="mat-overline" style="margin-top: 32px">Spyglass API Datasource</div>
                         <div class="mat-body-1" style="margin-bottom: 16px">
-                            This is used to show a filtered transaction history, fetch representative scores and account
+                            This is used to show filtered transaction history, fetch representative scores and account
                             aliases.
                         </div>
                         <div *ngFor="let source of datasourceService.availableSpyglassApiSources">
@@ -91,7 +91,6 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
     styleUrls: ['./settings.component.scss'],
 })
 export class SettingsPageComponent {
-
     bottomSheetOpenDelayMs = 250;
 
     constructor(

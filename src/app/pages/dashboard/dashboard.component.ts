@@ -57,9 +57,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         // Initial Load
         this.isLoadingAccount = this.getAccounts().length === 0;
         this.loadingAccountListener = this._walletEventsService.accountLoading.subscribe((loading) => {
-            setTimeout(() => {
-                this.isLoadingAccount = loading;
-            });
+            this.isLoadingAccount = loading;
         });
     }
 

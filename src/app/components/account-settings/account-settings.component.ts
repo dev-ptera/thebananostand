@@ -1,10 +1,10 @@
-import {Component, ViewEncapsulation} from '@angular/core';
-import {Router} from '@angular/router';
-import {SecretService} from '@app/services/secret.service';
-import {MatDialog} from '@angular/material/dialog';
-import {MatBottomSheet} from '@angular/material/bottom-sheet';
-import {ViewportService} from '@app/services/viewport.service';
-import {ThemeService} from '@app/services/theme.service';
+import { Component, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
+import { SecretService } from '@app/services/secret.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { ViewportService } from '@app/services/viewport.service';
+import { ThemeService } from '@app/services/theme.service';
 
 @Component({
     selector: 'app-account-settings',
@@ -28,8 +28,8 @@ import {ThemeService} from '@app/services/theme.service';
             <ng-container *ngIf="isUserLoggedIn()">
                 <div class="mat-overline" style="margin-top: 24px; padding-left: 16px">Advanced</div>
                 <button mat-menu-item (click)="navigateToSettingsPage()">
-                    <mat-icon>settings</mat-icon>
-                    <span>Advanced</span>
+                    <mat-icon>open_in_new</mat-icon>
+                    <span>More</span>
                 </button>
             </ng-container>
         </ng-template>
