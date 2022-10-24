@@ -170,7 +170,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     openAccount(address: string): void {
-        void this._router.navigate([`/${address}`]);
+        void this._router.navigate([`/account/${address}`]);
     }
 
     getBalance(): string {

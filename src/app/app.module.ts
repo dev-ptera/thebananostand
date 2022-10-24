@@ -45,7 +45,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ResponsiveDirective } from './directives/responsive.directive';
 import { LoginComponent } from '@app/pages/login/login.component';
-import { AppThemePickerComponent } from '@app/components/theme-picker/theme-picker.component';
 import { AppAccountSettingsComponent } from '@app/components/account-settings/account-settings.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -82,11 +81,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { MatMenuModule } from '@angular/material/menu';
 import { ResponsiveMenuModule } from '@app/components/responsive-menu/responsive-menu.module';
+import {SettingsPageComponent} from "@app/pages/settings/settings.component";
 
 @NgModule({
     declarations: [
         AppComponent,
-        AppThemePickerComponent,
         HomeComponent,
         DashboardComponent,
         AccountComponent,
@@ -124,6 +123,7 @@ import { ResponsiveMenuModule } from '@app/components/responsive-menu/responsive
         ChangePasswordDialogComponent,
         ChangePasswordBottomSheetComponent,
         HoverClassDirective,
+        SettingsPageComponent
     ],
     imports: [
         AppRoutingModule,

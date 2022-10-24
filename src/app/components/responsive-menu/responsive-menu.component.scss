@@ -17,14 +17,20 @@
     margin-right: 24px;
 }
 
+.responsive-menu-trigger-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .mat-menu-trigger {
+        display: flex;
+        align-items: center;
+
+    }
+}
+
 .sm {
     .responsive-menu-trigger-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
         min-height: 40px;
         min-width: 40px;
-        display: flex;
-        align-items: center;
     }
 }
