@@ -91,13 +91,14 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
     styleUrls: ['./settings.component.scss'],
 })
 export class SettingsPageComponent {
+
     bottomSheetOpenDelayMs = 250;
 
     constructor(
         public vp: ViewportService,
         private readonly _dialog: MatDialog,
         private readonly _sheet: MatBottomSheet,
-        private _location: Location,
+        private readonly _location: Location,
         public datasourceService: DatasourceService
     ) {}
 
