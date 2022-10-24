@@ -101,7 +101,8 @@ describe("User Session", () => {
 
         cy.window().then(() => {
             cy.get('[data-cy=dashboard-wrapper]').should('exist');
-            cy.get('[data-cy=session-settings]').click();
+            cy.get('[data-cy=settings-button]').click();
+            cy.get('[data-cy=more-settings]').click();
             cy.get('[data-cy=change-password-button]').click()
             cy.get('.change-password-overlay').should('exist');
             const newPassword = 'ABD123XYZ';
@@ -124,7 +125,8 @@ describe("User Session", () => {
 
         cy.window().then(() => {
             cy.get('[data-cy=dashboard-wrapper]').should('exist');
-            cy.get('[data-cy=session-settings]').click();
+            cy.get('[data-cy=settings-button]').click();
+            cy.get('[data-cy=more-settings]').click();
             cy.get('[data-cy=change-password-button]').click();
             const overlayRenderDelay = 500;
             cy.wait(overlayRenderDelay);

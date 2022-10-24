@@ -27,7 +27,7 @@ import { ThemeService } from '@app/services/theme.service';
 
             <ng-container *ngIf="isUserLoggedIn()">
                 <div class="mat-overline" style="margin-top: 24px; padding-left: 16px">Advanced</div>
-                <button mat-menu-item (click)="navigateToSettingsPage()">
+                <button mat-menu-item (click)="navigateToSettingsPage()" data-cy="more-settings">
                     <mat-icon>open_in_new</mat-icon>
                     <span>More</span>
                 </button>
@@ -47,7 +47,7 @@ import { ThemeService } from '@app/services/theme.service';
             [menu]="accountActionsMenu"
             [desktopTrigger]="desktopTrigger"
             [mobileTrigger]="mobileTrigger"
-            data-cy="change-password-button"
+            data-cy="settings-button"
         >
         </responsive-menu>
     `,

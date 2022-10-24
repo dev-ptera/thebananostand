@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { WalletEventsService } from '@app/services/wallet-events.service';
 import { SecretService } from '@app/services/secret.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-change-password-overlay',
@@ -130,7 +131,8 @@ export class ChangePasswordOverlayComponent {
 
     constructor(
         private readonly _walletEventService: WalletEventsService,
-        private readonly _secretService: SecretService
+        private readonly _secretService: SecretService,
+        private readonly _router: Router
     ) {}
 
     newPasswordMismatch(): boolean {
@@ -151,6 +153,7 @@ export class ChangePasswordOverlayComponent {
             .changePassword(currentPassword, newPassword)
             .then(() => {
                 this.close.emit();
+                void this._router.navigate(['/']);
             })
             .catch((err) => {
                 console.error(err);
