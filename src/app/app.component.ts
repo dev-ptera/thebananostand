@@ -53,6 +53,10 @@ export class AppComponent {
                 this._snackbar.open('Address Copied!', closeActionText, { duration });
             }
         });
+
+        this._walletEventService.clearLocalStorage.subscribe(() => {
+            this._snackbar.open('All Wallets Removed!', closeActionText, { duration });
+        });
     }
 
     showBanana(): boolean {

@@ -149,4 +149,22 @@ describe("User Session", () => {
             cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
         })
     });
+
+
+    it("should log a user out after clearing local storage", () => {
+        logInUsingSeedPasswordPair();
+
+        cy.window().then(() => {
+            cy.get('[data-cy=dashboard-wrapper]').should('exist');
+            cy.get('[data-cy=settings-button]').click();
+            cy.get('[data-cy=more-settings]').click();
+            cy.get('[data-cy=clear-storage-button]').trigger('mousedown', { button: 0 });
+            cy.wait(2000).then(() => {
+                void expect(window.localStorage.getItem('bananostand_encryptedWallets')).to.not.be.ok;
+                cy.get('.mat-snack-bar-container').contains('All Wallets Removed');
+                cy.get('[data-cy=dashboard-wrapper]').should('not.exist');
+                cy.get('[data-cy=home-wrapper]');
+            });
+        })
+    });
 });

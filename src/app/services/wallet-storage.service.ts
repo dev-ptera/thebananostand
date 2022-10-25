@@ -20,7 +20,8 @@ const LEDGER_STORED_INDEXES = 'bananostand_ledgerIndexes';
 /** Responsible for managing anything stored in localstorage -
  * wallet names, wallet ids, active wallet id, account indexes per wallet */
 export class WalletStorageService {
-    isLedger: boolean;
+    private isLedger: boolean;
+
     activeWallet: LocalStorageWallet;
     wallets: LocalStorageWallet[];
 
@@ -74,6 +75,11 @@ export class WalletStorageService {
             }
             this._updateState();
             this._walletEventsService.activeWalletChange.next(newActiveWallet);
+        });
+
+        this._walletEventsService.clearLocalStorage.subscribe(() => {
+            window.localStorage.clear();
+            this._walletEventsService.walletLocked.next();
         });
     }
 

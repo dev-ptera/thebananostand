@@ -53,4 +53,7 @@ export class WalletEventsService {
 
     /** User has copied account address to clipboard. */
     copiedAddress = new Subject<{ address: string }>();
+
+    /** User has opted to delete all locally stored info. */
+    clearLocalStorage = new Subject<void>();
 }
