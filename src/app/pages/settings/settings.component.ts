@@ -6,6 +6,8 @@ import { ChangePasswordDialogComponent } from '@app/overlays/dialogs/change-pass
 import { ViewportService } from '@app/services/viewport.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { Router } from '@angular/router';
+import { WalletEventsService } from '@app/services/wallet-events.service';
 
 @Component({
     selector: 'app-settings-page',
@@ -25,19 +27,44 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
                     <mat-card style="margin-bottom: 32px">
                         <div class="mat-title">Account Security</div>
                         <mat-divider></mat-divider>
-                        <div style="display: flex; align-items: center; justify-content: space-between">
+                        <div
+                            style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;"
+                        >
                             <div style="padding-top: 16px; flex: 1">
                                 <div class="mat-overline">Account Password</div>
                                 <div class="mat-body-1">The password used to access all encrypted wallets.</div>
                             </div>
                             <button
                                 mat-stroked-button
+                                blui-inline
                                 color="primary"
                                 (click)="openChangePasswordOverlay()"
                                 data-cy="change-password-button"
-                                style="min-width: 160px; margin-left: 16px"
+                                style="margin-left: 16px"
                             >
-                                Change Password
+                                <mat-icon>edit</mat-icon>
+                                <span>Change Password</span>
+                            </button>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div style="display: flex; align-items: center; justify-content: space-between">
+                            <div style="padding-top: 16px; flex: 1">
+                                <div class="mat-overline">Clear Local Storage</div>
+                                <div class="mat-body-1">
+                                    Press & hold to remove all encrypted wallets and preferences from this browser.
+                                </div>
+                            </div>
+                            <button
+                                mat-stroked-button
+                                blui-inline
+                                color="warn"
+                                longPress
+                                (mouseLongPress)="clearStorage()"
+                                data-cy="clear-storage-button"
+                                style="margin-left: 16px"
+                            >
+                                <mat-icon>delete_outline</mat-icon>
+                                <span>Remove</span>
                             </button>
                         </div>
                     </mat-card>
@@ -45,26 +72,29 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
                         <div class="mat-title">Data Sources</div>
                         <mat-divider></mat-divider>
                         <div class="mat-overline" style="margin-top: 32px">Node RPC Datasource</div>
-                        <div class="mat-body-1" style="margin-bottom: 16px">
+                        <div class="mat-body-1" style="margin-bottom: 8px">
                             This is used for send/receive/change actions and fetching account balances.
                         </div>
-                        <div *ngFor="let source of datasourceService.availableRpcDataSources">
-                            <mat-checkbox
-                                *ngIf="source.isAccessible"
-                                [checked]="source.isSelected"
-                                (change)="datasourceService.setRpcSource(source)"
-                            >
-                                <div
-                                    [style.fontWeight]="source.isSelected ? 600 : 400"
-                                    [class.primary]="source.isSelected"
+                        <div style="margin-bottom: 16px;">
+                            <div *ngFor="let source of datasourceService.availableRpcDataSources">
+                                <mat-checkbox
+                                    *ngIf="source.isAccessible"
+                                    [checked]="source.isSelected"
+                                    (change)="datasourceService.setRpcSource(source)"
                                 >
-                                    {{ source.alias }}
-                                </div>
-                                <div class="mono">{{ source.url }}</div>
-                            </mat-checkbox>
+                                    <div
+                                        [style.fontWeight]="source.isSelected ? 600 : 400"
+                                        [class.primary]="source.isSelected"
+                                    >
+                                        {{ source.alias }}
+                                    </div>
+                                    <div class="mono">{{ source.url }}</div>
+                                </mat-checkbox>
+                            </div>
                         </div>
+                        <mat-divider></mat-divider>
                         <div class="mat-overline" style="margin-top: 32px">Spyglass API Datasource</div>
-                        <div class="mat-body-1" style="margin-bottom: 16px">
+                        <div class="mat-body-1" style="margin-bottom: 8px">
                             This is used to show filtered transaction history, fetch representative scores and account
                             aliases.
                         </div>
@@ -98,6 +128,8 @@ export class SettingsPageComponent {
         private readonly _dialog: MatDialog,
         private readonly _sheet: MatBottomSheet,
         private readonly _location: Location,
+        private readonly _walletEventService: WalletEventsService,
+        private readonly _router: Router,
         public datasourceService: DatasourceService
     ) {}
 
@@ -113,5 +145,10 @@ export class SettingsPageComponent {
         } else {
             this._dialog.open(ChangePasswordDialogComponent);
         }
+    }
+
+    clearStorage(): void {
+        this._walletEventService.clearLocalStorage.next();
+        void this._router.navigate(['/']);
     }
 }
