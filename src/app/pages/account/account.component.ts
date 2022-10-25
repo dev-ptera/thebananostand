@@ -73,7 +73,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.address = window.location.pathname.replace('/', '');
+        this.address = window.location.pathname.split('/').pop();
         this._setAccount();
         this._searchAccountTxHistory();
     }

@@ -3,7 +3,7 @@ import { UtilService } from './util.service';
 import { AccountInfoResponse } from '@dev-ptera/nano-node-rpc';
 import { TransactionService } from '@app/services/./transaction.service';
 import { AccountOverview } from '@app/types/AccountOverview';
-import { NanoClientService } from '@app/services/nano-client.service';
+import { DatasourceService } from '@app/services/datasource.service';
 
 const LOG_ERR = (err: any): any => {
     console.error(`ERROR: Issue fetching RPC data.  ${err}`);
@@ -24,7 +24,7 @@ type UnopenedAccountResponse = {
 export class RpcService {
     constructor(
         private readonly _transactionService: TransactionService,
-        private readonly _nanoClientService: NanoClientService,
+        private readonly _datasourceService: DatasourceService,
         private readonly _util: UtilService
     ) {}
 
@@ -41,25 +41,21 @@ export class RpcService {
 
     /** Returns number of confirmed transactions an account has. */
     async getAccountHeight(address: string): Promise<number> {
-        const accountInfo = await this._nanoClientService
-            .getRpcNode()
-            .account_info(address)
-            .catch((err) => Promise.reject(LOG_ERR(err)));
+        const client = await this._datasourceService.getRpcNode();
+        const accountInfo = await client.account_info(address).catch((err) => Promise.reject(LOG_ERR(err)));
         return Number(accountInfo.confirmation_height);
     }
 
     /** Returns array of receivable transactions, sorted by balance descending. */
     async getReceivable(address: string): Promise<string[]> {
         const MAX_PENDING = 100;
-        const pendingRpcData = await this._nanoClientService
-            .getRpcNode()
-            .accounts_pending([address], MAX_PENDING, { sorting: true })
-            .catch((err) => {
-                LOG_ERR(err);
-                return Promise.resolve({
-                    blocks: '',
-                });
+        const client = await this._datasourceService.getRpcNode();
+        const pendingRpcData = await client.accounts_pending([address], MAX_PENDING, { sorting: true }).catch((err) => {
+            LOG_ERR(err);
+            return Promise.resolve({
+                blocks: '',
             });
+        });
         const pendingBlocks = pendingRpcData.blocks[address];
         if (!pendingBlocks) {
             return [];
@@ -71,19 +67,17 @@ export class RpcService {
     /** Returns a modified account info object, given an index. */
     async getAccountInfo(index: number): Promise<AccountOverview> {
         const address = await this._transactionService.getAccountFromIndex(index);
+        const client = await this._datasourceService.getRpcNode();
         const [pending, accountInfoRpc] = await Promise.all([
             this.getReceivable(address),
-            this._nanoClientService
-                .getRpcNode()
-                .account_info(address, { representative: true })
-                .catch((err) => {
-                    if (err.error === 'Account not found') {
-                        return Promise.resolve({
-                            unopenedAccount: true,
-                        } as UnopenedAccountResponse);
-                    }
-                    LOG_ERR(err);
-                }),
+            client.account_info(address, { representative: true }).catch((err) => {
+                if (err.error === 'Account not found') {
+                    return Promise.resolve({
+                        unopenedAccount: true,
+                    } as UnopenedAccountResponse);
+                }
+                LOG_ERR(err);
+            }),
         ]);
         const accountOverview = await this._formatAccountInfoResponse(index, address, pending, accountInfoRpc);
         return accountOverview;

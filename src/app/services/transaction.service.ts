@@ -2,9 +2,9 @@
 import { Injectable } from '@angular/core';
 import { UtilService } from './util.service';
 import { environment } from '../../environments/environment';
-import { NanoClientService } from '@app/services/nano-client.service';
 import { SecretService } from '@app/services/secret.service';
 import { WalletStorageService } from '@app/services/wallet-storage.service';
+import { DatasourceService } from '@app/services/datasource.service';
 
 export const ACTIVE_WALLET_ID = 'activeWalletID';
 
@@ -17,19 +17,20 @@ export class TransactionService {
         private readonly _util: UtilService,
         private readonly _secretService: SecretService,
         private readonly _walletStorageService: WalletStorageService,
-        private readonly _nanoClientService: NanoClientService
+        private readonly _datasource: DatasourceService
     ) {}
 
-    private _configApi(api): void {
-        api.setUrl(this._nanoClientService.getRpcNode().nodeAddress);
-        api.setAuth(environment.token);
+    private async _configApi(bananodeApi): Promise<void> {
+        const client = await this._datasource.getRpcNode();
+        bananodeApi.setUrl(client.nodeAddress);
+        bananodeApi.setAuth(environment.token);
     }
 
     /** Attempts a withdrawal.  On success, returns transaction hash. */
     async withdraw(recipient: string, withdrawAmount: number, accountIndex: number): Promise<string> {
         const accountSigner = await this.getAccountSigner(accountIndex);
         const bananodeApi = window.bananocoinBananojs.bananodeApi;
-        this._configApi(bananodeApi);
+        await this._configApi(bananodeApi);
         const bananoUtil = window.bananocoinBananojs.bananoUtil;
         const config = window.bananocoinBananojsHw.bananoConfig;
         try {
@@ -53,7 +54,7 @@ export class TransactionService {
         const config = window.bananocoinBananojsHw.bananoConfig;
         const accountSigner = await this.getAccountSigner(index);
         const bananodeApi = window.bananocoinBananojs.bananodeApi;
-        this._configApi(bananodeApi);
+        await this._configApi(bananodeApi);
         let representative = await bananodeApi.getAccountRepresentative(account);
         if (!representative) {
             // TODO populate this via the rep scores API. For now default to batman
@@ -82,7 +83,7 @@ export class TransactionService {
     async changeRepresentative(newRep: string, address: string, accountIndex: number): Promise<string> {
         const accountSigner = await this.getAccountSigner(accountIndex);
         const bananodeApi = window.bananocoinBananojs.bananodeApi;
-        this._configApi(bananodeApi);
+        await this._configApi(bananodeApi);
         const bananoUtil = window.bananocoinBananojs.bananoUtil;
         const config = window.bananocoinBananojsHw.bananoConfig;
         try {
