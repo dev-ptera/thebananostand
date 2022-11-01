@@ -23,18 +23,18 @@
     },
     "private": true,
     "dependencies": {
-        "@angular/animations": "^13.2.7",
-        "@angular/cdk": "^13.2.6",
-        "@angular/common": "^13.2.7",
-        "@angular/compiler": "^13.2.7",
-        "@angular/core": "^13.2.7",
-        "@angular/flex-layout": "^13.0.0-beta.38",
-        "@angular/forms": "^13.2.7",
-        "@angular/material": "^13.2.6",
-        "@angular/platform-browser": "^13.2.7",
-        "@angular/platform-browser-dynamic": "^13.2.7",
-        "@angular/router": "^13.2.7",
-        "@bananocoin/bananojs-hw": "^1.2.12",
+        "@angular/animations": "^14.2.8",
+        "@angular/cdk": "^14.2.6",
+        "@angular/common": "^14.2.8",
+        "@angular/compiler": "^14.2.8",
+        "@angular/core": "^14.2.8",
+        "@angular/flex-layout": "^14.0.0-beta.41",
+        "@angular/forms": "^14.2.8",
+        "@angular/material": "^14.2.6",
+        "@angular/platform-browser": "^14.2.8",
+        "@angular/platform-browser-dynamic": "^14.2.8",
+        "@angular/router": "^14.2.8",
+        "@bananocoin/bananojs-hw": "^1.2.14",
         "@brightlayer-ui/angular-components": "7.0.2",
         "@brightlayer-ui/angular-themes": "^7.0.1",
         "@brightlayer-ui/colors": "^3.0.1",
@@ -42,12 +42,12 @@
         "qrcode": "^1.5.1",
         "rxjs": "~6.6.7",
         "tslib": "^2.1.0",
-        "zone.js": "^0.11.7"
+        "zone.js": "^0.11.8"
     },
     "devDependencies": {
-        "@angular-devkit/build-angular": "^13.2.6",
-        "@angular/cli": "^13.2.6",
-        "@angular/compiler-cli": "^13.2.7",
+        "@angular-devkit/build-angular": "^14.2.7",
+        "@angular/cli": "^14.2.7",
+        "@angular/compiler-cli": "^14.2.8",
         "@brightlayer-ui/eslint-config": "^3.0.1",
         "@brightlayer-ui/prettier-config": "^1.0.3",
         "@types/jasmine": "~3.6.11",
@@ -67,7 +67,7 @@
         "npm-check-updates": "^12.5.12",
         "prettier": "^2.4.1",
         "start-server-and-test": "^1.14.0",
-        "typescript": "~4.4.4"
+        "typescript": "~4.6.4"
     },
     "prettier": "@brightlayer-ui/prettier-config"
 }
