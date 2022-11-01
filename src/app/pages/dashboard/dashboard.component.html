@@ -111,7 +111,12 @@
         </button>
     </ng-template>
     <ng-template #walletActionsDesktopTrigger>
-        <button mat-stroked-button blui-inline style="margin-right: 16px" data-cy="wallet-actions-desktop-menu">
+        <button
+            mat-stroked-button
+            blui-inline
+            style="margin-right: 16px; min-width: 110px"
+            data-cy="wallet-actions-desktop-menu"
+        >
             <span>Wallet</span>
             <mat-icon>arrow_drop_down</mat-icon>
         </button>
@@ -149,7 +154,7 @@
         </button>
     </ng-template>
     <ng-template #accountActionsDesktopTrigger>
-        <button mat-stroked-button blui-inline data-cy="account-actions-desktop-menu">
+        <button mat-stroked-button blui-inline data-cy="account-actions-desktop-menu" style="min-width: 115px">
             <span>Account</span>
             <mat-icon>arrow_drop_down</mat-icon>
         </button>
