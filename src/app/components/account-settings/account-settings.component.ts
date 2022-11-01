@@ -89,7 +89,9 @@ export class AppAccountSettingsComponent {
     }
 
     isUserLoggedIn(): boolean {
-        return (this._secretService.hasSecret() && this._secretService.isLocalSecretUnlocked())
-            || this._secretService.isLocalLedgerUnlocked();
+        return (
+            (this._secretService.hasSecret() && this._secretService.isLocalSecretUnlocked()) ||
+            this._secretService.isLocalLedgerUnlocked()
+        );
     }
 }
