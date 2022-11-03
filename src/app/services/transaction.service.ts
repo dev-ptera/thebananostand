@@ -7,6 +7,45 @@ import { WalletStorageService } from '@app/services/wallet-storage.service';
 import { DatasourceService } from '@app/services/datasource.service';
 
 
+const getDeferredPromise = () => {
+    const defer = {
+        promise: null,
+        resolve: null,
+        reject: null,
+    };
+
+    defer.promise = new Promise((resolve, reject) => {
+        defer.resolve = resolve;
+        defer.reject = reject;
+    });
+
+    return defer;
+}
+/**
+ * Generate PoW using WebGL
+ */
+const getHashWebGL = (hash) => {
+    const response = getDeferredPromise();
+
+    const start = Date.now();
+    try {
+        window['BananoWebglPow'](hash, (work, n) => {
+                console.log(`WebGL Worker: Found work (${work}) for ${hash} after ${(Date.now() - start) / 1000} seconds [${n} iterations]`);
+                response.resolve(work);
+            },
+            n => {}
+        );
+    } catch(error) {
+        console.error(error);
+        if (error.message === 'webgl2_required') {
+        }
+        response.resolve(null);
+    }
+
+    return response.promise;
+}
+
+
 const defaultBananoJsGetGeneratedWork = window.bananocoinBananojs.bananodeApi.getGeneratedWork;
 const getGeneratedWork = async (hash) => {
     console.log("The generated work override is called.");
@@ -14,12 +53,19 @@ const getGeneratedWork = async (hash) => {
     if (doClientSidePow) {
         console.log('Performing Client-side POW');
         const start = new Date().getTime();
-        const workBytes = window.bananocoinBananojs.getZeroedWorkBytes();
-        const actualWork = window.bananocoinBananojs.getWorkUsingCpu(hash, workBytes);
+        let work = '';
+        const doBlakeHashing = false;
+        if (doBlakeHashing) {
+            const workBytes = window.bananocoinBananojs.getZeroedWorkBytes();
+            work = window.bananocoinBananojs.getWorkUsingCpu(hash, workBytes);
+        } else {
+            work = await getHashWebGL(hash);
+        }
         const end = new Date().getTime();
         const time = end - start;
         console.log('Pow generation time was ' + time / 1000 + ' seconds');
-        return actualWork;
+        return work;
+
         // TODO
     } else {
         console.log('Performing Server-side POW');
@@ -39,6 +85,7 @@ export class TransactionService {
         private readonly _datasource: DatasourceService
     ) {
         console.log('setting it');
+        console.log(this.hasWebGLSupport());
         window.bananocoinBananojs.bananodeApi.getGeneratedWork = getGeneratedWork;
     }
 
@@ -101,6 +148,23 @@ export class TransactionService {
         }
         return receiveResponse.receiveBlocks[0];
     }
+
+
+    public hasWebGLSupport() {
+        if (this.webGLTested) return this.webGLAvailable;
+
+        this.webGLTested = true;
+
+        try {
+            const canvas = document.createElement( 'canvas' );
+            const webGL = !! window['WebGLRenderingContext'] && (canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ));
+            this.webGLAvailable = !!webGL;
+            return this.webGLAvailable;
+        } catch (e) {
+            this.webGLAvailable = false;
+            return false;
+        }
+    };
 
     /** Attempts a change block.  On success, returns transaction hash. */
     async changeRepresentative(newRep: string, address: string, accountIndex: number): Promise<string> {
