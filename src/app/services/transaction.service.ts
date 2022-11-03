@@ -6,12 +6,20 @@ import { SecretService } from '@app/services/secret.service';
 import { WalletStorageService } from '@app/services/wallet-storage.service';
 import { DatasourceService } from '@app/services/datasource.service';
 
-const defaultBananoJsGetGeneratedWork = window.bananocoinBananojs.bananodeApi.getGeneratedWork;
 
+const defaultBananoJsGetGeneratedWork = window.bananocoinBananojs.bananodeApi.getGeneratedWork;
 const getGeneratedWork = async (hash) => {
     console.log("The generated work override is called.");
-    const doClientSidePow = false;
+    const doClientSidePow = true;
     if (doClientSidePow) {
+        console.log('Performing Client-side POW');
+        const start = new Date().getTime();
+        const workBytes = window.bananocoinBananojs.getZeroedWorkBytes();
+        const actualWork = window.bananocoinBananojs.getWorkUsingCpu(hash, workBytes);
+        const end = new Date().getTime();
+        const time = end - start;
+        console.log('Pow generation time was ' + time / 1000 + ' seconds');
+        return actualWork;
         // TODO
     } else {
         console.log('Performing Server-side POW');
