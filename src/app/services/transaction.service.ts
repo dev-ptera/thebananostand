@@ -8,6 +8,43 @@ import { DatasourceService } from '@app/services/datasource.service';
 
 export const ACTIVE_WALLET_ID = 'activeWalletID';
 
+const getGeneratedWork = async (hash) => {
+
+    const doClientSide = false;
+    if (doClientSide) {
+        // TODO
+    } else {
+        // https://docs.nano.org/commands/rpc-protocol#work-generate
+        const formData = {
+            action: 'work_generate',
+            hash: hash,
+        };
+
+        console.log(
+            `STARTED getGeneratedWork request ${JSON.stringify(formData)}`,
+        );
+
+        return new Promise((resolve, reject) => {
+            window.bananocoinBananojs.bananoUtil.sendRequest(formData)
+                .catch((error) => {
+                    // console.log( `getGeneratedWork error '${error.message}'` );
+                    reject(error);
+                })
+                .then((json) => {
+                    if (json === undefined) {
+                        resolve('');
+                    } else {
+                        console.log(
+                            `SUCCESS getGeneratedWork response ${JSON.stringify(json)}`,
+                        );
+                        const work = json.work;
+                        resolve(work);
+                    }
+                });
+        });
+    }
+};
+
 @Injectable({
     providedIn: 'root',
 })
@@ -18,7 +55,10 @@ export class TransactionService {
         private readonly _secretService: SecretService,
         private readonly _walletStorageService: WalletStorageService,
         private readonly _datasource: DatasourceService
-    ) {}
+    ) {
+        bananoUtil.getGeneratedWork = getGeneratedWork;
+    }
+
 
     private async _configApi(bananodeApi): Promise<void> {
         const client = await this._datasource.getRpcNode();
