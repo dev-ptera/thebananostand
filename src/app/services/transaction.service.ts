@@ -6,42 +6,16 @@ import { SecretService } from '@app/services/secret.service';
 import { WalletStorageService } from '@app/services/wallet-storage.service';
 import { DatasourceService } from '@app/services/datasource.service';
 
-export const ACTIVE_WALLET_ID = 'activeWalletID';
+const defaultBananoJsGetGeneratedWork = window.bananocoinBananojs.bananodeApi.getGeneratedWork;
 
 const getGeneratedWork = async (hash) => {
-
-    const doClientSide = false;
-    if (doClientSide) {
+    console.log("The generated work override is called.");
+    const doClientSidePow = false;
+    if (doClientSidePow) {
         // TODO
     } else {
-        // https://docs.nano.org/commands/rpc-protocol#work-generate
-        const formData = {
-            action: 'work_generate',
-            hash: hash,
-        };
-
-        console.log(
-            `STARTED getGeneratedWork request ${JSON.stringify(formData)}`,
-        );
-
-        return new Promise((resolve, reject) => {
-            window.bananocoinBananojs.bananoUtil.sendRequest(formData)
-                .catch((error) => {
-                    // console.log( `getGeneratedWork error '${error.message}'` );
-                    reject(error);
-                })
-                .then((json) => {
-                    if (json === undefined) {
-                        resolve('');
-                    } else {
-                        console.log(
-                            `SUCCESS getGeneratedWork response ${JSON.stringify(json)}`,
-                        );
-                        const work = json.work;
-                        resolve(work);
-                    }
-                });
-        });
+        console.log('Performing Server-side POW');
+        return defaultBananoJsGetGeneratedWork(hash);
     }
 };
 
@@ -56,7 +30,8 @@ export class TransactionService {
         private readonly _walletStorageService: WalletStorageService,
         private readonly _datasource: DatasourceService
     ) {
-        bananoUtil.getGeneratedWork = getGeneratedWork;
+        console.log('setting it');
+        window.bananocoinBananojs.bananodeApi.getGeneratedWork = getGeneratedWork;
     }
 
 
