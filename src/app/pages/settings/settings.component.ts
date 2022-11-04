@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { Router } from '@angular/router';
 import { WalletEventsService } from '@app/services/wallet-events.service';
+import { PowService } from '@app/services/pow.service';
 
 @Component({
     selector: 'app-settings-page',
@@ -68,7 +69,7 @@ import { WalletEventsService } from '@app/services/wallet-events.service';
                             </button>
                         </div>
                     </mat-card>
-                    <mat-card>
+                    <mat-card style="margin-bottom: 32px">
                         <div class="mat-title">Data Sources</div>
                         <mat-divider></mat-divider>
                         <div class="mat-overline" style="margin-top: 32px">Node RPC Datasource</div>
@@ -114,6 +115,25 @@ import { WalletEventsService } from '@app/services/wallet-events.service';
                             </mat-checkbox>
                         </div>
                     </mat-card>
+                    <mat-card>
+                        <div class="mat-title">Proof-of-Work</div>
+                        <mat-divider></mat-divider>
+                        <div class="mat-overline" style="margin-top: 32px">Use Client-Side POW</div>
+                        <div class="mat-body-1" style="margin-bottom: 8px">
+                            When sending or receiving transactions, your local computer will perform the computation
+                            required to broadcast.
+                        </div>
+                        <mat-checkbox
+                            [checked]="powService.getUseClientSidePow()"
+                            (change)="powService.setUseClientSidePow($event.checked)"
+                        >
+                            Enable local proof-of-work
+                        </mat-checkbox>
+                        <div *ngIf="!powService.webGLAvailable" style="margin-top: 8px">
+                            <strong>Warning:</strong> This may be very slow on your browser; it is advised to disable
+                            this feature & offload this work to a remote server.
+                        </div>
+                    </mat-card>
                 </div>
             </div>
         </div>
@@ -130,6 +150,7 @@ export class SettingsPageComponent {
         private readonly _location: Location,
         private readonly _walletEventService: WalletEventsService,
         private readonly _router: Router,
+        public powService: PowService,
         public datasourceService: DatasourceService
     ) {}
 

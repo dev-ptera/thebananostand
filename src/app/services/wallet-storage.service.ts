@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { WalletEventsService } from '@app/services/wallet-events.service';
 import { UtilService } from '@app/services/util.service';
 
-
 export type LocalStorageWallet = {
     encryptedSeed: string;
     walletId: string;

@@ -6,6 +6,7 @@ import { SecretService } from '@app/services/secret.service';
 import { WalletEventsService } from '@app/services/wallet-events.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UtilService } from '@app/services/util.service';
+import { PowService } from '@app/services/pow.service';
 
 @Component({
     selector: 'app-root',
@@ -18,7 +19,8 @@ export class AppComponent {
         private readonly _secretService: SecretService,
         private readonly _snackbar: MatSnackBar,
         private readonly _util: UtilService,
-        private readonly _walletEventService: WalletEventsService
+        private readonly _walletEventService: WalletEventsService,
+        private readonly _powService: PowService
     ) {
         const duration = 3000;
         const closeActionText = 'Dismiss';
