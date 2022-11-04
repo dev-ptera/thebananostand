@@ -10,6 +10,7 @@
     font-size: 12px;
 }
 
+$card-horizontal-padding: 16px;
 .app-settings-page {
     ::ng-deep .mat-checkbox-label {
         word-break: break-all;
@@ -17,6 +18,36 @@
         * {
             display: flex;
             align-items: center;
+        }
+    }
+    .mat-card>.mat-divider-horizontal {
+        position: unset;
+        margin-left: -$card-horizontal-padding;
+        margin-right: -$card-horizontal-padding;
+        width: unset;
+    }
+
+    &.sm {
+        mat-card {
+            padding-left: $card-horizontal-padding;
+            padding-right: $card-horizontal-padding;
+        }
+    }
+    .account-security-option {
+        display: flex; justify-content: space-between; margin-bottom: 16px;
+        align-items: center;
+
+        button {
+            margin-left: 16px;
+        }
+        &.sm {
+            flex-direction: column;
+            align-items: flex-start;
+            button {
+                margin-left: 0;
+                margin-top: 12px;
+                margin-bottom: 8px;
+            }
         }
     }
 }

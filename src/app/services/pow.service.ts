@@ -23,7 +23,6 @@ export class PowService {
         // @ts-ignore
         window.bananocoinBananojs.bananodeApi.getGeneratedWork = this.getGeneratedWork.bind(this);
         this.setUseClientSidePow(window.localStorage.getItem(USE_CLIENT_POW_LOCALSTORAGE_KEY) === 'enabled');
-        console.log(this.useClientSidePow);
     }
 
     getUseClientSidePow(): boolean {

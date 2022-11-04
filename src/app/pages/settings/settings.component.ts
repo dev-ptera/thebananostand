@@ -28,9 +28,7 @@ import { PowService } from '@app/services/pow.service';
                     <mat-card style="margin-bottom: 32px">
                         <div class="mat-title">Account Security</div>
                         <mat-divider></mat-divider>
-                        <div
-                            style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;"
-                        >
+                        <div class="account-security-option" responsive>
                             <div style="padding-top: 16px; flex: 1">
                                 <div class="mat-overline">Account Password</div>
                                 <div class="mat-body-1">The password used to access all encrypted wallets.</div>
@@ -41,14 +39,13 @@ import { PowService } from '@app/services/pow.service';
                                 color="primary"
                                 (click)="openChangePasswordOverlay()"
                                 data-cy="change-password-button"
-                                style="margin-left: 16px"
                             >
                                 <mat-icon>edit</mat-icon>
                                 <span>Change Password</span>
                             </button>
                         </div>
                         <mat-divider></mat-divider>
-                        <div style="display: flex; align-items: center; justify-content: space-between">
+                        <div class="account-security-option" responsive style="margin-bottom: 0">
                             <div style="padding-top: 16px; flex: 1">
                                 <div class="mat-overline">Clear Local Storage</div>
                                 <div class="mat-body-1">
@@ -62,7 +59,6 @@ import { PowService } from '@app/services/pow.service';
                                 longPress
                                 (mouseLongPress)="clearStorage()"
                                 data-cy="clear-storage-button"
-                                style="margin-left: 16px"
                             >
                                 <mat-icon>delete_outline</mat-icon>
                                 <span>Remove</span>
@@ -72,7 +68,7 @@ import { PowService } from '@app/services/pow.service';
                     <mat-card style="margin-bottom: 32px">
                         <div class="mat-title">Data Sources</div>
                         <mat-divider></mat-divider>
-                        <div class="mat-overline" style="margin-top: 32px">Node RPC Datasource</div>
+                        <div class="mat-overline" style="margin-top: 16px">Node RPC Datasource</div>
                         <div class="mat-body-1" style="margin-bottom: 8px">
                             This is used for send/receive/change actions and fetching account balances.
                         </div>
@@ -94,7 +90,7 @@ import { PowService } from '@app/services/pow.service';
                             </div>
                         </div>
                         <mat-divider></mat-divider>
-                        <div class="mat-overline" style="margin-top: 32px">Spyglass API Datasource</div>
+                        <div class="mat-overline" style="margin-top: 16px">Spyglass API Datasource</div>
                         <div class="mat-body-1" style="margin-bottom: 8px">
                             This is used to show filtered transaction history, fetch representative scores and account
                             aliases.
@@ -115,13 +111,13 @@ import { PowService } from '@app/services/pow.service';
                             </mat-checkbox>
                         </div>
                     </mat-card>
-                    <mat-card>
+                    <mat-card style="margin-bottom: 24px">
                         <div class="mat-title">Proof-of-Work</div>
                         <mat-divider></mat-divider>
-                        <div class="mat-overline" style="margin-top: 32px">Use Client-Side POW</div>
+                        <div class="mat-overline" style="margin-top: 16px">Use Client-Side POW</div>
                         <div class="mat-body-1" style="margin-bottom: 8px">
-                            When sending or receiving transactions, your local computer will perform the computation
-                            required to broadcast.
+                            Your local computer will perform the computation
+                            required when sending or receiving transactions.
                         </div>
                         <mat-checkbox
                             [checked]="powService.getUseClientSidePow()"
