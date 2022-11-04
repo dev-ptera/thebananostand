@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { Router } from '@angular/router';
 import { WalletEventsService } from '@app/services/wallet-events.service';
+import { PowService } from '@app/services/pow.service';
 
 @Component({
     selector: 'app-settings-page',
@@ -27,9 +28,7 @@ import { WalletEventsService } from '@app/services/wallet-events.service';
                     <mat-card style="margin-bottom: 32px">
                         <div class="mat-title">Account Security</div>
                         <mat-divider></mat-divider>
-                        <div
-                            style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;"
-                        >
+                        <div class="account-security-option" responsive>
                             <div style="padding-top: 16px; flex: 1">
                                 <div class="mat-overline">Account Password</div>
                                 <div class="mat-body-1">The password used to access all encrypted wallets.</div>
@@ -40,14 +39,13 @@ import { WalletEventsService } from '@app/services/wallet-events.service';
                                 color="primary"
                                 (click)="openChangePasswordOverlay()"
                                 data-cy="change-password-button"
-                                style="margin-left: 16px"
                             >
                                 <mat-icon>edit</mat-icon>
                                 <span>Change Password</span>
                             </button>
                         </div>
                         <mat-divider></mat-divider>
-                        <div style="display: flex; align-items: center; justify-content: space-between">
+                        <div class="account-security-option" responsive style="margin-bottom: 0">
                             <div style="padding-top: 16px; flex: 1">
                                 <div class="mat-overline">Clear Local Storage</div>
                                 <div class="mat-body-1">
@@ -61,17 +59,35 @@ import { WalletEventsService } from '@app/services/wallet-events.service';
                                 longPress
                                 (mouseLongPress)="clearStorage()"
                                 data-cy="clear-storage-button"
-                                style="margin-left: 16px"
                             >
                                 <mat-icon>delete_outline</mat-icon>
                                 <span>Remove</span>
                             </button>
                         </div>
                     </mat-card>
-                    <mat-card>
+                    <mat-card style="margin-bottom: 32px; padding-bottom: 24px">
+                        <div class="mat-title">Proof-of-Work</div>
+                        <mat-divider></mat-divider>
+                        <div class="mat-overline" style="margin-top: 16px">Use Client-Side POW</div>
+                        <div class="mat-body-1" style="margin-bottom: 8px">
+                            Your local computer will perform the computation required when sending or receiving
+                            transactions.
+                        </div>
+                        <mat-checkbox
+                            [checked]="powService.getUseClientSidePow()"
+                            (change)="powService.setUseClientSidePow($event.checked)"
+                        >
+                            Enable local proof-of-work
+                        </mat-checkbox>
+                        <div *ngIf="!powService.webGLAvailable" style="margin-top: 8px">
+                            <strong>Warning:</strong> This may be very slow on your browser; it is advised to disable
+                            this feature & offload this work to a remote server.
+                        </div>
+                    </mat-card>
+                    <mat-card style="margin-bottom: 32px">
                         <div class="mat-title">Data Sources</div>
                         <mat-divider></mat-divider>
-                        <div class="mat-overline" style="margin-top: 32px">Node RPC Datasource</div>
+                        <div class="mat-overline" style="margin-top: 16px">Node RPC Datasource</div>
                         <div class="mat-body-1" style="margin-bottom: 8px">
                             This is used for send/receive/change actions and fetching account balances.
                         </div>
@@ -93,7 +109,7 @@ import { WalletEventsService } from '@app/services/wallet-events.service';
                             </div>
                         </div>
                         <mat-divider></mat-divider>
-                        <div class="mat-overline" style="margin-top: 32px">Spyglass API Datasource</div>
+                        <div class="mat-overline" style="margin-top: 16px">Spyglass API Datasource</div>
                         <div class="mat-body-1" style="margin-bottom: 8px">
                             This is used to show filtered transaction history, fetch representative scores and account
                             aliases.
@@ -130,6 +146,7 @@ export class SettingsPageComponent {
         private readonly _location: Location,
         private readonly _walletEventService: WalletEventsService,
         private readonly _router: Router,
+        public powService: PowService,
         public datasourceService: DatasourceService
     ) {}
 

@@ -12,8 +12,8 @@ import { Router } from '@angular/router';
             <h1 mat-dialog-title>Change Password</h1>
             <div mat-dialog-content style="margin-bottom: 32px;">
                 <div style="display: flex; align-items: center">
-                    <mat-icon class="secondary-text" style="margin-right: 16px">info</mat-icon>
-                    <span>You will be logged out after changing your password.</span>
+                    <mat-icon class="secondary-text" style="padding-right: 16px">info</mat-icon>
+                    <span style="margin-left: 16px">You will be logged out after changing your password.</span>
                 </div>
                 <form style="margin-top: 32px">
                     <mat-form-field style="width: 100%" appearance="fill">
@@ -98,7 +98,7 @@ import { Router } from '@angular/router';
                     mat-dialog-close
                     color="primary"
                     (click)="close.emit()"
-                    style="width: 130px;"
+                    style="width: 100px;"
                 >
                     Close
                 </button>
@@ -106,7 +106,7 @@ import { Router } from '@angular/router';
                     data-cy="confirm-change-password-button"
                     mat-flat-button
                     color="primary"
-                    style="width: 130px;"
+                    style="width: 100px;"
                     [disabled]="newPasswordMismatch()"
                     (click)="changePassword()"
                 >

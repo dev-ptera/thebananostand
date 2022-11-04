@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ACTIVE_WALLET_ID } from '@app/services/transaction.service';
 import { WalletEventsService } from '@app/services/wallet-events.service';
 import { UtilService } from '@app/services/util.service';
 
@@ -10,6 +9,7 @@ export type LocalStorageWallet = {
     loadedIndexes: number[];
 };
 
+const ACTIVE_WALLET_ID = 'activeWalletID';
 const ENCRYPTED_WALLETS = 'bananostand_encryptedWallets';
 const LEDGER_STORED_INDEXES = 'bananostand_ledgerIndexes';
 

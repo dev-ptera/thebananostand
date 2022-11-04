@@ -6,8 +6,6 @@ import { SecretService } from '@app/services/secret.service';
 import { WalletStorageService } from '@app/services/wallet-storage.service';
 import { DatasourceService } from '@app/services/datasource.service';
 
-export const ACTIVE_WALLET_ID = 'activeWalletID';
-
 @Injectable({
     providedIn: 'root',
 })
