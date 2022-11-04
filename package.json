@@ -16,10 +16,8 @@
         "lint": "eslint \"src/**/**.ts\"",
         "lint:fix": "eslint \"src/**/**.ts\" --fix",
         "preflight": "yarn upgrade && yarn npm-check-updates && yarn ng update && yarn && yarn audit fix && yarn lint:fix && yarn prettier && yarn outdated",
-        "prettier-src": "prettier \"src/**/**.{ts,js,json,css,scss,html}\" --write",
-        "prettier-root": "prettier \"*.{ts,js,json,css,scss,html}\" --write",
-        "prettier": "npm run prettier-src && npm run prettier-root",
-        "prettier:check": "prettier \"src/**/**.{ts,js,json,css,scss,html}\" --check"
+        "prettier": "prettier \"src/app/**/**.{ts,js,json,css,scss,html}\" --write",
+        "prettier:check": "prettier \"src/app/**/**.{ts,js,json,css,scss,html}\" --check"
     },
     "private": true,
     "dependencies": {
