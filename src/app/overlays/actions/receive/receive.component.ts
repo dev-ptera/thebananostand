@@ -16,7 +16,7 @@ export type ReceiveOverlayData = {
     template: `
         <div class="receive-overlay">
             <div
-                *ngIf="success"
+                *ngIf="hasSuccess"
                 mat-dialog-content
                 style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
@@ -52,7 +52,7 @@ export type ReceiveOverlayData = {
                 </blui-empty-state>
             </div>
 
-            <ng-container *ngIf="!success && !hasErrorReceiving">
+            <ng-container *ngIf="!hasSuccess && !hasErrorReceiving">
                 <h1 mat-dialog-title>Receive Transaction</h1>
                 <div mat-dialog-content style="margin-bottom: 32px;">
                     <ng-container>
@@ -108,7 +108,7 @@ export class ReceiveComponent implements OnInit {
 
     txHash: string;
     hasErrorReceiving: boolean;
-    success: boolean;
+    hasSuccess: boolean;
 
     isReceivingTx: boolean;
 
@@ -150,7 +150,7 @@ export class ReceiveComponent implements OnInit {
                 this.txHash = receivedHash;
                 this.activeStep++;
                 this.bufferValue = (100 / this.maxSteps) * this.activeStep;
-                this.success = this.maxSteps === this.activeStep;
+                this.hasSuccess = this.maxSteps === this.activeStep;
             } catch (err) {
                 console.error(err);
                 this.hasErrorReceiving = true;

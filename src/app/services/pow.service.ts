@@ -27,7 +27,16 @@ export class PowService {
             this.defaultBananoJsGetGeneratedWork = window.bananocoinBananojs.bananodeApi.getGeneratedWork;
             // @ts-ignore
             window.bananocoinBananojs.bananodeApi.getGeneratedWork = this.getGeneratedWork.bind(this);
-            this.setUseClientSidePow(window.localStorage.getItem(USE_CLIENT_POW_LOCALSTORAGE_KEY) === 'enabled');
+            const localStorageValue = window.localStorage.getItem(USE_CLIENT_POW_LOCALSTORAGE_KEY);
+            this.setUseClientSidePow(localStorageValue === 'enabled');
+
+            /*  If this is the first time using Bananostand & your browser supports WebGL,
+                it's probably faster than server-side rendered pow. */
+            const isFirstTimeUsingApp = Boolean(!localStorageValue);
+            if (isFirstTimeUsingApp && this.webGLAvailable) {
+                this.setUseClientSidePow(true);
+            }
+
             log('Pow Service Initialized');
         } catch (err) {
             console.error(err);
@@ -90,6 +99,7 @@ export class PowService {
 
     /** This function is invoked by BananoJs when attempting to provide work for transactions. */
     async getGeneratedWork(hash: string): Promise<string> {
+        /** Client side POW */
         if (this.useClientSidePow) {
             log('Performing Client-side POW');
             if (this.webGLAvailable) {
@@ -104,8 +114,18 @@ export class PowService {
             }
         }
 
+        /** Server side POW */
         const rpc = await this._datasourceService.getRpcSource();
-        log(`Performing Server-side POW, using ${rpc.alias}`);
-        return this.defaultBananoJsGetGeneratedWork(hash);
+        log(`Performing Server-side POW, using ${rpc.alias} node.`);
+        return new Promise((resolve, reject) => {
+            this.defaultBananoJsGetGeneratedWork(hash)
+                .then((work) => {
+                    work ? resolve(work) : reject(new Error(`${rpc.alias} node did not generate work.`));
+                })
+                .catch((err) => {
+                    console.error(err);
+                    reject(new Error(`${rpc.alias} node ran into an unknown error processing work.`));
+                });
+        });
     }
 }

@@ -41,9 +41,10 @@ export class TransactionService {
                 config.prefix
             );
             return Promise.resolve(response);
-        } catch (error) {
-            console.error(error);
-            return Promise.reject(error);
+        } catch (err) {
+            console.error(err);
+
+            return Promise.reject(err);
         }
     }
 
@@ -53,28 +54,34 @@ export class TransactionService {
         const accountSigner = await this.getAccountSigner(index);
         const bananodeApi = window.bananocoinBananojs.bananodeApi;
         await this._configApi(bananodeApi);
-        let representative = await bananodeApi.getAccountRepresentative(account);
-        if (!representative) {
-            // TODO populate this via the rep scores API. For now default to batman
-            representative = 'ban_3batmanuenphd7osrez9c45b3uqw9d9u81ne8xa6m43e1py56y9p48ap69zg';
-        }
-        const loggingUtil = window.bananocoinBananojs.loggingUtil;
-        const depositUtil = window.bananocoinBananojs.depositUtil;
-        const receiveResponse =
-            ((await depositUtil.receive(
-                loggingUtil,
-                bananodeApi,
-                account,
-                accountSigner,
-                representative,
-                hash,
-                config.prefix
-            )) as string) || ReceiveResponse;
 
-        if (typeof receiveResponse === 'string') {
-            return receiveResponse;
+        try {
+            let representative = await bananodeApi.getAccountRepresentative(account);
+            if (!representative) {
+                // TODO populate this via the rep scores API. For now default to batman
+                representative = 'ban_3batmanuenphd7osrez9c45b3uqw9d9u81ne8xa6m43e1py56y9p48ap69zg';
+            }
+            const loggingUtil = window.bananocoinBananojs.loggingUtil;
+            const depositUtil = window.bananocoinBananojs.depositUtil;
+            const receiveResponse =
+                ((await depositUtil.receive(
+                    loggingUtil,
+                    bananodeApi,
+                    account,
+                    accountSigner,
+                    representative,
+                    hash,
+                    config.prefix
+                )) as string) || ReceiveResponse;
+
+            if (typeof receiveResponse === 'string') {
+                return receiveResponse;
+            }
+            return receiveResponse.receiveBlocks[0];
+        } catch (err) {
+            console.error(err);
+            return Promise.reject(err);
         }
-        return receiveResponse.receiveBlocks[0];
     }
 
     /** Attempts a change block.  On success, returns transaction hash. */
@@ -87,9 +94,9 @@ export class TransactionService {
         try {
             const response = await bananoUtil.change(bananodeApi, accountSigner, newRep, config.prefix);
             return Promise.resolve(response);
-        } catch (error) {
-            console.error(error);
-            return Promise.reject(error);
+        } catch (err) {
+            console.error(err);
+            return Promise.reject(err);
         }
     }
 

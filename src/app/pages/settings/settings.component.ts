@@ -89,7 +89,7 @@ import { PowService } from '@app/services/pow.service';
                         <mat-divider></mat-divider>
                         <div class="mat-overline" style="margin-top: 16px">Node RPC Datasource</div>
                         <div class="mat-body-1" style="margin-bottom: 8px">
-                            This is used for send/receive/change actions and fetching account balances.
+                            The node which broadcasts send, receive and change transactions.
                         </div>
                         <div style="margin-bottom: 16px;">
                             <div *ngFor="let source of datasourceService.availableRpcDataSources">
@@ -111,8 +111,7 @@ import { PowService } from '@app/services/pow.service';
                         <mat-divider></mat-divider>
                         <div class="mat-overline" style="margin-top: 16px">Spyglass API Datasource</div>
                         <div class="mat-body-1" style="margin-bottom: 8px">
-                            This is used to show filtered transaction history, fetch representative scores and account
-                            aliases.
+                            Provides a filtered transaction history, fetches representative scores and account aliases.
                         </div>
                         <div *ngFor="let source of datasourceService.availableSpyglassApiSources">
                             <mat-checkbox
