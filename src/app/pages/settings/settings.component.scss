@@ -20,7 +20,7 @@ $card-horizontal-padding: 16px;
             align-items: center;
         }
     }
-    .mat-card>.mat-divider-horizontal {
+    .mat-card > .mat-divider-horizontal {
         position: unset;
         margin-left: -$card-horizontal-padding;
         margin-right: -$card-horizontal-padding;
@@ -34,7 +34,9 @@ $card-horizontal-padding: 16px;
         }
     }
     .account-security-option {
-        display: flex; justify-content: space-between; margin-bottom: 16px;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 16px;
         align-items: center;
 
         button {

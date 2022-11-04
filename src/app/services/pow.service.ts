@@ -46,51 +46,28 @@ export class PowService {
         }
     }
 
-    private _getDeferredPromise(): { promise: any; resolve: any; reject: any } {
-        const defer = {
-            promise: null,
-            resolve: null,
-            reject: null,
-        };
-
-        defer.promise = new Promise((resolve, reject) => {
-            defer.resolve = resolve;
-            defer.reject = reject;
-        });
-
-        return defer;
-    }
-
     /** Generate PoW using WebGL */
     private _getHashWebGL(hash): Promise<string> {
-        const response = this._getDeferredPromise();
-
-        const start = Date.now();
-        try {
-            window['BananoWebglPow'](
-                hash,
-                (work, n) => {
+        return new Promise((resolve, reject) => {
+            const start = Date.now();
+            try {
+                window['BananoWebglPow'](hash, (work, n) => {
                     log(
                         `WebGL Worker: Found work (${work}) for ${hash} after ${
                             (Date.now() - start) / 1000
                         } seconds [${n} iterations]`
                     );
-                    response.resolve(work);
-                },
-                (n) => {}
-            );
-        } catch (error) {
-            console.error(error);
-            if (error.message === 'webgl2_required') {
+                    resolve(work);
+                });
+            } catch (error) {
+                console.error(error);
+                reject(error);
             }
-            response.resolve(null);
-        }
-
-        return response.promise;
+        });
     }
 
     /** Generate PoW using Client CPU (slow as shit) */
-    private _getJsBlakeWork(hash): Promise<string> {
+    private _getJsBlakeWork(hash): string {
         const start = new Date().getTime();
         // @ts-ignore
         const workBytes = window.bananocoinBananojs.getZeroedWorkBytes();

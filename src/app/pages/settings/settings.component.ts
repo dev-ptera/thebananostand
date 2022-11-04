@@ -65,6 +65,25 @@ import { PowService } from '@app/services/pow.service';
                             </button>
                         </div>
                     </mat-card>
+                    <mat-card style="margin-bottom: 32px; padding-bottom: 24px">
+                        <div class="mat-title">Proof-of-Work</div>
+                        <mat-divider></mat-divider>
+                        <div class="mat-overline" style="margin-top: 16px">Use Client-Side POW</div>
+                        <div class="mat-body-1" style="margin-bottom: 8px">
+                            Your local computer will perform the computation required when sending or receiving
+                            transactions.
+                        </div>
+                        <mat-checkbox
+                            [checked]="powService.getUseClientSidePow()"
+                            (change)="powService.setUseClientSidePow($event.checked)"
+                        >
+                            Enable local proof-of-work
+                        </mat-checkbox>
+                        <div *ngIf="!powService.webGLAvailable" style="margin-top: 8px">
+                            <strong>Warning:</strong> This may be very slow on your browser; it is advised to disable
+                            this feature & offload this work to a remote server.
+                        </div>
+                    </mat-card>
                     <mat-card style="margin-bottom: 32px">
                         <div class="mat-title">Data Sources</div>
                         <mat-divider></mat-divider>
@@ -109,25 +128,6 @@ import { PowService } from '@app/services/pow.service';
                                 </div>
                                 <div class="mono">{{ source.url }}</div>
                             </mat-checkbox>
-                        </div>
-                    </mat-card>
-                    <mat-card style="margin-bottom: 24px">
-                        <div class="mat-title">Proof-of-Work</div>
-                        <mat-divider></mat-divider>
-                        <div class="mat-overline" style="margin-top: 16px">Use Client-Side POW</div>
-                        <div class="mat-body-1" style="margin-bottom: 8px">
-                            Your local computer will perform the computation
-                            required when sending or receiving transactions.
-                        </div>
-                        <mat-checkbox
-                            [checked]="powService.getUseClientSidePow()"
-                            (change)="powService.setUseClientSidePow($event.checked)"
-                        >
-                            Enable local proof-of-work
-                        </mat-checkbox>
-                        <div *ngIf="!powService.webGLAvailable" style="margin-top: 8px">
-                            <strong>Warning:</strong> This may be very slow on your browser; it is advised to disable
-                            this feature & offload this work to a remote server.
                         </div>
                     </mat-card>
                 </div>
