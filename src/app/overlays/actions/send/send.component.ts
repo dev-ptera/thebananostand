@@ -16,7 +16,7 @@ export type SendOverlayData = {
     template: `
         <div class="send-overlay">
             <div
-                *ngIf="success === true"
+                *ngIf="hasSuccess === true"
                 mat-dialog-content
                 style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
@@ -37,7 +37,7 @@ export type SendOverlayData = {
             </div>
 
             <div
-                *ngIf="success === false"
+                *ngIf="hasSuccess === false"
                 mat-dialog-content
                 class="dialog-content"
                 style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
@@ -45,7 +45,7 @@ export type SendOverlayData = {
                 <blui-empty-state>
                     <mat-icon blui-empty-icon> error</mat-icon>
                     <div blui-title>Transaction Failed</div>
-                    <div blui-description>Your transaction could not be completed. {{ errorMessage }}</div>
+                    <div blui-description>Your transaction could not be completed.</div>
                     <div blui-actions>
                         <button mat-flat-button color="primary" class="close-button" (click)="closeDialog()">
                             Close
@@ -54,7 +54,7 @@ export type SendOverlayData = {
                 </blui-empty-state>
             </div>
 
-            <ng-container *ngIf="success === undefined">
+            <ng-container *ngIf="hasSuccess === undefined">
                 <h1 mat-dialog-title>Send Amount</h1>
                 <div mat-dialog-content style="margin-bottom: 32px;">
                     <ng-container *ngIf="activeStep === 0">
@@ -146,9 +146,8 @@ export class SendComponent {
 
     txHash: string;
     recipient: string;
-    errorMessage: string;
 
-    success: boolean;
+    hasSuccess: boolean;
     isProcessingTx: boolean;
 
     colors = Colors;
@@ -201,13 +200,11 @@ export class SendComponent {
             .withdraw(this.recipient, this.sendAmount, this.data.index)
             .then((hash) => {
                 this.txHash = hash;
-                this.success = true;
+                this.hasSuccess = true;
                 this.isProcessingTx = false;
             })
-            .catch((err) => {
-                console.error(err);
-                this.errorMessage = err;
-                this.success = false;
+            .catch(() => {
+                this.hasSuccess = false;
                 this.isProcessingTx = false;
             });
     }

@@ -27,7 +27,7 @@ export type ChangeRepOverlayData = {
     template: `
         <div class="change-rep-overlay">
             <div
-                *ngIf="success === true"
+                *ngIf="hasSuccess === true"
                 mat-dialog-content
                 style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
@@ -54,7 +54,7 @@ export type ChangeRepOverlayData = {
             </div>
 
             <div
-                *ngIf="success === false"
+                *ngIf="hasSuccess === false"
                 mat-dialog-content
                 class="dialog-content"
                 style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
@@ -62,7 +62,7 @@ export type ChangeRepOverlayData = {
                 <blui-empty-state>
                     <mat-icon blui-empty-icon> error</mat-icon>
                     <div blui-title>Representative Change Failed</div>
-                    <div blui-description>Your representative could not be changed. {{ errorMessage }}</div>
+                    <div blui-description>Your representative could not be changed.</div>
                     <div blui-actions>
                         <button
                             mat-flat-button
@@ -77,7 +77,7 @@ export type ChangeRepOverlayData = {
                 </blui-empty-state>
             </div>
 
-            <ng-container *ngIf="success === undefined">
+            <ng-container *ngIf="hasSuccess === undefined">
                 <h1 mat-dialog-title>Change Representative</h1>
                 <div mat-dialog-content style="margin-bottom: 32px;">
                     <ng-container *ngIf="activeStep === 0">
@@ -211,10 +211,9 @@ export class ChangeRepComponent implements OnInit {
 
     txHash: string;
     manualEnteredNewRepresentative: string;
-    errorMessage: string;
 
     isChangingRepresentative: boolean;
-    success: boolean;
+    hasSuccess: boolean;
     selectFromList: boolean;
 
     colors = Colors;
@@ -310,13 +309,12 @@ export class ChangeRepComponent implements OnInit {
             .changeRepresentative(this.getUseSelectedRepresentative(), this.data.address, this.data.index)
             .then((response) => {
                 this.txHash = response;
-                this.success = true;
+                this.hasSuccess = true;
                 this.isChangingRepresentative = false;
             })
             .catch((err) => {
                 console.error(err);
-                this.errorMessage = err;
-                this.success = false;
+                this.hasSuccess = false;
                 this.isChangingRepresentative = false;
             });
     }

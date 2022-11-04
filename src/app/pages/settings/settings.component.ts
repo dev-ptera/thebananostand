@@ -79,7 +79,7 @@ import { PowService } from '@app/services/pow.service';
                         >
                             Enable local proof-of-work
                         </mat-checkbox>
-                        <div *ngIf="!powService.webGLAvailable" style="margin-top: 8px">
+                        <div *ngIf="!powService.isWebGLAvailable" style="margin-top: 8px">
                             <strong>Warning:</strong> This may be very slow on your browser; it is advised to disable
                             this feature & offload this work to a remote server.
                         </div>
@@ -89,7 +89,7 @@ import { PowService } from '@app/services/pow.service';
                         <mat-divider></mat-divider>
                         <div class="mat-overline" style="margin-top: 16px">Node RPC Datasource</div>
                         <div class="mat-body-1" style="margin-bottom: 8px">
-                            This is used for send/receive/change actions and fetching account balances.
+                            The node which broadcasts send, receive and change transactions.
                         </div>
                         <div style="margin-bottom: 16px;">
                             <div *ngFor="let source of datasourceService.availableRpcDataSources">
@@ -111,8 +111,7 @@ import { PowService } from '@app/services/pow.service';
                         <mat-divider></mat-divider>
                         <div class="mat-overline" style="margin-top: 16px">Spyglass API Datasource</div>
                         <div class="mat-body-1" style="margin-bottom: 8px">
-                            This is used to show filtered transaction history, fetch representative scores and account
-                            aliases.
+                            Provides a filtered transaction history, fetches representative scores and account aliases.
                         </div>
                         <div *ngFor="let source of datasourceService.availableSpyglassApiSources">
                             <mat-checkbox
