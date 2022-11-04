@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DatasourceService } from '@app/services/datasource.service';
 
-const USE_CLIENT_POW_LOCALSTORAGE_KEY = 'bananostand_useClientPow';
-
 // eslint-disable-next-line no-console
 const log = (msg: string): void => console.log(msg);
 
@@ -11,7 +9,7 @@ const log = (msg: string): void => console.log(msg);
     providedIn: 'root',
 })
 export class PowService {
-    webGLAvailable: boolean;
+    isWebGLAvailable: boolean;
     defaultBananoJsGetGeneratedWork: any;
 
     private useClientSidePow: boolean;
@@ -27,16 +25,9 @@ export class PowService {
             this.defaultBananoJsGetGeneratedWork = window.bananocoinBananojs.bananodeApi.getGeneratedWork;
             // @ts-ignore
             window.bananocoinBananojs.bananodeApi.getGeneratedWork = this.getGeneratedWork.bind(this);
-            const localStorageValue = window.localStorage.getItem(USE_CLIENT_POW_LOCALSTORAGE_KEY);
-            this.setUseClientSidePow(localStorageValue === 'enabled');
 
-            /*  If this is the first time using Bananostand & your browser supports WebGL,
-                it's probably faster than server-side rendered pow. */
-            const isFirstTimeUsingApp = Boolean(!localStorageValue);
-            if (isFirstTimeUsingApp && this.webGLAvailable) {
-                this.setUseClientSidePow(true);
-            }
-
+            /* If we have webgl available, default to using that. */
+            this.setUseClientSidePow(this.isWebGLAvailable);
             log('Pow Service Initialized');
         } catch (err) {
             console.error(err);
@@ -48,7 +39,6 @@ export class PowService {
     }
 
     setUseClientSidePow(useClient: boolean): void {
-        window.localStorage.setItem(USE_CLIENT_POW_LOCALSTORAGE_KEY, useClient ? 'enabled' : 'disabled');
         this.useClientSidePow = useClient;
     }
 
@@ -58,9 +48,9 @@ export class PowService {
             const webGL =
                 !!window['WebGLRenderingContext'] &&
                 (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
-            this.webGLAvailable = !!webGL;
+            this.isWebGLAvailable = !!webGL;
         } catch (e) {
-            this.webGLAvailable = false;
+            this.isWebGLAvailable = false;
         }
     }
 
@@ -99,10 +89,9 @@ export class PowService {
 
     /** This function is invoked by BananoJs when attempting to provide work for transactions. */
     async getGeneratedWork(hash: string): Promise<string> {
-        /** Client side POW */
-        if (this.useClientSidePow) {
-            log('Performing Client-side POW');
-            if (this.webGLAvailable) {
+        const generatePowFromClient = async (): Promise<string> => {
+            log('Performing Client-side PoW');
+            if (this.isWebGLAvailable) {
                 try {
                     return await this._getHashWebGL(hash);
                 } catch (err) {
@@ -112,20 +101,33 @@ export class PowService {
             } else {
                 return this._getJsBlakeWork(hash);
             }
-        }
+        };
 
-        /** Server side POW */
-        const rpc = await this._datasourceService.getRpcSource();
-        log(`Performing Server-side POW, using ${rpc.alias} node.`);
-        return new Promise((resolve, reject) => {
-            this.defaultBananoJsGetGeneratedWork(hash)
-                .then((work) => {
-                    work ? resolve(work) : reject(new Error(`${rpc.alias} node did not generate work.`));
-                })
-                .catch((err) => {
-                    console.error(err);
-                    reject(new Error(`${rpc.alias} node ran into an unknown error processing work.`));
-                });
-        });
+        const generatePowFromServer = async (): Promise<string> => {
+            const rpc = await this._datasourceService.getRpcSource();
+            log(`Performing Server-side PoW, using ${rpc.alias} node.`);
+            return new Promise((resolve, reject) => {
+                this.defaultBananoJsGetGeneratedWork(hash)
+                    .then((serverWork) => {
+                        if (serverWork) {
+                            resolve(serverWork);
+                        } else {
+                            throw new Error(`${rpc.alias} node did not generate work.`);
+                        }
+                    })
+                    .catch(async (err) => {
+                        console.error(err);
+                        if (this.isWebGLAvailable) {
+                            log(`Server-side PoW generation failed, defaulting to client using WebGL`);
+                            const clientWork = await generatePowFromClient();
+                            resolve(clientWork);
+                        } else {
+                            reject(new Error(`${rpc.alias} node ran into an unknown error processing work.`));
+                        }
+                    });
+            });
+        };
+
+        return this.useClientSidePow ? await generatePowFromClient() : await generatePowFromServer();
     }
 }

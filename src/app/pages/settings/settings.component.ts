@@ -79,7 +79,7 @@ import { PowService } from '@app/services/pow.service';
                         >
                             Enable local proof-of-work
                         </mat-checkbox>
-                        <div *ngIf="!powService.webGLAvailable" style="margin-top: 8px">
+                        <div *ngIf="!powService.isWebGLAvailable" style="margin-top: 8px">
                             <strong>Warning:</strong> This may be very slow on your browser; it is advised to disable
                             this feature & offload this work to a remote server.
                         </div>
