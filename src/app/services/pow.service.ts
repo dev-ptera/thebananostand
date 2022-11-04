@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { DatasourceService } from '@app/services/datasource.service';
 
 const USE_CLIENT_POW_LOCALSTORAGE_KEY = 'bananostand_useClientPow';
 
@@ -14,6 +15,8 @@ export class PowService {
     defaultBananoJsGetGeneratedWork: any;
 
     private useClientSidePow: boolean;
+
+    constructor(private readonly _datasourceService: DatasourceService) {}
 
     /** This will use client-side pow if the user has asked to use it, otherwise defaults to server-side pow (original implementation) */
     overrideDefaultBananoJSPowSource(): void {
@@ -87,7 +90,6 @@ export class PowService {
 
     /** This function is invoked by BananoJs when attempting to provide work for transactions. */
     async getGeneratedWork(hash: string): Promise<string> {
-        log('The generated work override is called.');
         if (this.useClientSidePow) {
             log('Performing Client-side POW');
             if (this.webGLAvailable) {
@@ -101,7 +103,9 @@ export class PowService {
                 return this._getJsBlakeWork(hash);
             }
         }
-        log('Performing Server-side POW');
+
+        const rpc = await this._datasourceService.getRpcSource();
+        log(`Performing Server-side POW, using ${rpc.alias}`);
         return this.defaultBananoJsGetGeneratedWork(hash);
     }
 }

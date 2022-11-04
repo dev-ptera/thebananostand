@@ -103,7 +103,7 @@ export class DatasourceService {
         if (this.rpcNode) {
             return Promise.resolve(this.rpcNode);
         }
-        const source = await this._getRpcSource();
+        const source = await this.getRpcSource();
         return new NanoClient({
             url: source.url,
         });
@@ -121,7 +121,8 @@ export class DatasourceService {
         });
     }
 
-    private _getRpcSource(): Promise<Datasource> {
+    /** The RPC source is only known once one of the servers responds. */
+    getRpcSource(): Promise<Datasource> {
         return new Promise((resolve) => {
             if (this.rpcSource) {
                 resolve(this.rpcSource);
