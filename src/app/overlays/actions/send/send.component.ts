@@ -203,7 +203,7 @@ export class SendComponent {
                 this.hasSuccess = true;
                 this.isProcessingTx = false;
             })
-            .catch((err) => {
+            .catch(() => {
                 this.hasSuccess = false;
                 this.isProcessingTx = false;
             });
