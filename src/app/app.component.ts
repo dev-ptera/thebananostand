@@ -61,6 +61,14 @@ export class AppComponent {
         });
     }
 
+    ngOnInit(): void {
+        this.initializePowService();
+    }
+
+    initializePowService(): void {
+        this._powService.overrideDefaultBananoJSPowSource();
+    }
+
     showBanana(): boolean {
         // const unlocked = this._secretService.isLocalSecretUnlocked() || this._secretService.isLocalLedgerUnlocked();
         // const isBigScreen = !this._vp.isSmall() && !this._vp.isMedium();

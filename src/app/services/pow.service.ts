@@ -2,9 +2,6 @@ import { Injectable } from '@angular/core';
 
 const USE_CLIENT_POW_LOCALSTORAGE_KEY = 'bananostand_useClientPow';
 
-// @ts-ignore
-const defaultBananoJsGetGeneratedWork = window.bananocoinBananojs.bananodeApi.getGeneratedWork;
-
 // eslint-disable-next-line no-console
 const log = (msg: string): void => console.log(msg);
 
@@ -14,15 +11,24 @@ const log = (msg: string): void => console.log(msg);
 })
 export class PowService {
     webGLAvailable: boolean;
+    defaultBananoJsGetGeneratedWork: any;
 
     private useClientSidePow: boolean;
 
-    constructor() {
-        log('Pow Service Initialized');
-        this._testWebGLSupport();
+    /** This will use client-side pow if the user has asked to use it, otherwise defaults to server-side pow (original implementation) */
+    overrideDefaultBananoJSPowSource(): void {
         // @ts-ignore
-        window.bananocoinBananojs.bananodeApi.getGeneratedWork = this.getGeneratedWork.bind(this);
-        this.setUseClientSidePow(window.localStorage.getItem(USE_CLIENT_POW_LOCALSTORAGE_KEY) === 'enabled');
+        try {
+            this._testWebGLSupport();
+            // @ts-ignore
+            this.defaultBananoJsGetGeneratedWork = window.bananocoinBananojs.bananodeApi.getGeneratedWork;
+            // @ts-ignore
+            window.bananocoinBananojs.bananodeApi.getGeneratedWork = this.getGeneratedWork.bind(this);
+            this.setUseClientSidePow(window.localStorage.getItem(USE_CLIENT_POW_LOCALSTORAGE_KEY) === 'enabled');
+            log('Pow Service Initialized');
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     getUseClientSidePow(): boolean {
@@ -96,6 +102,6 @@ export class PowService {
             }
         }
         log('Performing Server-side POW');
-        return defaultBananoJsGetGeneratedWork(hash);
+        return this.defaultBananoJsGetGeneratedWork(hash);
     }
 }
