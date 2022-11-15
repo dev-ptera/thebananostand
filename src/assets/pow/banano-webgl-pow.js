@@ -1,4 +1,51 @@
-!function(){function e(e,t,i){let o="";for(let r=i-1;r>-1;r--)o+=(e[r]>15?"":"0")+e[r].toString(16);return o}window.BananoWebglPow=function t(i,o,r){let _=document.createElement("canvas");_.width=window.BananoWebglPow.width,_.height=window.BananoWebglPow.height;let n=_.getContext("webgl2");if(!n)throw Error("webgl2_required");if(!/^[A-F-a-f0-9]{64}$/.test(i))throw Error("invalid_hash");n.clearColor(0,0,0,1);let a=function e(t){let i="";for(let o=t.length;o>0;o-=2)i+=t.slice(o-2,o);return i}(i),$=`#version 300 es
+// banano-webgl-pow
+// Banano Currency Proof of Work Value generation using WebGL2
+// Author:  numtel <ben@latenightsketches.com>
+// License: MIT
+
+// window.BananoWebglPow(hashHex, callback, progressCallback);
+// @param hashHex           String   Previous Block Hash as Hex String
+// @param callback          Function Called when work value found
+//   Receives single string argument, work value as hex
+// @param progressCallback  Function Optional
+//   Receives single argument: n, number of frames so far
+//   Return true to abort
+
+(function () {
+    function array_hex(arr, index, length) {
+        let out = '';
+        for (let i = length - 1; i > -1; i--) {
+            out += (arr[i] > 15 ? '' : '0') + arr[i].toString(16);
+        }
+        return out;
+    }
+
+    function hex_reverse(hex) {
+        let out = '';
+        for (let i = hex.length; i > 0; i -= 2) {
+            out += hex.slice(i - 2, i);
+        }
+        return out;
+    }
+
+    function calculate(hashHex, callback, progressCallback) {
+        const canvas = document.createElement('canvas');
+
+        canvas.width = window.BananoWebglPow.width;
+        canvas.height = window.BananoWebglPow.height;
+
+        const gl = canvas.getContext('webgl2');
+
+        if (!gl) throw new Error('webgl2_required');
+
+        if (!/^[A-F-a-f0-9]{64}$/.test(hashHex)) throw new Error('invalid_hash');
+
+        gl.clearColor(0, 0, 0, 1);
+
+        const reverseHex = hex_reverse(hashHex);
+
+        // Vertext Shader
+        const vsSource = `#version 300 es
     precision highp float;
     layout (location=0) in vec4 position;
     layout (location=1) in vec2 uv;
@@ -8,7 +55,10 @@
     void main() {
       uv_pos = uv;
       gl_Position = position;
-    }`,u=`#version 300 es
+    }`;
+
+        // Fragment shader
+        const fsSource = `#version 300 es
     precision highp float;
     precision highp int;
 
@@ -121,8 +171,8 @@
 
     void main() {
       int i;
-      uint uv_x = uint(uv_pos.x * ${_.width-1}.);
-      uint uv_y = uint(uv_pos.y * ${_.height-1}.);
+      uint uv_x = uint(uv_pos.x * ${canvas.width - 1}.);
+      uint uv_y = uint(uv_pos.y * ${canvas.height - 1}.);
       uint x_pos = uv_x % 256u;
       uint y_pos = uv_y % 256u;
       uint x_index = (uv_x - x_pos) / 256u;
@@ -136,14 +186,14 @@
       m[1] = (u_work1.r ^ (u_work1.g << 8) ^ (u_work1.b << 16) ^ (u_work1.a << 24));
 
       // Block hash
-      m[2] = 0x${a.slice(56,64)}u;
-      m[3] = 0x${a.slice(48,56)}u;
-      m[4] = 0x${a.slice(40,48)}u;
-      m[5] = 0x${a.slice(32,40)}u;
-      m[6] = 0x${a.slice(24,32)}u;
-      m[7] = 0x${a.slice(16,24)}u;
-      m[8] = 0x${a.slice(8,16)}u;
-      m[9] = 0x${a.slice(0,8)}u;
+      m[2] = 0x${reverseHex.slice(56, 64)}u;
+      m[3] = 0x${reverseHex.slice(48, 56)}u;
+      m[4] = 0x${reverseHex.slice(40, 48)}u;
+      m[5] = 0x${reverseHex.slice(32, 40)}u;
+      m[6] = 0x${reverseHex.slice(24, 32)}u;
+      m[7] = 0x${reverseHex.slice(16, 24)}u;
+      m[8] = 0x${reverseHex.slice(8, 16)}u;
+      m[9] = 0x${reverseHex.slice(0, 8)}u;
 
       // twelve rounds of mixing
       for(i=0;i<12;i++) {
@@ -168,4 +218,107 @@
           float(y_pos)/255.  // Second custom byte
         );
       }
-    }`,s=n.createShader(n.VERTEX_SHADER);if(n.shaderSource(s,$),n.compileShader(s),!n.getShaderParameter(s,n.COMPILE_STATUS))throw n.getShaderInfoLog(s);let d=n.createShader(n.FRAGMENT_SHADER);if(n.shaderSource(d,u),n.compileShader(d),!n.getShaderParameter(d,n.COMPILE_STATUS))throw n.getShaderInfoLog(d);let x=n.createProgram();if(n.attachShader(x,s),n.attachShader(x,d),n.linkProgram(x),!n.getProgramParameter(x,n.LINK_STATUS))throw n.getProgramInfoLog(x);n.useProgram(x);let l=n.createVertexArray();n.bindVertexArray(l);let v=new Float32Array([-1,-1,0,-1,1,0,1,1,0,1,-1,0,1,1,0,-1,-1,0]),f=n.createBuffer();n.bindBuffer(n.ARRAY_BUFFER,f),n.bufferData(n.ARRAY_BUFFER,v,n.STATIC_DRAW),n.vertexAttribPointer(0,3,n.FLOAT,!1,0,0),n.enableVertexAttribArray(0);let h=new Float32Array([1,1,1,0,0,0,0,1,0,0,1,1]),c=n.createBuffer();n.bindBuffer(n.ARRAY_BUFFER,c),n.bufferData(n.ARRAY_BUFFER,h,n.STATIC_DRAW),n.vertexAttribPointer(1,2,n.FLOAT,!1,0,0),n.enableVertexAttribArray(1);let b=n.getUniformLocation(x,"u_work0"),A=n.getUniformLocation(x,"u_work1"),m=new Uint8Array(4),B=new Uint8Array(4),g=0;function w(){if(g++,window.crypto.getRandomValues(m),window.crypto.getRandomValues(B),n.uniform4uiv(b,Array.from(m)),n.uniform4uiv(A,Array.from(B)),g%100==0&&"function"==typeof r&&r(g))return;n.clear(n.COLOR_BUFFER_BIT),n.drawArrays(n.TRIANGLES,0,6);let t=new Uint8Array(n.drawingBufferWidth*n.drawingBufferHeight*4);n.readPixels(0,0,n.drawingBufferWidth,n.drawingBufferHeight,n.RGBA,n.UNSIGNED_BYTE,t);for(let i=0;i<t.length;i+=4)if(0!==t[i]){"function"==typeof o&&o(e(B,0,4)+e([t[i+2],t[i+3],m[2]^t[i]-1,m[3]^t[i+1]-1,],0,4),g);return}window.requestAnimationFrame(w)}window.requestAnimationFrame(w)},window.BananoWebglPow.width=512,window.BananoWebglPow.height=512}();
+    }`;
+
+        const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+        gl.shaderSource(vertexShader, vsSource);
+        gl.compileShader(vertexShader);
+
+        if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) throw gl.getShaderInfoLog(vertexShader);
+
+        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+        gl.shaderSource(fragmentShader, fsSource);
+        gl.compileShader(fragmentShader);
+
+        if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) throw gl.getShaderInfoLog(fragmentShader);
+
+        const program = gl.createProgram();
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+        gl.linkProgram(program);
+
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw gl.getProgramInfoLog(program);
+
+        gl.useProgram(program);
+
+        // Construct simple 2D geometry
+        const triangleArray = gl.createVertexArray();
+        gl.bindVertexArray(triangleArray);
+
+        // Vertex Positions, 2 triangles
+        const positions = new Float32Array([-1, -1, 0, -1, 1, 0, 1, 1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0]);
+        const positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+        gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(0);
+
+        // Texture Positions
+        const uvPosArray = new Float32Array([1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1]);
+        const uvBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, uvPosArray, gl.STATIC_DRAW);
+        gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(1);
+
+        const work0Location = gl.getUniformLocation(program, 'u_work0');
+        const work1Location = gl.getUniformLocation(program, 'u_work1');
+
+        // Draw output until success or progressCallback says to stop
+        const work0 = new Uint8Array(4);
+        const work1 = new Uint8Array(4);
+        let n = 0;
+
+        function draw() {
+            n++;
+            window.crypto.getRandomValues(work0);
+            window.crypto.getRandomValues(work1);
+
+            gl.uniform4uiv(work0Location, Array.from(work0));
+            gl.uniform4uiv(work1Location, Array.from(work1));
+
+            // Check with progressCallback every 100 frames
+            if (typeof progressCallback === 'function' && progressCallback(n)) return;
+
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+            const pixels = new Uint8Array(gl.drawingBufferWidth * gl.drawingBufferHeight * 4);
+            gl.readPixels(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+
+            // Check the pixels for any success
+            for (let i = 0; i < pixels.length; i += 4) {
+                if (pixels[i] !== 0) {
+                    // Return the work value with the custom bits
+                    typeof callback === 'function' &&
+                    callback(
+                        array_hex(work1, 0, 4) +
+                        array_hex(
+                            [
+                                pixels[i + 2],
+                                pixels[i + 3],
+                                work0[2] ^ (pixels[i] - 1),
+                                work0[3] ^ (pixels[i + 1] - 1),
+                            ],
+                            0,
+                            4
+                        ),
+                        n
+                    );
+                    return;
+                }
+            }
+            // Nothing found yet, try again
+            window.requestAnimationFrame(draw);
+        }
+
+        // Begin generation
+        window.requestAnimationFrame(draw);
+    }
+
+    window.BananoWebglPow = calculate;
+    // Both width and height must be multiple of 256, (one byte)
+    // but do not need to be the same,
+    // matching GPU capabilities is the aim
+    window.BananoWebglPow.width = 256 * 2;
+    window.BananoWebglPow.height = 256 * 2;
+})();

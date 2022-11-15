@@ -32,8 +32,8 @@ export class DatasourceService {
     ];
 
     availableRpcDataSources = [
-        /* { alias: 'Vault', url: 'https://vault.banano.cc/api/node-api', isAccessible: false, isSelected: false }, */
-        /* { alias: 'Jungle TV', url: 'https://public.node.jungletv.live/rpc', isAccessible: false, isSelected: false }, */
+        /* { alias: 'Vault', url: 'https://vault.banano.cc/api/node-api', isAccessible: false, isSelected: false }, */ // CORS error
+        { alias: 'Jungle TV', url: 'https://public.node.jungletv.live/rpc', isAccessible: false, isSelected: false },
         { alias: 'Booster', url: 'https://booster.dev-ptera.com/banano-rpc', isAccessible: false, isSelected: false },
         { alias: 'Kalium', url: 'https://kaliumapi.appditto.com/api', isAccessible: false, isSelected: false },
     ];

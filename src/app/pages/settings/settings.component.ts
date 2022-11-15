@@ -65,6 +65,7 @@ import { PowService } from '@app/services/pow.service';
                             </button>
                         </div>
                     </mat-card>
+                    <!--
                     <mat-card style="margin-bottom: 32px; padding-bottom: 24px">
                         <div class="mat-title">Proof-of-Work</div>
                         <mat-divider></mat-divider>
@@ -84,6 +85,7 @@ import { PowService } from '@app/services/pow.service';
                             this feature & offload this work to a remote server.
                         </div>
                     </mat-card>
+                    -->
                     <mat-card style="margin-bottom: 32px">
                         <div class="mat-title">Data Sources</div>
                         <mat-divider></mat-divider>

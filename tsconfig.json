@@ -21,6 +21,6 @@
             "@app/overlays/*": ["app/overlays/*"],
             "stream": ["node_modules/stream-browserify"]
         },
-        "lib": ["es2018", "dom"]
+        "lib": ["es2021", "dom"]
     }
 }

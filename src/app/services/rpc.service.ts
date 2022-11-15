@@ -115,4 +115,12 @@ export class RpcService {
             representative: accountInfo.representative,
         };
     }
+
+    async cancelWorkGenerate(hash: string): Promise<void> {
+        const client = await this._datasourceService.getRpcNode();
+        return new Promise((resolve) => {
+            // @ts-ignore
+            client._send('work_cancel', { hash }).then(resolve).catch(resolve);
+        });
+    }
 }
