@@ -20,6 +20,13 @@ export class DatasourceAvailablePipe implements PipeTransform {
 @Component({
     selector: 'app-settings-page',
     template: `
+        <ng-template #radioData let-source="source">
+            <div [class.primary]="source.isSelected" [style.fontWeight]="source.isSelected ? 600 : 400">
+                {{ source.alias }}
+            </div>
+            <div class="mono">{{ source.url }}</div>
+        </ng-template>
+
         <div class="app-root app-settings-page" responsive>
             <mat-toolbar color="primary" class="mat-elevation-z2 app-toolbar" responsive>
                 <div style="display: flex; align-items: center">
@@ -97,36 +104,26 @@ export class DatasourceAvailablePipe implements PipeTransform {
                         <div class="mat-title">Data Sources</div>
                         <mat-divider></mat-divider>
                         <div class="mat-overline" style="margin-top: 16px">Node RPC Datasource</div>
-                        <div class="mat-body-1" style="margin-bottom: 8px">
-                            The node which broadcasts send, receive and change transactions.
-                        </div>
-                        <div style="margin-bottom: 16px;">
-                            <mat-radio-group
-                                aria-label="Select a RPC source"
-                                [(ngModel)]="selectedRpcSource"
-                                (change)="selectRpc($event)"
+                        <div class="mat-body-1">The node which broadcasts send, receive and change transactions.</div>
+                        <mat-radio-group
+                            style="margin-bottom: 8px; display: inline-block"
+                            aria-label="Select a RPC source"
+                            [(ngModel)]="selectedRpcSource"
+                            (change)="selectRpc($event)"
+                        >
+                            <mat-radio-button
+                                *ngFor="let source of datasourceService.availableRpcDataSources | available"
+                                [value]="source"
+                                [aria-label]="source.alias"
                             >
-                                <mat-radio-button
-                                    *ngFor="let source of datasourceService.availableRpcDataSources | available"
-                                    [value]="source"
-                                    [aria-label]="source.alias"
-                                >
-                                    <div
-                                        [class.primary]="source.isSelected"
-                                        [style.fontWeight]="source.isSelected ? 600 : 400"
-                                    >
-                                        {{ source.alias }}
-                                    </div>
-                                    <div class="mono">{{ source.url }}</div>
-                                </mat-radio-button>
-                            </mat-radio-group>
-                        </div>
+                                <ng-template *ngTemplateOutlet="radioData; context: { source }"></ng-template>
+                            </mat-radio-button>
+                        </mat-radio-group>
                         <mat-divider></mat-divider>
                         <div class="mat-overline" style="margin-top: 16px">Spyglass API Datasource</div>
                         <div class="mat-body-1" style="margin-bottom: 8px">
                             Provides a filtered transaction history, fetches representative scores and account aliases.
                         </div>
-
                         <mat-radio-group
                             aria-label="Select a Spyglass API source"
                             [(ngModel)]="selectedSpyglassApi"
@@ -137,13 +134,7 @@ export class DatasourceAvailablePipe implements PipeTransform {
                                 [value]="source"
                                 [aria-label]="source.alias"
                             >
-                                <div
-                                    [class.primary]="source.isSelected"
-                                    [style.fontWeight]="source.isSelected ? 600 : 400"
-                                >
-                                    {{ source.alias }}
-                                </div>
-                                <div class="mono">{{ source.url }}</div>
+                                <ng-template *ngTemplateOutlet="radioData; context: { source }"></ng-template>
                             </mat-radio-button>
                         </mat-radio-group>
                     </mat-card>

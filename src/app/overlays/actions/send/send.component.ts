@@ -20,7 +20,7 @@ export type SendOverlayData = {
                 mat-dialog-content
                 style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
-                <blui-empty-state>
+                <blui-empty-state data-cy="send-success-state">
                     <mat-icon blui-empty-icon> check_circle</mat-icon>
                     <div blui-title>Transaction Sent</div>
                     <div blui-description>
@@ -70,7 +70,13 @@ export type SendOverlayData = {
                         <div style="margin-bottom: 24px">Please enter the amount to transfer.</div>
                         <mat-form-field style="width: 100%;" appearance="fill">
                             <mat-label>Amount</mat-label>
-                            <input matInput type="number" [max]="data.maxSendAmount" [(ngModel)]="sendAmount" />
+                            <input
+                                matInput
+                                type="number"
+                                data-cy="send-amount-input"
+                                [max]="data.maxSendAmount"
+                                [(ngModel)]="sendAmount"
+                            />
                             <button
                                 matSuffix
                                 mat-icon-button
@@ -86,7 +92,13 @@ export type SendOverlayData = {
                         <div style="margin-bottom: 24px">Please enter the recipient address.</div>
                         <mat-form-field style="width: 100%;" appearance="fill">
                             <mat-label>Recipient Address</mat-label>
-                            <textarea style="resize: none" matInput type="value" [(ngModel)]="recipient"></textarea>
+                            <textarea
+                                data-cy="send-recipient-input"
+                                style="resize: none"
+                                matInput
+                                type="value"
+                                [(ngModel)]="recipient"
+                            ></textarea>
                         </mat-form-field>
                     </ng-container>
 
@@ -121,11 +133,12 @@ export type SendOverlayData = {
                         color="primary"
                         (click)="next()"
                         class="loading-button"
+                        data-cy="send-next-button"
                         [disabled]="!canContinue()"
                     >
                         <ng-container *ngIf="activeStep < lastStep">Next</ng-container>
                         <ng-container *ngIf="activeStep === lastStep">
-                            <div class="spinner-container" [class.isLoading]="isProcessingTx">
+                            <div class="spinner-container" [class.isLoading]="isProcessingTx" data-cy="send-loading">
                                 <mat-spinner class="primary-spinner" diameter="20"></mat-spinner>
                             </div>
                             <span *ngIf="!isProcessingTx"> Send </span>

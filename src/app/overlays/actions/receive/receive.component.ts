@@ -20,7 +20,7 @@ export type ReceiveOverlayData = {
                 mat-dialog-content
                 style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
-                <blui-empty-state>
+                <blui-empty-state data-cy="receive-success-state">
                     <mat-icon blui-empty-icon> check_circle</mat-icon>
                     <div blui-title>Received Successfully</div>
                     <div blui-description>
@@ -80,15 +80,24 @@ export type ReceiveOverlayData = {
                 ></mat-progress-bar>
                 <mat-divider *ngIf="maxSteps === 1" style="margin-left: -48px; margin-right: -48px"></mat-divider>
                 <blui-mobile-stepper [activeStep]="activeStep" [steps]="maxSteps" variant="text">
-                    <button mat-stroked-button blui-back-button color="primary" (click)="closeDialog()">Close</button>
+                    <button
+                        mat-stroked-button
+                        blui-back-button
+                        color="primary"
+                        data-cy="receive-close-button"
+                        (click)="closeDialog()"
+                    >
+                        Close
+                    </button>
                     <button
                         mat-flat-button
                         blui-next-button
                         color="primary"
                         class="loading-button"
+                        data-cy="receive-button"
                         (click)="receiveTransaction()"
                     >
-                        <div class="spinner-container" [class.isLoading]="isReceivingTx">
+                        <div class="spinner-container" data-cy="receive-loading" [class.isLoading]="isReceivingTx">
                             <mat-spinner class="primary-spinner" diameter="20"></mat-spinner>
                         </div>
                         <span *ngIf="!isReceivingTx">Receive</span>
