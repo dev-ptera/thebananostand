@@ -108,13 +108,13 @@ export class PowService {
 
     /** This function is invoked by BananoJs when attempting to provide work for transactions. */
     getGeneratedWork(hash: string): Promise<string> {
-
-        const generatePowFromClient = async (): Promise<{ work: string; isClientGenerated: boolean }> => {
+        const generatePowFromClient = async (): Promise<string> => {
             log('Racing Client-side PoW');
             try {
                 if (this.isWebGLAvailable) {
-                    const work = await this._getHashWebGL(hash);
-                    return { work, isClientGenerated: true };
+                    const clientWork = await this._getHashWebGL(hash);
+                    void this._rpcService.cancelWorkGenerate(hash);
+                    return clientWork;
                 }
                 log(`Client does not have support for webgl.`);
                 return Promise.reject();
@@ -125,7 +125,7 @@ export class PowService {
             }
         };
 
-        const generatePowFromServer = async (): Promise<{ work: string; isClientGenerated: boolean }> => {
+        const generatePowFromServer = async (): Promise<string> => {
             const rpc = await this._datasourceService.getRpcSource();
             log(`Racing Server-side PoW, using ${rpc.alias} node.`);
             try {
@@ -134,7 +134,10 @@ export class PowService {
                     log('Terminating server pow generate; client pow generated faster.');
                     return Promise.reject();
                 } else if (serverWork) {
-                    return { work: serverWork, isClientGenerated: false };
+                    // Terminates the client pow, see assets/pow/banano-webgl-pow.js
+                    // @ts-ignore
+                    window.bananocoinBananojs.hashWorkMap.set(hash, serverWork);
+                    return serverWork;
                 }
                 log(`${rpc.alias} node did not generate work.`);
                 return Promise.reject();
@@ -145,15 +148,7 @@ export class PowService {
         };
 
         return Promise.any([generatePowFromClient(), generatePowFromServer()])
-            .then(({ work, isClientGenerated }) => {
-                // @ts-ignore
-                // Terminates the client pow, see assets/pow/banano-webgl-pow.js
-                window.bananocoinBananojs.hashWorkMap.set(hash, work);
-                if (isClientGenerated) {
-                    void this._rpcService.cancelWorkGenerate(hash);
-                }
-                return Promise.resolve(work);
-            })
+            .then((work: string) => Promise.resolve(work))
             .catch((err) => {
                 console.error(err);
                 return Promise.resolve('');

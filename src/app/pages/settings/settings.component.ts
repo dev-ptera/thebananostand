@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { Location } from '@angular/common';
-import { DatasourceService } from '@app/services/datasource.service';
+import { Datasource, DatasourceService } from '@app/services/datasource.service';
 import { ChangePasswordBottomSheetComponent } from '@app/overlays/bottom-sheet/change-password/change-password-bottom-sheet.component';
 import { ChangePasswordDialogComponent } from '@app/overlays/dialogs/change-password/change-password-dialog.component';
 import { ViewportService } from '@app/services/viewport.service';
@@ -8,7 +8,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { Router } from '@angular/router';
 import { WalletEventsService } from '@app/services/wallet-events.service';
-import { PowService } from '@app/services/pow.service';
+import { MatRadioChange } from '@angular/material/radio';
+
+@Pipe({ name: 'available' })
+export class DatasourceAvailablePipe implements PipeTransform {
+    transform(items: Datasource[]): Datasource[] {
+        return items.filter((item) => item.isAccessible === true);
+    }
+}
 
 @Component({
     selector: 'app-settings-page',
@@ -94,42 +101,51 @@ import { PowService } from '@app/services/pow.service';
                             The node which broadcasts send, receive and change transactions.
                         </div>
                         <div style="margin-bottom: 16px;">
-                            <div *ngFor="let source of datasourceService.availableRpcDataSources">
-                                <mat-checkbox
-                                    *ngIf="source.isAccessible"
-                                    [checked]="source.isSelected"
-                                    (change)="datasourceService.setRpcSource(source)"
+                            <mat-radio-group
+                                aria-label="Select a RPC source"
+                                [(ngModel)]="selectedRpcSource"
+                                (change)="selectRpc($event)"
+                            >
+                                <mat-radio-button
+                                    *ngFor="let source of datasourceService.availableRpcDataSources | available"
+                                    [value]="source"
+                                    [aria-label]="source.alias"
                                 >
                                     <div
-                                        [style.fontWeight]="source.isSelected ? 600 : 400"
                                         [class.primary]="source.isSelected"
+                                        [style.fontWeight]="source.isSelected ? 600 : 400"
                                     >
                                         {{ source.alias }}
                                     </div>
                                     <div class="mono">{{ source.url }}</div>
-                                </mat-checkbox>
-                            </div>
+                                </mat-radio-button>
+                            </mat-radio-group>
                         </div>
                         <mat-divider></mat-divider>
                         <div class="mat-overline" style="margin-top: 16px">Spyglass API Datasource</div>
                         <div class="mat-body-1" style="margin-bottom: 8px">
                             Provides a filtered transaction history, fetches representative scores and account aliases.
                         </div>
-                        <div *ngFor="let source of datasourceService.availableSpyglassApiSources">
-                            <mat-checkbox
-                                *ngIf="source.isAccessible"
-                                [checked]="source.isSelected"
-                                (change)="datasourceService.setSpyglassApiSource(source)"
+
+                        <mat-radio-group
+                            aria-label="Select a Spyglass API source"
+                            [(ngModel)]="selectedSpyglassApi"
+                            (change)="selectSpyglassApi($event)"
+                        >
+                            <mat-radio-button
+                                *ngFor="let source of datasourceService.availableSpyglassApiSources | available"
+                                [value]="source"
+                                [aria-label]="source.alias"
                             >
                                 <div
-                                    [style.fontWeight]="source.isSelected ? 600 : 400"
                                     [class.primary]="source.isSelected"
+                                    [style.fontWeight]="source.isSelected ? 600 : 400"
                                 >
                                     {{ source.alias }}
                                 </div>
                                 <div class="mono">{{ source.url }}</div>
-                            </mat-checkbox>
-                        </div>
+                            </mat-radio-button>
+                        </mat-radio-group>
                     </mat-card>
                 </div>
             </div>
@@ -137,7 +153,9 @@ import { PowService } from '@app/services/pow.service';
     `,
     styleUrls: ['./settings.component.scss'],
 })
-export class SettingsPageComponent {
+export class SettingsPageComponent implements OnInit {
+    selectedRpcSource: any;
+    selectedSpyglassApi: any;
     bottomSheetOpenDelayMs = 250;
 
     constructor(
@@ -147,9 +165,13 @@ export class SettingsPageComponent {
         private readonly _location: Location,
         private readonly _walletEventService: WalletEventsService,
         private readonly _router: Router,
-        public powService: PowService,
         public datasourceService: DatasourceService
     ) {}
+
+    async ngOnInit(): Promise<void> {
+        this.selectedSpyglassApi = await this.datasourceService.getSpyglassApiSource();
+        this.selectedRpcSource = await this.datasourceService.getRpcSource();
+    }
 
     back(): void {
         this._location.back();
@@ -168,5 +190,13 @@ export class SettingsPageComponent {
     clearStorage(): void {
         this._walletEventService.clearLocalStorage.next();
         void this._router.navigate(['/']);
+    }
+
+    selectRpc(e: MatRadioChange): void {
+        this.datasourceService.setRpcSource(e.value);
+    }
+
+    selectSpyglassApi(e: MatRadioChange): void {
+        this.datasourceService.setSpyglassApiSource(e.value);
     }
 }

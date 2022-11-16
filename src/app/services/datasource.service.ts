@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { NanoClient } from '@dev-ptera/nano-node-rpc';
 
-type Datasource = {
+export type Datasource = {
     alias: string;
     url: string;
     isAccessible?: boolean;
@@ -58,6 +58,8 @@ export class DatasourceService {
                 .then(() => {
                     source.isAccessible = true;
                     if (!this.rpcSource) {
+                        // eslint-disable-next-line no-console
+                        console.log(`Using ${source.alias} as RPC source.`);
                         this.setRpcSource(source);
                         this.rpcSourceLoadedSubject.next(source);
                     }
@@ -72,6 +74,8 @@ export class DatasourceService {
                 .then(() => {
                     source.isAccessible = true;
                     if (!this.spyglassApiSource) {
+                        // eslint-disable-next-line no-console
+                        console.log(`Using ${source.alias} as Spyglass API source.`);
                         this.setSpyglassApiSource(source);
                         this.spyglassSourceLoadedSubject.next(source);
                     }
@@ -121,7 +125,7 @@ export class DatasourceService {
         });
     }
 
-    /** The RPC source is only known once one of the servers responds. */
+    /** The RPC source is only known once one of the servers respond. */
     getRpcSource(): Promise<Datasource> {
         return new Promise((resolve) => {
             if (this.rpcSource) {
