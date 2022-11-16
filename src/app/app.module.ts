@@ -69,7 +69,6 @@ import { ChangeRepBottomSheetComponent } from '@app/overlays/bottom-sheet/change
 import { RenameWalletComponent } from '@app/overlays/actions/rename-wallet/rename-wallet.component';
 import { RenameWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/rename-wallet/rename-wallet-bottom-sheet.component';
 import { RenameWalletDialogComponent } from '@app/overlays/dialogs/rename-wallet/rename-wallet-dialog.component';
-import { LongPressDirective } from '@app/components/long-press/long-press.directive';
 import { ChangePasswordOverlayComponent } from '@app/overlays/actions/change-password/change-password.component';
 import { ChangePasswordDialogComponent } from '@app/overlays/dialogs/change-password/change-password-dialog.component';
 import { ChangeRepDialogComponent } from '@app/overlays/dialogs/change-rep/change-rep-dialog.component';
@@ -81,7 +80,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { MatMenuModule } from '@angular/material/menu';
 import { ResponsiveMenuModule } from '@app/components/responsive-menu/responsive-menu.module';
-import { SettingsPageComponent } from '@app/pages/settings/settings.component';
+import { DatasourceAvailablePipe, SettingsPageComponent } from '@app/pages/settings/settings.component';
+import { LongPressDirective } from './directives/long-press.directive';
+import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
     declarations: [
@@ -124,6 +125,7 @@ import { SettingsPageComponent } from '@app/pages/settings/settings.component';
         ChangePasswordBottomSheetComponent,
         HoverClassDirective,
         SettingsPageComponent,
+        DatasourceAvailablePipe,
     ],
     imports: [
         AppRoutingModule,
@@ -161,6 +163,7 @@ import { SettingsPageComponent } from '@app/pages/settings/settings.component';
         MatExpansionModule,
         MatMenuModule,
         ResponsiveMenuModule,
+        MatRadioModule,
     ],
     providers: [],
     bootstrap: [AppComponent],

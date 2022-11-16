@@ -2,22 +2,23 @@
     width: 100%;
 }
 
-.mat-checkbox {
-    margin: 8px 0;
-}
-
-.mono {
-    font-size: 12px;
-}
-
 $card-horizontal-padding: 16px;
 .app-settings-page {
-    ::ng-deep .mat-checkbox-label {
-        word-break: break-all;
-        padding-left: 8px;
-        * {
-            display: flex;
-            align-items: center;
+    ::ng-deep {
+        .mat-radio-button {
+            display: block;
+            margin: 16px 0;
+        }
+        .mat-radio-label-content {
+            word-break: break-all;
+            padding-left: 16px;
+            * {
+                display: flex;
+                align-items: center;
+            }
+        }
+        .mono {
+            font-size: 12px;
         }
     }
     .mat-card > .mat-divider-horizontal {

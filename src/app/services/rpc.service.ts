@@ -115,4 +115,15 @@ export class RpcService {
             representative: accountInfo.representative,
         };
     }
+
+    /** Given a hash, tells our RPC datasource to stop calculating work to process a transaction. */
+    async cancelWorkGenerate(hash: string): Promise<void> {
+        const client = await this._datasourceService.getRpcNode();
+        // eslint-disable-next-line no-console
+        console.log('Canceling server-side work generate request');
+        return new Promise((resolve) => {
+            // @ts-ignore
+            client._send('work_cancel', { hash }).then(resolve).catch(resolve);
+        });
+    }
 }
