@@ -83,7 +83,7 @@ import { ResponsiveMenuModule } from '@app/components/responsive-menu/responsive
 import { DatasourceAvailablePipe, SettingsPageComponent } from '@app/pages/settings/settings.component';
 import { LongPressDirective } from './directives/long-press.directive';
 import { MatRadioModule } from '@angular/material/radio';
-import {AddressBookComponent} from "@app/pages/address-book/address-book.component";
+import { AddressBookComponent } from '@app/pages/address-book/address-book.component';
 
 @NgModule({
     declarations: [

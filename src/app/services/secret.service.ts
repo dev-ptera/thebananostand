@@ -26,7 +26,7 @@ export class SecretService {
         });
 
         this._walletEventService.addSecret.subscribe((data: { secret: string; password: string }) => {
-            void this._storeSecret(data.secret, data.password);
+            void this._storeSecret(data.secret, this.isLocalSecretUnlocked() ? this.walletPassword : data.password);
         });
     }
 
@@ -49,8 +49,8 @@ export class SecretService {
     }
 
     /** Saves a seed in localstorage, encrypting it using a user-provided password. */
-    private async _storeSeed(seed: string, walletPassword: string): Promise<LocalStorageWallet> {
-        let password = walletPassword;
+    private async _storeSeed(seed: string, userProvidedPassword: string): Promise<LocalStorageWallet> {
+        let password = userProvidedPassword;
 
         if (password.length === 0) {
             password = this.DEFAULT_PASSWORD;

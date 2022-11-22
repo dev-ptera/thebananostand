@@ -1,6 +1,6 @@
-import {Component} from "@angular/core";
-import {ViewportService} from "@app/services/viewport.service";
-import {Location} from "@angular/common";
+import { Component } from '@angular/core';
+import { ViewportService } from '@app/services/viewport.service';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-address-book',
@@ -25,16 +25,10 @@ import {Location} from "@angular/common";
         </div>
     </div>`,
 })
-export class AddressBookComponent  {
-
-
-    constructor(
-        public vp: ViewportService,
-        private readonly _location: Location,
-    ) {}
+export class AddressBookComponent {
+    constructor(public vp: ViewportService, private readonly _location: Location) {}
 
     back(): void {
         this._location.back();
     }
-
 }

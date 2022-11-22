@@ -27,10 +27,11 @@ import { ThemeService } from '@app/services/theme.service';
 
             <ng-container *ngIf="isUserLoggedIn()">
                 <div class="mat-overline" style="margin-top: 24px; padding-left: 16px">Advanced</div>
+                <!--
                 <button mat-menu-item (click)="navigateToAddressBook()">
                     <mat-icon>import_contacts</mat-icon>
                     <span>Address Book</span>
-                </button>
+                </button> -->
                 <button mat-menu-item (click)="navigateToSettingsPage()" data-cy="more-settings">
                     <mat-icon>open_in_new</mat-icon>
                     <span>More</span>

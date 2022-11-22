@@ -12,7 +12,7 @@ export class WalletEventsService {
     /** A wallet (previously unlocked) has been effectively logged out with no remaining secrets known. */
     walletLocked = new Subject<void>();
 
-    /** A new secret has been provided */
+    /** A new secret has been provided, can be either a seed or mnenomic. */
     addSecret = new Subject<{ secret: string; password: string }>();
 
     /** A new encrypted wallet has been created. */
