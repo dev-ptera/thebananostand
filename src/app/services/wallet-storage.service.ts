@@ -23,9 +23,11 @@ export class WalletStorageService {
     private isLedger: boolean;
 
     activeWallet: LocalStorageWallet;
-    wallets: LocalStorageWallet[];
+    wallets: LocalStorageWallet[] = [];
 
     constructor(private readonly _util: UtilService, private readonly _walletEventsService: WalletEventsService) {
+        this._updateState();
+
         this._walletEventsService.walletUnlocked.subscribe((data) => {
             this.isLedger = data.isLedger;
             this._updateState();
@@ -79,6 +81,8 @@ export class WalletStorageService {
 
         this._walletEventsService.clearLocalStorage.subscribe(() => {
             window.localStorage.clear();
+            this.wallets = [];
+            this.activeWallet = undefined;
             this._walletEventsService.walletLocked.next();
         });
     }
@@ -127,7 +131,7 @@ export class WalletStorageService {
     }
 
     getWalletFromId(id: string): LocalStorageWallet {
-        for (const wallet of this.readWalletsFromLocalStorage()) {
+        for (const wallet of this.wallets) {
             if (this._walletIdsMatch(id, wallet.walletId)) {
                 return wallet;
             }
@@ -187,9 +191,7 @@ export class WalletStorageService {
 
     /** Used to store or update wallet details in localStorage. */
     private _storeWalletDetails(newWallet: LocalStorageWallet): void {
-        const wallets = this.readWalletsFromLocalStorage().filter(
-            (wallet) => !this._walletIdsMatch(wallet.walletId, newWallet.walletId)
-        );
+        const wallets = this.wallets.filter((wallet) => !this._walletIdsMatch(wallet.walletId, newWallet.walletId));
         wallets.push(newWallet);
         window.localStorage.setItem(ENCRYPTED_WALLETS, JSON.stringify(wallets));
     }
@@ -213,7 +215,7 @@ export class WalletStorageService {
 
     private _removeActiveWallet(): void {
         const activeWallet = this.getActiveWallet();
-        const remainingWallets = this.readWalletsFromLocalStorage().filter(
+        const remainingWallets = this.wallets.filter(
             (wallet) => !this._walletIdsMatch(wallet.walletId, activeWallet.walletId)
         );
         if (remainingWallets[0]) {
@@ -227,7 +229,7 @@ export class WalletStorageService {
     }
 
     private _updateState(): void {
-        this.activeWallet = this.getActiveWallet();
         this.wallets = this.readWalletsFromLocalStorage();
+        this.activeWallet = this.getActiveWallet();
     }
 }
