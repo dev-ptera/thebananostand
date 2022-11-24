@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ConfirmedTx } from '@app/types/ConfirmedTx';
-import { UtilService } from './util.service';
 import { KnownAccount } from '@app/types/KnownAccount';
 import { RepScore } from '@app/overlays/actions/change-rep/change-rep.component';
 import { FilterOverlayData } from '@app/overlays/actions/filter/filter.component';
@@ -14,16 +13,12 @@ import { DatasourceService } from '@app/services/datasource.service';
 /**
  * SpyglassService is a supplemental service that provides a filtered transaction history, online representatives, aliases, known accounts, & representative scores.
  *
- *  Basically any functionality that a RPC call cannot provide will be provided by this service.
+ *  Basically any functionality that an RPC call cannot provide will be provided by this service.
  *
  *  Documentation for interacting with Spyglass API can be found here: https://spyglass-api.web.app/
  * */
 export class SpyglassService {
-    constructor(
-        private readonly _http: HttpClient,
-        private readonly _util: UtilService,
-        private readonly _datasource: DatasourceService
-    ) {}
+    constructor(private readonly _http: HttpClient, private readonly _datasource: DatasourceService) {}
 
     async getConfirmedTransactions(
         address: string,

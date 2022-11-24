@@ -23,6 +23,7 @@ import { SendDialogComponent } from '@app/overlays/dialogs/send/send-dialog.comp
 import { ChangeRepBottomSheetComponent } from '@app/overlays/bottom-sheet/change-rep/change-rep-bottom-sheet.component';
 import { ChangeRepDialogComponent } from '@app/overlays/dialogs/change-rep/change-rep-dialog.component';
 import { WalletEventsService } from '@app/services/wallet-events.service';
+import { AppStateService } from '@app/services/app-state.service';
 
 @Component({
     selector: 'app-account',
@@ -61,6 +62,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     constructor(
         public util: UtilService,
         public vp: ViewportService,
+        private readonly _appStateService: AppStateService,
         private readonly _router: Router,
         private readonly _dialog: MatDialog,
         private readonly _sheet: MatBottomSheet,
@@ -111,7 +113,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     /** Shows alias (if exists) or shortened address. */
     formatAddress(address: string): string {
-        return this._accountService.knownAccounts.get(address) || this.util.shortenAddress(address);
+        return this._appStateService.knownAccounts.get(address) || this.util.shortenAddress(address);
     }
 
     /** Iterates through each pending transaction block and receives them. */
@@ -208,7 +210,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     /** Using data from the dashboard, sets the account */
     private _setAccount(): void {
-        this._accountService.accounts.map((account) => {
+        this._appStateService.accounts.map((account) => {
             if (this.address === account.fullAddress) {
                 this.account = account;
                 this._adjustContainerHeightSettings();

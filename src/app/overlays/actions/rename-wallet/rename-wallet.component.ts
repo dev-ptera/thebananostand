@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { WalletEventsService } from '@app/services/wallet-events.service';
-import { WalletStorageService } from '@app/services/wallet-storage.service';
+import { AppStateService } from '@app/services/app-state.service';
 
 @Component({
     selector: 'app-rename-wallet-overlay',
@@ -62,11 +62,11 @@ export class RenameWalletComponent implements OnInit {
 
     constructor(
         private readonly _walletEventService: WalletEventsService,
-        private readonly _walletStorageService: WalletStorageService
+        private readonly _appStateService: AppStateService
     ) {}
 
     ngOnInit(): void {
-        this.currentWalletName = this._walletStorageService.getActiveWallet().name;
+        this.currentWalletName = this._appStateService.activeWallet.name;
     }
 
     isDisabled(): boolean {

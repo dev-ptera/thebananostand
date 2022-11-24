@@ -32,6 +32,7 @@ import { ThemeService } from '@app/services/theme.service';
                     <mat-icon>import_contacts</mat-icon>
                     <span>Address Book</span>
                 </button> -->
+                <mat-divider></mat-divider>
                 <button mat-menu-item (click)="navigateToSettingsPage()" data-cy="more-settings">
                     <mat-icon>open_in_new</mat-icon>
                     <span>More</span>

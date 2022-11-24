@@ -62,12 +62,16 @@ describe('Account Actions', () => {
 
     describe('Receive', () => {
 
+        /** The receive button will be disabled unless we have something to actually receive. */
+        /*
         it('should close the receive overlay (desktop)', () => {
             cy.get('[data-cy=receive-action]').click();
             cy.get('.receive-overlay');
             cy.get('[data-cy=receive-close-button]').click();
             cy.get('.receive-overlay').should('not.exist');
         });
+
+         */
 
         /* it('should receive all incoming transaction(s) (desktop)', () => {
             cy.get('[data-cy=receive-action]').click();

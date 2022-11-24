@@ -19,6 +19,7 @@ import { WalletEventsService } from '@app/services/wallet-events.service';
 import { RenameWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/rename-wallet/rename-wallet-bottom-sheet.component';
 import { RenameWalletDialogComponent } from '@app/overlays/dialogs/rename-wallet/rename-wallet-dialog.component';
 import { SecretService } from '@app/services/secret.service';
+import { AppStateService } from '@app/services/app-state.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -40,10 +41,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
     loadingAccountListener: Subscription;
     bottomSheetOpenDelayMs = 250;
 
+    trackBy = <T>(index: number, item: T): T => item;
+
     constructor(
         private readonly _router: Router,
         private readonly _dialog: MatDialog,
         private readonly _util: UtilService,
+        private readonly _appStateService: AppStateService,
         private readonly _sheet: MatBottomSheet,
         private readonly _themeService: ThemeService,
         private readonly _secretService: SecretService,
@@ -99,13 +103,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     copyWalletSeed(): void {
-        const activeWalletId = this._walletStorageService.getActiveWalletId();
+        const activeWalletId = this._appStateService.activeWallet.walletId;
         void this._secretService.backupWalletSecret(activeWalletId);
         this.walletActionsOverlayOpen = false;
     }
 
     copyWalletMnemonic(): void {
-        const activeWalletId = this._walletStorageService.getActiveWalletId();
+        const activeWalletId = this._appStateService.activeWallet.walletId;
         void this._secretService.backupWalletMnemonic(activeWalletId);
         this.walletActionsOverlayOpen = false;
     }
@@ -114,7 +118,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     /** Account Actions [START] **/
     refresh(): void {
         this._walletEventsService.refreshIndexes.next();
-        this.isLoadingAccount = true;
         this.accountActionsOverlayOpen = false;
     }
 
@@ -148,15 +151,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     getActiveWallet(): LocalStorageWallet {
-        return this._walletStorageService.activeWallet;
+        return this._appStateService.activeWallet;
     }
 
     getWallets(): LocalStorageWallet[] {
-        return this._walletStorageService.wallets;
+        return this._appStateService.wallets;
     }
 
     hasAlternativeWallets(): boolean {
-        return this._walletStorageService.wallets && this._walletStorageService.wallets.length >= 2;
+        return this._appStateService.wallets && this._appStateService.wallets.length >= 2;
     }
 
     showRepresentativeOffline(address: string): boolean {
@@ -164,7 +167,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     formatRepresentative(rep: string): string {
-        return this._accountService.repAliases.get(rep) || this._util.shortenAddress(rep);
+        return this._appStateService.repAliases.get(rep) || this._util.shortenAddress(rep);
     }
 
     openAccount(address: string): void {
@@ -172,11 +175,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     getBalance(): string {
-        return this._accountService.totalBalance || '--';
+        return this._appStateService.totalBalance || '--';
     }
 
     getAccounts(): AccountOverview[] {
-        return this._accountService.accounts;
+        return this._appStateService.accounts;
+    }
+
+    markUniqueAccount(index: number, item: AccountOverview): any {
+        return item.shortAddress;
     }
 
     toggleSelectAccounts(): void {

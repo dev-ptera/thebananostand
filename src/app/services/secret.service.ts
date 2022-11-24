@@ -1,24 +1,25 @@
 import { Injectable } from '@angular/core';
 import { LocalStorageWallet, WalletStorageService } from '@app/services/wallet-storage.service';
 import { WalletEventsService } from '@app/services/wallet-events.service';
+import { AppStateService } from '@app/services/app-state.service';
 
 @Injectable({
     providedIn: 'root',
 })
 /** Stores and encrypts a user's seed or mnemonic phrase. */
 export class SecretService {
+    /** The password used to unlock the wallet. */
+    private walletPassword: string;
     private unlockedLocalSecret = false;
     private unlockedLocalLedger = false;
 
     // Only used when a user does not provide a password.
     readonly DEFAULT_PASSWORD = 'default_password';
 
-    /** The password used to unlock the wallet. */
-    private walletPassword: string;
-
     constructor(
-        private readonly _walletStorageService: WalletStorageService,
-        private readonly _walletEventService: WalletEventsService
+        private readonly _appStateService: AppStateService,
+        private readonly _walletEventService: WalletEventsService,
+        private readonly _walletStorageService: WalletStorageService
     ) {
         this._walletEventService.walletLocked.subscribe(() => {
             this.unlockedLocalSecret = false;
@@ -82,7 +83,7 @@ export class SecretService {
             throw new Error('Passwords do not match');
         }
 
-        for await (const wallet of this._walletStorageService.readWalletsFromLocalStorage()) {
+        for await (const wallet of this._appStateService.wallets) {
             if (wallet.encryptedSeed) {
                 const encryptedSeed = wallet.encryptedSeed;
                 // @ts-ignore
@@ -104,17 +105,11 @@ export class SecretService {
         return userPassword === this.walletPassword;
     }
 
-    //  convertToMnemonic(): Promise<void> {
-    /*
-
-seed-> menomimc
-  const seed = window.bananocoinBananojs.bananoUtil.bytesToHex(seedBytes);
-  const mnemonic = window.bip39.entropyToMnemonic(seed);
-
-  // Mneominc-seed
-  const seed = window.bip39.mnemonicToEntropy(mnemonic);
-         */
-    // }
+    async getActiveWalletSecret(): Promise<string> {
+        const activeWalletId = this._appStateService.activeWallet.walletId;
+        const secret = await this.getSecret(activeWalletId);
+        return secret;
+    }
 
     createNewWallet(): { seed: string; mnemonic: string } {
         const seedBytes = new Uint8Array(32);
@@ -158,7 +153,7 @@ seed-> menomimc
             password = this.DEFAULT_PASSWORD;
         }
 
-        const encryptedWallets = this._walletStorageService.readWalletsFromLocalStorage();
+        const encryptedWallets = this._appStateService.wallets;
         const encryptedSeed = encryptedWallets[0].encryptedSeed;
         // @ts-ignore
         await window.bananocoin.passwordUtils.decryptData(encryptedSeed, password); // Error is thrown here.
@@ -186,7 +181,19 @@ seed-> menomimc
     }
 
     hasSecret(): boolean {
-        const encryptedWallets = this._walletStorageService.readWalletsFromLocalStorage();
+        const encryptedWallets = this._appStateService.wallets;
         return encryptedWallets && encryptedWallets.length > 0;
     }
 }
+
+//  convertToMnemonic(): Promise<void> {
+/*
+
+seed-> menomimc
+const seed = window.bananocoinBananojs.bananoUtil.bytesToHex(seedBytes);
+const mnemonic = window.bip39.entropyToMnemonic(seed);
+
+// Mneominc-seed
+const seed = window.bip39.mnemonicToEntropy(mnemonic);
+     */
+// }

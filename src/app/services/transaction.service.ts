@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { UtilService } from './util.service';
 import { environment } from '../../environments/environment';
 import { SecretService } from '@app/services/secret.service';
-import { WalletStorageService } from '@app/services/wallet-storage.service';
 import { DatasourceService } from '@app/services/datasource.service';
 
 @Injectable({
@@ -14,7 +13,6 @@ export class TransactionService {
     constructor(
         private readonly _util: UtilService,
         private readonly _secretService: SecretService,
-        private readonly _walletStorageService: WalletStorageService,
         private readonly _datasource: DatasourceService
     ) {}
 
@@ -126,7 +124,7 @@ export class TransactionService {
     /** Given an index, reads ledger device & returns an address. */
     async getAccountFromIndex(accountIndex: number): Promise<string> {
         if (this._secretService.isLocalSecretUnlocked()) {
-            const seed = await this._secretService.getSecret(this.getActiveWalletId());
+            const seed = await this._secretService.getActiveWalletSecret();
             /** LocalMobile **/
             // const seed = '727A5E960F6189BBF196D84A6B7715D0A78DE82AC15BBDB340540076768CDB31'; // Low Fund Seed
             const privateKey = await window.bananocoinBananojs.getPrivateKey(seed, accountIndex);
@@ -139,13 +137,9 @@ export class TransactionService {
         return account;
     }
 
-    getActiveWalletId(): number {
-        return this._walletStorageService.getActiveWalletId();
-    }
-
     async getAccountSigner(index: number): any {
         if (this._secretService.isLocalSecretUnlocked()) {
-            const seed = await this._secretService.getSecret(this.getActiveWalletId());
+            const seed = await this._secretService.getActiveWalletSecret();
             return await window.bananocoinBananojs.getPrivateKey(seed, index);
         }
         return await window.bananocoin.bananojsHw.getLedgerAccountSigner(index);

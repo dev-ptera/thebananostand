@@ -215,7 +215,7 @@
 
 <ng-template #accounts>
     <blui-info-list-item
-        *ngFor="let account of getAccounts(); let i = index; let even = even"
+        *ngFor="let account of getAccounts(); let i = index; let even = even; trackBy: markUniqueAccount"
         (mouseenter)="hoverRowNumber = i"
         (mouseleave)="hoverRowNumber = undefined"
         [class.hovered]="hoverRowNumber === i"

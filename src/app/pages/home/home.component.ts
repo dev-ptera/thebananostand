@@ -12,6 +12,8 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { EnterSecretBottomSheetComponent } from '@app/overlays/bottom-sheet/enter-secret/enter-secret-bottom-sheet.component';
 import { CreateWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/create-wallet/create-wallet-bottom-sheet.component';
 import { CreateWalletDialogComponent } from '@app/overlays/dialogs/create-wallet/create-wallet-dialog.component';
+import { WalletStorageService } from '@app/services/wallet-storage.service';
+import { WalletEventsService } from '@app/services/wallet-events.service';
 
 @Component({
     selector: 'ledger-snack-bar',
@@ -61,6 +63,8 @@ export class HomeComponent implements OnInit {
         private readonly _accountService: AccountService,
         private readonly _viewportService: ViewportService,
         private readonly _secretService: SecretService,
+        private readonly _walletStorageService: WalletStorageService,
+        private readonly _walletEventService: WalletEventsService,
         public vp: ViewportService
     ) {}
 
