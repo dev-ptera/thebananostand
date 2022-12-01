@@ -4,8 +4,6 @@ import { slideInAnimation } from './animation';
 import { ViewportService } from '@app/services/viewport.service';
 import { SecretService } from '@app/services/secret.service';
 import { WalletEventsService } from '@app/services/wallet-events.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { UtilService } from '@app/services/util.service';
 import { PowService } from '@app/services/pow.service';
 import { ListenerService } from '@app/services/listener.service';
 import { AppStateService } from '@app/services/app-state.service';
@@ -32,6 +30,7 @@ export class AppComponent {
         appHeight();
 
         this._appStoreService.store.subscribe((data) => {
+            // eslint-disable-next-line no-console
             console.log(data);
         });
     }

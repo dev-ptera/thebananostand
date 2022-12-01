@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LocalStorageWallet, WalletStorageService } from '@app/services/wallet-storage.service';
+import { WalletStorageService } from '@app/services/wallet-storage.service';
 import { WalletEventsService } from '@app/services/wallet-events.service';
 import { AppStateService } from '@app/services/app-state.service';
 
@@ -9,9 +9,7 @@ import { AppStateService } from '@app/services/app-state.service';
 /** Stores and encrypts a user's seed or mnemonic phrase. */
 export class SecretService {
     /** The password used to unlock the wallet. */
-    private walletPassword: string;
-    private unlockedLocalSecret = false;
-    private unlockedLocalLedger = false;
+    private walletPassword: string; // TODO REMOVE ME, use app store
 
     // Only used when a user does not provide a password.
     readonly DEFAULT_PASSWORD = 'default_password';
@@ -20,54 +18,36 @@ export class SecretService {
         private readonly _appStateService: AppStateService,
         private readonly _walletEventService: WalletEventsService,
         private readonly _walletStorageService: WalletStorageService
-    ) {
-        this._walletEventService.addSecret.subscribe((data: { secret: string; password: string }) => {
-            void this._storeSecret(data.secret, this.isLocalSecretUnlocked() ? this.walletPassword : data.password);
-        });
-    }
+    ) {}
 
-    private async _storeSecret(secret: string, walletPassword: string): Promise<void> {
+
+    /** Provided a secret phrase and password, returns the encrypted secret. */
+    async storeSecret(secret: string, walletPassword: string): Promise<string> {
         let password = walletPassword;
 
         if (password.length === 0) {
             password = this.DEFAULT_PASSWORD;
         }
+        this.walletPassword = password;
 
         if (secret.length === 64) {
-            await this._storeSeed(secret, password);
-        } else {
-            // @ts-ignore
-            const seed = window.bip39.mnemonicToEntropy(secret); // Mnemonic phrase is covered to seed, then stored.
-            await this._storeSeed(seed, password);
+            return await this._storeSeed(secret, password);
         }
-        this.walletPassword = password;
-        this.unlockedLocalSecret = true;
+        return await this._storeSeed(this._mnemonicToSeed(secret), password);
     }
 
     /** Saves a seed in localstorage, encrypting it using a user-provided password. */
-    private async _storeSeed(seed: string, userProvidedPassword: string): Promise<LocalStorageWallet> {
-        let password = userProvidedPassword;
-
-        if (password.length === 0) {
-            password = this.DEFAULT_PASSWORD;
-        }
+    private async _storeSeed(seed: string, password: string): Promise<string> {
 
         // @ts-ignore
         const result = window.bananocoin.bananojs.bananoUtil.isSeedValid(seed);
         if (!result.valid) {
-            return Promise.reject('Secret is not valid');
+            throw Error('Secret is not valid');
         }
-        // @ts-ignore
-        const encryptedSeed = await window.bananocoin.passwordUtils.encryptData(seed, password);
-        const walletId = encryptedSeed.substring(0, 10);
 
-        const newEntry: LocalStorageWallet = {
-            walletId,
-            name: this._walletStorageService.createNewWalletName(),
-            encryptedSeed,
-            loadedIndexes: [0],
-        };
-        this._walletEventService.addWallet.next(newEntry);
+        // @ts-ignore
+        const encryptedSeed: string = await window.bananocoin.passwordUtils.encryptData(seed, password);
+        return encryptedSeed;
     }
 
     async changePassword(currentPasswordInput: string, newPasswordInput: string): Promise<void> {
@@ -140,8 +120,9 @@ export class SecretService {
         this._walletEventService.backupMnemonic.next({ mnemonic, openSnackbar: true });
     }
 
-    // Throws an error if the login attempt fails.
-    async unlockSecretWallet(walletPassword: string): Promise<{ isLedger: boolean }> {
+    /** Using a password, attempts to decrypt localstorage secret wallet.
+     *  Throws an error if the login attempt fails. */
+    async unlockSecretWallet(walletPassword: string): Promise<void> {
         let password = walletPassword;
 
         if (password.length === 0) {
@@ -153,31 +134,12 @@ export class SecretService {
         // @ts-ignore
         await window.bananocoin.passwordUtils.decryptData(encryptedSeed, password); // Error is thrown here.
         this.walletPassword = password;
-        this.unlockedLocalSecret = true;
-        return { isLedger: false };
     }
 
-    /** Alter this method to trick the app into thinking we have unlocked the wallet already; useful for local mobile testing. */
-    isLocalSecretUnlocked(): boolean {
-        return this.unlockedLocalSecret;
-        /** LocalMobile **/
-        // return true;
-    }
-
-    isLocalLedgerUnlocked(): boolean {
-        return this.unlockedLocalLedger;
-    }
-
-    setLocalLedgerUnlocked(unlocked: boolean): void {
-        this.unlockedLocalLedger = unlocked;
-        if (unlocked) {
-            //  this._walletEventService.unlockWallet.next({ isLedger: true });
-        }
-    }
-
-    hasSecret(): boolean {
-        const encryptedWallets = this._appStateService.wallets;
-        return encryptedWallets && encryptedWallets.length > 0;
+    /** Given a mnemonic string, converts it to a seed phrase. */
+    private _mnemonicToSeed(mnemonic: string): string {
+        // @ts-ignore
+        return window.bip39.mnemonicToEntropy(mnemonic);
     }
 }
 

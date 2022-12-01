@@ -1,6 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef, EventEmitter, Output, AfterViewInit, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
-import { SecretService } from '@app/services/secret.service';
 import { FormControl } from '@angular/forms';
 import { WalletEventsService } from '@app/services/wallet-events.service';
 import { Subscription } from 'rxjs';

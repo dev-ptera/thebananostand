@@ -37,6 +37,7 @@
         "@brightlayer-ui/angular-themes": "^8.0.0",
         "@brightlayer-ui/colors": "^3.0.1",
         "@dev-ptera/nano-node-rpc": "^2.0.2",
+        "@ngneat/until-destroy": "^9.2.2",
         "banotils": "^0.3.2",
         "qrcode": "^1.5.1",
         "rxjs": "~6.6.7",

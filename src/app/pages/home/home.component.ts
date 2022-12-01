@@ -12,7 +12,9 @@ import { CreateWalletDialogComponent } from '@app/overlays/dialogs/create-wallet
 import { WalletEventsService } from '@app/services/wallet-events.service';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { LedgerSnackbarErrorComponent } from '@app/pages/home/ledger-error-snackbar.component';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
@@ -29,7 +31,6 @@ import { LedgerSnackbarErrorComponent } from '@app/pages/home/ledger-error-snack
     ],
 })
 export class HomeComponent {
-
     colors = Colors;
     store: AppStore;
 
@@ -46,18 +47,16 @@ export class HomeComponent {
         private readonly _snackBar: MatSnackBar,
         private readonly _viewportService: ViewportService,
         private readonly _appStateService: AppStateService,
-        private readonly _walletEventService: WalletEventsService,
+        private readonly _walletEventService: WalletEventsService
     ) {
-        this._appStateService.store.subscribe((store) => {
+        this._appStateService.store.pipe(untilDestroyed(this)).subscribe((store) => {
             this.store = store;
         });
 
-        this._walletEventService.ledgerConnectionError.subscribe((data) => {
+        this._walletEventService.ledgerConnectionError.pipe(untilDestroyed(this)).subscribe((data) => {
             this._showLedgerConnectionErrorSnackbar(data.error);
         });
     }
-
-    // TODO: Unsubscribe
 
     connectLedger(): void {
         this._walletEventService.attemptUnlockLedger.next();

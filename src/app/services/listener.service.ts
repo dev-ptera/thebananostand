@@ -1,13 +1,12 @@
-import { Injectable } from '@angular/core';
-import { SecretService } from '@app/services/secret.service';
-import { WalletEventsService } from '@app/services/wallet-events.service';
-import { AppStateService, AppStore } from '@app/services/app-state.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { UtilService } from '@app/services/util.service';
-import { WalletStorageService } from '@app/services/wallet-storage.service';
-import { MatDialog } from '@angular/material/dialog';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { TransactionService } from '@app/services/transaction.service';
+import {Injectable} from '@angular/core';
+import {SecretService} from '@app/services/secret.service';
+import {WalletEventsService} from '@app/services/wallet-events.service';
+import {AppStateService, AppStore} from '@app/services/app-state.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {UtilService} from '@app/services/util.service';
+import {LocalStorageWallet, WalletStorageService} from '@app/services/wallet-storage.service';
+import {TransactionService} from '@app/services/transaction.service';
+import {AccountService} from '@app/services/account.service';
 
 const duration = 3000;
 const closeActionText = 'Dismiss';
@@ -21,16 +20,42 @@ export class ListenerService {
         private readonly _walletEventService: WalletEventsService,
         private readonly _walletStorageService: WalletStorageService,
         private readonly _appStateService: AppStateService,
+        private readonly _accountService: AccountService,
         private readonly _transactionService: TransactionService,
         private readonly _snackbar: MatSnackBar,
         private readonly _util: UtilService,
-        private readonly _dialog: MatDialog,
-        private readonly _sheet: MatBottomSheet
     ) {
-        this._emitUpdatedStore({ hasSecret: this._walletStorageService.hasLocalStorageSecretWallet() });
+        // Initial App State
+        this._dispatch({
+            hasSecret: this._walletStorageService.hasSecretWalletSaved(),
+            localStorageWallets: this._walletStorageService.readWalletsFromLocalStorage(),
+        });
+
+        // Listening for events
         this._listenAuthorizationActions(_walletEventService);
         this._listenClipboardContentCopyActions(_walletEventService);
         this._listenRemoveWalletActions(_walletEventService);
+
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        this._walletEventService.addSecret.subscribe(async (data) => {
+            const store = this._appStateService.store.getValue();
+            const password = store.hasUnlockedSecret ? store.walletPassword : data.password;
+            const encryptedSecret = await this._secretService.storeSecret(data.secret, password);
+            this._dispatch({
+                hasSecret: true,
+                hasUnlockedSecret: true
+            });
+            const wallet = await this._walletStorageService.createNewWallet(encryptedSecret);
+            this._walletEventService.addWallet.next(wallet);
+        });
+
+        this._walletEventService.addWallet.subscribe((wallet: LocalStorageWallet) => {
+            this._walletStorageService.addWalletLocalStorage(wallet);
+            this._dispatch({
+                activeWallet: wallet,
+            });
+            this._walletEventService.activeWalletChange.next(wallet);
+        });
     }
 
     /** User has removed one or more wallets. */
@@ -49,9 +74,9 @@ export class ListenerService {
         e.attemptUnlockSecretWallet.subscribe((data) => {
             this._secretService
                 .unlockSecretWallet(data.password)
-                .then((results) => {
+                .then(() => {
                     e.unlockWallet.next({
-                        isLedger: results.isLedger,
+                        isLedger: false,
                         password: data.password,
                     });
                 })
@@ -62,15 +87,20 @@ export class ListenerService {
         });
 
         e.unlockWallet.subscribe((data) => {
-            this._emitUpdatedStore({
+            this._dispatch({
                 hasUnlockedSecret: !data.isLedger,
                 hasUnlockedLedger: data.isLedger,
                 walletPassword: data.password,
             });
+
+            this._accountService.refreshBalances();
+            this._accountService.fetchOnlineRepresentatives();
+            this._accountService.fetchRepresentativeAliases();
+            this._accountService.fetchKnownAccounts();
         });
 
         e.lockWallet.subscribe(() => {
-            this._emitUpdatedStore({
+            this._dispatch({
                 hasUnlockedLedger: false,
                 hasUnlockedSecret: false,
                 walletPassword: undefined,
@@ -81,7 +111,9 @@ export class ListenerService {
             this._transactionService
                 .checkLedgerOrError()
                 .then(() => {
-                    this._secretService.setLocalLedgerUnlocked(true);
+                    this._dispatch({
+                        hasUnlockedLedger: true,
+                    });
                 })
                 .catch((err: string) => {
                     // TODO, handle errors in a consistent way?  Reject only Errors?
@@ -115,7 +147,7 @@ export class ListenerService {
     }
 
     /** Broadcasts an updated app state. */
-    private _emitUpdatedStore(newData: Partial<AppStore>): void {
+    private _dispatch(newData: Partial<AppStore>): void {
         this._appStateService.store.next(Object.assign(this._appStateService.store.getValue(), newData));
     }
 }

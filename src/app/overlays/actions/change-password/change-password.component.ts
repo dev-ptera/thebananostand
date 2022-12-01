@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { WalletEventsService } from '@app/services/wallet-events.service';
 import { SecretService } from '@app/services/secret.service';
 import { Router } from '@angular/router';
 
@@ -117,23 +116,19 @@ import { Router } from '@angular/router';
     `,
 })
 export class ChangePasswordOverlayComponent {
-    currentPasswordFormControl = new FormControl('');
     newPasswordFormControl = new FormControl('');
+    currentPasswordFormControl = new FormControl('');
     confirmPasswordFormControl = new FormControl('');
 
-    isConfirmPasswordVisible: boolean;
     isNewPasswordVisible: boolean;
+    isConfirmPasswordVisible: boolean;
     isCurrentPasswordVisible: boolean;
 
     uncaughtError: string;
 
     @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
-    constructor(
-        private readonly _walletEventService: WalletEventsService,
-        private readonly _secretService: SecretService,
-        private readonly _router: Router
-    ) {}
+    constructor(private readonly _router: Router, private readonly _secretService: SecretService) {}
 
     newPasswordMismatch(): boolean {
         return this.newPasswordFormControl.value !== this.confirmPasswordFormControl.value;

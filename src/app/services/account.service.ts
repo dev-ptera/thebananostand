@@ -16,30 +16,22 @@ export class AccountService {
     constructor(
         private readonly _util: UtilService,
         private readonly _rpcService: RpcService,
-        private readonly _appStateService: AppStateService,
         private readonly _spyglassApi: SpyglassService,
+        private readonly _appStateService: AppStateService,
         private readonly _transactionService: TransactionService,
         private readonly _walletEventService: WalletEventsService,
         private readonly _walletStorageService: WalletStorageService
     ) {
         this._walletEventService.activeWalletChange.subscribe((wallet: LocalStorageWallet) => {
-            void this._refreshDashboardUsingIndexes(wallet.loadedIndexes);
-        });
-
-        this._walletEventService.unlockWallet.subscribe((data) => {
-            this._appStateService.isLedger = data.isLedger;
-            this._refreshBalances();
-            this._fetchOnlineRepresentatives();
-            this._fetchRepresentativeAliases();
-            this._fetchKnownAccounts();
+            void this.refreshDashboardUsingIndexes(wallet.loadedIndexes);
         });
 
         this._walletEventService.removeIndex.subscribe((index: number) => {
-            this._removeAccount(index);
+            this.removeAccount(index);
         });
 
         this._walletEventService.refreshIndexes.subscribe(() => {
-            this._refreshBalances();
+            this.refreshBalances();
         });
 
         this._walletEventService.addIndexes.subscribe((indexes: number[]) => {
@@ -65,13 +57,13 @@ export class AccountService {
 
     /** Fetches RPC account_info and stores response in a list sorted by account number. */
     fetchAccount(index: number): Promise<void> {
-        this._removeAccount(index);
+        this.removeAccount(index);
         return this._rpcService
             .getAccountInfo(index)
             .then((overview) => {
                 this._appStateService.accounts.push(overview);
                 this._appStateService.accounts.sort((a, b) => (a.index > b.index ? 1 : -1));
-                this._updateTotalBalance();
+                this.updateTotalBalance();
                 return Promise.resolve();
             })
             .catch((err) => {
@@ -100,7 +92,7 @@ export class AccountService {
         return `https://monkey.banano.cc/api/v1/monkey/${address}?svc=bananostand`;
     }
 
-    private _fetchOnlineRepresentatives(): void {
+    fetchOnlineRepresentatives(): void {
         this._spyglassApi
             .getOnlineReps()
             .then((reps) => {
@@ -111,7 +103,7 @@ export class AccountService {
             });
     }
 
-    private _fetchRepresentativeAliases(): void {
+    fetchRepresentativeAliases(): void {
         this._spyglassApi
             .getRepresentativeAliases()
             .then((pairs) => {
@@ -124,7 +116,7 @@ export class AccountService {
             });
     }
 
-    private _fetchKnownAccounts(): void {
+    fetchKnownAccounts(): void {
         this._spyglassApi
             .getAllKnownAccounts()
             .then((pairs) => {
@@ -138,15 +130,15 @@ export class AccountService {
     }
 
     /** Call this function to remove a specified index from the list of accounts. */
-    private _removeAccount(removedIndex: number): void {
+    removeAccount(removedIndex: number): void {
         this._appStateService.accounts = this._appStateService.accounts.filter(
             (account) => !this._util.matches(account.index, removedIndex)
         );
-        this._updateTotalBalance();
+        this.updateTotalBalance();
     }
 
     /** Synchronously loads account balances. */
-    private async _refreshDashboardUsingIndexes(indexes: number[]): Promise<void> {
+    async refreshDashboardUsingIndexes(indexes: number[]): Promise<void> {
         this._appStateService.accounts = [];
         indexes.sort((a, b) => a - b);
         this._walletEventService.accountLoading.next(true);
@@ -157,7 +149,7 @@ export class AccountService {
     }
 
     /** Iterates through each loaded account and aggregates the total confirmed balance. */
-    private _updateTotalBalance(): void {
+    updateTotalBalance(): void {
         let balance = 0;
         this._appStateService.accounts.map((account) => {
             balance += account.balance;
@@ -166,13 +158,13 @@ export class AccountService {
     }
 
     /** Reloads the dashboard, keeps previously-loaded accounts. */
-    private _refreshBalances(): void {
+    refreshBalances(): void {
         this._appStateService.accounts = [];
         const indexesToLoad = this._walletStorageService.getLoadedIndexes();
         if (!indexesToLoad || indexesToLoad.length === 0) {
             this._walletEventService.addIndexes.next([0]);
         } else {
-            void this._refreshDashboardUsingIndexes(indexesToLoad);
+            void this.refreshDashboardUsingIndexes(indexesToLoad);
         }
     }
 

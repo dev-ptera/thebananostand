@@ -1,9 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { TransactionService } from '@app/services/transaction.service';
-import { AccountService } from '@app/services/account.service';
-import { SpyglassService } from '@app/services/spyglass.service';
-import { UtilService } from '@app/services/util.service';
-import { SecretService } from '@app/services/secret.service';
+import { AppStateService } from '@app/services/app-state.service';
 import { WalletEventsService } from '@app/services/wallet-events.service';
 
 @Component({
@@ -92,17 +88,13 @@ export class EnterSecretComponent implements OnInit {
     error: string;
 
     constructor(
-        public util: UtilService,
         private readonly _ref: ChangeDetectorRef,
-        private readonly _apiService: SpyglassService,
-        private readonly _secretService: SecretService,
-        private readonly _accountService: AccountService,
-        private readonly _transactionService: TransactionService,
+        private readonly _appStateService: AppStateService,
         private readonly _walletEventService: WalletEventsService
     ) {}
 
     ngOnInit(): void {
-        this.maxSteps = this._secretService.isLocalSecretUnlocked() ? 1 : 2;
+        this.maxSteps = this._appStateService.store.getValue().hasUnlockedSecret ? 1 : 2;
         this.lastStep = this.maxSteps - 1;
     }
 

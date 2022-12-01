@@ -230,6 +230,6 @@ export class DashboardComponent implements OnDestroy {
     }
 
     isLedgerDevice(): boolean {
-        return this._secretService.isLocalLedgerUnlocked();
+        return this._appStateService.store.getValue().hasUnlockedLedger;
     }
 }

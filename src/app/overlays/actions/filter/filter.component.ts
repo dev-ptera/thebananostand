@@ -1,8 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { TransactionService } from '@app/services/transaction.service';
-import { AccountService } from '@app/services/account.service';
-import { SpyglassService } from '@app/services/spyglass.service';
-import { UtilService } from '@app/services/util.service';
 
 export type FilterOverlayData = {
     includeReceive: boolean;
@@ -99,13 +95,6 @@ export class FilterComponent implements OnInit {
     @Output() close: EventEmitter<FilterOverlayData> = new EventEmitter<FilterOverlayData>();
 
     adjustedFilters: FilterOverlayData;
-
-    constructor(
-        public util: UtilService,
-        private readonly _apiService: SpyglassService,
-        private readonly _transactionService: TransactionService,
-        private readonly _accountService: AccountService
-    ) {}
 
     ngOnInit(): void {
         this.adjustedFilters = Object.assign({}, this.originalData);

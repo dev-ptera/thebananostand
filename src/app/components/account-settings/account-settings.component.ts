@@ -1,10 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import { SecretService } from '@app/services/secret.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ViewportService } from '@app/services/viewport.service';
 import { ThemeService } from '@app/services/theme.service';
+import { AppStateService } from '@app/services/app-state.service';
 
 @Component({
     selector: 'app-account-settings',
@@ -68,7 +68,7 @@ export class AppAccountSettingsComponent {
         public vp: ViewportService,
         private readonly _dialog: MatDialog,
         private readonly _sheet: MatBottomSheet,
-        private readonly _secretService: SecretService,
+        private readonly _appStateService: AppStateService,
         private readonly _theme: ThemeService
     ) {}
 
@@ -103,8 +103,8 @@ export class AppAccountSettingsComponent {
 
     isUserLoggedIn(): boolean {
         return (
-            (this._secretService.hasSecret() && this._secretService.isLocalSecretUnlocked()) ||
-            this._secretService.isLocalLedgerUnlocked()
+            this._appStateService.store.getValue().hasUnlockedSecret ||
+            this._appStateService.store.getValue().hasUnlockedLedger
         );
     }
 }

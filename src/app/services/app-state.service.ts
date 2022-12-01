@@ -8,6 +8,8 @@ export type AppStore = {
     hasUnlockedLedger: boolean;
     hasUnlockedSecret: boolean;
     walletPassword: string;
+    localStorageWallets: LocalStorageWallet[];
+    activeWallet: LocalStorageWallet;
 };
 
 @Injectable({
@@ -43,5 +45,7 @@ export class AppStateService {
         hasUnlockedSecret: false,
         hasUnlockedLedger: false,
         walletPassword: undefined,
+        localStorageWallets: [],
+        activeWallet: undefined,
     });
 }
