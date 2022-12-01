@@ -4,10 +4,33 @@
     box-sizing: border-box;
 }
 
-.ledger-error-card {
+.home-bananostand-logo-icon {
+    margin-right: 24px;
+    margin-top: -8px;
+    font-size: 36px;
+    height: 36px;
+    width: 36px;
+}
+
+.home-content {
+    justify-content: center;
+    position: relative;
+    padding: 32px 16px;
+    text-align: center;
+}
+
+.home-logo-wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    justify-content: center;
+}
+
+.home-ledger-error-card {
     margin-top: 16px;
     width: 100%;
-    max-width: 694px;
+    max-width: 695px;
+    text-align: left;
     box-sizing: border-box;
     .instructions {
         div {

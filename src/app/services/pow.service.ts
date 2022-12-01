@@ -27,7 +27,7 @@ export class PowService {
             // @ts-ignore
             this.defaultBananoJsGetGeneratedWork = window.bananocoinBananojs.bananodeApi.getGeneratedWork;
             // @ts-ignore
-            window.bananocoinBananojs.bananodeApi.getGeneratedWork = this.getGeneratedWork.bind(this);
+            // window.bananocoinBananojs.bananodeApi.getGeneratedWork = this.getGeneratedWork.bind(this);
 
             /* If we have webgl available, default to using that. */
             this.setUseClientSidePow(this.isWebGLAvailable);

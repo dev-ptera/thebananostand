@@ -16,7 +16,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDividerModule } from '@angular/material/divider';
 
 import { AppComponent } from './app.component';
-import { HomeComponent, LedgerSnackbarErrorComponent } from './pages/home/home.component';
+import { HomeComponent } from './pages/home/home.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -84,6 +84,7 @@ import { DatasourceAvailablePipe, SettingsPageComponent } from '@app/pages/setti
 import { LongPressDirective } from './directives/long-press.directive';
 import { MatRadioModule } from '@angular/material/radio';
 import { AddressBookComponent } from '@app/pages/address-book/address-book.component';
+import { LedgerSnackbarErrorComponent } from '@app/pages/home/ledger-error-snackbar.component';
 
 @NgModule({
     declarations: [

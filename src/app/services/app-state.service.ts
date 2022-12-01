@@ -1,6 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { LocalStorageWallet } from '@app/services/wallet-storage.service';
+import { BehaviorSubject } from 'rxjs';
+
+export type AppStore = {
+    hasSecret: boolean;
+    hasUnlockedLedger: boolean;
+    hasUnlockedSecret: boolean;
+    walletPassword: string;
+};
 
 @Injectable({
     providedIn: 'root',
@@ -29,4 +37,11 @@ export class AppStateService {
 
     /** The list of wallets stored in localstorage. These use a secret. */
     wallets: LocalStorageWallet[] = [];
+
+    store: BehaviorSubject<AppStore> = new BehaviorSubject<AppStore>({
+        hasSecret: undefined, // Set on init.
+        hasUnlockedSecret: false,
+        hasUnlockedLedger: false,
+        walletPassword: undefined,
+    });
 }

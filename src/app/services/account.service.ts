@@ -26,7 +26,7 @@ export class AccountService {
             void this._refreshDashboardUsingIndexes(wallet.loadedIndexes);
         });
 
-        this._walletEventService.walletUnlocked.subscribe((data) => {
+        this._walletEventService.unlockWallet.subscribe((data) => {
             this._appStateService.isLedger = data.isLedger;
             this._refreshBalances();
             this._fetchOnlineRepresentatives();
@@ -40,14 +40,6 @@ export class AccountService {
 
         this._walletEventService.refreshIndexes.subscribe(() => {
             this._refreshBalances();
-        });
-
-        this._walletEventService.addIndex.subscribe((index: number) => {
-            void (async (): Promise<void> => {
-                this._walletEventService.accountLoading.next(true);
-                await this._addIndex(index);
-                this._walletEventService.accountLoading.next(false);
-            })();
         });
 
         this._walletEventService.addIndexes.subscribe((indexes: number[]) => {
@@ -178,7 +170,7 @@ export class AccountService {
         this._appStateService.accounts = [];
         const indexesToLoad = this._walletStorageService.getLoadedIndexes();
         if (!indexesToLoad || indexesToLoad.length === 0) {
-            this._walletEventService.addIndex.next(0);
+            this._walletEventService.addIndexes.next([0]);
         } else {
             void this._refreshDashboardUsingIndexes(indexesToLoad);
         }

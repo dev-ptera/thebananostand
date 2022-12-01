@@ -1,16 +1,22 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { LocalStorageWallet } from '@app/services/wallet-storage.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class WalletEventsService {
+    /** User has attempted to unlock an encrypted secret wallet using a password. */
+    attemptUnlockSecretWallet = new Subject<{ password: string }>();
+
+    /** User has provided an incorrect password to unlock the wallet. */
+    passwordIncorrect = new Subject<void>();
+
     /** A wallet (either secret or ledger) has been unlocked. */
-    walletUnlocked = new Subject<{ isLedger: boolean }>();
+    unlockWallet = new Subject<{ isLedger: boolean; password: string }>();
 
     /** A wallet (previously unlocked) has been effectively logged out with no remaining secrets known. */
-    walletLocked = new Subject<void>();
+    lockWallet = new Subject<void>();
 
     /** A new secret has been provided, can be either a seed or mnenomic. */
     addSecret = new Subject<{ secret: string; password: string }>();
@@ -21,9 +27,6 @@ export class WalletEventsService {
     /** The actively displayed wallet on the dashboard has changed. */
     activeWalletChange = new Subject<LocalStorageWallet>();
 
-    /** A new address (index) has been added to the dashboard. */
-    addIndex = new Subject<number>();
-
     /** New addresses (index) has been added to the dashboard. */
     addIndexes = new Subject<number[]>();
 
@@ -31,7 +34,7 @@ export class WalletEventsService {
     removeIndex = new Subject<number>();
 
     /** An account is being added to the dashboard. Can be either true or false. */
-    accountLoading = new Subject<boolean>();
+    accountLoading = new BehaviorSubject<boolean>(true);
 
     /** User has requested that all loaded indexes be refreshed, checking for receivable transactions and updating account balances. */
     refreshIndexes = new Subject<void>();
@@ -56,4 +59,13 @@ export class WalletEventsService {
 
     /** User has opted to delete all locally stored info. */
     clearLocalStorage = new Subject<void>();
+
+    /** User has generated a new seed & mnenomic. */
+    requestGenerateNewSecret = new Subject<void>();
+
+    /** User wants to unlock the ledger device. */
+    attemptUnlockLedger = new Subject<void>();
+
+    /** Oopsies */
+    ledgerConnectionError = new Subject<{ error: string }>();
 }

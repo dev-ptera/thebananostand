@@ -23,21 +23,10 @@ type UnopenedAccountResponse = {
  * */
 export class RpcService {
     constructor(
-        private readonly _transactionService: TransactionService,
+        private readonly _util: UtilService,
         private readonly _datasourceService: DatasourceService,
-        private readonly _util: UtilService
+        private readonly _transactionService: TransactionService
     ) {}
-
-    /** Given raw, converts BAN to a decimal. */
-    private async _convertRawToBan(raw: string): Promise<number> {
-        // @ts-ignore
-        const bananoJs = window.bananocoinBananojs;
-        const balanceParts = await bananoJs.getBananoPartsFromRaw(raw);
-        if (balanceParts.raw === '0') {
-            delete balanceParts.raw;
-        }
-        return await bananoJs.getBananoPartsAsDecimal(balanceParts);
-    }
 
     /** Returns number of confirmed transactions an account has. */
     async getAccountHeight(address: string): Promise<number> {
@@ -81,6 +70,17 @@ export class RpcService {
         ]);
         const accountOverview = await this._formatAccountInfoResponse(index, address, pending, accountInfoRpc);
         return accountOverview;
+    }
+
+    /** Given raw, converts BAN to a decimal. */
+    private async _convertRawToBan(raw: string): Promise<number> {
+        // @ts-ignore
+        const bananoJs = window.bananocoinBananojs;
+        const balanceParts = await bananoJs.getBananoPartsFromRaw(raw);
+        if (balanceParts.raw === '0') {
+            delete balanceParts.raw;
+        }
+        return await bananoJs.getBananoPartsAsDecimal(balanceParts);
     }
 
     /** Handles some data formatting; transforms account_info rpc data into some formatted dashboard data. */

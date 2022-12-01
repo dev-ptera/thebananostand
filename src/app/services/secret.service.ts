@@ -21,11 +21,6 @@ export class SecretService {
         private readonly _walletEventService: WalletEventsService,
         private readonly _walletStorageService: WalletStorageService
     ) {
-        this._walletEventService.walletLocked.subscribe(() => {
-            this.unlockedLocalSecret = false;
-            this.walletPassword = undefined;
-        });
-
         this._walletEventService.addSecret.subscribe((data: { secret: string; password: string }) => {
             void this._storeSecret(data.secret, this.isLocalSecretUnlocked() ? this.walletPassword : data.password);
         });
@@ -97,7 +92,7 @@ export class SecretService {
                 this._walletEventService.reencryptWalletSecret.next(wallet);
             }
         }
-        this._walletEventService.walletLocked.next();
+        this._walletEventService.lockWallet.next();
     }
 
     matchesCurrentPassword(currentPasswordUserInput: string): boolean {
@@ -146,7 +141,7 @@ export class SecretService {
     }
 
     // Throws an error if the login attempt fails.
-    async unlockSecretWallet(walletPassword: string): Promise<void> {
+    async unlockSecretWallet(walletPassword: string): Promise<{ isLedger: boolean }> {
         let password = walletPassword;
 
         if (password.length === 0) {
@@ -159,7 +154,7 @@ export class SecretService {
         await window.bananocoin.passwordUtils.decryptData(encryptedSeed, password); // Error is thrown here.
         this.walletPassword = password;
         this.unlockedLocalSecret = true;
-        this._walletEventService.walletUnlocked.next({ isLedger: false });
+        return { isLedger: false };
     }
 
     /** Alter this method to trick the app into thinking we have unlocked the wallet already; useful for local mobile testing. */
@@ -176,7 +171,7 @@ export class SecretService {
     setLocalLedgerUnlocked(unlocked: boolean): void {
         this.unlockedLocalLedger = unlocked;
         if (unlocked) {
-            this._walletEventService.walletUnlocked.next({ isLedger: true });
+            //  this._walletEventService.unlockWallet.next({ isLedger: true });
         }
     }
 

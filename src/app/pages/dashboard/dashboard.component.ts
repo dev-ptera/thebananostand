@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
 import { Router } from '@angular/router';
 import { UtilService } from '@app/services/util.service';
@@ -26,11 +26,11 @@ import { AppStateService } from '@app/services/app-state.service';
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements OnInit, OnDestroy {
+export class DashboardComponent implements OnDestroy {
     colors = Colors;
 
-    hasHideAccountToggle = false;
     isLoadingAccount = true;
+    hasHideAccountToggle = false;
     accountActionsOverlayOpen = false;
     walletActionsOverlayOpen = false;
     switchWalletOverlayOpen = false;
@@ -41,7 +41,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     loadingAccountListener: Subscription;
     bottomSheetOpenDelayMs = 250;
 
-    trackBy = <T>(index: number, item: T): T => item;
+    accounts$: Subscription;
 
     constructor(
         private readonly _router: Router,
@@ -55,14 +55,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
         private readonly _walletStorageService: WalletStorageService,
         private readonly _walletEventsService: WalletEventsService,
         public vp: ViewportService
-    ) {}
-
-    ngOnInit(): void {
-        // Initial Load
-        this.isLoadingAccount = this.getAccounts().length === 0;
+    ) {
         this.loadingAccountListener = this._walletEventsService.accountLoading.subscribe((loading) => {
             this.isLoadingAccount = loading;
         });
+        //this.accounts$ = this._walletEventsService.
     }
 
     ngOnDestroy(): void {
@@ -126,7 +123,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             return;
         }
         const nextIndex = this._accountService.findNextUnloadedIndex();
-        this._walletEventsService.addIndex.next(nextIndex);
+        this._walletEventsService.addIndexes.next([nextIndex]);
         this.accountActionsOverlayOpen = false;
     }
 

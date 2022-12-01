@@ -98,6 +98,7 @@ export class TransactionService {
         }
     }
 
+    /** Checks if ledger is connected via USB & is unlocked, ready to use. */
     async checkLedgerOrError(): Promise<void> {
         const config = window.bananocoinBananojsHw.bananoConfig;
         window.bananocoinBananojs.setBananodeApiUrl(config.bananodeUrl);

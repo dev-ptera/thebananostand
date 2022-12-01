@@ -14,7 +14,7 @@ export type Datasource = {
     providedIn: 'root',
 })
 
-/** Saves setting information around which data sources to use. */
+/** Which datasource should we use? RPC nodes & Spyglass API. */
 export class DatasourceService {
     availableSpyglassApiSources: Datasource[] = [
         {
@@ -113,6 +113,7 @@ export class DatasourceService {
         });
     }
 
+    /** The source is only known once one of the servers respond. */
     getSpyglassApiSource(): Promise<Datasource> {
         return new Promise((resolve) => {
             if (this.spyglassApiSource) {
@@ -125,7 +126,7 @@ export class DatasourceService {
         });
     }
 
-    /** The RPC source is only known once one of the servers respond. */
+    /** The source is only known once one of the servers respond. */
     getRpcSource(): Promise<Datasource> {
         return new Promise((resolve) => {
             if (this.rpcSource) {
