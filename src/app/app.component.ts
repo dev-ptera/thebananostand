@@ -62,7 +62,7 @@ export class AppComponent {
     }
 
     ngOnInit(): void {
-        this.initializePowService();
+      //  this.initializePowService();
     }
 
     initializePowService(): void {
