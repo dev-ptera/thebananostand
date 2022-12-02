@@ -13,7 +13,7 @@ export class TransactionService {
     constructor(
         private readonly _secretService: SecretService,
         private readonly _datasource: DatasourceService,
-        private readonly _appStateService: AppStateService,
+        private readonly _appStateService: AppStateService
     ) {}
 
     private async _configApi(bananodeApi): Promise<void> {
