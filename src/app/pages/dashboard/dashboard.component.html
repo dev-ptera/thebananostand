@@ -68,7 +68,7 @@
 <!-- Is shown whenever a seed is loaded, but no individual addresses are shown yet. -->
 <ng-template #noAccountsEmptyState>
     <blui-empty-state
-        *ngIf="getAccounts().length === 0 && !isLoadingAccount"
+        *ngIf="getAccounts().length === 0 && !store.isLoadingAccounts"
         style="margin: 64px 0 48px 0"
         title="No Accounts Displayed"
         description="Use the buttons above to add an account."
@@ -283,7 +283,12 @@
         >
             <ng-template [ngTemplateOutlet]="dashboardHeader"></ng-template>
             <mat-divider *ngIf="getAccounts().length !== 0" style="position: relative"></mat-divider>
-            <mat-progress-bar *ngIf="isLoadingAccount" color="primary" mode="indeterminate" style="position: absolute">
+            <mat-progress-bar
+                *ngIf="store.isLoadingAccounts"
+                color="primary"
+                mode="indeterminate"
+                style="position: absolute"
+            >
             </mat-progress-bar>
             <ng-template [ngTemplateOutlet]="noAccountsEmptyState"></ng-template>
             <mat-nav-list

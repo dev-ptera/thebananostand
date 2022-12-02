@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
 import { Router } from '@angular/router';
 import { UtilService } from '@app/services/util.service';
@@ -14,13 +14,12 @@ import { AddIndexBottomSheetComponent } from '@app/overlays/bottom-sheet/add-ind
 import { EnterSecretBottomSheetComponent } from '@app/overlays/bottom-sheet/enter-secret/enter-secret-bottom-sheet.component';
 import { EnterSecretDialogComponent } from '@app/overlays/dialogs/enter-secret/enter-secret-dialog.component';
 import { LocalStorageWallet, WalletStorageService } from '@app/services/wallet-storage.service';
-import { Subscription } from 'rxjs';
 import { WalletEventsService } from '@app/services/wallet-events.service';
 import { RenameWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/rename-wallet/rename-wallet-bottom-sheet.component';
 import { RenameWalletDialogComponent } from '@app/overlays/dialogs/rename-wallet/rename-wallet-dialog.component';
 import { SecretService } from '@app/services/secret.service';
-import {AppStateService, AppStore} from '@app/services/app-state.service';
-import {UntilDestroy, untilDestroyed} from "@ngneat/until-destroy";
+import { AppStateService, AppStore } from '@app/services/app-state.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()
 @Component({
@@ -28,7 +27,7 @@ import {UntilDestroy, untilDestroyed} from "@ngneat/until-destroy";
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements OnDestroy {
+export class DashboardComponent {
     colors = Colors;
 
     isLoadingAccount = true;
@@ -40,7 +39,6 @@ export class DashboardComponent implements OnDestroy {
 
     selectedItems: Set<number> = new Set();
 
-    loadingAccountListener: Subscription;
     bottomSheetOpenDelayMs = 250;
 
     store: AppStore;
@@ -58,18 +56,9 @@ export class DashboardComponent implements OnDestroy {
         private readonly _walletEventsService: WalletEventsService,
         public vp: ViewportService
     ) {
-
-        this.loadingAccountListener = this._walletEventsService.accountLoading.subscribe((loading) => {
-            this.isLoadingAccount = loading;
+        this._appStateService.store.pipe(untilDestroyed(this)).subscribe((store) => {
+            this.store = store;
         });
-
-        this._appStateService.store.pipe(untilDestroyed(this)).subscribe((store) => { this.store = store });
-    }
-
-    ngOnDestroy(): void {
-        if (this.loadingAccountListener) {
-            this.loadingAccountListener.unsubscribe();
-        }
     }
 
     /** Wallet Actions [START] */
@@ -103,14 +92,16 @@ export class DashboardComponent implements OnDestroy {
         }, 100);
     }
 
+    // TODO, emit event.
     copyWalletSeed(): void {
-        const activeWalletId = this._appStateService.activeWallet.walletId;
+        const activeWalletId = this.store.activeWallet.walletId;
         void this._secretService.backupWalletSecret(activeWalletId);
         this.walletActionsOverlayOpen = false;
     }
 
+    // TODO, emit event.
     copyWalletMnemonic(): void {
-        const activeWalletId = this._appStateService.activeWallet.walletId;
+        const activeWalletId = this.store.activeWallet.walletId;
         void this._secretService.backupWalletMnemonic(activeWalletId);
         this.walletActionsOverlayOpen = false;
     }
@@ -118,7 +109,7 @@ export class DashboardComponent implements OnDestroy {
 
     /** Account Actions [START] **/
     refresh(): void {
-        this._walletEventsService.refreshIndexes.next();
+        this._walletEventsService.refreshAccountBalances.next();
         this.accountActionsOverlayOpen = false;
     }
 
@@ -152,7 +143,7 @@ export class DashboardComponent implements OnDestroy {
     }
 
     getActiveWallet(): LocalStorageWallet {
-        return this._appStateService.activeWallet;
+        return this.store.activeWallet;
     }
 
     getWallets(): LocalStorageWallet[] {
@@ -168,7 +159,7 @@ export class DashboardComponent implements OnDestroy {
     }
 
     formatRepresentative(rep: string): string {
-        return this.store.repAliases.get(rep) || this._util.shortenAddress(rep);
+        return this._appStateService.knownAccounts.get(rep) || this._util.shortenAddress(rep);
     }
 
     openAccount(address: string): void {
@@ -176,11 +167,11 @@ export class DashboardComponent implements OnDestroy {
     }
 
     getBalance(): string {
-        return this._appStateService.totalBalance || '--';
+        return this._appStateService.store.getValue().totalBalance || '--';
     }
 
     getAccounts(): AccountOverview[] {
-        return this._appStateService.accounts;
+        return this._appStateService.store.getValue().accounts;
     }
 
     markUniqueAccount(index: number, item: AccountOverview): any {

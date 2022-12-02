@@ -54,19 +54,18 @@ import { AppStateService } from '@app/services/app-state.service';
     `,
 })
 export class RenameWalletComponent implements OnInit {
-    walletNameFormControl = new FormControl('');
-
-    currentWalletName: string;
-
     @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
+    currentWalletName: string;
+    walletNameFormControl = new FormControl('');
+
     constructor(
-        private readonly _walletEventService: WalletEventsService,
-        private readonly _appStateService: AppStateService
+        private readonly _appStateService: AppStateService,
+        private readonly _walletEventService: WalletEventsService
     ) {}
 
     ngOnInit(): void {
-        this.currentWalletName = this._appStateService.activeWallet.name;
+        this.currentWalletName = this._appStateService.store.getValue().activeWallet.name;
     }
 
     isDisabled(): boolean {

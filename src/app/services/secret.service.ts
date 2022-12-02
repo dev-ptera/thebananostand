@@ -20,7 +20,6 @@ export class SecretService {
         private readonly _walletStorageService: WalletStorageService
     ) {}
 
-
     /** Provided a secret phrase and password, returns the encrypted secret. */
     async storeSecret(secret: string, walletPassword: string): Promise<string> {
         let password = walletPassword;
@@ -38,7 +37,6 @@ export class SecretService {
 
     /** Saves a seed in localstorage, encrypting it using a user-provided password. */
     private async _storeSeed(seed: string, password: string): Promise<string> {
-
         // @ts-ignore
         const result = window.bananocoin.bananojs.bananoUtil.isSeedValid(seed);
         if (!result.valid) {
@@ -81,7 +79,7 @@ export class SecretService {
     }
 
     async getActiveWalletSecret(): Promise<string> {
-        const activeWalletId = this._appStateService.activeWallet.walletId;
+        const activeWalletId = this._appStateService.store.getValue().activeWallet.walletId;
         const secret = await this.getSecret(activeWalletId);
         return secret;
     }

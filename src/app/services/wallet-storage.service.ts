@@ -28,29 +28,12 @@ export class WalletStorageService {
     ) {
         this._updateState();
 
-        /*
-        this._walletEventService.unlockWallet.subscribe((data) => {
-            //   this._appStateService.isLedger = data.isLedger;
-            this._updateState();
-        }); */
-
-        /*
-        this._walletEventService.addWallet.subscribe((wallet: LocalStorageWallet) => {
-            this._setActiveWallet(wallet);
-            this.addWalletLocalStorage(wallet);
-            this._walletEventService.activeWalletChange.next(wallet);
-        }); */
-
         this._walletEventService.activeWalletChange.subscribe((wallet: LocalStorageWallet) => {
-            this._setActiveWallet(wallet);
+            this.setActiveWallet(wallet);
         });
 
         this._walletEventService.reencryptWalletSecret.subscribe((wallet: LocalStorageWallet) => {
             this.addWalletLocalStorage(wallet);
-        });
-
-        this._walletEventService.addIndexes.subscribe((addedIndexes) => {
-            addedIndexes.map((addedIndex) => this._addIndexToLocalStorage(addedIndex));
         });
 
         this._walletEventService.removeIndex.subscribe((removedIndex: number) => {
@@ -92,7 +75,7 @@ export class WalletStorageService {
             name: this.createNewWalletName(),
             encryptedSeed,
             loadedIndexes: [0],
-        }
+        };
     }
 
     getLoadedIndexes(): number[] {
@@ -157,7 +140,7 @@ export class WalletStorageService {
         }
     }
 
-     getActiveWallet(): LocalStorageWallet {
+    getActiveWallet(): LocalStorageWallet {
         if (this._appStateService.isLedger) {
             return this._getLedgerWallet();
         }
@@ -169,18 +152,17 @@ export class WalletStorageService {
         return String(s1) === String(s2);
     }
 
-    /** Used to store or update wallet details in localStorage. */
+    /** Stores wallet details in localStorage. */
     addWalletLocalStorage(newWallet: LocalStorageWallet): void {
         const wallets = this._appStateService.wallets.filter(
             (wallet) => !this._walletIdsMatch(wallet.walletId, newWallet.walletId)
         );
         wallets.push(newWallet);
         window.localStorage.setItem(ENCRYPTED_WALLETS, JSON.stringify(wallets));
-       // this._updateState();
+        // this._updateState();
     }
 
-    private _setActiveWallet(wallet: LocalStorageWallet): void {
-        this._appStateService.activeWallet = wallet;
+    setActiveWallet(wallet: LocalStorageWallet): void {
         window.localStorage.setItem(ACTIVE_WALLET_ID, String(wallet.walletId));
     }
 
@@ -189,8 +171,8 @@ export class WalletStorageService {
         if (this._appStateService.isLedger) {
             window.localStorage.setItem(LEDGER_STORED_INDEXES, JSON.stringify(indexes));
         } else {
-            this._appStateService.activeWallet.loadedIndexes = indexes;
-            this.addWalletLocalStorage(this._appStateService.activeWallet);
+            this._appStateService.store.getValue().activeWallet.loadedIndexes = indexes;
+            this.addWalletLocalStorage(this._appStateService.store.getValue().activeWallet);
         }
     }
 
@@ -203,9 +185,9 @@ export class WalletStorageService {
 
     /** Given an account index, removes it from local storage. */
     private _removeIndexFromLocalStorage(removedIndex: number): void {
-        const remainingIndexes = this._appStateService.activeWallet.loadedIndexes.filter(
-            (index) => !this._util.matches(index, removedIndex)
-        );
+        const remainingIndexes = this._appStateService.store
+            .getValue()
+            .activeWallet.loadedIndexes.filter((index) => !this._util.matches(index, removedIndex));
         this._setDisplayedAccountIndexes(remainingIndexes);
         this._updateState();
     }
@@ -220,7 +202,7 @@ export class WalletStorageService {
         if (hasNewActiveWallet) {
             window.localStorage.setItem(ENCRYPTED_WALLETS, JSON.stringify(remainingWallets));
             const newActiveWallet = remainingWallets[0];
-            this._setActiveWallet(newActiveWallet);
+            this.setActiveWallet(newActiveWallet);
             this._updateState();
             return newActiveWallet;
         }
@@ -241,10 +223,10 @@ export class WalletStorageService {
     private _updateState(): void {
         this._appStateService.wallets = this.readWalletsFromLocalStorage();
         if (this._appStateService.isLedger) {
-            this._appStateService.activeWallet = this._getLedgerWallet();
+            this._appStateService.store.getValue().activeWallet = this._getLedgerWallet();
         } else {
             const id = this._readActiveWalletFromLocalStorage();
-            this._appStateService.activeWallet = this.getWalletFromId(id);
+            this._appStateService.store.getValue().activeWallet = this.getWalletFromId(id);
         }
     }
 }

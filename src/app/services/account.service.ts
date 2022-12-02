@@ -3,9 +3,10 @@ import { TransactionService } from './transaction.service';
 import { SpyglassService } from './spyglass.service';
 import { UtilService } from './util.service';
 import { RpcService } from '@app/services/rpc.service';
-import { LocalStorageWallet, WalletStorageService } from '@app/services/wallet-storage.service';
+import { WalletStorageService } from '@app/services/wallet-storage.service';
 import { WalletEventsService } from '@app/services/wallet-events.service';
 import { AppStateService } from '@app/services/app-state.service';
+import { AccountOverview } from '@app/types/AccountOverview';
 
 @Injectable({
     providedIn: 'root',
@@ -22,26 +23,8 @@ export class AccountService {
         private readonly _walletEventService: WalletEventsService,
         private readonly _walletStorageService: WalletStorageService
     ) {
-        this._walletEventService.activeWalletChange.subscribe((wallet: LocalStorageWallet) => {
-            void this.refreshDashboardUsingIndexes(wallet.loadedIndexes);
-        });
-
         this._walletEventService.removeIndex.subscribe((index: number) => {
             this.removeAccount(index);
-        });
-
-        this._walletEventService.refreshIndexes.subscribe(() => {
-            this.refreshBalances();
-        });
-
-        this._walletEventService.addIndexes.subscribe((indexes: number[]) => {
-            void (async (): Promise<void> => {
-                this._walletEventService.accountLoading.next(true);
-                for await (const index of indexes) {
-                    await this._addIndex(index);
-                }
-                this._walletEventService.accountLoading.next(false);
-            })();
         });
     }
 
@@ -55,25 +38,9 @@ export class AccountService {
         return this._appStateService.onlineRepresentatives.has(address);
     }
 
-    /** Fetches RPC account_info and stores response in a list sorted by account number. */
-    fetchAccount(index: number): Promise<void> {
-        this.removeAccount(index);
-        return this._rpcService
-            .getAccountInfo(index)
-            .then((overview) => {
-                this._appStateService.accounts.push(overview);
-                this._appStateService.accounts.sort((a, b) => (a.index > b.index ? 1 : -1));
-                this.updateTotalBalance();
-                return Promise.resolve();
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-    }
-
     findNextUnloadedIndex(): number {
         let currIndex = 0;
-        this._appStateService.accounts.map((account) => {
+        this._appStateService.store.getValue().accounts.map((account) => {
             if (this._util.matches(account.index, currIndex)) {
                 currIndex++;
             }
@@ -92,79 +59,39 @@ export class AccountService {
         return `https://monkey.banano.cc/api/v1/monkey/${address}?svc=bananostand`;
     }
 
-    fetchOnlineRepresentatives(): void {
-        this._spyglassApi
-            .getOnlineReps()
-            .then((reps) => {
-                this._appStateService.onlineRepresentatives = new Set(reps);
-            })
-            .catch((err) => {
-                console.error(err);
-            });
+    /** Returns a set of online representatives. */
+    async fetchOnlineRepresentatives(): Promise<Set<string>> {
+        const reps = await this._spyglassApi.getOnlineReps();
+        return new Set(reps);
     }
 
-    async fetchRepresentativeAliases(): Promise<Map<string, string>> {
-        const reps = await this._spyglassApi.getRepresentativeAliases();
+    /** Fetches the list of known accounts from Creeper. */
+    async fetchKnownAccounts(): Promise<Map<string, string>> {
+        const accounts = await this._spyglassApi.getAllKnownAccounts();
         const map = new Map<string, string>();
-        reps.forEach((rep) => map.set(rep.address, rep.alias));
+        accounts.forEach((acc) => map.set(acc.address, acc.alias));
         return map;
     }
 
-    fetchKnownAccounts(): void {
-        this._spyglassApi
-            .getAllKnownAccounts()
-            .then((pairs) => {
-                pairs.map((pair) => {
-                    this._appStateService.knownAccounts.set(pair.address, pair.alias);
-                });
-            })
-            .catch((err) => {
-                console.error(err);
-            });
+    /** Fetches RPC account_info and stores response in a list sorted by account number. */
+    async fetchAccount(index: number): Promise<AccountOverview> {
+        return await this._rpcService.getAccountInfo(index);
     }
 
     /** Call this function to remove a specified index from the list of accounts. */
     removeAccount(removedIndex: number): void {
-        this._appStateService.accounts = this._appStateService.accounts.filter(
-            (account) => !this._util.matches(account.index, removedIndex)
-        );
+        this._appStateService.store.getValue().accounts = this._appStateService.store
+            .getValue()
+            .accounts.filter((account) => !this._util.matches(account.index, removedIndex));
         this.updateTotalBalance();
-    }
-
-    /** Synchronously loads account balances. */
-    async refreshDashboardUsingIndexes(indexes: number[]): Promise<void> {
-        this._appStateService.accounts = [];
-        indexes.sort((a, b) => a - b);
-        this._walletEventService.accountLoading.next(true);
-        for await (const index of indexes) {
-            await this.fetchAccount(Number(index));
-        }
-        this._walletEventService.accountLoading.next(false);
     }
 
     /** Iterates through each loaded account and aggregates the total confirmed balance. */
     updateTotalBalance(): void {
         let balance = 0;
-        this._appStateService.accounts.map((account) => {
+        this._appStateService.store.getValue().accounts.map((account) => {
             balance += account.balance;
         });
-        this._appStateService.totalBalance = this._util.numberWithCommas(balance, 6);
-    }
-
-    /** Reloads the dashboard, keeps previously-loaded accounts. */
-    refreshBalances(): void {
-        this._appStateService.accounts = [];
-        const indexesToLoad = this._walletStorageService.getLoadedIndexes();
-        if (!indexesToLoad || indexesToLoad.length === 0) {
-            this._walletEventService.addIndexes.next([0]);
-        } else {
-            void this.refreshDashboardUsingIndexes(indexesToLoad);
-        }
-    }
-
-    private async _addIndex(index: number): Promise<void> {
-        await this.fetchAccount(index).catch((err) => {
-            console.error(err);
-        });
+        this._appStateService.store.getValue().totalBalance = this._util.numberWithCommas(balance, 6);
     }
 }

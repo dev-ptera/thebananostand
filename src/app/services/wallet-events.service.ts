@@ -37,7 +37,7 @@ export class WalletEventsService {
     accountLoading = new BehaviorSubject<boolean>(true);
 
     /** User has requested that all loaded indexes be refreshed, checking for receivable transactions and updating account balances. */
-    refreshIndexes = new Subject<void>();
+    refreshAccountBalances = new Subject<void>();
 
     /** The active wallet has been removed. */
     removeWallet = new Subject<void>();

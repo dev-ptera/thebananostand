@@ -5,7 +5,7 @@ import { ViewportService } from '@app/services/viewport.service';
 import { SecretService } from '@app/services/secret.service';
 import { WalletEventsService } from '@app/services/wallet-events.service';
 import { PowService } from '@app/services/pow.service';
-import { ListenerService } from '@app/services/listener.service';
+import { ListenerService } from '@app/services/events/listener.service';
 import { AppStateService } from '@app/services/app-state.service';
 
 @Component({

@@ -16,7 +16,7 @@
                         [formControl]="password"
                         [type]="passwordVisible ? 'text' : 'password'"
                         placeholder="Password"
-                        (keyup.enter)="enter($event)"
+                        (keyup.enter)="pressEnterKey($event)"
                     />
                     <button type="button" mat-icon-button matSuffix (click)="togglePasswordVisibility()">
                         <mat-icon>{{ passwordVisible ? 'visibility' : 'visibility_off' }}</mat-icon>

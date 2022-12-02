@@ -1,9 +1,8 @@
-import {AfterViewInit, Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
-import {FormControl} from '@angular/forms';
-import {WalletEventsService} from '@app/services/wallet-events.service';
-import {Subscription} from 'rxjs';
-import {UntilDestroy, untilDestroyed} from "@ngneat/until-destroy";
+import { AfterViewInit, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
+import { FormControl } from '@angular/forms';
+import { WalletEventsService } from '@app/services/wallet-events.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()
 @Component({
@@ -16,12 +15,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
     isMobileView: boolean;
     passwordVisible = false;
-    hasIncorrectPassword: boolean;
+    hasIncorrectPassword = false;
 
     password = new FormControl('', []);
     passwordInput: HTMLElement;
-
-    incorrectPassword$: Subscription;
 
     constructor(
         private readonly _breakpointObserver: BreakpointObserver,
@@ -29,7 +26,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     ) {}
 
     ngOnInit(): void {
-        this.incorrectPassword$ = this._walletEventService.passwordIncorrect.pipe(untilDestroyed(this)).subscribe(() => {
+        this._walletEventService.passwordIncorrect.pipe(untilDestroyed(this)).subscribe(() => {
             this.hasIncorrectPassword = true;
             this.password.setErrors({ password: 'incorrect' });
             this.passwordInput.focus();
@@ -59,7 +56,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
         return undefined;
     }
 
-    enter(e: Event): void {
+    pressEnterKey(e: Event): void {
         e.stopImmediatePropagation();
         this.login();
     }
