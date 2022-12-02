@@ -63,6 +63,13 @@ export class DatasourceService {
                         this.setRpcSource(source);
                         this.rpcSourceLoadedSubject.next(source);
                     }
+                    // DEFAULT TO KALIUM FOR NOW.
+                    if (source.alias === 'Kalium') {
+                        // eslint-disable-next-line no-console
+                        console.log(`Using ${source.alias} as RPC source, but for real this time.`);
+                        this.setRpcSource(source);
+                        this.rpcSourceLoadedSubject.next(source);
+                    }
                 })
                 .catch((err) => handleError(err, source.url));
         });
