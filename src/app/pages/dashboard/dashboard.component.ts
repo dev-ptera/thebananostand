@@ -19,8 +19,10 @@ import { WalletEventsService } from '@app/services/wallet-events.service';
 import { RenameWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/rename-wallet/rename-wallet-bottom-sheet.component';
 import { RenameWalletDialogComponent } from '@app/overlays/dialogs/rename-wallet/rename-wallet-dialog.component';
 import { SecretService } from '@app/services/secret.service';
-import { AppStateService } from '@app/services/app-state.service';
+import {AppStateService, AppStore} from '@app/services/app-state.service';
+import {UntilDestroy, untilDestroyed} from "@ngneat/until-destroy";
 
+@UntilDestroy()
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
@@ -41,7 +43,7 @@ export class DashboardComponent implements OnDestroy {
     loadingAccountListener: Subscription;
     bottomSheetOpenDelayMs = 250;
 
-    accounts$: Subscription;
+    store: AppStore;
 
     constructor(
         private readonly _router: Router,
@@ -56,10 +58,12 @@ export class DashboardComponent implements OnDestroy {
         private readonly _walletEventsService: WalletEventsService,
         public vp: ViewportService
     ) {
+
         this.loadingAccountListener = this._walletEventsService.accountLoading.subscribe((loading) => {
             this.isLoadingAccount = loading;
         });
-        //this.accounts$ = this._walletEventsService.
+
+        this._appStateService.store.pipe(untilDestroyed(this)).subscribe((store) => { this.store = store });
     }
 
     ngOnDestroy(): void {
@@ -164,7 +168,7 @@ export class DashboardComponent implements OnDestroy {
     }
 
     formatRepresentative(rep: string): string {
-        return this._appStateService.repAliases.get(rep) || this._util.shortenAddress(rep);
+        return this.store.repAliases.get(rep) || this._util.shortenAddress(rep);
     }
 
     openAccount(address: string): void {

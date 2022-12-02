@@ -111,7 +111,7 @@ export class CreateWalletOverlayComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        const newWalletSecret = this._secretService.createNewWallet();
+        const newWalletSecret = this._secretService.createNewSecretWallet();
         this.seed = newWalletSecret.seed;
         this.mnemonic = newWalletSecret.mnemonic;
         this.mnemonicWords = newWalletSecret.mnemonic.split(' ');

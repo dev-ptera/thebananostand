@@ -103,17 +103,11 @@ export class AccountService {
             });
     }
 
-    fetchRepresentativeAliases(): void {
-        this._spyglassApi
-            .getRepresentativeAliases()
-            .then((pairs) => {
-                pairs.map((pair) => {
-                    this._appStateService.repAliases.set(pair.address, pair.alias);
-                });
-            })
-            .catch((err) => {
-                console.error(err);
-            });
+    async fetchRepresentativeAliases(): Promise<Map<string, string>> {
+        const reps = await this._spyglassApi.getRepresentativeAliases();
+        const map = new Map<string, string>();
+        reps.forEach((rep) => map.set(rep.address, rep.alias));
+        return map;
     }
 
     fetchKnownAccounts(): void {

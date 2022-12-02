@@ -10,6 +10,7 @@ export type AppStore = {
     walletPassword: string;
     localStorageWallets: LocalStorageWallet[];
     activeWallet: LocalStorageWallet;
+    repAliases: Map<string, string>
 };
 
 @Injectable({
@@ -47,5 +48,6 @@ export class AppStateService {
         walletPassword: undefined,
         localStorageWallets: [],
         activeWallet: undefined,
+        repAliases: new Map<string, string>()
     });
 }

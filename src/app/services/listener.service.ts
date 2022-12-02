@@ -15,6 +15,9 @@ const closeActionText = 'Dismiss';
     providedIn: 'root',
 })
 export class ListenerService {
+
+    store: AppStore;
+
     constructor(
         private readonly _secretService: SecretService,
         private readonly _walletEventService: WalletEventsService,
@@ -25,11 +28,15 @@ export class ListenerService {
         private readonly _snackbar: MatSnackBar,
         private readonly _util: UtilService,
     ) {
-        // Initial App State
+        // Dispatch initial app state
         this._dispatch({
             hasSecret: this._walletStorageService.hasSecretWalletSaved(),
             localStorageWallets: this._walletStorageService.readWalletsFromLocalStorage(),
         });
+
+        this._appStateService.store.subscribe((store) => {
+            this.store = store;
+        })
 
         // Listening for events
         this._listenAuthorizationActions(_walletEventService);
@@ -37,15 +44,14 @@ export class ListenerService {
         this._listenRemoveWalletActions(_walletEventService);
 
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        this._walletEventService.addSecret.subscribe(async (data) => {
-            const store = this._appStateService.store.getValue();
-            const password = store.hasUnlockedSecret ? store.walletPassword : data.password;
+        this._walletEventService.addSecret.subscribe(async (data): Promise<void>  => {
+            const password = this.store.hasUnlockedSecret ? this.store.walletPassword : data.password;
             const encryptedSecret = await this._secretService.storeSecret(data.secret, password);
             this._dispatch({
                 hasSecret: true,
                 hasUnlockedSecret: true
             });
-            const wallet = await this._walletStorageService.createNewWallet(encryptedSecret);
+            const wallet = this._walletStorageService.createLocalStorageWallet(encryptedSecret);
             this._walletEventService.addWallet.next(wallet);
         });
 
@@ -95,7 +101,9 @@ export class ListenerService {
 
             this._accountService.refreshBalances();
             this._accountService.fetchOnlineRepresentatives();
-            this._accountService.fetchRepresentativeAliases();
+            void this._accountService.fetchRepresentativeAliases().then((repAliases) => {
+                this._dispatch({ repAliases });
+            })
             this._accountService.fetchKnownAccounts();
         });
 

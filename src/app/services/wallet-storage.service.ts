@@ -85,7 +85,7 @@ export class WalletStorageService {
         return encryptedWallets && encryptedWallets.length > 0;
     }
 
-    createNewWallet(encryptedSeed: string): LocalStorageWallet {
+    createLocalStorageWallet(encryptedSeed: string): LocalStorageWallet {
         const walletId = encryptedSeed.substring(0, 10);
         return {
             walletId,

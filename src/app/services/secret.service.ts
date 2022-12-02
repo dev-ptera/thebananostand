@@ -86,7 +86,7 @@ export class SecretService {
         return secret;
     }
 
-    createNewWallet(): { seed: string; mnemonic: string } {
+    createNewSecretWallet(): { seed: string; mnemonic: string } {
         const seedBytes = new Uint8Array(32);
         window.crypto.getRandomValues(seedBytes);
         // @ts-ignore
