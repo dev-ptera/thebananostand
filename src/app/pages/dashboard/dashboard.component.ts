@@ -30,7 +30,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 export class DashboardComponent {
     colors = Colors;
 
-    isLoadingAccount = true;
     hasHideAccountToggle = false;
     accountActionsOverlayOpen = false;
     walletActionsOverlayOpen = false;
@@ -42,6 +41,8 @@ export class DashboardComponent {
     bottomSheetOpenDelayMs = 250;
 
     store: AppStore;
+
+    totalBalance = '--';
 
     constructor(
         private readonly _router: Router,
@@ -58,6 +59,7 @@ export class DashboardComponent {
     ) {
         this._appStateService.store.pipe(untilDestroyed(this)).subscribe((store) => {
             this.store = store;
+            this.totalBalance = store.totalBalance ? this._util.numberWithCommas(store.totalBalance) : '--';
         });
     }
 
@@ -114,11 +116,10 @@ export class DashboardComponent {
     }
 
     addAccount(): void {
-        if (this.isLoadingAccount) {
+        if (this.store.isLoadingAccounts) {
             return;
         }
-        const nextIndex = this._accountService.findNextUnloadedIndex();
-        this._walletEventsService.addIndexes.next([nextIndex]);
+        this._walletEventsService.addNextIndex.next();
         this.accountActionsOverlayOpen = false;
     }
 
@@ -164,10 +165,6 @@ export class DashboardComponent {
 
     openAccount(address: string): void {
         void this._router.navigate([`/account/${address}`]);
-    }
-
-    getBalance(): string {
-        return this._appStateService.store.getValue().totalBalance || '--';
     }
 
     getAccounts(): AccountOverview[] {

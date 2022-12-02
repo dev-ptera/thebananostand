@@ -158,7 +158,7 @@ export class ListenerService {
         });
 
         e.refreshAccountBalances.subscribe(() => {
-            this.dispatch({ accounts: [], isLoadingAccounts: true });
+            this.dispatch({ accounts: [], isLoadingAccounts: true, totalBalance: 0 });
             const indexes = this.store.activeWallet.loadedIndexes;
             if (indexes.length === 0) {
                 indexes.push(0);
@@ -166,13 +166,27 @@ export class ListenerService {
             this._walletEventService.addIndexes.next(indexes);
         });
 
+        e.addNextIndex.subscribe(() => {
+            const nextIndex = this._accountService.findNextUnloadedIndex();
+            this._walletEventService.addIndexes.next([nextIndex]);
+        });
+
         e.addIndexes.subscribe(async (indexes: number[]) => {
             const accounts = this.store.accounts;
             this.dispatch({ isLoadingAccounts: true });
+            let totalBalance = this.store.totalBalance;
             for await (const index of indexes) {
-                accounts.push(await this._accountService.fetchAccount(index));
+                const account = await this._accountService.fetchAccount(index);
+                accounts.push(account);
+                totalBalance += account.balance;
+                this.dispatch({ totalBalance });
             }
             this.dispatch({ accounts, isLoadingAccounts: false });
+        });
+
+        e.removeIndex.subscribe((index: number) => {
+            const accounts = this._accountService.removeAccount(index);
+            this.dispatch({ accounts });
         });
     }
 

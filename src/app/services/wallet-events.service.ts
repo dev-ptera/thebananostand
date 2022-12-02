@@ -27,6 +27,8 @@ export class WalletEventsService {
     /** The actively displayed wallet on the dashboard has changed. */
     activeWalletChange = new Subject<LocalStorageWallet>();
 
+    addNextIndex = new Subject<void>();
+
     /** New addresses (index) has been added to the dashboard. */
     addIndexes = new Subject<number[]>();
 

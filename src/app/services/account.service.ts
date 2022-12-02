@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
-import { TransactionService } from './transaction.service';
 import { SpyglassService } from './spyglass.service';
 import { UtilService } from './util.service';
 import { RpcService } from '@app/services/rpc.service';
-import { WalletStorageService } from '@app/services/wallet-storage.service';
-import { WalletEventsService } from '@app/services/wallet-events.service';
-import { AppStateService } from '@app/services/app-state.service';
+import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { AccountOverview } from '@app/types/AccountOverview';
 
 @Injectable({
@@ -14,33 +11,29 @@ import { AccountOverview } from '@app/types/AccountOverview';
 
 /** This is the service used by Dashboard and Account pages to manage a user's session and display state info. */
 export class AccountService {
+    store: AppStore;
+
     constructor(
         private readonly _util: UtilService,
         private readonly _rpcService: RpcService,
         private readonly _spyglassApi: SpyglassService,
-        private readonly _appStateService: AppStateService,
-        private readonly _transactionService: TransactionService,
-        private readonly _walletEventService: WalletEventsService,
-        private readonly _walletStorageService: WalletStorageService
+        private readonly _appStateService: AppStateService
     ) {
-        this._walletEventService.removeIndex.subscribe((index: number) => {
-            this.removeAccount(index);
+        this._appStateService.store.subscribe((store) => {
+            this.store = store;
         });
     }
 
+    /** Returns whether a representative is online. */
     isRepOnline(address: string): boolean {
-        if (!address) {
-            return true;
-        }
-        if (this._appStateService.onlineRepresentatives.size === 0) {
-            return true;
-        }
-        return this._appStateService.onlineRepresentatives.has(address);
+        const onlineReps = this._appStateService.onlineRepresentatives;
+        return !address || onlineReps.size === 0 || onlineReps.has(address);
     }
 
+    /** Finds the next sequential account that hasn't been added to the dashboard. */
     findNextUnloadedIndex(): number {
         let currIndex = 0;
-        this._appStateService.store.getValue().accounts.map((account) => {
+        this.store.accounts.forEach((account) => {
             if (this._util.matches(account.index, currIndex)) {
                 currIndex++;
             }
@@ -79,19 +72,7 @@ export class AccountService {
     }
 
     /** Call this function to remove a specified index from the list of accounts. */
-    removeAccount(removedIndex: number): void {
-        this._appStateService.store.getValue().accounts = this._appStateService.store
-            .getValue()
-            .accounts.filter((account) => !this._util.matches(account.index, removedIndex));
-        this.updateTotalBalance();
-    }
-
-    /** Iterates through each loaded account and aggregates the total confirmed balance. */
-    updateTotalBalance(): void {
-        let balance = 0;
-        this._appStateService.store.getValue().accounts.map((account) => {
-            balance += account.balance;
-        });
-        this._appStateService.store.getValue().totalBalance = this._util.numberWithCommas(balance, 6);
+    removeAccount(removedIndex: number): AccountOverview[] {
+        return this.store.accounts.filter((account) => !this._util.matches(account.index, removedIndex));
     }
 }

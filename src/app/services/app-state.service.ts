@@ -17,7 +17,7 @@ export type AppStore = {
     /** The wallet that is displayed on the dashboard page. */
     activeWallet: LocalStorageWallet;
     /** Aggregate balance of all loaded accounts. */
-    totalBalance: string;
+    totalBalance: number;
     /** Loaded ledger accounts, their rep, & respective balances.  */
     accounts: AccountOverview[];
     /** Accounts on the dashboard are being loaded. */
@@ -48,7 +48,7 @@ export class AppStateService {
         walletPassword: undefined,
         localStorageWallets: [],
         activeWallet: undefined,
-        totalBalance: undefined,
+        totalBalance: 0,
         isLoadingAccounts: true,
     });
 }
