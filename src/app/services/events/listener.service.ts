@@ -27,10 +27,12 @@ export class ListenerService {
         private readonly _walletEventService: WalletEventsService,
         private readonly _walletStorageService: WalletStorageService
     ) {
+        const e = this._walletEventService;
+
         // Dispatch initial app state
         this.dispatch({
-            activeWallet: this._walletStorageService.getActiveWallet(),
             hasSecret: this._walletStorageService.hasSecretWalletSaved(),
+            activeWallet: this._walletStorageService.readActiveWalletFromLocalStorage(),
             localStorageWallets: this._walletStorageService.readWalletsFromLocalStorage(),
         });
 
@@ -39,14 +41,6 @@ export class ListenerService {
         });
 
         // Listening for events
-        this._listenAuthorizationActions(_walletEventService);
-        this._listenClipboardContentCopyActions(_walletEventService);
-        this._listenRemoveWalletActions(_walletEventService);
-        this._listenDashboardManagementActions(_walletEventService);
-    }
-
-    /** Attempt Login, Login, Logout. */
-    private _listenAuthorizationActions(e: WalletEventsService): void {
         e.attemptUnlockSecretWallet.subscribe(async (data) => {
             try {
                 await this._secretService.unlockSecretWallet(data.password);
@@ -54,7 +48,8 @@ export class ListenerService {
                     isLedger: false,
                     password: data.password,
                 });
-            } catch {
+            } catch (err) {
+                console.error(err);
                 e.passwordIncorrect.next();
             }
         });
@@ -92,10 +87,7 @@ export class ListenerService {
                 e.ledgerConnectionError.next({ error: err });
             }
         });
-    }
 
-    /** User wants to copy content to the clipboard. */
-    private _listenClipboardContentCopyActions(e: WalletEventsService): void {
         e.backupSeed.subscribe((data: { seed: string; openSnackbar: boolean }) => {
             this._util.clipboardCopy(data.seed);
             if (data.openSnackbar) {
@@ -116,21 +108,17 @@ export class ListenerService {
                 this._snackbar.open('Address Copied!', closeActionText, { duration });
             }
         });
-    }
 
-    /** User has removed one or more wallets. */
-    private _listenRemoveWalletActions(e: WalletEventsService): void {
         e.removeWallet.subscribe(() => {
             this._snackbar.open('Removed Wallet', closeActionText, { duration });
         });
 
         e.clearLocalStorage.subscribe(() => {
+            localStorage.clear();
             this._snackbar.open('All Wallets Removed!', closeActionText, { duration });
             this._walletEventService.lockWallet.next();
         });
-    }
 
-    private _listenDashboardManagementActions(e: WalletEventsService): void {
         e.accountLoading.subscribe((isLoading) => {
             this.dispatch({ isLoadingAccounts: isLoading });
         });
@@ -143,16 +131,10 @@ export class ListenerService {
                 hasUnlockedSecret: true,
             });
             const wallet = this._walletStorageService.createLocalStorageWallet(encryptedSecret);
-            e.addWallet.next(wallet);
-        });
-
-        e.addWallet.subscribe((newWallet: LocalStorageWallet) => {
-            this._walletStorageService.addWalletLocalStorage(newWallet);
-            e.activeWalletChange.next(newWallet);
+            e.activeWalletChange.next(wallet);
         });
 
         e.activeWalletChange.subscribe((activeWallet: LocalStorageWallet) => {
-            this._walletStorageService.setActiveWallet(activeWallet);
             this.dispatch({ activeWallet });
             e.refreshAccountBalances.next();
         });
@@ -184,8 +166,8 @@ export class ListenerService {
             this.dispatch({ accounts, isLoadingAccounts: false });
         });
 
-        e.removeIndex.subscribe((index: number) => {
-            const accounts = this._accountService.removeAccount(index);
+        e.removeIndexes.subscribe((indexes: number[]) => {
+            const accounts = this._accountService.removeAccounts(indexes);
             this.dispatch({ accounts });
         });
     }

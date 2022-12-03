@@ -56,7 +56,7 @@ export class SecretService {
             throw new Error('Passwords do not match');
         }
 
-        for await (const wallet of this._appStateService.wallets) {
+        for await (const wallet of this._appStateService.store.getValue().localStorageWallets) {
             if (wallet.encryptedSeed) {
                 const encryptedSeed = wallet.encryptedSeed;
                 // @ts-ignore
@@ -127,7 +127,7 @@ export class SecretService {
             password = this.DEFAULT_PASSWORD;
         }
 
-        const encryptedWallets = this._appStateService.wallets;
+        const encryptedWallets = this._appStateService.store.getValue().localStorageWallets;
         const encryptedSeed = encryptedWallets[0].encryptedSeed;
         // @ts-ignore
         await window.bananocoin.passwordUtils.decryptData(encryptedSeed, password); // Error is thrown here.

@@ -12,6 +12,12 @@ export class WalletEventsService {
     /** User has provided an incorrect password to unlock the wallet. */
     passwordIncorrect = new Subject<void>();
 
+    /** User wants to unlock the ledger device. */
+    attemptUnlockLedger = new Subject<void>();
+
+    /** User ran into an issue connection their ledger. */
+    ledgerConnectionError = new Subject<{ error: string }>();
+
     /** A wallet (either secret or ledger) has been unlocked. */
     unlockWallet = new Subject<{ isLedger: boolean; password: string }>();
 
@@ -21,19 +27,17 @@ export class WalletEventsService {
     /** A new secret has been provided, can be either a seed or mnemonic. */
     addSecret = new Subject<{ secret: string; password: string }>();
 
-    /** A new encrypted wallet has been created. */
-    addWallet = new Subject<LocalStorageWallet>();
-
     /** The actively displayed wallet on the dashboard has changed. */
     activeWalletChange = new Subject<LocalStorageWallet>();
 
+    /** User has request next sequential index be added to the dashboard. */
     addNextIndex = new Subject<void>();
 
     /** New addresses (index) has been added to the dashboard. */
     addIndexes = new Subject<number[]>();
 
     /** An address (index) has been removed from the dashboard. */
-    removeIndex = new Subject<number>();
+    removeIndexes = new Subject<number[]>();
 
     /** An account is being added to the dashboard. Can be either true or false. */
     accountLoading = new BehaviorSubject<boolean>(true);
@@ -64,10 +68,4 @@ export class WalletEventsService {
 
     /** User has generated a new seed & mnenomic. */
     requestGenerateNewSecret = new Subject<void>();
-
-    /** User wants to unlock the ledger device. */
-    attemptUnlockLedger = new Subject<void>();
-
-    /** Oopsies */
-    ledgerConnectionError = new Subject<{ error: string }>();
 }

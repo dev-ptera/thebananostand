@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { SpyglassService } from './spyglass.service';
-import { UtilService } from './util.service';
 import { RpcService } from '@app/services/rpc.service';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { AccountOverview } from '@app/types/AccountOverview';
@@ -14,7 +13,6 @@ export class AccountService {
     store: AppStore;
 
     constructor(
-        private readonly _util: UtilService,
         private readonly _rpcService: RpcService,
         private readonly _spyglassApi: SpyglassService,
         private readonly _appStateService: AppStateService
@@ -34,7 +32,7 @@ export class AccountService {
     findNextUnloadedIndex(): number {
         let currIndex = 0;
         this.store.accounts.forEach((account) => {
-            if (this._util.matches(account.index, currIndex)) {
+            if (account.index === currIndex) {
                 currIndex++;
             }
         });
@@ -71,8 +69,9 @@ export class AccountService {
         return await this._rpcService.getAccountInfo(index);
     }
 
-    /** Call this function to remove a specified index from the list of accounts. */
-    removeAccount(removedIndex: number): AccountOverview[] {
-        return this.store.accounts.filter((account) => !this._util.matches(account.index, removedIndex));
+    /** Call this function to remove specified indexes from the list of accounts. */
+    removeAccounts(indexes: number[]): AccountOverview[] {
+        const removeSet = new Set(indexes);
+        return this.store.accounts.filter((account) => !removeSet.has(account.index));
     }
 }

@@ -31,9 +31,6 @@ export class AppStateService {
     /** Whether the wallet has been unlocked using a ledger physical device. */
     isLedger: boolean;
 
-    /** The list of wallets stored in localstorage. These use a secret. */
-    wallets: LocalStorageWallet[] = [];
-
     /** Map of address to alias, contains all known aliases. */
     knownAccounts: Map<string, string> = new Map<string, string>();
 

@@ -148,11 +148,11 @@ export class DashboardComponent {
     }
 
     getWallets(): LocalStorageWallet[] {
-        return this._appStateService.wallets;
+        return this.store.localStorageWallets;
     }
 
     hasAlternativeWallets(): boolean {
-        return this._appStateService.wallets && this._appStateService.wallets.length >= 2;
+        return this.store.localStorageWallets.length >= 2;
     }
 
     showRepresentativeOffline(address: string): boolean {
@@ -182,9 +182,7 @@ export class DashboardComponent {
     }
 
     hideSelected(): void {
-        for (const index of Array.from(this.selectedItems.values())) {
-            this._walletEventsService.removeIndex.next(index);
-        }
+        this._walletEventsService.removeIndexes.next(Array.from(this.selectedItems.values()));
         this.selectedItems.clear();
     }
 
@@ -217,8 +215,8 @@ export class DashboardComponent {
                 ? this.colors.darkBlack[300]
                 : this.colors.white[100]
             : this.isDark()
-            ? this.colors.darkBlack[200]
-            : this.colors.white[50];
+                ? this.colors.darkBlack[200]
+                : this.colors.white[50];
     }
 
     isLedgerDevice(): boolean {
