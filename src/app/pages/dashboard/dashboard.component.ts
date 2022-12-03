@@ -14,7 +14,13 @@ import { AddIndexBottomSheetComponent } from '@app/overlays/bottom-sheet/add-ind
 import { EnterSecretBottomSheetComponent } from '@app/overlays/bottom-sheet/enter-secret/enter-secret-bottom-sheet.component';
 import { EnterSecretDialogComponent } from '@app/overlays/dialogs/enter-secret/enter-secret-dialog.component';
 import { LocalStorageWallet, WalletStorageService } from '@app/services/wallet-storage.service';
-import { WalletEventsService } from '@app/services/wallet-events.service';
+import {
+    CHANGE_ACTIVE_WALLET,
+    ADD_NEXT_ACCOUNT_BY_INDEX,
+    REFRESH_DASHBOARD_ACCOUNTS,
+    REMOVE_ACCOUNTS_BY_INDEX,
+    REMOVE_ACTIVE_WALLET,
+} from '@app/services/wallet-events.service';
 import { RenameWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/rename-wallet/rename-wallet-bottom-sheet.component';
 import { RenameWalletDialogComponent } from '@app/overlays/dialogs/rename-wallet/rename-wallet-dialog.component';
 import { SecretService } from '@app/services/secret.service';
@@ -54,7 +60,6 @@ export class DashboardComponent {
         private readonly _secretService: SecretService,
         private readonly _accountService: AccountService,
         private readonly _walletStorageService: WalletStorageService,
-        private readonly _walletEventsService: WalletEventsService,
         public vp: ViewportService
     ) {
         this._appStateService.store.pipe(untilDestroyed(this)).subscribe((store) => {
@@ -90,7 +95,7 @@ export class DashboardComponent {
         this.walletActionsOverlayOpen = false;
         // Wait a moment to dismiss the menu before deleting wallet.
         setTimeout(() => {
-            this._walletEventsService.removeWallet.next();
+            REMOVE_ACTIVE_WALLET.next();
         }, 100);
     }
 
@@ -111,7 +116,7 @@ export class DashboardComponent {
 
     /** Account Actions [START] **/
     refresh(): void {
-        this._walletEventsService.refreshAccountBalances.next();
+        REFRESH_DASHBOARD_ACCOUNTS.next();
         this.accountActionsOverlayOpen = false;
     }
 
@@ -119,7 +124,7 @@ export class DashboardComponent {
         if (this.store.isLoadingAccounts) {
             return;
         }
-        this._walletEventsService.addNextIndex.next();
+        ADD_NEXT_ACCOUNT_BY_INDEX.next();
         this.accountActionsOverlayOpen = false;
     }
 
@@ -182,7 +187,7 @@ export class DashboardComponent {
     }
 
     hideSelected(): void {
-        this._walletEventsService.removeIndexes.next(Array.from(this.selectedItems.values()));
+        REMOVE_ACCOUNTS_BY_INDEX.next(Array.from(this.selectedItems.values()));
         this.selectedItems.clear();
     }
 
@@ -205,7 +210,7 @@ export class DashboardComponent {
     }
 
     changeActiveWallet(wallet: LocalStorageWallet): void {
-        this._walletEventsService.activeWalletChange.next(wallet);
+        CHANGE_ACTIVE_WALLET.next(wallet);
         this.switchWalletOverlayOpen = false;
     }
 
@@ -215,8 +220,8 @@ export class DashboardComponent {
                 ? this.colors.darkBlack[300]
                 : this.colors.white[100]
             : this.isDark()
-                ? this.colors.darkBlack[200]
-                : this.colors.white[50];
+            ? this.colors.darkBlack[200]
+            : this.colors.white[50];
     }
 
     isLedgerDevice(): boolean {

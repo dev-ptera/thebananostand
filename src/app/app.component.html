@@ -1,18 +1,3 @@
-<div
-    *ngIf="showBanana()"
-    style="
-        width: 100vw;
-        height: 100vh;
-        margin-top: 10vh;
-        position: fixed;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: -1;
-    "
->
-    <img src="assets/banana.svg" style="height: 87vh; margin-bottom: 13vh; margin-right: 40vw" />
-</div>
 <div [@routeAnimations]="prepareRoute(outlet)">
     <router-outlet #outlet="outlet"></router-outlet>
 </div>

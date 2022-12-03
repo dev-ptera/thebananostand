@@ -5,7 +5,6 @@ import { ViewportService } from '@app/services/viewport.service';
 import { SecretService } from '@app/services/secret.service';
 import { WalletEventsService } from '@app/services/wallet-events.service';
 import { PowService } from '@app/services/pow.service';
-import { ListenerService } from '@app/services/events/listener.service';
 import { AppStateService } from '@app/services/app-state.service';
 
 @Component({
@@ -19,7 +18,6 @@ export class AppComponent {
         private readonly _secretService: SecretService,
         private readonly _walletEventService: WalletEventsService,
         private readonly _powService: PowService,
-        private readonly _listenerService: ListenerService,
         private readonly _appStoreService: AppStateService
     ) {
         const appHeight = (): void => {
@@ -41,13 +39,6 @@ export class AppComponent {
 
     initializePowService(): void {
         this._powService.overrideDefaultBananoJSPowSource();
-    }
-
-    showBanana(): boolean {
-        // const unlocked = this._secretService.isLocalSecretUnlocked() || this._secretService.isLocalLedgerUnlocked();
-        // const isBigScreen = !this._vp.isSmall() && !this._vp.isMedium();
-        //  return !unlocked && isBigScreen;
-        return false;
     }
 
     prepareRoute(outlet: RouterOutlet): Data {

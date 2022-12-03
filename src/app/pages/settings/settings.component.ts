@@ -7,7 +7,7 @@ import { ViewportService } from '@app/services/viewport.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { Router } from '@angular/router';
-import { WalletEventsService } from '@app/services/wallet-events.service';
+import { REMOVE_ALL_WALLET_DATA } from '@app/services/wallet-events.service';
 import { MatRadioChange } from '@angular/material/radio';
 
 @Pipe({ name: 'available' })
@@ -154,7 +154,6 @@ export class SettingsPageComponent implements OnInit {
         private readonly _dialog: MatDialog,
         private readonly _sheet: MatBottomSheet,
         private readonly _location: Location,
-        private readonly _walletEventService: WalletEventsService,
         private readonly _router: Router,
         public datasourceService: DatasourceService
     ) {}
@@ -179,7 +178,7 @@ export class SettingsPageComponent implements OnInit {
     }
 
     clearStorage(): void {
-        this._walletEventService.clearLocalStorage.next();
+        REMOVE_ALL_WALLET_DATA.next();
         void this._router.navigate(['/']);
     }
 

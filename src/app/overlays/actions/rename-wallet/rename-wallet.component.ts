@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { WalletEventsService } from '@app/services/wallet-events.service';
+import { RENAME_ACTIVE_WALLET } from '@app/services/wallet-events.service';
 import { AppStateService } from '@app/services/app-state.service';
 
 @Component({
@@ -59,10 +59,7 @@ export class RenameWalletComponent implements OnInit {
     currentWalletName: string;
     walletNameFormControl = new FormControl('');
 
-    constructor(
-        private readonly _appStateService: AppStateService,
-        private readonly _walletEventService: WalletEventsService
-    ) {}
+    constructor(private readonly _appStateService: AppStateService) {}
 
     ngOnInit(): void {
         this.currentWalletName = this._appStateService.store.getValue().activeWallet.name;
@@ -77,7 +74,7 @@ export class RenameWalletComponent implements OnInit {
             return;
         }
         const newName = this.walletNameFormControl.value;
-        this._walletEventService.renameWallet.next(newName);
+        RENAME_ACTIVE_WALLET.next(newName);
         this.close.emit();
     }
 }

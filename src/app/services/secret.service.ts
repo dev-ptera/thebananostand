@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { WalletStorageService } from '@app/services/wallet-storage.service';
-import { WalletEventsService } from '@app/services/wallet-events.service';
+import {
+    COPY_MNEMONIC_TO_CLIPBOARD,
+    COPY_SECRET_TO_CLIPBOARD,
+    LOCK_WALLET,
+    REENCRYPT_ACTIVE_WALLET,
+} from '@app/services/wallet-events.service';
 import { AppStateService } from '@app/services/app-state.service';
 
 @Injectable({
@@ -16,15 +21,13 @@ export class SecretService {
 
     constructor(
         private readonly _appStateService: AppStateService,
-        private readonly _walletEventService: WalletEventsService,
         private readonly _walletStorageService: WalletStorageService
     ) {}
 
     /** Provided a secret phrase and password, returns the encrypted secret. */
     async storeSecret(secret: string, walletPassword: string): Promise<string> {
         let password = walletPassword;
-
-        if (password.length === 0) {
+        if (this._useDefaultPassword(password)) {
             password = this.DEFAULT_PASSWORD;
         }
         this.walletPassword = password;
@@ -67,10 +70,10 @@ export class SecretService {
                 // @ts-ignore
                 const reencryptSeed = await window.bananocoin.passwordUtils.encryptData(decryptedSeed, newUserPassword);
                 wallet.encryptedSeed = reencryptSeed;
-                this._walletEventService.reencryptWalletSecret.next(wallet);
+                REENCRYPT_ACTIVE_WALLET.next(wallet);
             }
         }
-        this._walletEventService.lockWallet.next();
+        LOCK_WALLET.next();
     }
 
     matchesCurrentPassword(currentPasswordUserInput: string): boolean {
@@ -108,14 +111,14 @@ export class SecretService {
 
     async backupWalletSecret(walletId: string): Promise<void> {
         const seed = await this.getSecret(walletId);
-        this._walletEventService.backupSeed.next({ seed, openSnackbar: true });
+        COPY_SECRET_TO_CLIPBOARD.next({ seed, openSnackbar: true });
     }
 
     async backupWalletMnemonic(walletId: string): Promise<void> {
         const seed = await this.getSecret(walletId);
         // @ts-ignore
         const mnemonic = window.bip39.entropyToMnemonic(seed);
-        this._walletEventService.backupMnemonic.next({ mnemonic, openSnackbar: true });
+        COPY_MNEMONIC_TO_CLIPBOARD.next({ mnemonic, openSnackbar: true });
     }
 
     /** Using a password, attempts to decrypt localstorage secret wallet.
@@ -123,7 +126,7 @@ export class SecretService {
     async unlockSecretWallet(walletPassword: string): Promise<void> {
         let password = walletPassword;
 
-        if (password.length === 0) {
+        if (this._useDefaultPassword(password)) {
             password = this.DEFAULT_PASSWORD;
         }
 
@@ -138,6 +141,10 @@ export class SecretService {
     private _mnemonicToSeed(mnemonic: string): string {
         // @ts-ignore
         return window.bip39.mnemonicToEntropy(mnemonic);
+    }
+
+    private _useDefaultPassword(password): boolean {
+        return password === undefined || password.length === 0;
     }
 }
 

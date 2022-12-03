@@ -9,7 +9,7 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { EnterSecretBottomSheetComponent } from '@app/overlays/bottom-sheet/enter-secret/enter-secret-bottom-sheet.component';
 import { CreateWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/create-wallet/create-wallet-bottom-sheet.component';
 import { CreateWalletDialogComponent } from '@app/overlays/dialogs/create-wallet/create-wallet-dialog.component';
-import { WalletEventsService } from '@app/services/wallet-events.service';
+import { ATTEMPT_UNLOCK_LEDGER_WALLET, EMIT_LEDGER_CONNECTION_ERROR } from '@app/services/wallet-events.service';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { LedgerSnackbarErrorComponent } from '@app/pages/home/ledger-error-snackbar.component';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -46,20 +46,19 @@ export class HomeComponent {
         private readonly _sheet: MatBottomSheet,
         private readonly _snackBar: MatSnackBar,
         private readonly _viewportService: ViewportService,
-        private readonly _appStateService: AppStateService,
-        private readonly _walletEventService: WalletEventsService
+        private readonly _appStateService: AppStateService
     ) {
         this._appStateService.store.pipe(untilDestroyed(this)).subscribe((store) => {
             this.store = store;
         });
 
-        this._walletEventService.ledgerConnectionError.pipe(untilDestroyed(this)).subscribe((data) => {
+        EMIT_LEDGER_CONNECTION_ERROR.pipe(untilDestroyed(this)).subscribe((data) => {
             this._showLedgerConnectionErrorSnackbar(data.error);
         });
     }
 
     connectLedger(): void {
-        this._walletEventService.attemptUnlockLedger.next();
+        ATTEMPT_UNLOCK_LEDGER_WALLET.next();
     }
 
     openEnterSeedDialog(): void {

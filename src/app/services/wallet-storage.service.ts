@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { WalletEventsService } from '@app/services/wallet-events.service';
 import { UtilService } from '@app/services/util.service';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 
@@ -23,55 +22,15 @@ const LEDGER_STORED_INDEXES = 'bananostand_ledgerIndexes';
 export class WalletStorageService {
     store: AppStore;
 
-    constructor(
-        private readonly _util: UtilService,
-        private readonly _appStateService: AppStateService,
-        private readonly _walletEventService: WalletEventsService
-    ) {
+    constructor(private readonly _util: UtilService, private readonly _appStateService: AppStateService) {
         this._appStateService.store.subscribe((store) => {
             this.store = store;
-        });
-    }
-    /*
-
-        this._updateState();
-
-        this._walletEventService.activeWalletChange.subscribe((wallet: LocalStorageWallet) => {
-            this.setActiveWallet(wallet);
-        });
-
-        this._walletEventService.reencryptWalletSecret.subscribe((wallet: LocalStorageWallet) => {
-            this.addWalletLocalStorage(wallet);
-        });
-
-        this._walletEventService.removeIndex.subscribe((removedIndex: number) => {
-            this._removeIndexFromLocalStorage(removedIndex);
-        });
-
-        this._walletEventService.renameWallet.subscribe((newWalletName: string) => {
-            const activeWallet = this.getActiveWallet();
-            activeWallet.name = newWalletName;
-            this.addWalletLocalStorage(activeWallet);
-        });
-
-        this._walletEventService.removeWallet.subscribe(() => {
-            const activeWalletId = this._readActiveWalletFromLocalStorage();
-            const newActiveWallet = this._removeWalletById(activeWalletId);
-            if (newActiveWallet) {
-                this._walletEventService.activeWalletChange.next(newActiveWallet);
-            } else {
-                this._walletEventService.lockWallet.next();
-            }
-        });
-
-        this._walletEventService.clearLocalStorage.subscribe(() => {
-            window.localStorage.clear();
-            this._updateState();
-            this._walletEventService.lockWallet.next();
+            this._listenForAccountChanges();
         });
     }
 
-         */
+    /** When the number of accounts saved in the store changes, we need to persist these changes in localstorage. */
+    private _listenForAccountChanges(): void {}
 
     hasSecretWalletSaved(): boolean {
         const encryptedWallets = this.readWalletsFromLocalStorage();
@@ -82,7 +41,7 @@ export class WalletStorageService {
         const walletId = encryptedSeed.substring(0, 10);
         return {
             walletId,
-            name: this.createNewWalletName(),
+            name: this._createNewWalletName(),
             encryptedSeed,
             loadedIndexes: [0],
         };
@@ -106,8 +65,72 @@ export class WalletStorageService {
         }
     }
 
+    /** Returns the list of available wallets. */
+    readWalletsFromLocalStorage(): LocalStorageWallet[] {
+        if (this.store.hasUnlockedLedger) {
+            return [this._getLedgerWallet()];
+        }
+
+        try {
+            const encryptedWallets = JSON.parse(window.localStorage.getItem(ENCRYPTED_WALLETS)) as LocalStorageWallet[];
+            if (!encryptedWallets || !encryptedWallets[0]) {
+                return [];
+            }
+            return encryptedWallets;
+        } catch (err) {
+            return [];
+        }
+    }
+
+    readActiveWalletFromLocalStorage(): LocalStorageWallet {
+        if (this.store.hasUnlockedLedger) {
+            return this._getLedgerWallet();
+        }
+        const id = this.readActiveWalletIdFromLocalStorage();
+        return this.getWalletFromId(id);
+    }
+
+    /** Only applicable to secret-based wallets.  Returns the current-selected wallet's localstorage ID. */
+    readActiveWalletIdFromLocalStorage(): string {
+        if (!this.store.hasUnlockedLedger) {
+            // Ledger wallets do not have an active id.
+            return String(window.localStorage.getItem(ACTIVE_WALLET_ID));
+        }
+        console.error('Ledger Account is Loaded, attempted to getActiveWalletId');
+    }
+
+    writeActiveWalletToLocalStorage(activeWallet: LocalStorageWallet): void {
+        this.writeWalletToLocalStorage(activeWallet);
+        this.writeActiveWalletIdToLocalStorage(activeWallet);
+    }
+
+    /** Stores wallet details in localStorage. */ // TODO Private
+    writeWalletToLocalStorage(newWallet: LocalStorageWallet): void {
+        const wallets = this.store.localStorageWallets.filter(
+            (wallet) => !this._walletIdsMatch(wallet.walletId, newWallet.walletId)
+        );
+        wallets.push(newWallet);
+        window.localStorage.setItem(ENCRYPTED_WALLETS, JSON.stringify(wallets));
+    }
+
+    writeActiveWalletIdToLocalStorage(wallet: LocalStorageWallet): void {
+        // TODO Private
+        window.localStorage.setItem(ACTIVE_WALLET_ID, String(wallet.walletId));
+    }
+
+    /** Writes to localstorage active wallet displayed accounts. */
+    private _setDisplayedAccountIndexes(indexes: number[]): void {
+        if (this.store.hasUnlockedLedger) {
+            window.localStorage.setItem(LEDGER_STORED_INDEXES, JSON.stringify(indexes));
+        } else {
+            const wallet = this.store.activeWallet;
+            wallet.loadedIndexes = indexes;
+            this.writeWalletToLocalStorage(wallet);
+        }
+    }
+
     /** Creates a wallet name for the user, based on the number of Unnamed Wallets. */
-    createNewWalletName(): string {
+    private _createNewWalletName(): string {
         const unnamedWallet = 'Unnamed Wallet';
         const walletNameSet = new Set<string>();
         if (!this.store.localStorageWallets || this.store.localStorageWallets.length === 0) {
@@ -125,66 +148,8 @@ export class WalletStorageService {
         }
     }
 
-    /** Only applicable to secret-based wallets.  Returns the current-selected wallet's localstorage ID. */
-    private _readActiveWalletIdLocalStorage(): string {
-        if (!this.store.hasUnlockedLedger) {
-            // Ledger wallets do not have an active id.
-            return String(window.localStorage.getItem(ACTIVE_WALLET_ID));
-        }
-        console.error('Ledger Account is Loaded, attempted to getActiveWalletId');
-    }
-
-    /** Returns the list of available wallets. */
-    readWalletsFromLocalStorage(): LocalStorageWallet[] {
-        if (this.store.hasUnlockedLedger) {
-            return [this._getLedgerWallet()];
-        }
-
-        try {
-            const encryptedWallets = JSON.parse(window.localStorage.getItem(ENCRYPTED_WALLETS)) as LocalStorageWallet[];
-            if (!encryptedWallets) {
-                return [];
-            }
-            return encryptedWallets;
-        } catch (err) {
-            return [];
-        }
-    }
-
-    readActiveWalletFromLocalStorage(): LocalStorageWallet {
-        if (this.store.hasUnlockedLedger) {
-            return this._getLedgerWallet();
-        }
-        const id = this._readActiveWalletIdLocalStorage();
-        return this.getWalletFromId(id);
-    }
-
     private _walletIdsMatch(s1: string, s2: string): boolean {
         return String(s1) === String(s2);
-    }
-
-    /** Stores wallet details in localStorage. */
-    addWalletLocalStorage(newWallet: LocalStorageWallet): void {
-        const wallets = this.store.localStorageWallets.filter(
-            (wallet) => !this._walletIdsMatch(wallet.walletId, newWallet.walletId)
-        );
-        wallets.push(newWallet);
-        window.localStorage.setItem(ENCRYPTED_WALLETS, JSON.stringify(wallets));
-        // this._updateState();
-    }
-
-    writeActiveWallet(wallet: LocalStorageWallet): void {
-        window.localStorage.setItem(ACTIVE_WALLET_ID, String(wallet.walletId));
-    }
-
-    /** Writes to localstorage active wallet displayed accounts. */
-    private _setDisplayedAccountIndexes(indexes: number[]): void {
-        if (this.store.hasUnlockedLedger) {
-            window.localStorage.setItem(LEDGER_STORED_INDEXES, JSON.stringify(indexes));
-        } else {
-            this._appStateService.store.getValue().activeWallet.loadedIndexes = indexes;
-            this.addWalletLocalStorage(this._appStateService.store.getValue().activeWallet);
-        }
     }
 
     /** New addresses (index) are added to localstorage. */
@@ -200,7 +165,6 @@ export class WalletStorageService {
             .getValue()
             .activeWallet.loadedIndexes.filter((index) => !this._util.matches(index, removedIndex));
         this._setDisplayedAccountIndexes(remainingIndexes);
-        this._updateState();
     }
 
     /** Removes a specified wallet from localstorage & returns the new active wallet, if any. */
@@ -213,13 +177,11 @@ export class WalletStorageService {
         if (hasNewActiveWallet) {
             window.localStorage.setItem(ENCRYPTED_WALLETS, JSON.stringify(remainingWallets));
             const newActiveWallet = remainingWallets[0];
-            this.writeActiveWallet(newActiveWallet);
-            this._updateState();
+            this.writeActiveWalletIdToLocalStorage(newActiveWallet);
             return newActiveWallet;
         }
         window.localStorage.removeItem(ENCRYPTED_WALLETS);
         window.localStorage.removeItem(ACTIVE_WALLET_ID);
-        this._updateState();
     }
 
     private _getLedgerWallet(): LocalStorageWallet {
@@ -229,15 +191,5 @@ export class WalletStorageService {
             name: 'Ledger Wallet',
             loadedIndexes: this.getLoadedIndexes(),
         };
-    }
-
-    private _updateState(): void {
-        this.store.localStorageWallets = this.readWalletsFromLocalStorage();
-        if (this.store.hasUnlockedLedger) {
-            this._appStateService.store.getValue().activeWallet = this._getLedgerWallet();
-        } else {
-            const id = this._readActiveWalletIdLocalStorage();
-            this._appStateService.store.getValue().activeWallet = this.getWalletFromId(id);
-        }
     }
 }

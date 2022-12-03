@@ -22,7 +22,7 @@ import { SendBottomSheetComponent } from '@app/overlays/bottom-sheet/send/send-b
 import { SendDialogComponent } from '@app/overlays/dialogs/send/send-dialog.component';
 import { ChangeRepBottomSheetComponent } from '@app/overlays/bottom-sheet/change-rep/change-rep-bottom-sheet.component';
 import { ChangeRepDialogComponent } from '@app/overlays/dialogs/change-rep/change-rep-dialog.component';
-import { WalletEventsService } from '@app/services/wallet-events.service';
+import { COPY_ADDRESS_TO_CLIPBOARD } from '@app/services/wallet-events.service';
 import { AppStateService } from '@app/services/app-state.service';
 
 @Component({
@@ -70,7 +70,6 @@ export class AccountComponent implements OnInit, OnDestroy {
         private readonly _rpcService: RpcService,
         private readonly _themeService: ThemeService,
         private readonly _accountService: AccountService,
-        private readonly _walletEventService: WalletEventsService,
         private readonly _spyglassService: SpyglassService
     ) {}
 
@@ -335,7 +334,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     copyAccountAddressMobile(): void {
-        this._walletEventService.copiedAddress.next({ address: this.address });
+        COPY_ADDRESS_TO_CLIPBOARD.next({ address: this.address });
         this.isAccountActionsMobileMenuOpen = false;
     }
 

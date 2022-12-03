@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { WalletEventsService } from '@app/services/wallet-events.service';
+import { COPY_MNEMONIC_TO_CLIPBOARD, COPY_SECRET_TO_CLIPBOARD } from '@app/services/wallet-events.service';
 import { EnterSecretBottomSheetComponent } from '@app/overlays/bottom-sheet/enter-secret/enter-secret-bottom-sheet.component';
 import { EnterSecretDialogComponent } from '@app/overlays/dialogs/enter-secret/enter-secret-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -106,8 +106,7 @@ export class CreateWalletOverlayComponent implements OnInit {
         public vp: ViewportService,
         private readonly _dialog: MatDialog,
         private readonly _sheet: MatBottomSheet,
-        private readonly _secretService: SecretService,
-        private readonly _walletEventService: WalletEventsService
+        private readonly _secretService: SecretService
     ) {}
 
     ngOnInit(): void {
@@ -118,7 +117,7 @@ export class CreateWalletOverlayComponent implements OnInit {
     }
 
     copySeed(): void {
-        this._walletEventService.backupSeed.next({ seed: this.seed, openSnackbar: false });
+        COPY_SECRET_TO_CLIPBOARD.next({ seed: this.seed, openSnackbar: false });
         this.hasRecentlyCopiedSeed = true;
         setTimeout(() => {
             this.hasRecentlyCopiedSeed = false;
@@ -126,7 +125,7 @@ export class CreateWalletOverlayComponent implements OnInit {
     }
 
     copyMnemonic(): void {
-        this._walletEventService.backupMnemonic.next({ mnemonic: this.mnemonic, openSnackbar: false });
+        COPY_MNEMONIC_TO_CLIPBOARD.next({ mnemonic: this.mnemonic, openSnackbar: false });
         this.hasRecentlyCopiedMnemonic = true;
         setTimeout(() => {
             this.hasRecentlyCopiedMnemonic = false;

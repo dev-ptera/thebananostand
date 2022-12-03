@@ -28,9 +28,6 @@ export type AppStore = {
     providedIn: 'root',
 })
 export class AppStateService {
-    /** Whether the wallet has been unlocked using a ledger physical device. */
-    isLedger: boolean;
-
     /** Map of address to alias, contains all known aliases. */
     knownAccounts: Map<string, string> = new Map<string, string>();
 
