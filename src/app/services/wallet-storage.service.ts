@@ -45,7 +45,10 @@ export class WalletStorageService {
             console.log(walletData);
             if (walletData.activeWallet) {
                 if (this.store.hasUnlockedLedger) {
-                    window.localStorage.setItem(LEDGER_STORED_INDEXES, JSON.stringify(walletData.activeWallet.loadedIndexes));
+                    window.localStorage.setItem(
+                        LEDGER_STORED_INDEXES,
+                        JSON.stringify(walletData.activeWallet.loadedIndexes)
+                    );
                 } else {
                     window.localStorage.setItem(ACTIVE_WALLET_ID, String(walletData.activeWallet.walletId));
                 }

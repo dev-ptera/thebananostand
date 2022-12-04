@@ -68,7 +68,6 @@ export class SecretService {
         return userProvidedPassword === currentPassword;
     }
 
-
     createNewSecretWallet(): { seed: string; mnemonic: string } {
         const seedBytes = new Uint8Array(32);
         window.crypto.getRandomValues(seedBytes);
