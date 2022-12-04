@@ -3,7 +3,7 @@ import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/l
 import { FormControl } from '@angular/forms';
 import {
     ATTEMPT_UNLOCK_WALLET_WITH_PASSWORD,
-    PROVIDED_INCORRECT_PASSWORD,
+    UNLOCK_WALLET_WITH_PASSWORD_ERROR,
     WalletEventsService,
 } from '@app/services/wallet-events.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -28,7 +28,7 @@ export class LoginComponent implements AfterViewInit {
         private readonly _breakpointObserver: BreakpointObserver,
         private readonly _walletEventService: WalletEventsService
     ) {
-        PROVIDED_INCORRECT_PASSWORD.pipe(untilDestroyed(this)).subscribe(() => {
+        UNLOCK_WALLET_WITH_PASSWORD_ERROR.pipe(untilDestroyed(this)).subscribe(() => {
             this.hasIncorrectPassword = true;
             this.password.setErrors({ password: 'incorrect' });
             this.passwordInput.focus();

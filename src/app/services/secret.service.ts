@@ -7,7 +7,7 @@ export type BananoifiedWindow = {
     bananocoin: any;
     bananocoinBananojs: any;
     bip39: any;
-} & Window
+} & Window;
 
 declare let window: BananoifiedWindow;
 
@@ -64,9 +64,10 @@ export class SecretService {
 
     matchesCurrentPassword(currentPasswordUserInput: string): boolean {
         const userProvidedPassword = currentPasswordUserInput || this.DEFAULT_PASSWORD;
-        const currentPassword = this._appStateService.store.getValue().walletPassword;
+        const currentPassword = this._appStateService.store.getValue().walletPassword || this.DEFAULT_PASSWORD;
         return userProvidedPassword === currentPassword;
     }
+
 
     createNewSecretWallet(): { seed: string; mnemonic: string } {
         const seedBytes = new Uint8Array(32);

@@ -11,50 +11,20 @@ import { TransactionService } from '@app/services/transaction.service';
 const SNACKBAR_DURATION = 3000;
 const SNACKBAR_CLOSE_ACTION_TEXT = 'Dismiss';
 
-/** User has attempted to unlock an encrypted secret wallet using a password. */
-export const ATTEMPT_UNLOCK_WALLET_WITH_PASSWORD = new Subject<{ password: string }>();
-
-/** User has provided an incorrect password to unlock the wallet. */
-export const PROVIDED_INCORRECT_PASSWORD = new Subject<void>();
-
-/** User wants to unlock the ledger device. */
-export const ATTEMPT_UNLOCK_LEDGER_WALLET = new Subject<void>();
-
-/** User ran into an issue connection their ledger. */
-export const EMIT_LEDGER_CONNECTION_ERROR = new Subject<{ error: string }>();
-
-/** A wallet (either secret or ledger) has been unlocked. */
-export const UNLOCK_WALLET = new Subject<{ isLedger: boolean; password: string }>();
-
-/** A wallet (previously unlocked with a password) has been logged out. */
-export const LOCK_WALLET = new Subject<void>();
-
-/** A new secret (either seed or mnemonic phrase) has been provided. */
-export const IMPORT_NEW_WALLET_FROM_SECRET = new Subject<{ secret: string; password: string }>();
-
-/** The actively displayed wallet on the dashboard has changed to another. */
-export const CHANGE_ACTIVE_WALLET = new Subject<LocalStorageWallet>();
-
 /** User has request next sequential index be added to the dashboard. */
 export const ADD_NEXT_ACCOUNT_BY_INDEX = new Subject<void>();
 
 /** New addresses (index) has been added to the dashboard. */
 export const ADD_SPECIFIC_ACCOUNTS_BY_INDEX = new Subject<number[]>();
 
-/** An address (index) has been removed from the dashboard. */
-export const REMOVE_ACCOUNTS_BY_INDEX = new Subject<number[]>();
+/** User has attempted to unlock an encrypted secret wallet using a password. */
+export const ATTEMPT_UNLOCK_WALLET_WITH_PASSWORD = new Subject<{ password: string }>();
 
-/** An account is being added to the dashboard. Can be either true or false. */
-export const SET_DASHBOARD_ACCOUNT_LOADING = new BehaviorSubject<boolean>(true);
+/** User wants to unlock the ledger device. */
+export const ATTEMPT_UNLOCK_LEDGER_WALLET = new Subject<void>();
 
-/** User has requested that all loaded indexes be refreshed, checking for receivable transactions and updating account balances. */
-export const REFRESH_DASHBOARD_ACCOUNTS = new Subject<void>();
-
-/** The active wallet has been removed. */
-export const REMOVE_ACTIVE_WALLET = new Subject<void>();
-
-/** The active wallet has been given an alias. */
-export const RENAME_ACTIVE_WALLET = new Subject<string>();
+/** The actively displayed wallet on the dashboard has changed to another. */
+export const CHANGE_ACTIVE_WALLET = new Subject<LocalStorageWallet>();
 
 /** All wallets need to have their password changed. */
 export const CHANGE_PASSWORD = new Subject<{ currentPassword: string; newPassword: string }>();
@@ -65,17 +35,47 @@ export const CHANGE_PASSWORD_SUCCESS = new Subject<void>();
 /** An issue was encountered while attempting to change password. */
 export const CHANGE_PASSWORD_ERROR = new Subject<{ error: string }>();
 
-/** Backup active wallet seed to clipboard  */
-export const COPY_SEED_TO_CLIPBOARD = new Subject<{ seed: string; openSnackbar: boolean }>();
+/** User has copied account address to clipboard. */
+export const COPY_ADDRESS_TO_CLIPBOARD = new Subject<{ address: string }>();
 
 /** Backup active wallet Mnemonic Phrase to clipboard */
 export const COPY_MNEMONIC_TO_CLIPBOARD = new Subject<{ mnemonic: string; openSnackbar: boolean }>();
 
-/** User has copied account address to clipboard. */
-export const COPY_ADDRESS_TO_CLIPBOARD = new Subject<{ address: string }>();
+/** Backup active wallet seed to clipboard  */
+export const COPY_SEED_TO_CLIPBOARD = new Subject<{ seed: string; openSnackbar: boolean }>();
+
+/** User ran into an issue connection their ledger. */
+export const EMIT_LEDGER_CONNECTION_ERROR = new Subject<{ error: string }>();
+
+/** A new secret (either seed or mnemonic phrase) has been provided. */
+export const IMPORT_NEW_WALLET_FROM_SECRET = new Subject<{ secret: string; password: string }>();
+
+/** A wallet (previously unlocked with a password) has been logged out. */
+export const LOCK_WALLET = new Subject<void>();
+
+/** An address (index) has been removed from the dashboard. */
+export const REMOVE_ACCOUNTS_BY_INDEX = new Subject<number[]>();
+
+/** User has requested that all loaded indexes be refreshed, checking for receivable transactions and updating account balances. */
+export const REFRESH_DASHBOARD_ACCOUNTS = new Subject<void>();
+
+/** The active wallet has been given an alias. */
+export const RENAME_ACTIVE_WALLET = new Subject<string>();
+
+/** The active wallet has been removed. */
+export const REMOVE_ACTIVE_WALLET = new Subject<void>();
 
 /** User has opted to delete all locally stored info. */
 export const REMOVE_ALL_WALLET_DATA = new Subject<void>();
+
+/** An account is being added to the dashboard. Can be either true or false. */
+export const SET_DASHBOARD_ACCOUNT_LOADING = new BehaviorSubject<boolean>(true);
+
+/** A wallet (either secret or ledger) has been unlocked. */
+export const UNLOCK_WALLET = new Subject<{ isLedger: boolean; password: string }>();
+
+/** User has provided an incorrect password to unlock the wallet. */
+export const UNLOCK_WALLET_WITH_PASSWORD_ERROR = new Subject<void>();
 
 @Injectable({
     providedIn: 'root',
@@ -94,7 +94,7 @@ export class WalletEventsService {
     ) {
         // _dispatch initial app state
         this._dispatch({
-            activeWallet: this._walletStorageService.readActiveWalletFromLocalStorage(),
+            activeWallet: undefined,
             hasSecret: this._walletStorageService.hasSecretWalletSaved(),
             localStorageWallets: this._walletStorageService.readWalletsFromLocalStorage(),
         });
@@ -113,12 +113,13 @@ export class WalletEventsService {
                 });
             } catch (err) {
                 console.error(err);
-                PROVIDED_INCORRECT_PASSWORD.next();
+                UNLOCK_WALLET_WITH_PASSWORD_ERROR.next();
             }
         });
 
         UNLOCK_WALLET.subscribe((data) => {
             this._dispatch({
+                activeWallet: this._walletStorageService.readActiveWalletFromLocalStorage(),
                 hasUnlockedSecret: !data.isLedger,
                 hasUnlockedLedger: data.isLedger,
                 walletPassword: data.password,
@@ -146,6 +147,7 @@ export class WalletEventsService {
             try {
                 await this._transactionService.checkLedgerOrError();
                 this._dispatch({ hasUnlockedLedger: true });
+                UNLOCK_WALLET.next({ isLedger: true, password: undefined });
             } catch (err) {
                 EMIT_LEDGER_CONNECTION_ERROR.next({ error: err });
             }
@@ -220,8 +222,8 @@ export class WalletEventsService {
                 totalBalance += account.balance;
                 this._dispatch({ totalBalance });
             }
-            this._walletStorageService.updateWalletIndexes(accounts);
-            this._dispatch({ accounts, isLoadingAccounts: false });
+            const { activeWallet, localStorageWallets } = this._walletStorageService.updateWalletIndexes(accounts);
+            this._dispatch({ accounts, activeWallet, isLoadingAccounts: false, localStorageWallets });
         });
 
         REMOVE_ACCOUNTS_BY_INDEX.subscribe((indexes: number[]) => {

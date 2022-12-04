@@ -41,8 +41,14 @@ export class WalletStorageService {
             if (walletData.localStorageWallets) {
                 window.localStorage.setItem(ENCRYPTED_WALLETS, JSON.stringify(walletData.localStorageWallets));
             }
+
+            console.log(walletData);
             if (walletData.activeWallet) {
-                window.localStorage.setItem(ACTIVE_WALLET_ID, String(walletData.activeWallet.walletId));
+                if (this.store.hasUnlockedLedger) {
+                    window.localStorage.setItem(LEDGER_STORED_INDEXES, JSON.stringify(walletData.activeWallet.loadedIndexes));
+                } else {
+                    window.localStorage.setItem(ACTIVE_WALLET_ID, String(walletData.activeWallet.walletId));
+                }
             }
         });
     }
@@ -124,11 +130,15 @@ export class WalletStorageService {
             return this._getLedgerWallet();
         }
         const id = this.readActiveWalletIdFromLocalStorage();
-        for (const wallet of this.readWalletsFromLocalStorage()) {
+        const wallets = this.readWalletsFromLocalStorage();
+        for (const wallet of wallets) {
             if (wallet.walletId === id) {
                 return wallet;
             }
         }
+
+        // Default
+        return wallets[0];
     }
 
     /** Only applicable to secret-based wallets.  Returns the current-selected wallet's localstorage ID. */
