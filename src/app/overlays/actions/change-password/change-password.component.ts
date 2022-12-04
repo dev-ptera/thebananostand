@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { SecretService } from '@app/services/secret.service';
 import { Router } from '@angular/router';
+import { CHANGE_PASSWORD, CHANGE_PASSWORD_ERROR, CHANGE_PASSWORD_SUCCESS } from '@app/services/wallet-events.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
     selector: 'app-change-password-overlay',
     styleUrls: ['change-password.component.scss'],
@@ -73,10 +75,6 @@ import { Router } from '@angular/router';
                         </button>
                     </mat-form-field>
                 </form>
-                <div class="error-row mat-hint" *ngIf="currentPasswordMismatch()">
-                    <mat-icon color="warn" class="indicator-icon">error</mat-icon>
-                    Current password does not match.
-                </div>
                 <div class="error-row mat-hint" *ngIf="newPasswordMismatch()">
                     <mat-icon color="warn" class="indicator-icon">error</mat-icon>
                     Passwords do not match.
@@ -89,15 +87,7 @@ import { Router } from '@angular/router';
             <blui-spacer></blui-spacer>
             <mat-divider style="margin-left: -48px; margin-right: -48px"></mat-divider>
             <div style="display: flex; justify-content: space-between; margin-bottom: 0; padding: 16px 0 8px 0">
-                <button
-                    mat-stroked-button
-                    mat-dialog-close
-                    color="primary"
-                    (click)="close.emit()"
-                    style="width: 100px;"
-                >
-                    Close
-                </button>
+                <button mat-stroked-button color="primary" (click)="close.emit()" style="width: 100px;">Close</button>
                 <button
                     data-cy="confirm-change-password-button"
                     mat-flat-button
@@ -125,14 +115,20 @@ export class ChangePasswordOverlayComponent {
 
     @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
-    constructor(private readonly _router: Router, private readonly _secretService: SecretService) {}
+    constructor(private readonly _router: Router) {
+        CHANGE_PASSWORD_SUCCESS.pipe(untilDestroyed(this)).subscribe(() => {
+            this.close.emit();
+            void this._router.navigate(['/']);
+        });
+
+        CHANGE_PASSWORD_ERROR.pipe(untilDestroyed(this)).subscribe(({ error }) => {
+            console.error(error);
+            this.uncaughtError = error;
+        });
+    }
 
     newPasswordMismatch(): boolean {
         return this.newPasswordFormControl.value !== this.confirmPasswordFormControl.value;
-    }
-
-    currentPasswordMismatch(): boolean {
-        return !this._secretService.matchesCurrentPassword(this.currentPasswordFormControl.value);
     }
 
     changePassword(): void {
@@ -141,15 +137,6 @@ export class ChangePasswordOverlayComponent {
         }
         const currentPassword = this.currentPasswordFormControl.value;
         const newPassword = this.confirmPasswordFormControl.value;
-        this._secretService
-            .changePassword(currentPassword, newPassword)
-            .then(() => {
-                this.close.emit();
-                void this._router.navigate(['/']);
-            })
-            .catch((err) => {
-                console.error(err);
-                this.uncaughtError = err;
-            });
+        CHANGE_PASSWORD.next({ currentPassword, newPassword });
     }
 }

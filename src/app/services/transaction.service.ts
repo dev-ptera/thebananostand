@@ -122,12 +122,10 @@ export class TransactionService {
         }
     }
 
-    /** Given an index, reads ledger device & returns an address. */
+    /** Returns a public address associated with the active wallet's index number. */
     async getAccountFromIndex(accountIndex: number): Promise<string> {
         if (this._appStateService.store.getValue().hasUnlockedSecret) {
-            const seed = await this._secretService.getActiveWalletSecret();
-            /** LocalMobile **/
-            // const seed = '727A5E960F6189BBF196D84A6B7715D0A78DE82AC15BBDB340540076768CDB31'; // Low Fund Seed
+            const seed = await this._secretService.getActiveWalletSeed();
             const privateKey = await window.bananocoinBananojs.getPrivateKey(seed, accountIndex);
             const publicKey = await window.bananocoinBananojs.getPublicKey(privateKey);
             const account = window.bananocoinBananojs.getBananoAccount(publicKey);
@@ -140,7 +138,7 @@ export class TransactionService {
 
     async getAccountSigner(index: number): any {
         if (this._appStateService.store.getValue().hasUnlockedSecret) {
-            const seed = await this._secretService.getActiveWalletSecret();
+            const seed = await this._secretService.getActiveWalletSeed();
             return await window.bananocoinBananojs.getPrivateKey(seed, index);
         }
         return await window.bananocoin.bananojsHw.getLedgerAccountSigner(index);

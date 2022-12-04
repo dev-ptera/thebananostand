@@ -101,15 +101,13 @@ export class DashboardComponent {
 
     // TODO, emit event.
     copyWalletSeed(): void {
-        const activeWalletId = this.store.activeWallet.walletId;
-        void this._secretService.backupWalletSecret(activeWalletId);
+        void this._secretService.backupWalletSecret();
         this.walletActionsOverlayOpen = false;
     }
 
     // TODO, emit event.
     copyWalletMnemonic(): void {
-        const activeWalletId = this.store.activeWallet.walletId;
-        void this._secretService.backupWalletMnemonic(activeWalletId);
+        void this._secretService.backupWalletMnemonic();
         this.walletActionsOverlayOpen = false;
     }
     /** Wallet Actions [END] */

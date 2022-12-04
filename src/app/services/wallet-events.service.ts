@@ -26,13 +26,13 @@ export const EMIT_LEDGER_CONNECTION_ERROR = new Subject<{ error: string }>();
 /** A wallet (either secret or ledger) has been unlocked. */
 export const UNLOCK_WALLET = new Subject<{ isLedger: boolean; password: string }>();
 
-/** A wallet (previously unlocked) has been effectively logged out with no remaining secrets known. */
+/** A wallet (previously unlocked with a password) has been logged out. */
 export const LOCK_WALLET = new Subject<void>();
 
-/** A new secret has been provided, can be either a seed or mnemonic. */
+/** A new secret (either seed or mnemonic phrase) has been provided. */
 export const IMPORT_NEW_WALLET_FROM_SECRET = new Subject<{ secret: string; password: string }>();
 
-/** The actively displayed wallet on the dashboard has changed. */
+/** The actively displayed wallet on the dashboard has changed to another. */
 export const CHANGE_ACTIVE_WALLET = new Subject<LocalStorageWallet>();
 
 /** User has request next sequential index be added to the dashboard. */
@@ -56,11 +56,17 @@ export const REMOVE_ACTIVE_WALLET = new Subject<void>();
 /** The active wallet has been given an alias. */
 export const RENAME_ACTIVE_WALLET = new Subject<string>();
 
-/** Update active wallet password */
-export const REENCRYPT_ACTIVE_WALLET = new Subject<LocalStorageWallet>();
+/** All wallets need to have their password changed. */
+export const CHANGE_PASSWORD = new Subject<{ currentPassword: string; newPassword: string }>();
+
+/** All wallets have had their password changed. */
+export const CHANGE_PASSWORD_SUCCESS = new Subject<void>();
+
+/** An issue was encountered while attempting to change password. */
+export const CHANGE_PASSWORD_ERROR = new Subject<{ error: string }>();
 
 /** Backup active wallet seed to clipboard  */
-export const COPY_SECRET_TO_CLIPBOARD = new Subject<{ seed: string; openSnackbar: boolean }>();
+export const COPY_SEED_TO_CLIPBOARD = new Subject<{ seed: string; openSnackbar: boolean }>();
 
 /** Backup active wallet Mnemonic Phrase to clipboard */
 export const COPY_MNEMONIC_TO_CLIPBOARD = new Subject<{ mnemonic: string; openSnackbar: boolean }>();
@@ -88,8 +94,8 @@ export class WalletEventsService {
     ) {
         // _dispatch initial app state
         this._dispatch({
-            hasSecret: this._walletStorageService.hasSecretWalletSaved(),
             activeWallet: this._walletStorageService.readActiveWalletFromLocalStorage(),
+            hasSecret: this._walletStorageService.hasSecretWalletSaved(),
             localStorageWallets: this._walletStorageService.readWalletsFromLocalStorage(),
         });
 
@@ -145,7 +151,7 @@ export class WalletEventsService {
             }
         });
 
-        COPY_SECRET_TO_CLIPBOARD.subscribe((data: { seed: string; openSnackbar: boolean }) => {
+        COPY_SEED_TO_CLIPBOARD.subscribe((data: { seed: string; openSnackbar: boolean }) => {
             this._util.clipboardCopy(data.seed);
             if (data.openSnackbar) {
                 this._snackbar.open('Wallet Seed Copied!', SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION });
@@ -168,17 +174,6 @@ export class WalletEventsService {
             }
         });
 
-        REMOVE_ALL_WALLET_DATA.subscribe(() => {
-            localStorage.clear();
-            this._snackbar.open('All Wallets Removed!', SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION });
-            this._dispatch({
-                hasSecret: false,
-                localStorageWallets: [],
-                activeWallet: undefined,
-            });
-            LOCK_WALLET.next();
-        });
-
         SET_DASHBOARD_ACCOUNT_LOADING.subscribe((isLoading) => {
             this._dispatch({ isLoadingAccounts: isLoading });
         });
@@ -186,17 +181,17 @@ export class WalletEventsService {
         IMPORT_NEW_WALLET_FROM_SECRET.subscribe(async (data): Promise<void> => {
             const password = this.store.hasUnlockedSecret ? this.store.walletPassword : data.password;
             const encryptedSecret = await this._secretService.storeSecret(data.secret, password);
+            const { activeWallet, localStorageWallets } =
+                this._walletStorageService.createLocalStorageWallet(encryptedSecret);
             this._dispatch({
                 hasSecret: true,
                 hasUnlockedSecret: true,
+                localStorageWallets,
             });
-            const wallet = this._walletStorageService.createLocalStorageWallet(encryptedSecret);
-            this._walletStorageService.writeActiveWalletToLocalStorage(wallet);
-            CHANGE_ACTIVE_WALLET.next(wallet);
+            CHANGE_ACTIVE_WALLET.next(activeWallet);
         });
 
         CHANGE_ACTIVE_WALLET.subscribe((activeWallet: LocalStorageWallet) => {
-            this._walletStorageService.writeActiveWalletToLocalStorage(activeWallet);
             this._dispatch({ activeWallet });
             REFRESH_DASHBOARD_ACCOUNTS.next();
         });
@@ -225,14 +220,14 @@ export class WalletEventsService {
                 totalBalance += account.balance;
                 this._dispatch({ totalBalance });
             }
-            this._walletStorageService.writeLocalStorageUpdates(accounts);
+            this._walletStorageService.updateWalletIndexes(accounts);
             this._dispatch({ accounts, isLoadingAccounts: false });
         });
 
         REMOVE_ACCOUNTS_BY_INDEX.subscribe((indexes: number[]) => {
             const accounts = this._accountService.removeAccounts(indexes);
-            this._walletStorageService.writeLocalStorageUpdates(accounts);
-            this._dispatch({ accounts });
+            const { activeWallet, localStorageWallets } = this._walletStorageService.updateWalletIndexes(accounts);
+            this._dispatch({ accounts, activeWallet, localStorageWallets });
         });
 
         RENAME_ACTIVE_WALLET.subscribe((newWalletName: string) => {
@@ -243,7 +238,6 @@ export class WalletEventsService {
         REMOVE_ACTIVE_WALLET.subscribe(() => {
             const { activeWallet, localStorageWallets } = this._walletStorageService.removeActiveWallet();
             this._snackbar.open('Removed Wallet', SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION });
-
             this._dispatch({ activeWallet, localStorageWallets });
             if (activeWallet) {
                 REFRESH_DASHBOARD_ACCOUNTS.next();
@@ -256,13 +250,38 @@ export class WalletEventsService {
                 });
             }
         });
+
+        REMOVE_ALL_WALLET_DATA.subscribe(() => {
+            this._walletStorageService.clearLocalStorage();
+            this._snackbar.open('All Wallets Removed!', SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION });
+            this._dispatch({
+                hasSecret: false,
+                localStorageWallets: [],
+                activeWallet: undefined,
+            });
+            LOCK_WALLET.next();
+        });
+
+        CHANGE_PASSWORD.subscribe(({ currentPassword, newPassword }) => {
+            this._secretService
+                .changePassword(currentPassword, newPassword)
+                .then((updatedWallets) => {
+                    this._dispatch({ localStorageWallets: updatedWallets, activeWallet: updatedWallets[0] });
+                    LOCK_WALLET.next();
+                    CHANGE_PASSWORD_SUCCESS.next();
+                })
+                .catch((err: Error) => {
+                    CHANGE_PASSWORD_ERROR.next({ error: err.message });
+                });
+        });
     }
 
     /** Broadcasts an updated app state. */
     private _dispatch(newData: Partial<AppStore>): void {
         this._appStateService.store.next(Object.assign(this._appStateService.store.getValue(), newData));
 
-        if (newData.activeWallet !== undefined && newData.localStorageWallets !== undefined) {
+        /* appLocalStorage events are only emitted when we need to write to localstorage; see `wallet-storage.service`. */
+        if (newData.activeWallet !== undefined || newData.localStorageWallets !== undefined) {
             this._appStateService.appLocalStorage.next({
                 activeWallet: newData.activeWallet,
                 localStorageWallets: newData.localStorageWallets,
