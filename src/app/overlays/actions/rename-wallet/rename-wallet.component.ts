@@ -7,7 +7,7 @@ import { AppStateService } from '@app/services/app-state.service';
     selector: 'app-rename-wallet-overlay',
     styleUrls: ['rename-wallet.component.scss'],
     template: `
-        <div class="add-index-overlay">
+        <div class="rename-wallet-overlay">
             <h1 mat-dialog-title>Rename Wallet</h1>
             <div mat-dialog-content style="margin-bottom: 32px;">
                 <div>Rename "{{ currentWalletName }}" to something else?</div>
@@ -19,28 +19,17 @@ import { AppStateService } from '@app/services/app-state.service';
                             matInput
                             [formControl]="walletNameFormControl"
                             (keyup.enter)="renameWallet()"
-                            data-cy="add-rename-wallet-input"
+                            data-cy="rename-wallet-input"
                         />
                     </mat-form-field>
                 </form>
             </div>
             <blui-spacer></blui-spacer>
             <mat-divider style="margin-left: -48px; margin-right: -48px"></mat-divider>
-            <div
-                mat-dialog-actions
-                style="display: flex; justify-content: space-between; margin-bottom: 0; padding: 8px 0"
-            >
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0; padding: 16px 0 8px 0">
+                <button mat-stroked-button color="primary" (click)="close.emit()" style="width: 100px;">Close</button>
                 <button
-                    mat-stroked-button
-                    mat-dialog-close
-                    color="primary"
-                    (click)="close.emit()"
-                    style="width: 100px;"
-                >
-                    Close
-                </button>
-                <button
-                    data-cy="add-account-overlay-button"
+                    data-cy="rename-wallet-overlay-button"
                     mat-flat-button
                     color="primary"
                     style="width: 100px;"

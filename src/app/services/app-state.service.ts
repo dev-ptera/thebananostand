@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { LocalStorageWallet } from '@app/services/wallet-storage.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 export type AppStore = {
     /** User has a wallet (encrypted seed) stored in localstorage. */
@@ -45,4 +45,6 @@ export class AppStateService {
         totalBalance: 0,
         isLoadingAccounts: true,
     });
+
+    appLocalStorage = new Subject<{ activeWallet: LocalStorageWallet; localStorageWallets: LocalStorageWallet[] }>();
 }

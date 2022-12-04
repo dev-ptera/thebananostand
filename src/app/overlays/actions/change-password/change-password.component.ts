@@ -88,10 +88,7 @@ import { Router } from '@angular/router';
             </div>
             <blui-spacer></blui-spacer>
             <mat-divider style="margin-left: -48px; margin-right: -48px"></mat-divider>
-            <div
-                mat-dialog-actions
-                style="display: flex; justify-content: space-between; margin-bottom: 0; padding: 8px 0"
-            >
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0; padding: 16px 0 8px 0">
                 <button
                     mat-stroked-button
                     mat-dialog-close

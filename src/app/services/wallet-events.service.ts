@@ -8,8 +8,8 @@ import { SecretService } from '@app/services/secret.service';
 import { AccountService } from '@app/services/account.service';
 import { TransactionService } from '@app/services/transaction.service';
 
-const duration = 3000;
-const closeActionText = 'Dismiss';
+const SNACKBAR_DURATION = 3000;
+const SNACKBAR_CLOSE_ACTION_TEXT = 'Dismiss';
 
 /** User has attempted to unlock an encrypted secret wallet using a password. */
 export const ATTEMPT_UNLOCK_WALLET_WITH_PASSWORD = new Subject<{ password: string }>();
@@ -148,31 +148,29 @@ export class WalletEventsService {
         COPY_SECRET_TO_CLIPBOARD.subscribe((data: { seed: string; openSnackbar: boolean }) => {
             this._util.clipboardCopy(data.seed);
             if (data.openSnackbar) {
-                this._snackbar.open('Wallet Seed Copied!', closeActionText, { duration });
+                this._snackbar.open('Wallet Seed Copied!', SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION });
             }
         });
 
         COPY_MNEMONIC_TO_CLIPBOARD.subscribe((data: { mnemonic: string; openSnackbar: boolean }) => {
             this._util.clipboardCopy(data.mnemonic);
             if (data.openSnackbar) {
-                this._snackbar.open('Wallet Mnemonic Phrase Copied!', closeActionText, { duration });
+                this._snackbar.open('Wallet Mnemonic Phrase Copied!', SNACKBAR_CLOSE_ACTION_TEXT, {
+                    duration: SNACKBAR_DURATION,
+                });
             }
         });
 
         COPY_ADDRESS_TO_CLIPBOARD.subscribe((data: { address: string }) => {
             this._util.clipboardCopy(data.address);
             if (data.address) {
-                this._snackbar.open('Address Copied!', closeActionText, { duration });
+                this._snackbar.open('Address Copied!', SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION });
             }
-        });
-
-        REMOVE_ACTIVE_WALLET.subscribe(() => {
-            this._snackbar.open('Removed Wallet', closeActionText, { duration });
         });
 
         REMOVE_ALL_WALLET_DATA.subscribe(() => {
             localStorage.clear();
-            this._snackbar.open('All Wallets Removed!', closeActionText, { duration });
+            this._snackbar.open('All Wallets Removed!', SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION });
             this._dispatch({
                 hasSecret: false,
                 localStorageWallets: [],
@@ -198,7 +196,7 @@ export class WalletEventsService {
         });
 
         CHANGE_ACTIVE_WALLET.subscribe((activeWallet: LocalStorageWallet) => {
-            this._walletStorageService.writeActiveWalletIdToLocalStorage(activeWallet);
+            this._walletStorageService.writeActiveWalletToLocalStorage(activeWallet);
             this._dispatch({ activeWallet });
             REFRESH_DASHBOARD_ACCOUNTS.next();
         });
@@ -227,17 +225,48 @@ export class WalletEventsService {
                 totalBalance += account.balance;
                 this._dispatch({ totalBalance });
             }
+            this._walletStorageService.writeLocalStorageUpdates(accounts);
             this._dispatch({ accounts, isLoadingAccounts: false });
         });
 
         REMOVE_ACCOUNTS_BY_INDEX.subscribe((indexes: number[]) => {
             const accounts = this._accountService.removeAccounts(indexes);
+            this._walletStorageService.writeLocalStorageUpdates(accounts);
             this._dispatch({ accounts });
+        });
+
+        RENAME_ACTIVE_WALLET.subscribe((newWalletName: string) => {
+            const { activeWallet, localStorageWallets } = this._walletStorageService.updateWalletName(newWalletName);
+            this._dispatch({ activeWallet, localStorageWallets });
+        });
+
+        REMOVE_ACTIVE_WALLET.subscribe(() => {
+            const { activeWallet, localStorageWallets } = this._walletStorageService.removeActiveWallet();
+            this._snackbar.open('Removed Wallet', SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION });
+
+            this._dispatch({ activeWallet, localStorageWallets });
+            if (activeWallet) {
+                REFRESH_DASHBOARD_ACCOUNTS.next();
+            } else {
+                this._dispatch({
+                    hasSecret: false,
+                    hasUnlockedLedger: false,
+                    hasUnlockedSecret: false,
+                    walletPassword: undefined,
+                });
+            }
         });
     }
 
     /** Broadcasts an updated app state. */
     private _dispatch(newData: Partial<AppStore>): void {
         this._appStateService.store.next(Object.assign(this._appStateService.store.getValue(), newData));
+
+        if (newData.activeWallet !== undefined && newData.localStorageWallets !== undefined) {
+            this._appStateService.appLocalStorage.next({
+                activeWallet: newData.activeWallet,
+                localStorageWallets: newData.localStorageWallets,
+            });
+        }
     }
 }
