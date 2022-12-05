@@ -42,7 +42,6 @@ export class WalletStorageService {
                 window.localStorage.setItem(ENCRYPTED_WALLETS, JSON.stringify(walletData.localStorageWallets));
             }
 
-            console.log(walletData);
             if (walletData.activeWallet) {
                 if (this.store.hasUnlockedLedger) {
                     window.localStorage.setItem(

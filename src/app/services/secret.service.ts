@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { COPY_MNEMONIC_TO_CLIPBOARD, COPY_SEED_TO_CLIPBOARD } from '@app/services/wallet-events.service';
 import { AppStateService } from '@app/services/app-state.service';
 import { LocalStorageWallet } from '@app/services/wallet-storage.service';
 
@@ -87,15 +86,9 @@ export class SecretService {
         return seed;
     }
 
-    async backupWalletSecret(): Promise<void> {
+    async getActiveWalletMnemonic(): Promise<string> {
         const seed = await this.getActiveWalletSeed();
-        COPY_SEED_TO_CLIPBOARD.next({ seed, openSnackbar: true });
-    }
-
-    async backupWalletMnemonic(): Promise<void> {
-        const seed = await this.getActiveWalletSeed();
-        const mnemonic = window.bip39.entropyToMnemonic(seed);
-        COPY_MNEMONIC_TO_CLIPBOARD.next({ mnemonic, openSnackbar: true });
+        return window.bip39.entropyToMnemonic(seed);
     }
 
     /** Using a password, attempts to decrypt localstorage secret wallet.

@@ -13,17 +13,17 @@ import { AddIndexDialogComponent } from '@app/overlays/dialogs/add-index/add-ind
 import { AddIndexBottomSheetComponent } from '@app/overlays/bottom-sheet/add-index/add-index-bottom-sheet.component';
 import { EnterSecretBottomSheetComponent } from '@app/overlays/bottom-sheet/enter-secret/enter-secret-bottom-sheet.component';
 import { EnterSecretDialogComponent } from '@app/overlays/dialogs/enter-secret/enter-secret-dialog.component';
-import { LocalStorageWallet, WalletStorageService } from '@app/services/wallet-storage.service';
+import { LocalStorageWallet } from '@app/services/wallet-storage.service';
 import {
     CHANGE_ACTIVE_WALLET,
     ADD_NEXT_ACCOUNT_BY_INDEX,
     REFRESH_DASHBOARD_ACCOUNTS,
     REMOVE_ACCOUNTS_BY_INDEX,
     REMOVE_ACTIVE_WALLET,
+    REQUEST_BACKUP_SECRET,
 } from '@app/services/wallet-events.service';
 import { RenameWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/rename-wallet/rename-wallet-bottom-sheet.component';
 import { RenameWalletDialogComponent } from '@app/overlays/dialogs/rename-wallet/rename-wallet-dialog.component';
-import { SecretService } from '@app/services/secret.service';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -51,24 +51,25 @@ export class DashboardComponent {
     totalBalance = '--';
 
     constructor(
+        public vp: ViewportService,
         private readonly _router: Router,
         private readonly _dialog: MatDialog,
         private readonly _util: UtilService,
-        private readonly _appStateService: AppStateService,
         private readonly _sheet: MatBottomSheet,
         private readonly _themeService: ThemeService,
-        private readonly _secretService: SecretService,
         private readonly _accountService: AccountService,
-        private readonly _walletStorageService: WalletStorageService,
-        public vp: ViewportService
+        private readonly _appStateService: AppStateService
     ) {
         this._appStateService.store.pipe(untilDestroyed(this)).subscribe((store) => {
             this.store = store;
-            this.totalBalance = store.totalBalance ? this._util.numberWithCommas(store.totalBalance) : '--';
+            if (store.totalBalance === undefined) {
+                this.totalBalance = '--';
+            } else {
+                this.totalBalance = this._util.numberWithCommas(store.totalBalance);
+            }
         });
     }
 
-    /** Wallet Actions [START] */
     openEnterSeedOverlay(): void {
         if (this.vp.sm) {
             setTimeout(() => {
@@ -99,21 +100,17 @@ export class DashboardComponent {
         }, 100);
     }
 
-    // TODO, emit event.
     copyWalletSeed(): void {
-        void this._secretService.backupWalletSecret();
+        REQUEST_BACKUP_SECRET.next({ useMnemonic: false });
         this.walletActionsOverlayOpen = false;
     }
 
-    // TODO, emit event.
     copyWalletMnemonic(): void {
-        void this._secretService.backupWalletMnemonic();
+        REQUEST_BACKUP_SECRET.next({ useMnemonic: true });
         this.walletActionsOverlayOpen = false;
     }
-    /** Wallet Actions [END] */
 
-    /** Account Actions [START] **/
-    refresh(): void {
+    refreshDashboard(): void {
         REFRESH_DASHBOARD_ACCOUNTS.next();
         this.accountActionsOverlayOpen = false;
     }
@@ -136,22 +133,9 @@ export class DashboardComponent {
         }
         this.accountActionsOverlayOpen = false;
     }
-    /** Account Actions [END] **/
-
-    isDark(): boolean {
-        return this._themeService.isDark();
-    }
 
     getMonkeyUrl(address: string): string {
         return this._accountService.createMonKeyUrl(address);
-    }
-
-    getActiveWallet(): LocalStorageWallet {
-        return this.store.activeWallet;
-    }
-
-    getWallets(): LocalStorageWallet[] {
-        return this.store.localStorageWallets;
     }
 
     hasAlternativeWallets(): boolean {
@@ -168,10 +152,6 @@ export class DashboardComponent {
 
     openAccount(address: string): void {
         void this._router.navigate([`/account/${address}`]);
-    }
-
-    getAccounts(): AccountOverview[] {
-        return this._appStateService.store.getValue().accounts;
     }
 
     markUniqueAccount(index: number, item: AccountOverview): any {
@@ -191,7 +171,7 @@ export class DashboardComponent {
 
     toggleAll(e: MatCheckboxChange): void {
         if (e.checked) {
-            this.getAccounts().map((account) => {
+            this.store.accounts.map((account) => {
                 this.selectedItems.add(account.index);
             });
         } else {
@@ -213,16 +193,17 @@ export class DashboardComponent {
     }
 
     getItemBackgroundColor(even: boolean): string {
-        return even
-            ? this.isDark()
-                ? this.colors.darkBlack[300]
-                : this.colors.white[100]
-            : this.isDark()
-            ? this.colors.darkBlack[200]
-            : this.colors.white[50];
+        if (even) {
+            return this._themeService.isDark() ? this.colors.darkBlack[300] : this.colors.white[100];
+        }
+        return this._themeService.isDark() ? this.colors.darkBlack[200] : this.colors.white[50];
     }
 
     isLedgerDevice(): boolean {
         return this._appStateService.store.getValue().hasUnlockedLedger;
+    }
+
+    isShowMultiWalletSelect(): boolean {
+        return this.store.localStorageWallets.length > 1 && this.store.hasUnlockedSecret;
     }
 }
