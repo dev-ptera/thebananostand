@@ -56,12 +56,12 @@ export class WalletStorageService {
     }
 
     /** Given an encrypted seed, makes a wallet that is later stored in the browser. */
-    createLocalStorageWallet(encryptedSeed: string): WalletState {
+    createNewLocalStorageWallet(encryptedSeed: string): WalletState {
         const walletId = encryptedSeed.substring(0, 10);
         const activeWallet = {
             encryptedSeed,
             loadedIndexes: [0],
-            name: this._createNewWalletName(),
+            name: `Unnamed Wallet ${this.store.localStorageWallets.length + 1}`,
             walletId,
         };
         this.store.localStorageWallets.push(activeWallet);
@@ -150,25 +150,6 @@ export class WalletStorageService {
             return String(window.localStorage.getItem(ACTIVE_WALLET_ID));
         }
         console.error('Ledger Account is Loaded, attempted to getActiveWalletId');
-    }
-
-    /** Creates a wallet name for the user, based on the number of Unnamed Wallets. */
-    private _createNewWalletName(): string {
-        const unnamedWallet = 'Unnamed Wallet';
-        const walletNameSet = new Set<string>();
-        if (!this.store.localStorageWallets || this.store.localStorageWallets.length === 0) {
-            return `${unnamedWallet} #1`;
-        }
-
-        this.store.localStorageWallets.map((wallet) => walletNameSet.add(wallet.name));
-
-        let index = 0;
-        while (index++ <= walletNameSet.size) {
-            const createdName = `${unnamedWallet} #${index}`;
-            if (!walletNameSet.has(createdName)) {
-                return createdName;
-            }
-        }
     }
 
     private _walletIdsMatch(s1: string, s2: string): boolean {

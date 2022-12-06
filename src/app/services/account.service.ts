@@ -66,7 +66,14 @@ export class AccountService {
 
     /** Fetches RPC account_info and stores response in a list sorted by account number. */
     async fetchAccount(index: number): Promise<AccountOverview> {
-        return await this._rpcService.getAccountInfo(index);
+        if (isNaN(index)) {
+            return undefined;
+        }
+        try {
+            return await this._rpcService.getAccountInfo(index);
+        } catch (err) {
+            return undefined;
+        }
     }
 
     /** Call this function to remove specified indexes from the list of accounts. */

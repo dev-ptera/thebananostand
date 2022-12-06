@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SecretService } from '@app/services/secret.service';
 import { AccountService } from '@app/services/account.service';
 import { TransactionService } from '@app/services/transaction.service';
+import { AccountOverview } from '@app/types/AccountOverview';
 
 const SNACKBAR_DURATION = 3000;
 const SNACKBAR_CLOSE_ACTION_TEXT = 'Dismiss';
@@ -112,17 +113,25 @@ export class WalletEventsService {
         });
 
         ADD_SPECIFIC_ACCOUNTS_BY_INDEX.subscribe(async (indexes: number[]) => {
+            const sortAccounts = (accounts): AccountOverview[] => accounts.sort((a, b) => (a.index < b.index ? -1 : 1));
             const accounts = this.store.accounts;
             this._dispatch({ isLoadingAccounts: true });
             let totalBalance = this.store.totalBalance;
             for await (const index of indexes) {
                 const account = await this._accountService.fetchAccount(index);
-                accounts.push(account);
-                totalBalance += account.balance;
-                this._dispatch({ totalBalance });
+                if (account) {
+                    accounts.push(account);
+                    totalBalance += account.balance;
+                    this._dispatch({ totalBalance, accounts: sortAccounts(accounts) });
+                }
             }
             const { activeWallet, localStorageWallets } = this._walletStorageService.updateWalletIndexes(accounts);
-            this._dispatch({ accounts, activeWallet, isLoadingAccounts: false, localStorageWallets });
+            this._dispatch({
+                activeWallet,
+                localStorageWallets,
+                isLoadingAccounts: false,
+                accounts: sortAccounts(accounts),
+            });
         });
 
         ATTEMPT_UNLOCK_LEDGER_WALLET.subscribe(async () => {
@@ -194,7 +203,7 @@ export class WalletEventsService {
             const password = this.store.hasUnlockedSecret ? this.store.walletPassword : data.password;
             const encryptedSecret = await this._secretService.storeSecret(data.secret, password);
             const { activeWallet, localStorageWallets } =
-                this._walletStorageService.createLocalStorageWallet(encryptedSecret);
+                this._walletStorageService.createNewLocalStorageWallet(encryptedSecret);
             this._dispatch({
                 hasSecret: true,
                 hasUnlockedSecret: true,
