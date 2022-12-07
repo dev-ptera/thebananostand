@@ -1,9 +1,21 @@
-// @ts-nocheck
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
 import { SecretService } from '@app/services/secret.service';
 import { DatasourceService } from '@app/services/datasource.service';
 import { AppStateService } from '@app/services/app-state.service';
+
+export type BananoifiedWindow = {
+    bananocoin: any;
+    bananocoinBananojs: any;
+    bananocoinBananojsHw: any;
+    TransportWebUSB: any;
+    banotils: any;
+} & Window;
+
+declare let window: BananoifiedWindow;
+
+type ReceiveBlock = {
+    receiveBlocks: string[];
+}
 
 @Injectable({
     providedIn: 'root',
@@ -14,17 +26,40 @@ export class TransactionService {
         private readonly _secretService: SecretService,
         private readonly _datasource: DatasourceService,
         private readonly _appStateService: AppStateService
-    ) {}
+    ) {
 
+    }
     private async _configApi(bananodeApi): Promise<void> {
         const client = await this._datasource.getRpcNode();
         bananodeApi.setUrl(client.nodeAddress);
-        bananodeApi.setAuth(environment.token);
     }
 
     /** Attempts a withdrawal.  On success, returns transaction hash. */
-    async withdraw(recipient: string, withdrawAmount: number, accountIndex: number): Promise<string> {
-        const accountSigner = await this.getAccountSigner(accountIndex);
+    async withdraw(recipientAddress: string, withdrawAmount: number, accountIndex: number): Promise<string> {
+        window.banotils.setProofOfWorkMode(window.banotils.PROOF_OF_WORK_MODE.GPU);
+        await window.banotils.setAPIURL(`https://kaliumapi.appditto.com/api`);
+        // {0: 'AUTO', 1: 'GPU', 2: 'CPU', 3: 'NODE', AUTO: 0, GPU: 1, CPU: 2, NODE: 3}
+
+        const walletPrivateKey = await this.getAccountSigner(accountIndex);
+        console.log(walletPrivateKey);
+        const walletAddress = await this.getAccountFromIndex(accountIndex);
+        console.log(walletAddress);
+        const walletPublicKey = window.banotils.getPublicKey(walletAddress);
+        console.log(walletAddress);
+        const recipientPublicKey = window.banotils.getPublicKey(recipientAddress);
+        console.log(recipientPublicKey);
+        const accountRepresentativeAddress = await window.banotils.getAccountRepresentative(walletPublicKey);
+        console.log(accountRepresentativeAddress);
+        const accountRepresentativePublicKey = window.banotils.getPublicKey(accountRepresentativeAddress);
+        console.log(accountRepresentativePublicKey);
+
+        const amountRaw = window.bananocoinBananojs.getBananoDecimalAmountAsRaw(withdrawAmount);
+        const json = await window.banotils.sendAccount(walletPrivateKey, recipientPublicKey, accountRepresentativePublicKey, amountRaw);
+        console.log(json);
+        return Promise.resolve("");
+        /*
+
+
         const bananodeApi = window.bananocoinBananojs.bananodeApi;
         await this._configApi(bananodeApi);
         const bananoUtil = window.bananocoinBananojs.bananoUtil;
@@ -44,9 +79,11 @@ export class TransactionService {
 
             return Promise.reject(err);
         }
+
+         */
     }
 
-    /** Attempts to receive funds. */
+    /** Attempts to receive funds.  Returns the hash of the received block. */
     async receive(account: string, index: number, hash: string): Promise<string> {
         const config = window.bananocoinBananojsHw.bananoConfig;
         const accountSigner = await this.getAccountSigner(index);
@@ -61,8 +98,7 @@ export class TransactionService {
             }
             const loggingUtil = window.bananocoinBananojs.loggingUtil;
             const depositUtil = window.bananocoinBananojs.depositUtil;
-            const receiveResponse =
-                ((await depositUtil.receive(
+            const receiveResponse = await depositUtil.receive(
                     loggingUtil,
                     bananodeApi,
                     account,
@@ -70,7 +106,7 @@ export class TransactionService {
                     representative,
                     hash,
                     config.prefix
-                )) as string) || ReceiveResponse;
+                ) as (string | ReceiveBlock);
 
             if (typeof receiveResponse === 'string') {
                 return receiveResponse;
@@ -82,8 +118,9 @@ export class TransactionService {
         }
     }
 
-    /** Attempts a change block.  On success, returns transaction hash. */
-    async changeRepresentative(newRep: string, address: string, accountIndex: number): Promise<string> {
+
+     /** Attempts a change block.  On success, returns transaction hash. */
+   async changeRepresentative(newRep: string, address: string, accountIndex: number): Promise<string> {
         const accountSigner = await this.getAccountSigner(accountIndex);
         const bananodeApi = window.bananocoinBananojs.bananodeApi;
         await this._configApi(bananodeApi);
@@ -136,7 +173,7 @@ export class TransactionService {
         return account;
     }
 
-    async getAccountSigner(index: number): any {
+    async getAccountSigner(index: number): Promise<string> {
         if (this._appStateService.store.getValue().hasUnlockedSecret) {
             const seed = await this._secretService.getActiveWalletSeed();
             return await window.bananocoinBananojs.getPrivateKey(seed, index);
@@ -144,3 +181,4 @@ export class TransactionService {
         return await window.bananocoin.bananojsHw.getLedgerAccountSigner(index);
     }
 }
+

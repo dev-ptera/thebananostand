@@ -39,6 +39,7 @@
         "@dev-ptera/nano-node-rpc": "^2.0.2",
         "@ngneat/until-destroy": "^9.2.2",
         "banotils": "^0.3.2",
+        "crypto": "^1.0.1",
         "qrcode": "^1.5.1",
         "rxjs": "~6.6.7",
         "tslib": "^2.1.0",
