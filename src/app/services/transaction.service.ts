@@ -41,21 +41,18 @@ export class TransactionService {
         // {0: 'AUTO', 1: 'GPU', 2: 'CPU', 3: 'NODE', AUTO: 0, GPU: 1, CPU: 2, NODE: 3}
 
         const walletPrivateKey = await this.getAccountSigner(accountIndex);
-        console.log(walletPrivateKey);
         const walletAddress = await this.getAccountFromIndex(accountIndex);
-        console.log(walletAddress);
         const walletPublicKey = window.banotils.getPublicKey(walletAddress);
-        console.log(walletAddress);
         const recipientPublicKey = window.banotils.getPublicKey(recipientAddress);
-        console.log(recipientPublicKey);
         const accountRepresentativeAddress = await window.banotils.getAccountRepresentative(walletPublicKey);
-        console.log(accountRepresentativeAddress);
         const accountRepresentativePublicKey = window.banotils.getPublicKey(accountRepresentativeAddress);
-        console.log(accountRepresentativePublicKey);
-
         const amountRaw = window.bananocoinBananojs.getBananoDecimalAmountAsRaw(withdrawAmount);
-        const json = await window.banotils.sendAccount(walletPrivateKey, recipientPublicKey, accountRepresentativePublicKey, amountRaw);
-        console.log(json);
+        const everything = { walletPrivateKey, walletPublicKey, walletAddress, recipientPublicKey, accountRepresentativeAddress, accountRepresentativePublicKey};
+        console.log (everything);
+
+        // Not sure why this is failing; no error in console. :/
+        const response = await window.banotils.sendAccount(walletPrivateKey, recipientPublicKey, accountRepresentativePublicKey, amountRaw);
+        console.log(response);
         return Promise.resolve("");
         /*
 
