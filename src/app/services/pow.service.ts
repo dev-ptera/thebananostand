@@ -18,7 +18,6 @@ const log = (msg: string): void => console.log(msg);
     providedIn: 'root',
 })
 export class PowService {
-
     isWebGLAvailable: boolean;
     defaultBananoJsGetGeneratedWork: any;
     timesCalled = 0;
@@ -97,7 +96,6 @@ export class PowService {
 
     /** This function is invoked by BananoJs when attempting to provide work for transactions. */
     async getGeneratedWork(hash: string): Promise<string> {
-
         const generatePowFromClient = async (): Promise<string> => {
             log('Racing Client-side PoW.');
             try {
@@ -124,7 +122,9 @@ export class PowService {
                     log(`${rpc.alias} node generated work via 'work_generate'.`);
                     return serverWork;
                 }
-                log(`${rpc.alias} node did NOT generate work via 'work_generate', continuing BananoJS default behavior.`);
+                log(
+                    `${rpc.alias} node did NOT generate work via 'work_generate', continuing BananoJS default behavior.`
+                );
                 return Promise.resolve(undefined);
             } catch (err) {
                 log(`${rpc.alias} node ran into an unknown error processing work.`);

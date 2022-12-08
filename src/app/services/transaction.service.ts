@@ -15,7 +15,6 @@ export type BananoifiedWindow = {
 
 declare let window: BananoifiedWindow;
 
-
 type ReceiveBlock = {
     receiveBlocks: string[];
 };
@@ -39,7 +38,7 @@ export class TransactionService {
         const sleep = (milliseconds): Promise<void> => new Promise((resolve) => setTimeout(resolve, milliseconds));
         bananodeApi.setUrl(client.nodeAddress);
         while (window.isClientActivelyGeneratingWork) {
-            log("I am not doing anything until the client stops trying to do work...");
+            log('I am not doing anything until the client stops trying to do work...');
             // eslint-disable-next-line no-await-in-loop
             await sleep(100);
         }
@@ -107,7 +106,7 @@ export class TransactionService {
                     return receiveResponse;
                 }
                 return receiveResponse.receiveBlocks[0];
-            }
+            };
 
             const clientPowReceive = receive;
             const serverPowReceive = receive;
