@@ -124,14 +124,23 @@ export class TransactionService {
 
     /** Attempts a change block.  On success, returns transaction hash. */
     async changeRepresentative(newRep: string, address: string, accountIndex: number): Promise<string> {
+        log('** Begin Change Transaction **');
         const accountSigner = await this._signerService.getAccountSigner(accountIndex);
         const bananodeApi = window.bananocoinBananojs.bananodeApi;
         await this._configApi(bananodeApi);
         const bananoUtil = window.bananocoinBananojs.bananoUtil;
         const config = window.bananocoinBananojsHw.bananoConfig;
         try {
-            const response = await bananoUtil.change(bananodeApi, accountSigner, newRep, config.prefix);
-            return Promise.resolve(response);
+            const change = async (): Promise<string> =>
+                await bananoUtil.change(bananodeApi, accountSigner, newRep, config.prefix);
+            const clientPowChange = change;
+            const serverPowChange = change;
+            window.shouldHaltClientSideWorkGeneration = false;
+            return Promise.any([clientPowChange(), serverPowChange()]).then((changeHash: string) => {
+                window.shouldHaltClientSideWorkGeneration = true;
+                log(`Work Completed for Tx ${changeHash}.\n`);
+                return Promise.resolve(changeHash);
+            });
         } catch (err) {
             console.error(err);
             return Promise.reject(err);

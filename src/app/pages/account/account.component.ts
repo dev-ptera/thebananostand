@@ -218,6 +218,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     /** Using data from the dashboard, sets the account */
+    // TODO, reevaluate this.
     private _setAccount(): void {
         this._appStateService.store.getValue().accounts.map((account) => {
             if (this.address === account.fullAddress) {
