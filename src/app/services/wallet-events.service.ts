@@ -9,7 +9,7 @@ import { AccountService } from '@app/services/account.service';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { SignerService } from '@app/services/signer.service';
 
-const SNACKBAR_DURATION = 3000;
+const SNACKBAR_DURATION = 2000;
 const SNACKBAR_CLOSE_ACTION_TEXT = 'Dismiss';
 const sortAccounts = (accounts): AccountOverview[] => accounts.sort((a, b) => (a.index < b.index ? -1 : 1));
 
@@ -119,13 +119,12 @@ export class WalletEventsService {
         ADD_SPECIFIC_ACCOUNTS_BY_INDEX.subscribe(async (indexes: number[]) => {
             const accounts = this.store.accounts;
             this._dispatch({ isLoadingAccounts: true });
-            let totalBalance = this.store.totalBalance;
             for await (const index of indexes) {
                 const account = await this._accountService.fetchAccount(index);
                 if (account) {
                     accounts.push(account);
-                    totalBalance += account.balance;
-                    this._dispatch({ totalBalance, accounts: sortAccounts(accounts) });
+                    const totalBalance = this._accountService.calculateLoadedAccountsTotalBalance(accounts)
+                    this._dispatch({ accounts: sortAccounts(accounts), totalBalance });
                 }
             }
             const { activeWallet, localStorageWallets } = this._walletStorageService.updateWalletIndexes(accounts);
@@ -147,7 +146,6 @@ export class WalletEventsService {
             }
         });
 
-        // Listening for events
         ATTEMPT_UNLOCK_WALLET_WITH_PASSWORD.subscribe(async (data) => {
             try {
                 await this._secretService.unlockSecretWallet(data.password);
@@ -233,22 +231,20 @@ export class WalletEventsService {
         });
 
         REFRESH_SPECIFIC_ACCOUNT_BY_INDEX.subscribe(async (index) => {
-            const account = await this._accountService.fetchAccount(index);
+            const newAccount = await this._accountService.fetchAccount(index);
             const accounts = this._accountService.removeAccounts([index]);
-            accounts.push(account);
-            const { activeWallet, localStorageWallets } = this._walletStorageService.updateWalletIndexes(accounts);
+            accounts.push(newAccount);
             this._dispatch({
-                activeWallet,
-                localStorageWallets,
-                isLoadingAccounts: false,
                 accounts: sortAccounts(accounts),
+                totalBalance: this._accountService.calculateLoadedAccountsTotalBalance(accounts),
             });
         });
 
         REMOVE_ACCOUNTS_BY_INDEX.subscribe((indexes: number[]) => {
             const accounts = this._accountService.removeAccounts(indexes);
             const { activeWallet, localStorageWallets } = this._walletStorageService.updateWalletIndexes(accounts);
-            this._dispatch({ accounts, activeWallet, localStorageWallets });
+            const totalBalance = this._accountService.calculateLoadedAccountsTotalBalance(accounts);
+            this._dispatch({ accounts, activeWallet, localStorageWallets, totalBalance });
         });
 
         RENAME_ACTIVE_WALLET.subscribe((newWalletName: string) => {

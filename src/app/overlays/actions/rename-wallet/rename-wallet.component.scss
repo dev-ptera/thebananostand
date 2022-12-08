@@ -1,6 +1,11 @@
+:host {
+    display: flex;
+    width: 100%;
+}
+
 .rename-wallet-overlay {
-    max-width: 340px;
-    width: 340px;
+    max-width: 350px;
+    width: 305px;
     height: 335px;
     display: flex;
     flex-direction: column;

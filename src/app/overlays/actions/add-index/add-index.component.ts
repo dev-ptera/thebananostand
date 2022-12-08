@@ -36,7 +36,7 @@ import { ADD_SPECIFIC_ACCOUNTS_BY_INDEX } from '@app/services/wallet-events.serv
                     mat-dialog-close
                     color="primary"
                     (click)="close.emit()"
-                    style="width: 130px;"
+                    style="width: 100px;"
                 >
                     Close
                 </button>
@@ -44,11 +44,11 @@ import { ADD_SPECIFIC_ACCOUNTS_BY_INDEX } from '@app/services/wallet-events.serv
                     data-cy="add-account-overlay-button"
                     mat-flat-button
                     color="primary"
-                    style="width: 130px;"
+                    style="width: 100px;"
                     [disabled]="isDisabled()"
                     (click)="addAccounts()"
                 >
-                    Add Accounts
+                    Add
                 </button>
             </div>
         </div>

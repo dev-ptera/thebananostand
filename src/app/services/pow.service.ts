@@ -24,7 +24,7 @@ export class PowService {
 
     constructor(private readonly _datasourceService: DatasourceService, private readonly _rpcService: RpcService) {}
 
-    /** This will use client-side pow if the user has asked to use it, otherwise defaults to server-side pow (original implementation) */
+    /** Changes the getGeneratedWork method of BananoJS */
     overrideDefaultBananoJSPowSource(): void {
         try {
             this._testWebGLSupport();
