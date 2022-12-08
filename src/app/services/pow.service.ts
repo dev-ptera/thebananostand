@@ -2,6 +2,14 @@ import { Injectable } from '@angular/core';
 import { DatasourceService } from '@app/services/datasource.service';
 import { RpcService } from '@app/services/rpc.service';
 
+export type BananoifiedWindow = {
+    bananocoinBananojs: any;
+    shouldHaltClientSideWorkGeneration: boolean;
+    isClientActivelyGeneratingWork: boolean;
+} & Window;
+
+declare let window: BananoifiedWindow;
+
 // eslint-disable-next-line no-console
 const log = (msg: string): void => console.log(msg);
 
@@ -10,10 +18,10 @@ const log = (msg: string): void => console.log(msg);
     providedIn: 'root',
 })
 export class PowService {
+
     isWebGLAvailable: boolean;
     defaultBananoJsGetGeneratedWork: any;
-
-    private useClientSidePow: boolean;
+    timesCalled = 0;
 
     constructor(private readonly _datasourceService: DatasourceService, private readonly _rpcService: RpcService) {}
 
@@ -22,27 +30,12 @@ export class PowService {
         // @ts-ignore
         try {
             this._testWebGLSupport();
-            // @ts-ignore
-            window.bananocoinBananojs.hashWorkMap = new Map<string, string>();
-            // @ts-ignore
             this.defaultBananoJsGetGeneratedWork = window.bananocoinBananojs.bananodeApi.getGeneratedWork;
-            // @ts-ignore
-            // window.bananocoinBananojs.bananodeApi.getGeneratedWork = this.getGeneratedWork.bind(this);
-
-            /* If we have webgl available, default to using that. */
-            this.setUseClientSidePow(this.isWebGLAvailable);
+            window.bananocoinBananojs.bananodeApi.getGeneratedWork = this.getGeneratedWork.bind(this);
             log('Pow Service Initialized');
         } catch (err) {
             console.error(err);
         }
-    }
-
-    getUseClientSidePow(): boolean {
-        return this.useClientSidePow;
-    }
-
-    setUseClientSidePow(useClient: boolean): void {
-        this.useClientSidePow = useClient;
     }
 
     private _testWebGLSupport(): void {
@@ -59,6 +52,7 @@ export class PowService {
 
     /** Generate PoW using WebGL */
     private _getHashWebGL(hash): Promise<string> {
+        window.isClientActivelyGeneratingWork = true;
         return new Promise((resolve, reject) => {
             const start = Date.now();
             try {
@@ -70,15 +64,15 @@ export class PowService {
                                 (Date.now() - start) / 1000
                             } seconds [${n} iterations]`
                         );
+                        window.isClientActivelyGeneratingWork = false;
                         resolve(work);
                     },
                     () => {
-                        // @ts-ignore
-                        const completedWork = window.bananocoinBananojs.hashWorkMap.has(hash);
-                        if (completedWork) {
+                        if (window.shouldHaltClientSideWorkGeneration) {
+                            window.isClientActivelyGeneratingWork = false;
                             log('Terminating client pow generate; server pow generated faster.');
+                            return true;
                         }
-                        return completedWork;
                     }
                 );
             } catch (error) {
@@ -101,15 +95,11 @@ export class PowService {
         return work;
     }
 
-    private _hasClientGeneratedWork(hash: string): boolean {
-        // @ts-ignore
-        return window.bananocoinBananojs.hashWorkMap.has(hash);
-    }
-
     /** This function is invoked by BananoJs when attempting to provide work for transactions. */
-    getGeneratedWork(hash: string): Promise<string> {
+    async getGeneratedWork(hash: string): Promise<string> {
+
         const generatePowFromClient = async (): Promise<string> => {
-            log('Racing Client-side PoW');
+            log('Racing Client-side PoW.');
             try {
                 if (this.isWebGLAvailable) {
                     const clientWork = await this._getHashWebGL(hash);
@@ -130,28 +120,24 @@ export class PowService {
             log(`Racing Server-side PoW, using ${rpc.alias} node.`);
             try {
                 const serverWork = await this.defaultBananoJsGetGeneratedWork(hash);
-                if (this._hasClientGeneratedWork(hash)) {
-                    log('Terminating server pow generate; client pow generated faster.');
-                    return Promise.reject();
-                } else if (serverWork) {
-                    // Terminates the client pow, see assets/pow/banano-webgl-pow.js
-                    // @ts-ignore
-                    window.bananocoinBananojs.hashWorkMap.set(hash, serverWork);
+                if (serverWork) {
+                    log(`${rpc.alias} node generated work via 'work_generate'.`);
                     return serverWork;
                 }
-                log(`${rpc.alias} node did not generate work.`);
-                return Promise.reject();
+                log(`${rpc.alias} node did NOT generate work via 'work_generate', continuing BananoJS default behavior.`);
+                return Promise.resolve(undefined);
             } catch (err) {
                 log(`${rpc.alias} node ran into an unknown error processing work.`);
                 return Promise.reject();
             }
         };
 
-        return Promise.any([generatePowFromClient(), generatePowFromServer()])
-            .then((work: string) => Promise.resolve(work))
-            .catch((err) => {
-                console.error(err);
-                return Promise.resolve('');
-            });
+        /* This is extremely hacky but is intended as a temporarily solution...
+           Every other call to generate work will alternate between using client & server-side.
+           This allows the client to broadcast 2 transactions, but with alternate pow-sources so that the fastest pow source broadcasts first.  */
+        if (this.timesCalled++ % 2 === 0) {
+            return generatePowFromClient();
+        }
+        return generatePowFromServer();
     }
 }

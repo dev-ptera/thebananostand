@@ -66,7 +66,7 @@ export class DatasourceService {
                     // DEFAULT TO KALIUM FOR NOW.
                     if (source.alias === 'Kalium') {
                         // eslint-disable-next-line no-console
-                        console.log(`Using ${source.alias} as RPC source, but for real this time.`);
+                        console.log(`Using ${source.alias} as RPC source; this is the default source.`);
                         this.setRpcSource(source);
                         this.rpcSourceLoadedSubject.next(source);
                     }
@@ -110,7 +110,7 @@ export class DatasourceService {
         this.spyglassApiSource = source;
     }
 
-    async getRpcNode(): Promise<NanoClient> {
+    async getRpcClient(): Promise<NanoClient> {
         if (this.rpcNode) {
             return Promise.resolve(this.rpcNode);
         }

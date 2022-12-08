@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { UtilService } from './util.service';
 import { AccountInfoResponse } from '@dev-ptera/nano-node-rpc';
-import { TransactionService } from '@app/services/./transaction.service';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { DatasourceService } from '@app/services/datasource.service';
+import { SignerService } from '@app/services/signer.service';
 
 const LOG_ERR = (err: any): any => {
     console.error(`ERROR: Issue fetching RPC data.  ${err}`);
@@ -25,12 +25,12 @@ export class RpcService {
     constructor(
         private readonly _util: UtilService,
         private readonly _datasourceService: DatasourceService,
-        private readonly _transactionService: TransactionService
+        private readonly _signerService: SignerService
     ) {}
 
     /** Returns number of confirmed transactions an account has. */
     async getAccountHeight(address: string): Promise<number> {
-        const client = await this._datasourceService.getRpcNode();
+        const client = await this._datasourceService.getRpcClient();
         const accountInfo = await client.account_info(address).catch((err) => Promise.reject(LOG_ERR(err)));
         return Number(accountInfo.confirmation_height);
     }
@@ -38,7 +38,7 @@ export class RpcService {
     /** Returns array of receivable transactions, sorted by balance descending. */
     async getReceivable(address: string): Promise<string[]> {
         const MAX_PENDING = 100;
-        const client = await this._datasourceService.getRpcNode();
+        const client = await this._datasourceService.getRpcClient();
         const pendingRpcData = await client.accounts_pending([address], MAX_PENDING, { sorting: true }).catch((err) => {
             LOG_ERR(err);
             return Promise.resolve({
@@ -55,8 +55,8 @@ export class RpcService {
 
     /** Returns a modified account info object, given an index. */
     async getAccountInfo(index: number): Promise<AccountOverview> {
-        const address = await this._transactionService.getAccountFromIndex(index);
-        const client = await this._datasourceService.getRpcNode();
+        const address = await this._signerService.getAccountFromIndex(index);
+        const client = await this._datasourceService.getRpcClient();
         const [pending, accountInfoRpc] = await Promise.all([
             this.getReceivable(address),
             client.account_info(address, { representative: true }).catch((err) => {
@@ -105,6 +105,7 @@ export class RpcService {
 
         const accountInfo = rpcData as AccountInfoResponse;
         const balance = await this._convertRawToBan(accountInfo.balance);
+
         return {
             index,
             pending,
@@ -118,7 +119,7 @@ export class RpcService {
 
     /** Given a hash, tells our RPC datasource to stop calculating work to process a transaction. */
     async cancelWorkGenerate(hash: string): Promise<void> {
-        const client = await this._datasourceService.getRpcNode();
+        const client = await this._datasourceService.getRpcClient();
         // eslint-disable-next-line no-console
         console.log('Canceling server-side work generate request');
         return new Promise((resolve) => {

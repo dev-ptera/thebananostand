@@ -6,8 +6,8 @@ import { UtilService } from '@app/services/util.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SecretService } from '@app/services/secret.service';
 import { AccountService } from '@app/services/account.service';
-import { TransactionService } from '@app/services/transaction.service';
 import { AccountOverview } from '@app/types/AccountOverview';
+import { SignerService } from '@app/services/signer.service';
 
 const SNACKBAR_DURATION = 3000;
 const SNACKBAR_CLOSE_ACTION_TEXT = 'Dismiss';
@@ -93,7 +93,7 @@ export class WalletEventsService {
         private readonly _secretService: SecretService,
         private readonly _accountService: AccountService,
         private readonly _appStateService: AppStateService,
-        private readonly _transactionService: TransactionService,
+        private readonly _signerService: SignerService,
         private readonly _walletStorageService: WalletStorageService
     ) {
         // _dispatch initial app state
@@ -136,7 +136,7 @@ export class WalletEventsService {
 
         ATTEMPT_UNLOCK_LEDGER_WALLET.subscribe(async () => {
             try {
-                await this._transactionService.checkLedgerOrError();
+                await this._signerService.checkLedgerOrError();
                 this._dispatch({ hasUnlockedLedger: true });
                 UNLOCK_WALLET.next({ isLedger: true, password: undefined });
             } catch (err) {
