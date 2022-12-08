@@ -11,6 +11,7 @@ import { SignerService } from '@app/services/signer.service';
 
 const SNACKBAR_DURATION = 3000;
 const SNACKBAR_CLOSE_ACTION_TEXT = 'Dismiss';
+const sortAccounts = (accounts): AccountOverview[] => accounts.sort((a, b) => (a.index < b.index ? -1 : 1));
 
 /** User has request next sequential index be added to the dashboard. */
 export const ADD_NEXT_ACCOUNT_BY_INDEX = new Subject<void>();
@@ -56,6 +57,9 @@ export const LOCK_WALLET = new Subject<void>();
 
 /** An address (index) has been removed from the dashboard. */
 export const REMOVE_ACCOUNTS_BY_INDEX = new Subject<number[]>();
+
+/** User has requested a specific account be refreshed. */
+export const REFRESH_SPECIFIC_ACCOUNT_BY_INDEX = new Subject<number>();
 
 /** User has requested that all loaded indexes be refreshed, checking for receivable transactions and updating account balances. */
 export const REFRESH_DASHBOARD_ACCOUNTS = new Subject<void>();
@@ -113,7 +117,6 @@ export class WalletEventsService {
         });
 
         ADD_SPECIFIC_ACCOUNTS_BY_INDEX.subscribe(async (indexes: number[]) => {
-            const sortAccounts = (accounts): AccountOverview[] => accounts.sort((a, b) => (a.index < b.index ? -1 : 1));
             const accounts = this.store.accounts;
             this._dispatch({ isLoadingAccounts: true });
             let totalBalance = this.store.totalBalance;
@@ -227,6 +230,19 @@ export class WalletEventsService {
                 indexes.push(0);
             }
             ADD_SPECIFIC_ACCOUNTS_BY_INDEX.next(indexes);
+        });
+
+        REFRESH_SPECIFIC_ACCOUNT_BY_INDEX.subscribe(async (index) => {
+            const account = await this._accountService.fetchAccount(index);
+            const accounts = this._accountService.removeAccounts([index]);
+            accounts.push(account);
+            const { activeWallet, localStorageWallets } = this._walletStorageService.updateWalletIndexes(accounts);
+            this._dispatch({
+                activeWallet,
+                localStorageWallets,
+                isLoadingAccounts: false,
+                accounts: sortAccounts(accounts),
+            });
         });
 
         REMOVE_ACCOUNTS_BY_INDEX.subscribe((indexes: number[]) => {

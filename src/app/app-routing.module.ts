@@ -4,9 +4,10 @@ import { AccountComponent } from './pages/account/account.component';
 import { HomeComponent } from './pages/home/home.component';
 import { SettingsPageComponent } from '@app/pages/settings/settings.component';
 import { AddressBookComponent } from '@app/pages/address-book/address-book.component';
+import { AuthGuardService as AuthGuard } from './guards/auth-guard';
 
 const routes: Routes = [
-    { path: 'account/:account', component: AccountComponent, data: { animation: 'Account' } },
+    { path: 'account/:account', component: AccountComponent, data: { animation: 'Account' }, canActivate: [AuthGuard] },
     { path: '', component: HomeComponent, data: { animation: 'Home' } },
     { path: 'settings', component: SettingsPageComponent, data: { animation: 'Settings' } },
     { path: 'address-book', component: AddressBookComponent, data: { animation: 'AddressBook' } },

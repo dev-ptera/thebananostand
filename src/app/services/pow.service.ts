@@ -20,13 +20,12 @@ const log = (msg: string): void => console.log(msg);
 export class PowService {
     isWebGLAvailable: boolean;
     defaultBananoJsGetGeneratedWork: any;
-    timesCalled = 0;
+    timesWorkGenerateRequested = 0;
 
     constructor(private readonly _datasourceService: DatasourceService, private readonly _rpcService: RpcService) {}
 
     /** This will use client-side pow if the user has asked to use it, otherwise defaults to server-side pow (original implementation) */
     overrideDefaultBananoJSPowSource(): void {
-        // @ts-ignore
         try {
             this._testWebGLSupport();
             this.defaultBananoJsGetGeneratedWork = window.bananocoinBananojs.bananodeApi.getGeneratedWork;
@@ -95,7 +94,7 @@ export class PowService {
     }
 
     /** This function is invoked by BananoJs when attempting to provide work for transactions. */
-    async getGeneratedWork(hash: string): Promise<string> {
+    getGeneratedWork(hash: string): Promise<string> {
         const generatePowFromClient = async (): Promise<string> => {
             log('Racing Client-side PoW.');
             try {
@@ -132,10 +131,10 @@ export class PowService {
             }
         };
 
-        /* This is extremely hacky but is intended as a temporarily solution...
+        /* This is extremely hacky but is intended as a temporary solution...
            Every other call to generate work will alternate between using client & server-side.
            This allows the client to broadcast 2 transactions, but with alternate pow-sources so that the fastest pow source broadcasts first.  */
-        if (this.timesCalled++ % 2 === 0) {
+        if (this.timesWorkGenerateRequested++ % 2 === 0) {
             return generatePowFromClient();
         }
         return generatePowFromServer();
