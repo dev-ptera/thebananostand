@@ -98,6 +98,8 @@ export class RpcService {
                 fullAddress: address,
                 formattedBalance: '0',
                 balance: 0,
+                balanceRaw: undefined,
+                frontier: undefined,
                 representative: undefined,
                 pending: pending,
             };
@@ -110,10 +112,12 @@ export class RpcService {
             index,
             pending,
             balance: Number(balance),
+            balanceRaw: accountInfo.balance,
             fullAddress: address,
             shortAddress: this._util.shortenAddress(address),
             formattedBalance: this._util.numberWithCommas(balance, 6),
             representative: accountInfo.representative,
+            frontier: accountInfo.frontier,
         };
     }
 
@@ -126,5 +130,28 @@ export class RpcService {
             // @ts-ignore
             client._send('work_cancel', { hash }).then(resolve).catch(resolve);
         });
+    }
+
+    async generateWork(hash: string): Promise<string> {
+        const client = await this._datasourceService.getRpcClient();
+        const response = await client['_send']('work_generate', { hash });
+        return response.work;
+    }
+
+    async process(block: any, type: 'send' | 'receive' | 'change'): Promise<string> {
+        const client = await this._datasourceService.getRpcClient();
+        const datasource = await this._datasourceService.getRpcSource();
+        const processReq = {
+            json_block: 'true',
+            subtype: type,
+            block: block
+        };
+
+        // Kalium specific.
+        if (block.work === undefined && datasource.alias === 'Kalium') {
+            processReq['do_work'] = true;
+        }
+        const response = await client['_send']('process', processReq);
+        return response.hash;
     }
 }

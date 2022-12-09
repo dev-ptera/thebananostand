@@ -123,7 +123,7 @@ export class WalletEventsService {
                 const account = await this._accountService.fetchAccount(index);
                 if (account) {
                     accounts.push(account);
-                    const totalBalance = this._accountService.calculateLoadedAccountsTotalBalance(accounts)
+                    const totalBalance = this._accountService.calculateLoadedAccountsTotalBalance(accounts);
                     this._dispatch({ accounts: sortAccounts(accounts), totalBalance });
                 }
             }

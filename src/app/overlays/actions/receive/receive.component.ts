@@ -57,7 +57,7 @@ export type ReceiveOverlayData = {
                     <ng-container>
                         <div style="margin-bottom: 8px">
                             You are attempting to receive an incoming transaction(s).
-                            <ng-container *ngIf="isLedger"> Use the button below to receive each block. </ng-container>
+                            <ng-container *ngIf="!isLedger"> Use the button below to receive each block. </ng-container>
                             <ng-container *ngIf="isLedger">
                                 Use the button below and your ledger device to manually receive each block.
                             </ng-container>

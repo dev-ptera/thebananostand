@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { DatasourceService } from '@app/services/datasource.service';
 import { AppStateService } from '@app/services/app-state.service';
 import { SignerService } from '@app/services/signer.service';
+import { RpcService } from '@app/services/rpc.service';
+import { PowService } from '@app/services/pow.service';
 
 export type BananoifiedWindow = {
     bananocoin: any;
@@ -13,11 +15,50 @@ export type BananoifiedWindow = {
     isClientActivelyGeneratingWork: boolean;
 } & Window;
 
+declare type Block = {
+    type: string;
+    account: string;
+    previous: string;
+    representative: string;
+    balance: string;
+    link: string;
+    signature: string;
+    work?: string;
+    do_work?: string;
+};
+
 declare let window: BananoifiedWindow;
 
 type ReceiveBlock = {
     receiveBlocks: string[];
 };
+
+const getAmountPartsFromRaw = (amountRawStr: string): any => {
+    return window.bananocoinBananojs.BananoUtil.getAmountPartsFromRaw(
+        amountRawStr,
+        window.bananocoinBananojs.BANANO_PREFIX
+    );
+};
+
+const getPrivateKeyFromSeed = (seed: string, seedIx: number): string => {
+    return window.bananocoinBananojs.BananoUtil.getPrivateKey(seed, seedIx);
+};
+
+const signBlock = async (privateKey: string, block: Block): Promise<string> => {
+    // console.log('bananojs', bananojs);
+    return window.bananocoinBananojs.BananoUtil.sign(privateKey, block);
+};
+
+const getPublicKeyFromPrivateKey = (privateKey: string): Promise<string> => {
+    return window.bananocoinBananojs.BananoUtil.getPublicKey(privateKey);
+};
+
+const getPublicKeyFromAccount = (privateKey: string): string => {
+    return window.bananocoinBananojs.BananoUtil.getAccountPublicKey(privateKey);
+};
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // eslint-disable-next-line no-console
 const log = (msg: string): void => console.log(msg);
@@ -28,9 +69,11 @@ const log = (msg: string): void => console.log(msg);
 /** Services that handle send, receive, change transactions. */
 export class TransactionService {
     constructor(
+        private readonly _powService: PowService,
         private readonly _signerService: SignerService,
         private readonly _datasource: DatasourceService,
-        private readonly _appStateService: AppStateService
+        private readonly _appStateService: AppStateService,
+        private readonly _rpcService: RpcService
     ) {}
 
     private async _configApi(bananodeApi): Promise<void> {
@@ -47,26 +90,51 @@ export class TransactionService {
     /** Attempts a withdrawal.  On success, returns transaction hash. */
     async withdraw(recipientAddress: string, withdrawAmount: number, accountIndex: number): Promise<string> {
         log('** Begin Send Transaction **');
-        const bananodeApi = window.bananocoinBananojs.bananodeApi;
-        await this._configApi(bananodeApi);
-        const accountSigner = await this._signerService.getAccountSigner(accountIndex);
-        const config = window.bananocoinBananojsHw.bananoConfig;
+        await this._configApi(window.bananocoinBananojs.bananodeApi);
+        const privateKey = await this._signerService.getAccountSigner(accountIndex);
+        await sleep(50); // Ledger device is in use in prior fn call
+        const accountInfo = await this._rpcService.getAccountInfo(accountIndex);
+        await sleep(50); // Ledger device is in use in prior fn call
+        const accountAddress = await this._signerService.getAccountFromIndex(accountIndex);
+        const previous = accountInfo.frontier;
+        const balanceRaw = accountInfo.balanceRaw;
+        const amountRaw = window.bananocoinBananojs.getBananoDecimalAmountAsRaw(withdrawAmount);
+
+        if (BigInt(balanceRaw) < BigInt(amountRaw)) {
+            const balance = getAmountPartsFromRaw(balanceRaw);
+            const amount = getAmountPartsFromRaw(amountRaw);
+            const balanceMajorAmount = balance.banano;
+            const amountMajorAmount = amount.banano;
+            throw Error(`The server's account balance of ${balanceMajorAmount} banano is too small,
+            cannot withdraw ${amountMajorAmount} banano. In raw ${balanceRaw} < ${amountRaw}.`);
+        }
+
+        const remaining = BigInt(balanceRaw) - BigInt(amountRaw);
+        const remainingDecimal = remaining.toString(10);
+        const destPublicKey = getPublicKeyFromAccount(recipientAddress);
+        const block: Block = {
+            type: 'state',
+            account: accountAddress,
+            previous: previous,
+            representative: accountInfo.representative,
+            balance: remainingDecimal,
+            link: destPublicKey,
+            signature: '',
+        };
+        block.signature = await signBlock(privateKey, block);
+
+        const sendUsingServerPow = async (): Promise<string> => {
+            block.work = await this._powService.generateRemoteWork(previous);
+            return await this._rpcService.process(block, 'send');
+        }
+        const sendUsingClientPow = async (): Promise<string> => {
+            window.shouldHaltClientSideWorkGeneration = false;
+            block.work = await this._powService.generateLocalWork(previous);
+            return await this._rpcService.process(block, 'send');
+        };
 
         try {
-            const amountRaw = window.bananocoinBananojs.getBananoDecimalAmountAsRaw(withdrawAmount);
-            const send = async (): Promise<string> =>
-                await window.bananocoinBananojs.bananoUtil.sendFromPrivateKey(
-                    bananodeApi,
-                    accountSigner,
-                    recipientAddress,
-                    amountRaw,
-                    config.prefix
-                );
-
-            const clientPowSend = send;
-            const serverPowSend = send;
-            window.shouldHaltClientSideWorkGeneration = false;
-            return Promise.any([clientPowSend(), serverPowSend()]).then((sentHash: string) => {
+            return Promise.any([sendUsingClientPow(), sendUsingServerPow()]).then((sentHash: string) => {
                 window.shouldHaltClientSideWorkGeneration = true;
                 log(`Work Completed for Tx ${sentHash}.\n`);
                 return Promise.resolve(sentHash);

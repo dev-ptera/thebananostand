@@ -19,8 +19,6 @@ const log = (msg: string): void => console.log(msg);
 })
 export class PowService {
     isWebGLAvailable: boolean;
-    defaultBananoJsGetGeneratedWork: any;
-    timesWorkGenerateRequested = 0;
 
     constructor(private readonly _datasourceService: DatasourceService, private readonly _rpcService: RpcService) {}
 
@@ -28,8 +26,6 @@ export class PowService {
     overrideDefaultBananoJSPowSource(): void {
         try {
             this._testWebGLSupport();
-            this.defaultBananoJsGetGeneratedWork = window.bananocoinBananojs.bananodeApi.getGeneratedWork;
-            window.bananocoinBananojs.bananodeApi.getGeneratedWork = this.getGeneratedWork.bind(this);
             log('Pow Service Initialized');
         } catch (err) {
             console.error(err);
@@ -93,50 +89,33 @@ export class PowService {
         return work;
     }
 
-    /** This function is invoked by BananoJs when attempting to provide work for transactions. */
-    getGeneratedWork(hash: string): Promise<string> {
-        const generatePowFromClient = async (): Promise<string> => {
-            log('Racing Client-side PoW.');
-            try {
-                if (this.isWebGLAvailable) {
-                    const clientWork = await this._getHashWebGL(hash);
-                    void this._rpcService.cancelWorkGenerate(hash);
-                    return clientWork;
-                }
-                log(`Client does not have support for webgl.`);
-                return Promise.reject();
-            } catch (err) {
-                console.error(err);
-                log(`Error using webgl to generate local work.`);
-                return Promise.reject();
+    async generateLocalWork(hash: string): Promise<string> {
+        log('Racing Client-side PoW.');
+        try {
+            if (this.isWebGLAvailable) {
+                const clientWork = await this._getHashWebGL(hash);
+                void this._rpcService.cancelWorkGenerate(hash);
+                return clientWork;
             }
-        };
-
-        const generatePowFromServer = async (): Promise<string> => {
-            const rpc = await this._datasourceService.getRpcSource();
-            log(`Racing Server-side PoW, using ${rpc.alias} node.`);
-            try {
-                const serverWork = await this.defaultBananoJsGetGeneratedWork(hash);
-                if (serverWork) {
-                    log(`${rpc.alias} node generated work via 'work_generate'.`);
-                    return serverWork;
-                }
-                log(
-                    `${rpc.alias} node did NOT generate work via 'work_generate', continuing BananoJS default behavior.`
-                );
-                return Promise.resolve(undefined);
-            } catch (err) {
-                log(`${rpc.alias} node ran into an unknown error processing work.`);
-                return Promise.reject();
-            }
-        };
-
-        /* This is extremely hacky but is intended as a temporary solution...
-           Every other call to generate work will alternate between using client & server-side.
-           This allows the client to broadcast 2 transactions, but with alternate pow-sources so that the fastest pow source broadcasts first.  */
-        if (this.timesWorkGenerateRequested++ % 2 === 0) {
-            return generatePowFromClient();
+            log(`Client does not have support for webgl.`);
+            return Promise.reject();
+        } catch (err) {
+            console.error(err);
+            log(`Error using webgl to generate local work.`);
+            return Promise.reject();
         }
-        return generatePowFromServer();
+    }
+
+    async generateRemoteWork(hash: string): Promise<string> {
+        const datasource = await this._datasourceService.getRpcSource();
+        log(`Racing Server-side PoW using ${datasource.alias} server.`);
+        try {
+            const work = await this._rpcService.generateWork(hash);
+            return work;
+        } catch (err) {
+            log(`${datasource.alias} server did not provide work via 'work_generate' rpc call.`);
+            console.error(err);
+            return undefined;
+        }
     }
 }
