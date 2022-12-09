@@ -27,12 +27,7 @@ declare type Block = {
     work?: string;
     do_work?: string;
 };
-
 declare let window: BananoifiedWindow;
-
-type ReceiveBlock = {
-    receiveBlocks: string[];
-};
 
 const getAmountPartsFromRaw = (amountRawStr: string): any => {
     return window.bananocoinBananojs.BananoUtil.getAmountPartsFromRaw(
@@ -41,12 +36,7 @@ const getAmountPartsFromRaw = (amountRawStr: string): any => {
     );
 };
 
-const getPrivateKeyFromSeed = (seed: string, seedIx: number): string => {
-    return window.bananocoinBananojs.BananoUtil.getPrivateKey(seed, seedIx);
-};
-
 const signBlock = async (privateKey: string, block: Block): Promise<string> => {
-    // console.log('bananojs', bananojs);
     return window.bananocoinBananojs.BananoUtil.sign(privateKey, block);
 };
 
@@ -93,11 +83,8 @@ export class TransactionService {
         log('** Begin Send Transaction **');
         await this._configApi(window.bananocoinBananojs.bananodeApi);
         const privateKey = await this._signerService.getAccountSigner(accountIndex);
-        await sleep(50); // Ledger device is in use in prior fn call
+        await sleep(100); // Ledger device is in use in prior fn call
         const accountInfo = await this._rpcService.getAccountInfo(accountIndex);
-        await sleep(50); // Ledger device is in use in prior fn call
-        const accountAddress = await this._signerService.getAccountFromIndex(accountIndex);
-        const previous = accountInfo.frontier;
         const balanceRaw = accountInfo.balanceRaw;
         const amountRaw = window.bananocoinBananojs.getBananoDecimalAmountAsRaw(withdrawAmount);
 
@@ -115,8 +102,8 @@ export class TransactionService {
         const destPublicKey = getPublicKeyFromAccount(recipientAddress);
         const block: Block = {
             type: 'state',
-            account: accountAddress,
-            previous: previous,
+            account: accountInfo.fullAddress,
+            previous: accountInfo.frontier,
             representative: accountInfo.representative,
             balance: remainingDecimal,
             link: destPublicKey,
@@ -125,12 +112,12 @@ export class TransactionService {
         block.signature = await signBlock(privateKey, block);
 
         const sendUsingServerPow = async (): Promise<string> => {
-            block.work = await this._powService.generateRemoteWork(previous);
+            block.work = await this._powService.generateRemoteWork(accountInfo.frontier);
             return await this._rpcService.process(block, 'send');
         };
         const sendUsingClientPow = async (): Promise<string> => {
             window.shouldHaltClientSideWorkGeneration = false;
-            block.work = await this._powService.generateLocalWork(previous);
+            block.work = await this._powService.generateLocalWork(accountInfo.frontier);
             return await this._rpcService.process(block, 'send');
         };
 
@@ -151,15 +138,14 @@ export class TransactionService {
         log('** Begin Receive Transaction **');
         await this._configApi(window.bananocoinBananojs.bananodeApi);
         const privateKey = await this._signerService.getAccountSigner(accountIndex);
-        await sleep(50); // Ledger device is in use in prior fn call
+        await sleep(100); // Ledger device is in use in prior fn call
         const accountInfo = await this._rpcService.getAccountInfo(accountIndex);
-        await sleep(50); // Ledger device is in use in prior fn call
+        await sleep(100); // Ledger device is in use in prior fn call
         const publicKey = await getPublicKeyFromPrivateKey(privateKey);
-        await sleep(50); // Ledger device is in use in prior fn call
-        const accountAddress = await this._signerService.getAccountFromIndex(accountIndex);
         const accountBalanceRaw = accountInfo.balanceRaw;
         const valueRaw = (BigInt(incoming.receivableRaw) + BigInt(accountBalanceRaw)).toString();
         const isOpeningAccount = !accountInfo.representative;
+
         // TODO - Get this from the rep list, top rep please.
         const representative = isOpeningAccount
             ? 'ban_3batmanuenphd7osrez9c45b3uqw9d9u81ne8xa6m43e1py56y9p48ap69zg'
@@ -170,7 +156,7 @@ export class TransactionService {
         const subtype = isOpeningAccount ? 'open' : 'receive';
         const block: Block = {
             type: 'state',
-            account: accountAddress,
+            account: accountInfo.fullAddress,
             previous,
             representative,
             balance: valueRaw,
@@ -181,7 +167,6 @@ export class TransactionService {
 
         const workHash = isOpeningAccount ? publicKey : accountInfo.frontier;
         const receiveUsingServerPow = async (): Promise<string> => {
-            // const work = await bananodeApi.getGeneratedWork(publicKey);
             block.work = await this._powService.generateRemoteWork(workHash);
             return await this._rpcService.process(block, subtype);
         };
@@ -206,21 +191,36 @@ export class TransactionService {
     /** Attempts a change block.  On success, returns transaction hash. */
     async changeRepresentative(newRep: string, address: string, accountIndex: number): Promise<string> {
         log('** Begin Change Transaction **');
-        const accountSigner = await this._signerService.getAccountSigner(accountIndex);
-        const bananodeApi = window.bananocoinBananojs.bananodeApi;
-        await this._configApi(bananodeApi);
-        const bananoUtil = window.bananocoinBananojs.bananoUtil;
-        const config = window.bananocoinBananojsHw.bananoConfig;
-        try {
-            const change = async (): Promise<string> =>
-                await bananoUtil.change(bananodeApi, accountSigner, newRep, config.prefix);
-            const clientPowChange = change;
-            const serverPowChange = change;
+        await this._configApi(window.bananocoinBananojs.bananodeApi);
+        const privateKey = await this._signerService.getAccountSigner(accountIndex);
+        await sleep(100); // Ledger device is in use in prior fn call
+        const accountInfo = await this._rpcService.getAccountInfo(accountIndex);
+        const block: Block = {
+            type: 'state',
+            account: accountInfo.fullAddress,
+            previous: accountInfo.frontier,
+            representative: accountInfo.representative,
+            balance: accountInfo.balanceRaw,
+            link: '0000000000000000000000000000000000000000000000000000000000000000',
+            signature: '',
+        };
+        block.signature = await signBlock(privateKey, block);
+
+        const changeUsingServerPow = async (): Promise<string> => {
+            block.work = await this._powService.generateRemoteWork(accountInfo.frontier);
+            return await this._rpcService.process(block, 'change');
+        };
+        const changeUsingClientPow = async (): Promise<string> => {
             window.shouldHaltClientSideWorkGeneration = false;
-            return Promise.any([clientPowChange(), serverPowChange()]).then((changeHash: string) => {
+            block.work = await this._powService.generateLocalWork(accountInfo.frontier);
+            return await this._rpcService.process(block, 'change');
+        };
+
+        try {
+            return Promise.any([changeUsingServerPow(), changeUsingClientPow()]).then((sentHash: string) => {
                 window.shouldHaltClientSideWorkGeneration = true;
-                log(`Work Completed for Tx ${changeHash}.\n`);
-                return Promise.resolve(changeHash);
+                log(`Work Completed for Tx ${sentHash}.\n`);
+                return Promise.resolve(sentHash);
             });
         } catch (err) {
             console.error(err);
