@@ -59,6 +59,7 @@ export class RpcService {
     }
 
     /** Returns a modified account info object, given an index. */
+    // Make this accept a public address, yeah? // TODO
     async getAccountInfo(index: number): Promise<AccountOverview> {
         const address = await this._signerService.getAccountFromIndex(index);
         const client = await this._datasourceService.getRpcClient();

@@ -38,12 +38,10 @@ describe("User Session", () => {
         cy.get('[data-cy=secret-next]').should('not.exist'); // Waits for the New Seed window to dismiss.
         reload();
         cy.window().then(() => {
-
             cy.get('[data-cy=login-wrapper]');
             cy.get('[data-cy=account-unlock-button]').click();
             cy.get('[data-cy=dashboard-wrapper]');
-            }
-        );
+        });
     });
 
     it("should login with a seed and password", () => {

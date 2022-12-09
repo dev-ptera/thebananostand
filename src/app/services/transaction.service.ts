@@ -25,28 +25,22 @@ declare type Block = {
     link: string;
     signature: string;
     work?: string;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     do_work?: string;
 };
 declare let window: BananoifiedWindow;
 
-const getAmountPartsFromRaw = (amountRawStr: string): any => {
-    return window.bananocoinBananojs.BananoUtil.getAmountPartsFromRaw(
-        amountRawStr,
-        window.bananocoinBananojs.BANANO_PREFIX
-    );
-};
+const getAmountPartsFromRaw = (amountRawStr: string): any =>
+    window.bananocoinBananojs.BananoUtil.getAmountPartsFromRaw(amountRawStr, window.bananocoinBananojs.BANANO_PREFIX);
 
-const signBlock = async (privateKey: string, block: Block): Promise<string> => {
-    return window.bananocoinBananojs.BananoUtil.sign(privateKey, block);
-};
+const signBlock = async (privateKey: string, block: Block): Promise<string> =>
+    await window.bananocoinBananojs.BananoUtil.sign(privateKey, block);
 
-const getPublicKeyFromPrivateKey = (privateKey: string): Promise<string> => {
-    return window.bananocoinBananojs.BananoUtil.getPublicKey(privateKey);
-};
+const getPublicKeyFromPrivateKey = (privateKey: string): Promise<string> =>
+    window.bananocoinBananojs.BananoUtil.getPublicKey(privateKey);
 
-const getPublicKeyFromAccount = (privateKey: string): string => {
-    return window.bananocoinBananojs.BananoUtil.getAccountPublicKey(privateKey);
-};
+const getPublicKeyFromAccount = (privateKey: string): string =>
+    window.bananocoinBananojs.BananoUtil.getAccountPublicKey(privateKey);
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -69,7 +63,6 @@ export class TransactionService {
 
     private async _configApi(bananodeApi): Promise<void> {
         const client = await this._datasource.getRpcClient();
-        const sleep = (milliseconds): Promise<void> => new Promise((resolve) => setTimeout(resolve, milliseconds));
         bananodeApi.setUrl(client.nodeAddress);
         while (window.isClientActivelyGeneratingWork) {
             log('I am not doing anything until the client stops trying to do work...');

@@ -75,7 +75,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
                         </button>
                     </mat-form-field>
                 </form>
-                <div class="error-row mat-hint" *ngIf="newPasswordMismatch()">
+                <div class="error-row mat-hint" *ngIf="isNewPasswordMismatch()">
                     <mat-icon color="warn" class="indicator-icon">error</mat-icon>
                     Passwords do not match.
                 </div>
@@ -86,14 +86,14 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
             </div>
             <blui-spacer></blui-spacer>
             <mat-divider style="margin-left: -48px; margin-right: -48px"></mat-divider>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 0; padding: 16px 0 8px 0">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0; padding: 16px 0">
                 <button mat-stroked-button color="primary" (click)="close.emit()" style="width: 100px;">Close</button>
                 <button
                     data-cy="confirm-change-password-button"
                     mat-flat-button
                     color="primary"
                     style="width: 100px;"
-                    [disabled]="newPasswordMismatch()"
+                    [disabled]="isNewPasswordMismatch()"
                     (click)="changePassword()"
                 >
                     Change
@@ -127,12 +127,12 @@ export class ChangePasswordOverlayComponent {
         });
     }
 
-    newPasswordMismatch(): boolean {
+    isNewPasswordMismatch(): boolean {
         return this.newPasswordFormControl.value !== this.confirmPasswordFormControl.value;
     }
 
     changePassword(): void {
-        if (this.newPasswordMismatch()) {
+        if (this.isNewPasswordMismatch()) {
             return;
         }
         const currentPassword = this.currentPasswordFormControl.value;

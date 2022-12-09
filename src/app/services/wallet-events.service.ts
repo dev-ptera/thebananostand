@@ -167,8 +167,9 @@ export class WalletEventsService {
         CHANGE_PASSWORD.subscribe(({ currentPassword, newPassword }) => {
             this._secretService
                 .changePassword(currentPassword, newPassword)
-                .then((updatedWallets) => {
-                    this._dispatch({ localStorageWallets: updatedWallets, activeWallet: updatedWallets[0] });
+                .then(({ localStorageWallets, walletPassword }) => {
+                    const activeWallet = localStorageWallets[0];
+                    this._dispatch({ activeWallet, localStorageWallets, walletPassword });
                     LOCK_WALLET.next();
                     CHANGE_PASSWORD_SUCCESS.next();
                 })
@@ -177,10 +178,10 @@ export class WalletEventsService {
                 });
         });
 
-        COPY_SEED_TO_CLIPBOARD.subscribe((data: { seed: string; openSnackbar: boolean }) => {
-            this._util.clipboardCopy(data.seed);
-            if (data.openSnackbar) {
-                this._snackbar.open('Wallet Seed Copied!', SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION });
+        COPY_ADDRESS_TO_CLIPBOARD.subscribe((data: { address: string }) => {
+            this._util.clipboardCopy(data.address);
+            if (data.address) {
+                this._snackbar.open('Address Copied!', SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION });
             }
         });
 
@@ -193,22 +194,23 @@ export class WalletEventsService {
             }
         });
 
-        COPY_ADDRESS_TO_CLIPBOARD.subscribe((data: { address: string }) => {
-            this._util.clipboardCopy(data.address);
-            if (data.address) {
-                this._snackbar.open('Address Copied!', SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION });
+        COPY_SEED_TO_CLIPBOARD.subscribe((data: { seed: string; openSnackbar: boolean }) => {
+            this._util.clipboardCopy(data.seed);
+            if (data.openSnackbar) {
+                this._snackbar.open('Wallet Seed Copied!', SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION });
             }
         });
 
         IMPORT_NEW_WALLET_FROM_SECRET.subscribe(async (data): Promise<void> => {
             const password = this.store.hasUnlockedSecret ? this.store.walletPassword : data.password;
-            const encryptedSecret = await this._secretService.storeSecret(data.secret, password);
+            const { encryptedSecret, walletPassword } = await this._secretService.storeSecret(data.secret, password);
             const { activeWallet, localStorageWallets } =
                 this._walletStorageService.createNewLocalStorageWallet(encryptedSecret);
             this._dispatch({
                 hasSecret: true,
                 hasUnlockedSecret: true,
                 localStorageWallets,
+                walletPassword,
             });
             CHANGE_ACTIVE_WALLET.next(activeWallet);
         });
