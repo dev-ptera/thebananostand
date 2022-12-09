@@ -4,6 +4,7 @@ import { AppStateService } from '@app/services/app-state.service';
 import { SignerService } from '@app/services/signer.service';
 import { RpcService } from '@app/services/rpc.service';
 import { PowService } from '@app/services/pow.service';
+import { ReceivableHash } from '@app/types/ReceivableHash';
 
 export type BananoifiedWindow = {
     bananocoin: any;
@@ -126,7 +127,7 @@ export class TransactionService {
         const sendUsingServerPow = async (): Promise<string> => {
             block.work = await this._powService.generateRemoteWork(previous);
             return await this._rpcService.process(block, 'send');
-        }
+        };
         const sendUsingClientPow = async (): Promise<string> => {
             window.shouldHaltClientSideWorkGeneration = false;
             block.work = await this._powService.generateLocalWork(previous);
@@ -146,43 +147,55 @@ export class TransactionService {
     }
 
     /** Attempts to receive funds.  Returns the hash of the received block. */
-    async receive(account: string, index: number, hash: string): Promise<string> {
+    async receive(accountIndex: number, incoming: ReceivableHash): Promise<string> {
         log('** Begin Receive Transaction **');
-        const config = window.bananocoinBananojsHw.bananoConfig;
-        const accountSigner = await this._signerService.getAccountSigner(index);
-        const bananodeApi = window.bananocoinBananojs.bananodeApi;
-        await this._configApi(bananodeApi);
+        await this._configApi(window.bananocoinBananojs.bananodeApi);
+        const privateKey = await this._signerService.getAccountSigner(accountIndex);
+        await sleep(50); // Ledger device is in use in prior fn call
+        const accountInfo = await this._rpcService.getAccountInfo(accountIndex);
+        await sleep(50); // Ledger device is in use in prior fn call
+        const publicKey = await getPublicKeyFromPrivateKey(privateKey);
+        await sleep(50); // Ledger device is in use in prior fn call
+        const accountAddress = await this._signerService.getAccountFromIndex(accountIndex);
+        const accountBalanceRaw = accountInfo.balanceRaw;
+        const valueRaw = (BigInt(incoming.receivableRaw) + BigInt(accountBalanceRaw)).toString();
+        const isOpeningAccount = !accountInfo.representative;
+        // TODO - Get this from the rep list, top rep please.
+        const representative = isOpeningAccount
+            ? 'ban_3batmanuenphd7osrez9c45b3uqw9d9u81ne8xa6m43e1py56y9p48ap69zg'
+            : accountInfo.representative;
+        const previous = isOpeningAccount
+            ? '0000000000000000000000000000000000000000000000000000000000000000'
+            : accountInfo.frontier;
+        const subtype = isOpeningAccount ? 'open' : 'receive';
+        const block: Block = {
+            type: 'state',
+            account: accountAddress,
+            previous,
+            representative,
+            balance: valueRaw,
+            link: incoming.hash,
+            signature: '',
+        };
+        block.signature = await signBlock(privateKey, block);
+
+        const workHash = isOpeningAccount ? publicKey : accountInfo.frontier;
+        const receiveUsingServerPow = async (): Promise<string> => {
+            // const work = await bananodeApi.getGeneratedWork(publicKey);
+            block.work = await this._powService.generateRemoteWork(workHash);
+            return await this._rpcService.process(block, subtype);
+        };
+        const receiveUsingClientPow = async (): Promise<string> => {
+            window.shouldHaltClientSideWorkGeneration = false;
+            block.work = await this._powService.generateLocalWork(workHash);
+            return await this._rpcService.process(block, subtype);
+        };
 
         try {
-            let representative = await bananodeApi.getAccountRepresentative(account);
-            if (!representative) {
-                representative = 'ban_3batmanuenphd7osrez9c45b3uqw9d9u81ne8xa6m43e1py56y9p48ap69zg';
-            }
-
-            const receive = async (): Promise<string> => {
-                const receiveResponse = (await window.bananocoinBananojs.depositUtil.receive(
-                    window.bananocoinBananojs.loggingUtil,
-                    bananodeApi,
-                    account,
-                    accountSigner,
-                    representative,
-                    hash,
-                    config.prefix
-                )) as string | ReceiveBlock;
-
-                if (typeof receiveResponse === 'string') {
-                    return receiveResponse;
-                }
-                return receiveResponse.receiveBlocks[0];
-            };
-
-            const clientPowReceive = receive;
-            const serverPowReceive = receive;
-            window.shouldHaltClientSideWorkGeneration = false;
-            return Promise.any([clientPowReceive(), serverPowReceive()]).then((receiveHash: string) => {
+            return Promise.any([receiveUsingServerPow(), receiveUsingClientPow()]).then((sentHash: string) => {
                 window.shouldHaltClientSideWorkGeneration = true;
-                log(`Work Completed for Tx ${receiveHash}.\n`);
-                return Promise.resolve(receiveHash);
+                log(`Work Completed for Tx ${sentHash}.\n`);
+                return Promise.resolve(sentHash);
             });
         } catch (err) {
             console.error(err);

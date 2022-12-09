@@ -4,6 +4,7 @@ import { AccountInfoResponse } from '@dev-ptera/nano-node-rpc';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { DatasourceService } from '@app/services/datasource.service';
 import { SignerService } from '@app/services/signer.service';
+import { ReceivableHash } from '@app/types/ReceivableHash';
 
 const LOG_ERR = (err: any): any => {
     console.error(`ERROR: Issue fetching RPC data.  ${err}`);
@@ -36,7 +37,7 @@ export class RpcService {
     }
 
     /** Returns array of receivable transactions, sorted by balance descending. */
-    async getReceivable(address: string): Promise<string[]> {
+    async getReceivable(address: string): Promise<ReceivableHash[]> {
         const MAX_PENDING = 100;
         const client = await this._datasourceService.getRpcClient();
         const pendingRpcData = await client.accounts_pending([address], MAX_PENDING, { sorting: true }).catch((err) => {
@@ -49,8 +50,12 @@ export class RpcService {
         if (!pendingBlocks) {
             return [];
         }
+        const receivables = [];
         const hashes = [...Object.keys(pendingBlocks)];
-        return hashes;
+        for (const hash of hashes) {
+            receivables.push({ hash, receivableRaw: pendingBlocks[hash] });
+        }
+        return receivables;
     }
 
     /** Returns a modified account info object, given an index. */
@@ -87,7 +92,7 @@ export class RpcService {
     private async _formatAccountInfoResponse(
         index: number,
         address: string,
-        pending: string[],
+        pending: ReceivableHash[],
         rpcData: AccountInfoResponse | UnopenedAccountResponse
     ): Promise<AccountOverview> {
         // If account is not opened, return a placeholder account.
@@ -98,10 +103,10 @@ export class RpcService {
                 fullAddress: address,
                 formattedBalance: '0',
                 balance: 0,
-                balanceRaw: undefined,
+                balanceRaw: '0',
                 frontier: undefined,
                 representative: undefined,
-                pending: pending,
+                pending,
             };
         }
 
@@ -138,13 +143,14 @@ export class RpcService {
         return response.work;
     }
 
-    async process(block: any, type: 'send' | 'receive' | 'change'): Promise<string> {
+    async process(block: any, type: 'send' | 'receive' | 'change' | 'open'): Promise<string> {
         const client = await this._datasourceService.getRpcClient();
         const datasource = await this._datasourceService.getRpcSource();
         const processReq = {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             json_block: 'true',
             subtype: type,
-            block: block
+            block: block,
         };
 
         // Kalium specific.
@@ -154,4 +160,11 @@ export class RpcService {
         const response = await client['_send']('process', processReq);
         return response.hash;
     }
+
+    /*
+    async getPending(account: string): Promise<any> {
+        const client = await this._datasourceService.getRpcClient();
+        const response = await client.accounts_pending([account], 1);
+        return response.blocks;
+    } */
 }

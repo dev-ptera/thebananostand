@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { NanoClient } from '@dev-ptera/nano-node-rpc';
 
 export type Datasource = {
-   // alias: 'Batman' | 'Creeper' | 'Jungle Tv' | 'Booster' | 'Kalium';
+    // alias: 'Batman' | 'Creeper' | 'Jungle Tv' | 'Booster' | 'Kalium';
     alias: string;
     url: string;
     isAccessible?: boolean;
