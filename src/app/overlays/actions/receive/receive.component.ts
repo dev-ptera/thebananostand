@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
-import { AccountService } from '@app/services/account.service';
 import { TransactionService } from '@app/services/transaction.service';
-import { SecretService } from '@app/services/secret.service';
+import { AppStateService } from '@app/services/app-state.service';
+import { ReceivableHash } from '@app/types/ReceivableHash';
 
 export type ReceiveOverlayData = {
     address: string;
     index: number;
-    blocks: string[];
+    blocks: ReceivableHash[];
 };
 
 @Component({
@@ -58,10 +58,8 @@ export type ReceiveOverlayData = {
                     <ng-container>
                         <div style="margin-bottom: 8px">
                             You are attempting to receive an incoming transaction(s).
-                            <ng-container *ngIf="secretService.isLocalSecretUnlocked()">
-                                Use the button below to receive each block.
-                            </ng-container>
-                            <ng-container *ngIf="secretService.isLocalLedgerUnlocked()">
+                            <ng-container *ngIf="!isLedger"> Use the button below to receive each block.</ng-container>
+                            <ng-container *ngIf="isLedger">
                                 Use the button below and your ledger device to manually receive each block.
                             </ng-container>
                         </div>
@@ -118,19 +116,19 @@ export class ReceiveComponent implements OnInit {
     txHash: string;
     hasErrorReceiving: boolean;
     hasSuccess: boolean;
-
+    isLedger: boolean;
     isReceivingTx: boolean;
 
     colors = Colors;
     bufferValue = 0;
 
     constructor(
-        private readonly _transactionService: TransactionService,
-        private readonly _accountService: AccountService,
-        public secretService: SecretService
+        private readonly _appStateService: AppStateService,
+        private readonly _transactionService: TransactionService
     ) {}
 
     ngOnInit(): void {
+        this.isLedger = this._appStateService.store.getValue().hasUnlockedLedger;
         this.maxSteps = this.data.blocks.length;
         this.lastStep = this.maxSteps - 1;
     }
@@ -151,11 +149,7 @@ export class ReceiveComponent implements OnInit {
         for (const receivableBlock of this.data.blocks) {
             try {
                 // eslint-disable-next-line no-await-in-loop
-                const receivedHash = await this._transactionService.receive(
-                    this.data.address,
-                    this.data.index,
-                    receivableBlock
-                );
+                const receivedHash = await this._transactionService.receive(this.data.index, receivableBlock);
                 this.txHash = receivedHash;
                 this.activeStep++;
                 this.bufferValue = (100 / this.maxSteps) * this.activeStep;

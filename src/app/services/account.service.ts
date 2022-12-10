@@ -81,4 +81,13 @@ export class AccountService {
         const removeSet = new Set(indexes);
         return this.store.accounts.filter((account) => !removeSet.has(account.index));
     }
+
+    /** Given a list of accounts, aggregates the total balance. */
+    calculateLoadedAccountsTotalBalance(accounts: AccountOverview[]): number {
+        let total = 0;
+        accounts.forEach((acc) => {
+            total += acc.balance;
+        });
+        return total;
+    }
 }

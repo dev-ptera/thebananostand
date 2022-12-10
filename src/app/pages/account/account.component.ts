@@ -11,7 +11,6 @@ import { ThemeService } from '@app/services/theme.service';
 import { ConfirmedTx } from '@app/types/ConfirmedTx';
 import { RpcService } from '@app/services/rpc.service';
 import { ViewportService } from '@app/services/viewport.service';
-import { environment } from '../../../environments/environment';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { FilterBottomSheetComponent } from '@app/overlays/bottom-sheet/filter/filter-bottom-sheet.component';
 import { FilterOverlayData } from '@app/overlays/actions/filter/filter.component';
@@ -22,9 +21,11 @@ import { SendBottomSheetComponent } from '@app/overlays/bottom-sheet/send/send-b
 import { SendDialogComponent } from '@app/overlays/dialogs/send/send-dialog.component';
 import { ChangeRepBottomSheetComponent } from '@app/overlays/bottom-sheet/change-rep/change-rep-bottom-sheet.component';
 import { ChangeRepDialogComponent } from '@app/overlays/dialogs/change-rep/change-rep-dialog.component';
-import { COPY_ADDRESS_TO_CLIPBOARD } from '@app/services/wallet-events.service';
-import { AppStateService } from '@app/services/app-state.service';
+import { COPY_ADDRESS_TO_CLIPBOARD, REFRESH_SPECIFIC_ACCOUNT_BY_INDEX } from '@app/services/wallet-events.service';
+import { AppStateService, AppStore } from '@app/services/app-state.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
     selector: 'app-account',
     templateUrl: './account.component.html',
@@ -32,6 +33,7 @@ import { AppStateService } from '@app/services/app-state.service';
 })
 export class AccountComponent implements OnInit, OnDestroy {
     colors = Colors;
+    store: AppStore;
     ds: MyDataSource;
     account: AccountOverview;
 
@@ -46,7 +48,6 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     // This is set on page load using route.
     address: string;
-
     accountHeight: number;
 
     isAccountActionsMobileMenuOpen = false;
@@ -62,7 +63,6 @@ export class AccountComponent implements OnInit, OnDestroy {
     constructor(
         public util: UtilService,
         public vp: ViewportService,
-        private readonly _appStateService: AppStateService,
         private readonly _router: Router,
         private readonly _dialog: MatDialog,
         private readonly _sheet: MatBottomSheet,
@@ -70,8 +70,18 @@ export class AccountComponent implements OnInit, OnDestroy {
         private readonly _rpcService: RpcService,
         private readonly _themeService: ThemeService,
         private readonly _accountService: AccountService,
-        private readonly _spyglassService: SpyglassService
-    ) {}
+        private readonly _spyglassService: SpyglassService,
+        private readonly _appStateService: AppStateService
+    ) {
+        this._appStateService.store.pipe(untilDestroyed(this)).subscribe((store) => {
+            this.store = store;
+            store.accounts.forEach((account) => {
+                if (account.fullAddress === this.address) {
+                    this.account = account;
+                }
+            });
+        });
+    }
 
     ngOnInit(): void {
         this.address = window.location.pathname.split('/').pop();
@@ -208,6 +218,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     /** Using data from the dashboard, sets the account */
+    // TODO, reevaluate this.
     private _setAccount(): void {
         this._appStateService.store.getValue().accounts.map((account) => {
             if (this.address === account.fullAddress) {
@@ -216,25 +227,6 @@ export class AccountComponent implements OnInit, OnDestroy {
                 this._ref.detectChanges();
             }
         });
-
-        // If the account is not found within the accounts listed in the dashboard, redirect user back to home page.
-        // If running locally, create a dummy account.
-        if (this.account === undefined) {
-            if (environment.production) {
-                // (|| true) can be added to prevent changing page.
-                this.goHome();
-            } else {
-                this.account = {
-                    index: 0,
-                    fullAddress: this.address,
-                    shortAddress: this.util.shortenAddress(this.address),
-                    representative: undefined,
-                    balance: 50,
-                    formattedBalance: '--',
-                    pending: [],
-                };
-            }
-        }
     }
 
     /**
@@ -353,19 +345,7 @@ export class AccountComponent implements OnInit, OnDestroy {
             return;
         }
         this._searchAccountTxHistory();
-        this._reloadDashboardAccountInfo();
-    }
-
-    /** Reload dashboard and local account info. */
-    private _reloadDashboardAccountInfo(): void {
-        this._accountService
-            .fetchAccount(this.account.index)
-            .then(() => {
-                this._setAccount();
-            })
-            .catch((err) => {
-                console.error(err);
-            });
+        REFRESH_SPECIFIC_ACCOUNT_BY_INDEX.next(this.account.index);
     }
 
     isFilterApplied(): boolean {

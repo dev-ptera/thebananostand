@@ -21,31 +21,40 @@ export class SecretService {
     constructor(private readonly _appStateService: AppStateService) {}
 
     /** Provided a secret phrase and password, returns the encrypted secret. */
-    async storeSecret(secret: string, walletPassword: string): Promise<string> {
-        const password = walletPassword || DEFAULT_PASSWORD;
-        if (secret.length === 64) {
-            return await this._storeSeed(secret, password);
-        }
-        return await this._storeSeed(this._mnemonicToSeed(secret), password);
+    async storeSecret(
+        secret: string,
+        userPassword: string
+    ): Promise<{ walletPassword: string; encryptedSecret: string }> {
+        const walletPassword = userPassword || DEFAULT_PASSWORD;
+        const encryptedSecret =
+            secret.length === 64
+                ? await this._encryptSeedUsingPassword(secret, walletPassword)
+                : await this._encryptSeedUsingPassword(this._mnemonicToSeed(secret), walletPassword);
+        return { walletPassword, encryptedSecret };
     }
 
-    /** Saves a seed in localstorage, encrypting it using a user-provided password. */
-    private async _storeSeed(seed: string, password: string): Promise<string> {
+    /** Encrypts seed using a password. */
+    private async _encryptSeedUsingPassword(seed: string, password: string): Promise<string> {
         const result = window.bananocoin.bananojs.bananoUtil.isSeedValid(seed);
         if (!result.valid) {
             throw Error('Secret is not valid');
         }
-        const encryptedSeed: string = await window.bananocoin.passwordUtils.encryptData(seed, password);
-        return encryptedSeed;
+        return await window.bananocoin.passwordUtils.encryptData(seed, password);
     }
 
-    async changePassword(currentPasswordInput: string, newPasswordInput: string): Promise<LocalStorageWallet[]> {
-        const currentUserPassword = currentPasswordInput || DEFAULT_PASSWORD;
-        const newUserPassword = newPasswordInput || DEFAULT_PASSWORD;
+    async changePassword(
+        userProvidedCurrentPassword: string,
+        userProvidedNewPassword: string
+    ): Promise<{ localStorageWallets: LocalStorageWallet[]; walletPassword: string }> {
+        const currentUserPassword = userProvidedCurrentPassword || DEFAULT_PASSWORD;
+        const newUserPassword = userProvidedNewPassword || DEFAULT_PASSWORD;
 
-        if (!this.matchesCurrentPassword(currentUserPassword)) {
+        try {
+            await this.unlockSecretWallet(currentUserPassword);
+        } catch {
             throw new Error('Current password incorrect');
         }
+
         const wallets = this._appStateService.store.getValue().localStorageWallets;
         for await (const wallet of wallets) {
             if (wallet.encryptedSeed) {
@@ -58,13 +67,7 @@ export class SecretService {
                 wallet.encryptedSeed = encryptedSeed;
             }
         }
-        return wallets;
-    }
-
-    matchesCurrentPassword(currentPasswordUserInput: string): boolean {
-        const userProvidedPassword = currentPasswordUserInput || DEFAULT_PASSWORD;
-        const currentPassword = this._appStateService.store.getValue().walletPassword || DEFAULT_PASSWORD;
-        return userProvidedPassword === currentPassword;
+        return { localStorageWallets: wallets, walletPassword: newUserPassword };
     }
 
     createNewSecretWallet(): { seed: string; mnemonic: string } {

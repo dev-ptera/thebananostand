@@ -6,11 +6,12 @@ import { UtilService } from '@app/services/util.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SecretService } from '@app/services/secret.service';
 import { AccountService } from '@app/services/account.service';
-import { TransactionService } from '@app/services/transaction.service';
 import { AccountOverview } from '@app/types/AccountOverview';
+import { SignerService } from '@app/services/signer.service';
 
-const SNACKBAR_DURATION = 3000;
+const SNACKBAR_DURATION = 2000;
 const SNACKBAR_CLOSE_ACTION_TEXT = 'Dismiss';
+const sortAccounts = (accounts): AccountOverview[] => accounts.sort((a, b) => (a.index < b.index ? -1 : 1));
 
 /** User has request next sequential index be added to the dashboard. */
 export const ADD_NEXT_ACCOUNT_BY_INDEX = new Subject<void>();
@@ -57,6 +58,9 @@ export const LOCK_WALLET = new Subject<void>();
 /** An address (index) has been removed from the dashboard. */
 export const REMOVE_ACCOUNTS_BY_INDEX = new Subject<number[]>();
 
+/** User has requested a specific account be refreshed. */
+export const REFRESH_SPECIFIC_ACCOUNT_BY_INDEX = new Subject<number>();
+
 /** User has requested that all loaded indexes be refreshed, checking for receivable transactions and updating account balances. */
 export const REFRESH_DASHBOARD_ACCOUNTS = new Subject<void>();
 
@@ -93,7 +97,7 @@ export class WalletEventsService {
         private readonly _secretService: SecretService,
         private readonly _accountService: AccountService,
         private readonly _appStateService: AppStateService,
-        private readonly _transactionService: TransactionService,
+        private readonly _signerService: SignerService,
         private readonly _walletStorageService: WalletStorageService
     ) {
         // _dispatch initial app state
@@ -113,16 +117,14 @@ export class WalletEventsService {
         });
 
         ADD_SPECIFIC_ACCOUNTS_BY_INDEX.subscribe(async (indexes: number[]) => {
-            const sortAccounts = (accounts): AccountOverview[] => accounts.sort((a, b) => (a.index < b.index ? -1 : 1));
             const accounts = this.store.accounts;
             this._dispatch({ isLoadingAccounts: true });
-            let totalBalance = this.store.totalBalance;
             for await (const index of indexes) {
                 const account = await this._accountService.fetchAccount(index);
                 if (account) {
                     accounts.push(account);
-                    totalBalance += account.balance;
-                    this._dispatch({ totalBalance, accounts: sortAccounts(accounts) });
+                    const totalBalance = this._accountService.calculateLoadedAccountsTotalBalance(accounts);
+                    this._dispatch({ accounts: sortAccounts(accounts), totalBalance });
                 }
             }
             const { activeWallet, localStorageWallets } = this._walletStorageService.updateWalletIndexes(accounts);
@@ -136,7 +138,7 @@ export class WalletEventsService {
 
         ATTEMPT_UNLOCK_LEDGER_WALLET.subscribe(async () => {
             try {
-                await this._transactionService.checkLedgerOrError();
+                await this._signerService.checkLedgerOrError();
                 this._dispatch({ hasUnlockedLedger: true });
                 UNLOCK_WALLET.next({ isLedger: true, password: undefined });
             } catch (err) {
@@ -144,7 +146,6 @@ export class WalletEventsService {
             }
         });
 
-        // Listening for events
         ATTEMPT_UNLOCK_WALLET_WITH_PASSWORD.subscribe(async (data) => {
             try {
                 await this._secretService.unlockSecretWallet(data.password);
@@ -166,8 +167,9 @@ export class WalletEventsService {
         CHANGE_PASSWORD.subscribe(({ currentPassword, newPassword }) => {
             this._secretService
                 .changePassword(currentPassword, newPassword)
-                .then((updatedWallets) => {
-                    this._dispatch({ localStorageWallets: updatedWallets, activeWallet: updatedWallets[0] });
+                .then(({ localStorageWallets, walletPassword }) => {
+                    const activeWallet = localStorageWallets[0];
+                    this._dispatch({ activeWallet, localStorageWallets, walletPassword });
                     LOCK_WALLET.next();
                     CHANGE_PASSWORD_SUCCESS.next();
                 })
@@ -176,10 +178,10 @@ export class WalletEventsService {
                 });
         });
 
-        COPY_SEED_TO_CLIPBOARD.subscribe((data: { seed: string; openSnackbar: boolean }) => {
-            this._util.clipboardCopy(data.seed);
-            if (data.openSnackbar) {
-                this._snackbar.open('Wallet Seed Copied!', SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION });
+        COPY_ADDRESS_TO_CLIPBOARD.subscribe((data: { address: string }) => {
+            this._util.clipboardCopy(data.address);
+            if (data.address) {
+                this._snackbar.open('Address Copied!', SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION });
             }
         });
 
@@ -192,22 +194,23 @@ export class WalletEventsService {
             }
         });
 
-        COPY_ADDRESS_TO_CLIPBOARD.subscribe((data: { address: string }) => {
-            this._util.clipboardCopy(data.address);
-            if (data.address) {
-                this._snackbar.open('Address Copied!', SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION });
+        COPY_SEED_TO_CLIPBOARD.subscribe((data: { seed: string; openSnackbar: boolean }) => {
+            this._util.clipboardCopy(data.seed);
+            if (data.openSnackbar) {
+                this._snackbar.open('Wallet Seed Copied!', SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION });
             }
         });
 
         IMPORT_NEW_WALLET_FROM_SECRET.subscribe(async (data): Promise<void> => {
             const password = this.store.hasUnlockedSecret ? this.store.walletPassword : data.password;
-            const encryptedSecret = await this._secretService.storeSecret(data.secret, password);
+            const { encryptedSecret, walletPassword } = await this._secretService.storeSecret(data.secret, password);
             const { activeWallet, localStorageWallets } =
                 this._walletStorageService.createNewLocalStorageWallet(encryptedSecret);
             this._dispatch({
                 hasSecret: true,
                 hasUnlockedSecret: true,
                 localStorageWallets,
+                walletPassword,
             });
             CHANGE_ACTIVE_WALLET.next(activeWallet);
         });
@@ -229,10 +232,21 @@ export class WalletEventsService {
             ADD_SPECIFIC_ACCOUNTS_BY_INDEX.next(indexes);
         });
 
+        REFRESH_SPECIFIC_ACCOUNT_BY_INDEX.subscribe(async (index) => {
+            const newAccount = await this._accountService.fetchAccount(index);
+            const accounts = this._accountService.removeAccounts([index]);
+            accounts.push(newAccount);
+            this._dispatch({
+                accounts: sortAccounts(accounts),
+                totalBalance: this._accountService.calculateLoadedAccountsTotalBalance(accounts),
+            });
+        });
+
         REMOVE_ACCOUNTS_BY_INDEX.subscribe((indexes: number[]) => {
             const accounts = this._accountService.removeAccounts(indexes);
             const { activeWallet, localStorageWallets } = this._walletStorageService.updateWalletIndexes(accounts);
-            this._dispatch({ accounts, activeWallet, localStorageWallets });
+            const totalBalance = this._accountService.calculateLoadedAccountsTotalBalance(accounts);
+            this._dispatch({ accounts, activeWallet, localStorageWallets, totalBalance });
         });
 
         RENAME_ACTIVE_WALLET.subscribe((newWalletName: string) => {

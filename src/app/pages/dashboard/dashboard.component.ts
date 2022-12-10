@@ -34,19 +34,17 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
     styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent {
-    colors = Colors;
-
     hasHideAccountToggle = false;
-    accountActionsOverlayOpen = false;
-    walletActionsOverlayOpen = false;
     switchWalletOverlayOpen = false;
-    hoverRowNumber: number;
-
-    selectedItems: Set<number> = new Set();
-
-    bottomSheetOpenDelayMs = 250;
+    walletActionsOverlayOpen = false;
+    accountActionsOverlayOpen = false;
 
     store: AppStore;
+    colors = Colors;
+    selectedItems: Set<number> = new Set();
+
+    hoverRowNumber: number;
+    bottomSheetOpenDelayMs = 250;
 
     totalBalance = '--';
 
