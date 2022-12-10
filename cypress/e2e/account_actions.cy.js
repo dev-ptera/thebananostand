@@ -46,7 +46,7 @@ describe('Account Actions', () => {
             cy.get('.send-overlay').should('not.exist');
         });
 
-       /* it('should send .01 BAN to self (desktop)', () => {
+       it('should send .01 BAN to self (desktop)', () => {
             cy.get('[data-cy=send-action]').click();
             cy.get('.send-overlay');
             cy.get('[data-cy=send-next-button]').click();
@@ -57,13 +57,12 @@ describe('Account Actions', () => {
             cy.get('[data-cy=send-next-button]').click();
             cy.get('[data-cy=send-loading]').should('exist');
             cy.get('[data-cy=send-success-state]').should('exist');
-        }); */
+        });
     })
 
     describe('Receive', () => {
 
         /** The receive button will be disabled unless we have something to actually receive. */
-        /*
         it('should close the receive overlay (desktop)', () => {
             cy.get('[data-cy=receive-action]').click();
             cy.get('.receive-overlay');
@@ -71,14 +70,12 @@ describe('Account Actions', () => {
             cy.get('.receive-overlay').should('not.exist');
         });
 
-         */
-
-        /* it('should receive all incoming transaction(s) (desktop)', () => {
+        it('should receive all incoming transaction(s) (desktop)', () => {
             cy.get('[data-cy=receive-action]').click();
             cy.get('.receive-overlay');
             cy.get('[data-cy=receive-button]').click();
             cy.get('[data-cy=receive-loading]').should('exist');
             cy.get('[data-cy=receive-success-state').should('exist');
-        }); */
+        });
     });
 });
