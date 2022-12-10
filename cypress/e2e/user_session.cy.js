@@ -4,7 +4,6 @@ describe("User Session", () => {
     const root = 'http://localhost:4200'
     const defaultPasswordForTesting = 'SamplePasswordTest123';
 
-
     const reload = () => {
         cy.intercept(root).as('home');
         cy.visit(root);
@@ -12,6 +11,7 @@ describe("User Session", () => {
     }
 
     beforeEach(() => {
+        Cypress.config('defaultCommandTimeout', 10000);
         cy.clearLocalStorage();
         reload();
     });
