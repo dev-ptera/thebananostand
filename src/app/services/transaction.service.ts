@@ -15,6 +15,7 @@ export type BananoifiedWindow = {
     shouldHaltClientSideWorkGeneration: boolean;
     isClientActivelyGeneratingWork: boolean;
 } & Window;
+declare let window: BananoifiedWindow;
 
 declare type Block = {
     type: string;
@@ -28,7 +29,6 @@ declare type Block = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     do_work?: string;
 };
-declare let window: BananoifiedWindow;
 
 const getAmountPartsFromRaw = (amountRawStr: string): any =>
     window.bananocoinBananojs.BananoUtil.getAmountPartsFromRaw(amountRawStr, window.bananocoinBananojs.BANANO_PREFIX);

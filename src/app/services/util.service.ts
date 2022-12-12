@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
 
+export type BananoifiedWindow = {
+    clipboardData: any;
+} & Window;
+declare let window: BananoifiedWindow;
+
 @Injectable({
     providedIn: 'root',
 })
@@ -42,25 +47,23 @@ export class UtilService {
     }
 
     clipboardCopy(text: string): void {
-        window.focus();
-        setTimeout(() => {
+        /* https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript */
+        if (window.clipboardData && window.clipboardData.setData) {
+            // Internet Explorer-specific code path to prevent textarea being shown while dialog is visible.
+            return window.clipboardData.setData('Text', text);
+        } else if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
+            const textarea = document.createElement('textarea');
+            textarea.textContent = text;
+            textarea.style.position = 'fixed'; // Prevent scrolling to bottom of page in Microsoft Edge.
+            document.body.appendChild(textarea);
+            textarea.select();
             try {
-                // Attempt 1
-                void navigator.clipboard.writeText(text);
-            } catch (err1) {
-                // Attempt 2
-                try {
-                    console.error(err1);
-                    const el = document.createElement('textarea');
-                    el.value = text;
-                    document.body.appendChild(el);
-                    el.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(el);
-                } catch (err2) {
-                    console.error(err2);
-                }
+                document.execCommand('copy'); // Security exception may be thrown by some browsers.
+            } catch (ex) {
+                console.error(ex);
+            } finally {
+                document.body.removeChild(textarea);
             }
-        });
+        }
     }
 }
