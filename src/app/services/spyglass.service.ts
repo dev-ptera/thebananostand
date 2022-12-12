@@ -33,12 +33,6 @@ export class SpyglassService {
         return this._http.post<ConfirmedTx[]>(url, { address, size, offset, ...filters, filterAddresses }).toPromise();
     }
 
-    async getRepresentativeAliases(): Promise<KnownAccount[]> {
-        const source = await this._datasource.getSpyglassApiSource();
-        const url = `${source.url}/v1/representatives/aliases`;
-        return this._http.get<KnownAccount[]>(url).toPromise();
-    }
-
     async getAllKnownAccounts(): Promise<KnownAccount[]> {
         const source = await this._datasource.getSpyglassApiSource();
         const url = `${source.url}/v1/known/accounts`;

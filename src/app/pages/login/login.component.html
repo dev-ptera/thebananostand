@@ -1,6 +1,6 @@
-<section class="login-section" [class.fullScreen]="!useCard">
+<section class="login-section" [class.fullScreen]="!isMobileView">
     <mat-card class="login-card">
-        <mat-card-header *ngIf="useCard" class="password-form-card-header">
+        <mat-card-header *ngIf="isMobileView" class="password-form-card-header">
             <mat-card-title style="margin-bottom: 0">Welcome Back!</mat-card-title>
         </mat-card-header>
         <mat-card-content class="login-card-content">
@@ -16,7 +16,7 @@
                         [formControl]="password"
                         [type]="passwordVisible ? 'text' : 'password'"
                         placeholder="Password"
-                        (keyup.enter)="enter($event)"
+                        (keyup.enter)="pressEnterKey($event)"
                     />
                     <button type="button" mat-icon-button matSuffix (click)="togglePasswordVisibility()">
                         <mat-icon>{{ passwordVisible ? 'visibility' : 'visibility_off' }}</mat-icon>

@@ -1,40 +1,53 @@
-import { Component, OnInit, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Output } from '@angular/core';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
-import { SecretService } from '@app/services/secret.service';
 import { FormControl } from '@angular/forms';
+import {
+    ATTEMPT_UNLOCK_WALLET_WITH_PASSWORD,
+    UNLOCK_WALLET_WITH_PASSWORD_ERROR,
+    WalletEventsService,
+} from '@app/services/wallet-events.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements AfterViewInit {
     @Output() cancel: EventEmitter<void> = new EventEmitter();
 
-    useCard: boolean;
+    isMobileView: boolean;
     passwordVisible = false;
-    hasIncorrectPassword: boolean;
+    hasIncorrectPassword = false;
 
     password = new FormControl('', []);
-    passwordInput;
+    passwordInput: HTMLElement;
 
     constructor(
         private readonly _breakpointObserver: BreakpointObserver,
-        private readonly _changeDetectorRef: ChangeDetectorRef,
-        private readonly _seedService: SecretService
-    ) {}
-
-    ngOnInit(): void {
-        this._breakpointObserver.observe([Breakpoints.XSmall]).subscribe((state: BreakpointState) => {
-            this.useCard = !state.matches;
-            this._changeDetectorRef.detectChanges();
+        private readonly _walletEventService: WalletEventsService
+    ) {
+        UNLOCK_WALLET_WITH_PASSWORD_ERROR.pipe(untilDestroyed(this)).subscribe(() => {
+            this.hasIncorrectPassword = true;
+            this.password.setErrors({ password: 'incorrect' });
+            this.passwordInput.focus();
+            this.password.markAsTouched();
         });
+
+        this._breakpointObserver
+            .observe([Breakpoints.XSmall])
+            .pipe(untilDestroyed(this))
+            .subscribe((state: BreakpointState) => {
+                this.isMobileView = !state.matches;
+            });
     }
 
     ngAfterViewInit(): void {
         this.passwordInput = document.getElementById('active-wallet-password-input');
-        this.passwordInput.focus();
-        this._changeDetectorRef.detectChanges();
+        setTimeout(() => {
+            this.passwordInput.focus();
+        });
     }
 
     togglePasswordVisibility(): void {
@@ -48,18 +61,12 @@ export class LoginComponent implements OnInit {
         return undefined;
     }
 
-    enter(e: Event): void {
+    pressEnterKey(e: Event): void {
         e.stopImmediatePropagation();
         this.login();
     }
 
     login(): void {
-        this._seedService.unlockSecretWallet(this.password.value).catch((err) => {
-            console.error(err);
-            this.hasIncorrectPassword = true;
-            this.password.setErrors({ password: 'incorrect' });
-            this.passwordInput.focus();
-            this.password.markAsTouched();
-        });
+        ATTEMPT_UNLOCK_WALLET_WITH_PASSWORD.next({ password: this.password.value });
     }
 }

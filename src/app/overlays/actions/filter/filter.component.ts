@@ -1,8 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { TransactionService } from '@app/services/transaction.service';
-import { AccountService } from '@app/services/account.service';
-import { SpyglassService } from '@app/services/spyglass.service';
-import { UtilService } from '@app/services/util.service';
 
 export type FilterOverlayData = {
     includeReceive: boolean;
@@ -20,7 +16,7 @@ export type FilterOverlayData = {
     template: `
         <div class="filter-overlay">
             <h1 mat-dialog-title>Filter Transactions</h1>
-            <div mat-dialog-content style="margin-bottom: 16px; display: flex; flex: 1 1 0px; flex-direction: column">
+            <div mat-dialog-content style="display: flex; flex: 1 1 0px; flex-direction: column">
                 <div style="margin-bottom: 8px">Use the knobs below to filter your transaction history.</div>
                 <mat-chip-list multiple style="display: flex; justify-content: space-between; margin-top: 16px;">
                     <mat-chip
@@ -75,12 +71,15 @@ export type FilterOverlayData = {
 
                 <blui-spacer></blui-spacer>
                 <mat-divider style="margin-left: -24px; margin-right: -24px"></mat-divider>
-                <div style="display: flex; justify-content: space-between; margin-top: 16px">
-                    <button color="primary" mat-stroked-button (click)="closeDialog()">Close</button>
+                <div style="display: flex; justify-content: space-between; padding: 16px 0">
+                    <button color="primary" mat-stroked-button (click)="closeDialog()" style="width: 100px;">
+                        Close
+                    </button>
                     <button
                         color="primary"
                         mat-flat-button
                         (click)="apply()"
+                        style="width: 100px;"
                         [disabled]="
                             !adjustedFilters.includeReceive &&
                             !adjustedFilters.includeChange &&
@@ -99,13 +98,6 @@ export class FilterComponent implements OnInit {
     @Output() close: EventEmitter<FilterOverlayData> = new EventEmitter<FilterOverlayData>();
 
     adjustedFilters: FilterOverlayData;
-
-    constructor(
-        public util: UtilService,
-        private readonly _apiService: SpyglassService,
-        private readonly _transactionService: TransactionService,
-        private readonly _accountService: AccountService
-    ) {}
 
     ngOnInit(): void {
         this.adjustedFilters = Object.assign({}, this.originalData);

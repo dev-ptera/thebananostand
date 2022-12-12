@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
 import { Router } from '@angular/router';
 import { UtilService } from '@app/services/util.service';
@@ -13,65 +13,61 @@ import { AddIndexDialogComponent } from '@app/overlays/dialogs/add-index/add-ind
 import { AddIndexBottomSheetComponent } from '@app/overlays/bottom-sheet/add-index/add-index-bottom-sheet.component';
 import { EnterSecretBottomSheetComponent } from '@app/overlays/bottom-sheet/enter-secret/enter-secret-bottom-sheet.component';
 import { EnterSecretDialogComponent } from '@app/overlays/dialogs/enter-secret/enter-secret-dialog.component';
-import { LocalStorageWallet, WalletStorageService } from '@app/services/wallet-storage.service';
-import { Subscription } from 'rxjs';
-import { WalletEventsService } from '@app/services/wallet-events.service';
+import { LocalStorageWallet } from '@app/services/wallet-storage.service';
+import {
+    CHANGE_ACTIVE_WALLET,
+    ADD_NEXT_ACCOUNT_BY_INDEX,
+    REFRESH_DASHBOARD_ACCOUNTS,
+    REMOVE_ACCOUNTS_BY_INDEX,
+    REMOVE_ACTIVE_WALLET,
+    REQUEST_BACKUP_SECRET,
+} from '@app/services/wallet-events.service';
 import { RenameWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/rename-wallet/rename-wallet-bottom-sheet.component';
 import { RenameWalletDialogComponent } from '@app/overlays/dialogs/rename-wallet/rename-wallet-dialog.component';
-import { SecretService } from '@app/services/secret.service';
-import { AppStateService } from '@app/services/app-state.service';
+import { AppStateService, AppStore } from '@app/services/app-state.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements OnInit, OnDestroy {
-    colors = Colors;
-
+export class DashboardComponent {
     hasHideAccountToggle = false;
-    isLoadingAccount = true;
-    accountActionsOverlayOpen = false;
-    walletActionsOverlayOpen = false;
     switchWalletOverlayOpen = false;
-    hoverRowNumber: number;
+    walletActionsOverlayOpen = false;
+    accountActionsOverlayOpen = false;
 
+    store: AppStore;
+    colors = Colors;
     selectedItems: Set<number> = new Set();
 
-    loadingAccountListener: Subscription;
+    hoverRowNumber: number;
     bottomSheetOpenDelayMs = 250;
 
-    trackBy = <T>(index: number, item: T): T => item;
+    totalBalance = '--';
 
     constructor(
+        public vp: ViewportService,
         private readonly _router: Router,
         private readonly _dialog: MatDialog,
         private readonly _util: UtilService,
-        private readonly _appStateService: AppStateService,
         private readonly _sheet: MatBottomSheet,
         private readonly _themeService: ThemeService,
-        private readonly _secretService: SecretService,
         private readonly _accountService: AccountService,
-        private readonly _walletStorageService: WalletStorageService,
-        private readonly _walletEventsService: WalletEventsService,
-        public vp: ViewportService
-    ) {}
-
-    ngOnInit(): void {
-        // Initial Load
-        this.isLoadingAccount = this.getAccounts().length === 0;
-        this.loadingAccountListener = this._walletEventsService.accountLoading.subscribe((loading) => {
-            this.isLoadingAccount = loading;
+        private readonly _appStateService: AppStateService
+    ) {
+        this._appStateService.store.pipe(untilDestroyed(this)).subscribe((store) => {
+            this.store = store;
+            if (store.totalBalance === undefined) {
+                this.totalBalance = '--';
+            } else {
+                this.totalBalance = this._util.numberWithCommas(store.totalBalance);
+            }
         });
     }
 
-    ngOnDestroy(): void {
-        if (this.loadingAccountListener) {
-            this.loadingAccountListener.unsubscribe();
-        }
-    }
-
-    /** Wallet Actions [START] */
     openEnterSeedOverlay(): void {
         if (this.vp.sm) {
             setTimeout(() => {
@@ -98,35 +94,30 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.walletActionsOverlayOpen = false;
         // Wait a moment to dismiss the menu before deleting wallet.
         setTimeout(() => {
-            this._walletEventsService.removeWallet.next();
+            REMOVE_ACTIVE_WALLET.next();
         }, 100);
     }
 
     copyWalletSeed(): void {
-        const activeWalletId = this._appStateService.activeWallet.walletId;
-        void this._secretService.backupWalletSecret(activeWalletId);
+        REQUEST_BACKUP_SECRET.next({ useMnemonic: false });
         this.walletActionsOverlayOpen = false;
     }
 
     copyWalletMnemonic(): void {
-        const activeWalletId = this._appStateService.activeWallet.walletId;
-        void this._secretService.backupWalletMnemonic(activeWalletId);
+        REQUEST_BACKUP_SECRET.next({ useMnemonic: true });
         this.walletActionsOverlayOpen = false;
     }
-    /** Wallet Actions [END] */
 
-    /** Account Actions [START] **/
-    refresh(): void {
-        this._walletEventsService.refreshIndexes.next();
+    refreshDashboard(): void {
+        REFRESH_DASHBOARD_ACCOUNTS.next();
         this.accountActionsOverlayOpen = false;
     }
 
     addAccount(): void {
-        if (this.isLoadingAccount) {
+        if (this.store.isLoadingAccounts) {
             return;
         }
-        const nextIndex = this._accountService.findNextUnloadedIndex();
-        this._walletEventsService.addIndex.next(nextIndex);
+        ADD_NEXT_ACCOUNT_BY_INDEX.next();
         this.accountActionsOverlayOpen = false;
     }
 
@@ -140,26 +131,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
         this.accountActionsOverlayOpen = false;
     }
-    /** Account Actions [END] **/
-
-    isDark(): boolean {
-        return this._themeService.isDark();
-    }
 
     getMonkeyUrl(address: string): string {
         return this._accountService.createMonKeyUrl(address);
     }
 
-    getActiveWallet(): LocalStorageWallet {
-        return this._appStateService.activeWallet;
-    }
-
-    getWallets(): LocalStorageWallet[] {
-        return this._appStateService.wallets;
-    }
-
     hasAlternativeWallets(): boolean {
-        return this._appStateService.wallets && this._appStateService.wallets.length >= 2;
+        return this.store.localStorageWallets.length >= 2;
     }
 
     showRepresentativeOffline(address: string): boolean {
@@ -167,19 +145,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     formatRepresentative(rep: string): string {
-        return this._appStateService.repAliases.get(rep) || this._util.shortenAddress(rep);
+        return this._appStateService.knownAccounts.get(rep) || this._util.shortenAddress(rep);
     }
 
     openAccount(address: string): void {
         void this._router.navigate([`/account/${address}`]);
-    }
-
-    getBalance(): string {
-        return this._appStateService.totalBalance || '--';
-    }
-
-    getAccounts(): AccountOverview[] {
-        return this._appStateService.accounts;
     }
 
     markUniqueAccount(index: number, item: AccountOverview): any {
@@ -193,15 +163,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     hideSelected(): void {
-        for (const index of Array.from(this.selectedItems.values())) {
-            this._walletEventsService.removeIndex.next(index);
-        }
+        REMOVE_ACCOUNTS_BY_INDEX.next(Array.from(this.selectedItems.values()));
         this.selectedItems.clear();
     }
 
     toggleAll(e: MatCheckboxChange): void {
         if (e.checked) {
-            this.getAccounts().map((account) => {
+            this.store.accounts.map((account) => {
                 this.selectedItems.add(account.index);
             });
         } else {
@@ -218,21 +186,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     changeActiveWallet(wallet: LocalStorageWallet): void {
-        this._walletEventsService.activeWalletChange.next(wallet);
+        CHANGE_ACTIVE_WALLET.next(wallet);
         this.switchWalletOverlayOpen = false;
     }
 
     getItemBackgroundColor(even: boolean): string {
-        return even
-            ? this.isDark()
-                ? this.colors.darkBlack[300]
-                : this.colors.white[100]
-            : this.isDark()
-            ? this.colors.darkBlack[200]
-            : this.colors.white[50];
+        if (even) {
+            return this._themeService.isDark() ? this.colors.darkBlack[300] : this.colors.white[100];
+        }
+        return this._themeService.isDark() ? this.colors.darkBlack[200] : this.colors.white[50];
     }
 
     isLedgerDevice(): boolean {
-        return this._secretService.isLocalLedgerUnlocked();
+        return this._appStateService.store.getValue().hasUnlockedLedger;
+    }
+
+    isShowMultiWalletSelect(): boolean {
+        return this.store.localStorageWallets.length > 1 && this.store.hasUnlockedSecret;
     }
 }

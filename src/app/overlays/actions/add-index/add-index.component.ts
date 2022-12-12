@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { WalletEventsService } from '@app/services/wallet-events.service';
+import { ADD_SPECIFIC_ACCOUNTS_BY_INDEX } from '@app/services/wallet-events.service';
 
 @Component({
     selector: 'app-add-index-overlay',
@@ -36,7 +36,7 @@ import { WalletEventsService } from '@app/services/wallet-events.service';
                     mat-dialog-close
                     color="primary"
                     (click)="close.emit()"
-                    style="width: 130px;"
+                    style="width: 100px;"
                 >
                     Close
                 </button>
@@ -44,11 +44,11 @@ import { WalletEventsService } from '@app/services/wallet-events.service';
                     data-cy="add-account-overlay-button"
                     mat-flat-button
                     color="primary"
-                    style="width: 130px;"
+                    style="width: 100px;"
                     [disabled]="isDisabled()"
                     (click)="addAccounts()"
                 >
-                    Add Accounts
+                    Add
                 </button>
             </div>
         </div>
@@ -59,8 +59,6 @@ export class AddIndexOverlayComponent {
     errorMessage: string;
 
     @Output() close: EventEmitter<void> = new EventEmitter<void>();
-
-    constructor(private readonly _walletEventService: WalletEventsService) {}
 
     isDisabled(): boolean {
         return !this.indexFormControl.value;
@@ -78,7 +76,7 @@ export class AddIndexOverlayComponent {
         for (const index of stringIndexes) {
             numberIndexes.push(Number(index));
         }
-        this._walletEventService.addIndexes.next(numberIndexes);
+        ADD_SPECIFIC_ACCOUNTS_BY_INDEX.next(numberIndexes);
         this.close.emit();
     }
 }

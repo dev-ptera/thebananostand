@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { NanoClient } from '@dev-ptera/nano-node-rpc';
 
 export type Datasource = {
+    // alias: 'Batman' | 'Creeper' | 'Jungle Tv' | 'Booster' | 'Kalium';
     alias: string;
     url: string;
     isAccessible?: boolean;
@@ -14,7 +15,7 @@ export type Datasource = {
     providedIn: 'root',
 })
 
-/** Saves setting information around which data sources to use. */
+/** Which datasource should we use? RPC nodes & Spyglass API. */
 export class DatasourceService {
     availableSpyglassApiSources: Datasource[] = [
         {
@@ -33,7 +34,7 @@ export class DatasourceService {
 
     availableRpcDataSources = [
         /* { alias: 'Vault', url: 'https://vault.banano.cc/api/node-api', isAccessible: false, isSelected: false }, */ // CORS error
-        { alias: 'Jungle TV', url: 'https://public.node.jungletv.live/rpc', isAccessible: false, isSelected: false },
+        /* { alias: 'Jungle TV', url: 'https://public.node.jungletv.live/rpc', isAccessible: false, isSelected: false }, */ // Can't do work_generate
         { alias: 'Booster', url: 'https://booster.dev-ptera.com/banano-rpc', isAccessible: false, isSelected: false },
         { alias: 'Kalium', url: 'https://kaliumapi.appditto.com/api', isAccessible: false, isSelected: false },
     ];
@@ -66,7 +67,7 @@ export class DatasourceService {
                     // DEFAULT TO KALIUM FOR NOW.
                     if (source.alias === 'Kalium') {
                         // eslint-disable-next-line no-console
-                        console.log(`Using ${source.alias} as RPC source, but for real this time.`);
+                        console.log(`Using ${source.alias} as RPC source; this is the default source.`);
                         this.setRpcSource(source);
                         this.rpcSourceLoadedSubject.next(source);
                     }
@@ -110,7 +111,7 @@ export class DatasourceService {
         this.spyglassApiSource = source;
     }
 
-    async getRpcNode(): Promise<NanoClient> {
+    async getRpcClient(): Promise<NanoClient> {
         if (this.rpcNode) {
             return Promise.resolve(this.rpcNode);
         }
@@ -120,6 +121,7 @@ export class DatasourceService {
         });
     }
 
+    /** The source is only known once one of the servers respond. */
     getSpyglassApiSource(): Promise<Datasource> {
         return new Promise((resolve) => {
             if (this.spyglassApiSource) {
@@ -132,7 +134,7 @@ export class DatasourceService {
         });
     }
 
-    /** The RPC source is only known once one of the servers respond. */
+    /** The source is only known once one of the servers respond. */
     getRpcSource(): Promise<Datasource> {
         return new Promise((resolve) => {
             if (this.rpcSource) {

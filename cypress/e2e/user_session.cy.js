@@ -4,7 +4,6 @@ describe("User Session", () => {
     const root = 'http://localhost:4200'
     const defaultPasswordForTesting = 'SamplePasswordTest123';
 
-
     const reload = () => {
         cy.intercept(root).as('home');
         cy.visit(root);
@@ -12,6 +11,7 @@ describe("User Session", () => {
     }
 
     beforeEach(() => {
+        Cypress.config('defaultCommandTimeout', 10000);
         cy.clearLocalStorage();
         reload();
     });
@@ -38,12 +38,10 @@ describe("User Session", () => {
         cy.get('[data-cy=secret-next]').should('not.exist'); // Waits for the New Seed window to dismiss.
         reload();
         cy.window().then(() => {
-
             cy.get('[data-cy=login-wrapper]');
             cy.get('[data-cy=account-unlock-button]').click();
             cy.get('[data-cy=dashboard-wrapper]');
-            }
-        );
+        });
     });
 
     it("should login with a seed and password", () => {

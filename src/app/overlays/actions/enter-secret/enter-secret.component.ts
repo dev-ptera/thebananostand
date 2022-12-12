@@ -1,10 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { TransactionService } from '@app/services/transaction.service';
-import { AccountService } from '@app/services/account.service';
-import { SpyglassService } from '@app/services/spyglass.service';
-import { UtilService } from '@app/services/util.service';
-import { SecretService } from '@app/services/secret.service';
-import { WalletEventsService } from '@app/services/wallet-events.service';
+import { AppStateService } from '@app/services/app-state.service';
+import { IMPORT_NEW_WALLET_FROM_SECRET } from '@app/services/wallet-events.service';
 
 @Component({
     selector: 'app-enter-secret-overlay',
@@ -91,18 +87,10 @@ export class EnterSecretComponent implements OnInit {
 
     error: string;
 
-    constructor(
-        public util: UtilService,
-        private readonly _ref: ChangeDetectorRef,
-        private readonly _apiService: SpyglassService,
-        private readonly _secretService: SecretService,
-        private readonly _accountService: AccountService,
-        private readonly _transactionService: TransactionService,
-        private readonly _walletEventService: WalletEventsService
-    ) {}
+    constructor(private readonly _ref: ChangeDetectorRef, private readonly _appStateService: AppStateService) {}
 
     ngOnInit(): void {
-        this.maxSteps = this._secretService.isLocalSecretUnlocked() ? 1 : 2;
+        this.maxSteps = this._appStateService.store.getValue().hasUnlockedSecret ? 1 : 2;
         this.lastStep = this.maxSteps - 1;
     }
 
@@ -143,7 +131,7 @@ export class EnterSecretComponent implements OnInit {
     addSeed(): void {
         this.error = undefined;
         this.secret = this.secret.trim();
-        this._walletEventService.addSecret.next({ secret: this.secret, password: this.password });
+        IMPORT_NEW_WALLET_FROM_SECRET.next({ secret: this.secret, password: this.password });
         this.close.emit();
     }
 }

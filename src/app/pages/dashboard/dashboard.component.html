@@ -5,16 +5,16 @@
             <ng-template #switchWalletNameTrigger>
                 <div style="display: flex; align-items: center">
                     <div responsive-trigger class="blui-headline-6 primary" style="margin: 0">
-                        {{ getActiveWallet()?.name }}
+                        {{ store.activeWallet.name }}
                     </div>
-                    <mat-icon *ngIf="getWallets().length > 1">arrow_drop_down</mat-icon>
+                    <mat-icon *ngIf="isShowMultiWalletSelect()">arrow_drop_down</mat-icon>
                 </div>
             </ng-template>
             <ng-template #switchWalletsMenu>
-                <ng-container *ngFor="let wallet of getWallets()">
+                <ng-container *ngFor="let wallet of store.localStorageWallets">
                     <button
                         mat-menu-item
-                        *ngIf="getActiveWallet()?.walletId !== wallet.walletId"
+                        *ngIf="store.activeWallet.walletId !== wallet.walletId"
                         (click)="changeActiveWallet(wallet)"
                     >
                         {{ wallet.name }}
@@ -25,7 +25,7 @@
                 menuTitle="Switch Wallet"
                 [(open)]="switchWalletOverlayOpen"
                 [menu]="switchWalletsMenu"
-                [disabled]="getWallets().length === 1"
+                [disabled]="store.localStorageWallets.length === 1"
                 [desktopTrigger]="switchWalletNameTrigger"
                 [mobileTrigger]="switchWalletNameTrigger"
             >
@@ -68,7 +68,7 @@
 <!-- Is shown whenever a seed is loaded, but no individual addresses are shown yet. -->
 <ng-template #noAccountsEmptyState>
     <blui-empty-state
-        *ngIf="getAccounts().length === 0 && !isLoadingAccount"
+        *ngIf="store.accounts.length === 0 && !store.isLoadingAccounts"
         style="margin: 64px 0 48px 0"
         title="No Accounts Displayed"
         description="Use the buttons above to add an account."
@@ -137,7 +137,7 @@
 <!-- Account-level actions -->
 <ng-template #accountActions>
     <ng-template #accountActionsMenu>
-        <button mat-menu-item (click)="refresh()" data-cy="refresh-dashboard-button">
+        <button mat-menu-item (click)="refreshDashboard()" data-cy="refresh-dashboard-button">
             <mat-icon blui-icon>refresh</mat-icon>Refresh
         </button>
         <div class="mat-overline" style="margin-top: 24px; padding-left: 16px">Show / Hide</div>
@@ -179,11 +179,11 @@
             <mat-checkbox
                 color="warn"
                 *ngIf="hasHideAccountToggle"
-                [disabled]="getAccounts().length === 0"
+                [disabled]="store.accounts.length === 0"
                 style="margin-right: 32px; margin-left: -8px"
                 (change)="toggleAll($event)"
-                [indeterminate]="selectedItems.size < getAccounts().length && selectedItems.size > 0"
-                [checked]="selectedItems.size === getAccounts().length && selectedItems.size > 0"
+                [indeterminate]="selectedItems.size < store.accounts.length && selectedItems.size > 0"
+                [checked]="selectedItems.size === store.accounts.length && selectedItems.size > 0"
             >
             </mat-checkbox>
             <div>
@@ -192,7 +192,7 @@
                 <!-- Account Balance -->
                 <div>
                     <span class="mat-subheading-1" style="margin-right: 8px"> Accounts Balance: </span>
-                    <span> {{ getBalance() }}</span>
+                    <span> {{ totalBalance }}</span>
                     <ng-container *ngIf="!vp.sm"> BAN</ng-container>
                 </div>
             </div>
@@ -215,11 +215,11 @@
 
 <ng-template #accounts>
     <blui-info-list-item
-        *ngFor="let account of getAccounts(); let i = index; let even = even; trackBy: markUniqueAccount"
+        *ngFor="let account of store.accounts; let i = index; let even = even; trackBy: markUniqueAccount"
         (mouseenter)="hoverRowNumber = i"
         (mouseleave)="hoverRowNumber = undefined"
         [class.hovered]="hoverRowNumber === i"
-        [divider]="i === getAccounts().length - 1 ? undefined : 'partial'"
+        [divider]="i === store.accounts.length - 1 ? undefined : 'partial'"
         [style.backgroundColor]="getItemBackgroundColor(even)"
         (click)="openAccount(account.fullAddress)"
     >
@@ -275,27 +275,36 @@
 </ng-template>
 
 <!-- Page Layout -->
-<mat-card
-    style="padding: 0; display: flex; flex-direction: column; overflow: hidden"
-    [style.marginTop.px]="vp.sm ? 0 : 16"
->
-    <ng-template [ngTemplateOutlet]="dashboardHeader"></ng-template>
-    <mat-divider *ngIf="getAccounts().length !== 0" style="position: relative"></mat-divider>
-    <mat-progress-bar *ngIf="isLoadingAccount" color="primary" mode="indeterminate" style="position: absolute">
-    </mat-progress-bar>
-    <ng-template [ngTemplateOutlet]="noAccountsEmptyState"></ng-template>
-    <mat-nav-list
-        responsive
-        *ngIf="getAccounts().length > 0"
-        data-cy="dashboard-account-list"
-        class="dashboard-account-list fade"
-        style="
-            overflow: auto;
-            padding-top: 0;
-            border-top-right-radius: 0 !important;
-            border-top-left-radius: 0 !important;
-        "
-    >
-        <ng-template [ngTemplateOutlet]="accounts"></ng-template>
-    </mat-nav-list>
-</mat-card>
+<div class="app-body" responsive>
+    <div class="app-body-content">
+        <mat-card
+            style="padding: 0; display: flex; flex-direction: column; overflow: hidden; width: 100%"
+            [style.marginTop.px]="vp.sm ? 0 : 16"
+        >
+            <ng-template [ngTemplateOutlet]="dashboardHeader"></ng-template>
+            <mat-divider *ngIf="store.accounts.length !== 0" style="position: relative"></mat-divider>
+            <mat-progress-bar
+                *ngIf="store.isLoadingAccounts"
+                color="primary"
+                mode="indeterminate"
+                style="position: absolute"
+            >
+            </mat-progress-bar>
+            <ng-template [ngTemplateOutlet]="noAccountsEmptyState"></ng-template>
+            <mat-nav-list
+                responsive
+                *ngIf="store.accounts.length > 0"
+                data-cy="dashboard-account-list"
+                class="dashboard-account-list fade"
+                style="
+                    overflow: auto;
+                    padding-top: 0;
+                    border-top-right-radius: 0 !important;
+                    border-top-left-radius: 0 !important;
+                "
+            >
+                <ng-template [ngTemplateOutlet]="accounts"></ng-template>
+            </mat-nav-list>
+        </mat-card>
+    </div>
+</div>

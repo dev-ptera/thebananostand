@@ -11,8 +11,8 @@ describe('Dashboard Management', () => {
         // so we must tell it to visit our website with the `cy.visit()` command.
         // Since we want to visit the same URL at the start of all our tests,
         // we include it in our beforeEach function so that it runs before each test
-        cy.reload();
         Cypress.config('defaultCommandTimeout', 10000);
+        cy.reload();
         cy.intercept(root).as('home');
         cy.visit(root);
         cy.wait('@home'); // once the route resolves, cy.wait will resolve as well

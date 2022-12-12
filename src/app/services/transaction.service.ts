@@ -1,9 +1,56 @@
-// @ts-nocheck
 import { Injectable } from '@angular/core';
-import { UtilService } from './util.service';
-import { environment } from '../../environments/environment';
-import { SecretService } from '@app/services/secret.service';
 import { DatasourceService } from '@app/services/datasource.service';
+import { AppStateService } from '@app/services/app-state.service';
+import { SignerService } from '@app/services/signer.service';
+import { RpcService } from '@app/services/rpc.service';
+import { PowService } from '@app/services/pow.service';
+import { ReceivableHash } from '@app/types/ReceivableHash';
+import { AccountOverview } from '@app/types/AccountOverview';
+
+export type BananoifiedWindow = {
+    bananocoin: any;
+    bananocoinBananojs: any;
+    bananocoinBananojsHw: any;
+    TransportWebUSB: any;
+    banotils: any;
+    shouldHaltClientSideWorkGeneration: boolean;
+    isClientActivelyGeneratingWork: boolean;
+} & Window;
+declare let window: BananoifiedWindow;
+
+declare type Block = {
+    type: string;
+    account: string;
+    previous: string;
+    representative: string;
+    balance: string;
+    link: string;
+    signature: string;
+    work?: string;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    do_work?: string;
+};
+
+const getAmountPartsFromRaw = (amountRawStr: string): any =>
+    window.bananocoinBananojs.BananoUtil.getAmountPartsFromRaw(amountRawStr, window.bananocoinBananojs.BANANO_PREFIX);
+
+const signBlock = async (privateKey: string, block: Block): Promise<string> =>
+    await window.bananocoinBananojs.BananoUtil.sign(privateKey, block);
+
+const getPublicKeyFromPrivateKey = (privateKey: string): Promise<string> =>
+    window.bananocoinBananojs.BananoUtil.getPublicKey(privateKey);
+
+const getPublicKeyFromAccount = (privateKey: string): string =>
+    window.bananocoinBananojs.BananoUtil.getAccountPublicKey(privateKey);
+
+const getAddressFromPublicKey = async (publicKey: string): Promise<string> =>
+    await window.bananocoinBananojs.getBananoAccount(publicKey);
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// eslint-disable-next-line no-console
+const log = (msg: string): void => console.log(msg);
 
 @Injectable({
     providedIn: 'root',
@@ -11,71 +58,131 @@ import { DatasourceService } from '@app/services/datasource.service';
 /** Services that handle send, receive, change transactions. */
 export class TransactionService {
     constructor(
-        private readonly _util: UtilService,
-        private readonly _secretService: SecretService,
-        private readonly _datasource: DatasourceService
+        private readonly _powService: PowService,
+        private readonly _signerService: SignerService,
+        private readonly _datasource: DatasourceService,
+        private readonly _appStateService: AppStateService,
+        private readonly _rpcService: RpcService
     ) {}
 
     private async _configApi(bananodeApi): Promise<void> {
-        const client = await this._datasource.getRpcNode();
+        const client = await this._datasource.getRpcClient();
         bananodeApi.setUrl(client.nodeAddress);
-        bananodeApi.setAuth(environment.token);
+        while (window.isClientActivelyGeneratingWork) {
+            log('I am not doing anything until the client stops trying to do work...');
+            // eslint-disable-next-line no-await-in-loop
+            await sleep(100);
+        }
+    }
+
+    private async _getEssentials(
+        accountIndex
+    ): Promise<{ privateKey: string; publicKey: string; publicAddress: string; accountInfo: AccountOverview }> {
+        const privateKey = await this._signerService.getAccountSigner(accountIndex);
+        const publicKey = await getPublicKeyFromPrivateKey(privateKey);
+        const publicAddress = await getAddressFromPublicKey(publicKey);
+        const accountInfo = await this._rpcService.getAccountInfoFromIndex(accountIndex, publicAddress);
+        return { privateKey, publicKey, publicAddress, accountInfo };
     }
 
     /** Attempts a withdrawal.  On success, returns transaction hash. */
-    async withdraw(recipient: string, withdrawAmount: number, accountIndex: number): Promise<string> {
-        const accountSigner = await this.getAccountSigner(accountIndex);
-        const bananodeApi = window.bananocoinBananojs.bananodeApi;
-        await this._configApi(bananodeApi);
-        const bananoUtil = window.bananocoinBananojs.bananoUtil;
-        const config = window.bananocoinBananojsHw.bananoConfig;
+    async withdraw(recipientAddress: string, withdrawAmount: number, accountIndex: number): Promise<string> {
+        log('** Begin Send Transaction **');
+        await this._configApi(window.bananocoinBananojs.bananodeApi);
+        const { privateKey, accountInfo } = await this._getEssentials(accountIndex);
+        const balanceRaw = accountInfo.balanceRaw;
+        const amountRaw = window.bananocoinBananojs.getBananoDecimalAmountAsRaw(withdrawAmount);
+
+        if (BigInt(balanceRaw) < BigInt(amountRaw)) {
+            const balance = getAmountPartsFromRaw(balanceRaw);
+            const amount = getAmountPartsFromRaw(amountRaw);
+            const balanceMajorAmount = balance.banano;
+            const amountMajorAmount = amount.banano;
+            throw Error(`The server's account balance of ${balanceMajorAmount} banano is too small,
+            cannot withdraw ${amountMajorAmount} banano. In raw ${balanceRaw} < ${amountRaw}.`);
+        }
+
+        const remaining = BigInt(balanceRaw) - BigInt(amountRaw);
+        const remainingDecimal = remaining.toString(10);
+        const destPublicKey = getPublicKeyFromAccount(recipientAddress);
+        const block: Block = {
+            type: 'state',
+            account: accountInfo.fullAddress,
+            previous: accountInfo.frontier,
+            representative: accountInfo.representative,
+            balance: remainingDecimal,
+            link: destPublicKey,
+            signature: '',
+        };
+        block.signature = await signBlock(privateKey, block);
+
+        const sendUsingServerPow = async (): Promise<string> => {
+            block.work = await this._powService.generateRemoteWork(accountInfo.frontier);
+            return await this._rpcService.process(block, 'send');
+        };
+        const sendUsingClientPow = async (): Promise<string> => {
+            window.shouldHaltClientSideWorkGeneration = false;
+            block.work = await this._powService.generateLocalWork(accountInfo.frontier);
+            return await this._rpcService.process(block, 'send');
+        };
+
         try {
-            const amountRaw = window.bananocoinBananojs.getBananoDecimalAmountAsRaw(withdrawAmount);
-            const response = await bananoUtil.sendFromPrivateKey(
-                bananodeApi,
-                accountSigner,
-                recipient,
-                amountRaw,
-                config.prefix
-            );
-            return Promise.resolve(response);
+            return Promise.any([sendUsingClientPow(), sendUsingServerPow()]).then((sentHash: string) => {
+                window.shouldHaltClientSideWorkGeneration = true;
+                log(`Work Completed for Tx ${sentHash}.\n`);
+                return Promise.resolve(sentHash);
+            });
         } catch (err) {
             console.error(err);
-
             return Promise.reject(err);
         }
     }
 
-    /** Attempts to receive funds. */
-    async receive(account: string, index: number, hash: string): Promise<string> {
-        const config = window.bananocoinBananojsHw.bananoConfig;
-        const accountSigner = await this.getAccountSigner(index);
-        const bananodeApi = window.bananocoinBananojs.bananodeApi;
-        await this._configApi(bananodeApi);
+    /** Attempts to receive funds.  Returns the hash of the received block. */
+    async receive(accountIndex: number, incoming: ReceivableHash): Promise<string> {
+        log('** Begin Receive Transaction **');
+        await this._configApi(window.bananocoinBananojs.bananodeApi);
+        const { privateKey, publicKey, accountInfo } = await this._getEssentials(accountIndex);
+        const accountBalanceRaw = accountInfo.balanceRaw;
+        const valueRaw = (BigInt(incoming.receivableRaw) + BigInt(accountBalanceRaw)).toString();
+        const isOpeningAccount = !accountInfo.representative;
+
+        // TODO - Get this from the rep list, top rep please.
+        const representative = isOpeningAccount
+            ? 'ban_3batmanuenphd7osrez9c45b3uqw9d9u81ne8xa6m43e1py56y9p48ap69zg'
+            : accountInfo.representative;
+        const previous = isOpeningAccount
+            ? '0000000000000000000000000000000000000000000000000000000000000000'
+            : accountInfo.frontier;
+        const subtype = isOpeningAccount ? 'open' : 'receive';
+        const block: Block = {
+            type: 'state',
+            account: accountInfo.fullAddress,
+            previous,
+            representative,
+            balance: valueRaw,
+            link: incoming.hash,
+            signature: '',
+        };
+        block.signature = await signBlock(privateKey, block);
+
+        const workHash = isOpeningAccount ? publicKey : accountInfo.frontier;
+        const receiveUsingServerPow = async (): Promise<string> => {
+            block.work = await this._powService.generateRemoteWork(workHash);
+            return await this._rpcService.process(block, subtype);
+        };
+        const receiveUsingClientPow = async (): Promise<string> => {
+            window.shouldHaltClientSideWorkGeneration = false;
+            block.work = await this._powService.generateLocalWork(workHash);
+            return await this._rpcService.process(block, subtype);
+        };
 
         try {
-            let representative = await bananodeApi.getAccountRepresentative(account);
-            if (!representative) {
-                // TODO populate this via the rep scores API. For now default to batman
-                representative = 'ban_3batmanuenphd7osrez9c45b3uqw9d9u81ne8xa6m43e1py56y9p48ap69zg';
-            }
-            const loggingUtil = window.bananocoinBananojs.loggingUtil;
-            const depositUtil = window.bananocoinBananojs.depositUtil;
-            const receiveResponse =
-                ((await depositUtil.receive(
-                    loggingUtil,
-                    bananodeApi,
-                    account,
-                    accountSigner,
-                    representative,
-                    hash,
-                    config.prefix
-                )) as string) || ReceiveResponse;
-
-            if (typeof receiveResponse === 'string') {
-                return receiveResponse;
-            }
-            return receiveResponse.receiveBlocks[0];
+            return Promise.any([receiveUsingServerPow(), receiveUsingClientPow()]).then((sentHash: string) => {
+                window.shouldHaltClientSideWorkGeneration = true;
+                log(`Work Completed for Tx ${sentHash}.\n`);
+                return Promise.resolve(sentHash);
+            });
         } catch (err) {
             console.error(err);
             return Promise.reject(err);
@@ -84,64 +191,39 @@ export class TransactionService {
 
     /** Attempts a change block.  On success, returns transaction hash. */
     async changeRepresentative(newRep: string, address: string, accountIndex: number): Promise<string> {
-        const accountSigner = await this.getAccountSigner(accountIndex);
-        const bananodeApi = window.bananocoinBananojs.bananodeApi;
-        await this._configApi(bananodeApi);
-        const bananoUtil = window.bananocoinBananojs.bananoUtil;
-        const config = window.bananocoinBananojsHw.bananoConfig;
+        log('** Begin Change Transaction **');
+        await this._configApi(window.bananocoinBananojs.bananodeApi);
+        const { privateKey, accountInfo } = await this._getEssentials(accountIndex);
+        const block: Block = {
+            type: 'state',
+            account: accountInfo.fullAddress,
+            previous: accountInfo.frontier,
+            representative: accountInfo.representative,
+            balance: accountInfo.balanceRaw,
+            link: '0000000000000000000000000000000000000000000000000000000000000000',
+            signature: '',
+        };
+        block.signature = await signBlock(privateKey, block);
+
+        const changeUsingServerPow = async (): Promise<string> => {
+            block.work = await this._powService.generateRemoteWork(accountInfo.frontier);
+            return await this._rpcService.process(block, 'change');
+        };
+        const changeUsingClientPow = async (): Promise<string> => {
+            window.shouldHaltClientSideWorkGeneration = false;
+            block.work = await this._powService.generateLocalWork(accountInfo.frontier);
+            return await this._rpcService.process(block, 'change');
+        };
+
         try {
-            const response = await bananoUtil.change(bananodeApi, accountSigner, newRep, config.prefix);
-            return Promise.resolve(response);
+            return Promise.any([changeUsingServerPow(), changeUsingClientPow()]).then((sentHash: string) => {
+                window.shouldHaltClientSideWorkGeneration = true;
+                log(`Work Completed for Tx ${sentHash}.\n`);
+                return Promise.resolve(sentHash);
+            });
         } catch (err) {
             console.error(err);
             return Promise.reject(err);
         }
-    }
-
-    async checkLedgerOrError(): Promise<void> {
-        const config = window.bananocoinBananojsHw.bananoConfig;
-        window.bananocoinBananojs.setBananodeApiUrl(config.bananodeUrl);
-        const TransportWebUSB = window.TransportWebUSB;
-        try {
-            const isSupportedFlag = await TransportWebUSB.isSupported();
-            // eslint-disable-next-line no-console
-            console.info('connectLedger', 'isSupportedFlag', isSupportedFlag);
-            // Check Ledger is connected & app is open:
-            await this.getAccountFromIndex(0);
-            return Promise.resolve();
-        } catch (err) {
-            console.error(err);
-            if (err.message) {
-                if (err.message.includes('No device selected')) {
-                    return Promise.reject('No ledger device connected.');
-                }
-            }
-
-            return Promise.reject('Error connecting ledger.');
-        }
-    }
-
-    /** Given an index, reads ledger device & returns an address. */
-    async getAccountFromIndex(accountIndex: number): Promise<string> {
-        if (this._secretService.isLocalSecretUnlocked()) {
-            const seed = await this._secretService.getActiveWalletSecret();
-            /** LocalMobile **/
-            // const seed = '727A5E960F6189BBF196D84A6B7715D0A78DE82AC15BBDB340540076768CDB31'; // Low Fund Seed
-            const privateKey = await window.bananocoinBananojs.getPrivateKey(seed, accountIndex);
-            const publicKey = await window.bananocoinBananojs.getPublicKey(privateKey);
-            const account = window.bananocoinBananojs.getBananoAccount(publicKey);
-            return account;
-        }
-        const accountData = await window.bananocoin.bananojsHw.getLedgerAccountData(accountIndex);
-        const account = accountData.account;
-        return account;
-    }
-
-    async getAccountSigner(index: number): any {
-        if (this._secretService.isLocalSecretUnlocked()) {
-            const seed = await this._secretService.getActiveWalletSecret();
-            return await window.bananocoinBananojs.getPrivateKey(seed, index);
-        }
-        return await window.bananocoin.bananojsHw.getLedgerAccountSigner(index);
     }
 }

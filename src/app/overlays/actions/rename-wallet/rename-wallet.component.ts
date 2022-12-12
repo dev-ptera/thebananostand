@@ -1,13 +1,13 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { WalletEventsService } from '@app/services/wallet-events.service';
+import { RENAME_ACTIVE_WALLET } from '@app/services/wallet-events.service';
 import { AppStateService } from '@app/services/app-state.service';
 
 @Component({
     selector: 'app-rename-wallet-overlay',
     styleUrls: ['rename-wallet.component.scss'],
     template: `
-        <div class="add-index-overlay">
+        <div class="rename-wallet-overlay">
             <h1 mat-dialog-title>Rename Wallet</h1>
             <div mat-dialog-content style="margin-bottom: 32px;">
                 <div>Rename "{{ currentWalletName }}" to something else?</div>
@@ -19,28 +19,17 @@ import { AppStateService } from '@app/services/app-state.service';
                             matInput
                             [formControl]="walletNameFormControl"
                             (keyup.enter)="renameWallet()"
-                            data-cy="add-rename-wallet-input"
+                            data-cy="rename-wallet-input"
                         />
                     </mat-form-field>
                 </form>
             </div>
             <blui-spacer></blui-spacer>
             <mat-divider style="margin-left: -48px; margin-right: -48px"></mat-divider>
-            <div
-                mat-dialog-actions
-                style="display: flex; justify-content: space-between; margin-bottom: 0; padding: 8px 0"
-            >
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0; padding: 16px 0">
+                <button mat-stroked-button color="primary" (click)="close.emit()" style="width: 100px;">Close</button>
                 <button
-                    mat-stroked-button
-                    mat-dialog-close
-                    color="primary"
-                    (click)="close.emit()"
-                    style="width: 100px;"
-                >
-                    Close
-                </button>
-                <button
-                    data-cy="add-account-overlay-button"
+                    data-cy="rename-wallet-overlay-button"
                     mat-flat-button
                     color="primary"
                     style="width: 100px;"
@@ -54,19 +43,15 @@ import { AppStateService } from '@app/services/app-state.service';
     `,
 })
 export class RenameWalletComponent implements OnInit {
-    walletNameFormControl = new FormControl('');
-
-    currentWalletName: string;
-
     @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
-    constructor(
-        private readonly _walletEventService: WalletEventsService,
-        private readonly _appStateService: AppStateService
-    ) {}
+    currentWalletName: string;
+    walletNameFormControl = new FormControl('');
+
+    constructor(private readonly _appStateService: AppStateService) {}
 
     ngOnInit(): void {
-        this.currentWalletName = this._appStateService.activeWallet.name;
+        this.currentWalletName = this._appStateService.store.getValue().activeWallet.name;
     }
 
     isDisabled(): boolean {
@@ -78,7 +63,7 @@ export class RenameWalletComponent implements OnInit {
             return;
         }
         const newName = this.walletNameFormControl.value;
-        this._walletEventService.renameWallet.next(newName);
+        RENAME_ACTIVE_WALLET.next(newName);
         this.close.emit();
     }
 }

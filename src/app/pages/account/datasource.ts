@@ -11,7 +11,7 @@ import { FilterOverlayData } from '@app/overlays/actions/filter/filter.component
 export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
     _blockCount: number;
     _address: string;
-    _pageSize = 200;
+    _pageSize = 200; // Update this to test out pagination, incremental loading.
     _cachedData: Array<ConfirmedTx | undefined>;
     _fetchedPages: Set<number>;
     _dataStream: BehaviorSubject<Array<ConfirmedTx | undefined>>;

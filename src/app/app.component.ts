@@ -4,9 +4,8 @@ import { slideInAnimation } from './animation';
 import { ViewportService } from '@app/services/viewport.service';
 import { SecretService } from '@app/services/secret.service';
 import { WalletEventsService } from '@app/services/wallet-events.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { UtilService } from '@app/services/util.service';
 import { PowService } from '@app/services/pow.service';
+import { AppStateService } from '@app/services/app-state.service';
 
 @Component({
     selector: 'app-root',
@@ -17,13 +16,10 @@ export class AppComponent {
     constructor(
         private readonly _vp: ViewportService,
         private readonly _secretService: SecretService,
-        private readonly _snackbar: MatSnackBar,
-        private readonly _util: UtilService,
         private readonly _walletEventService: WalletEventsService,
-        private readonly _powService: PowService
+        private readonly _powService: PowService,
+        private readonly _appStoreService: AppStateService
     ) {
-        const duration = 3000;
-        const closeActionText = 'Dismiss';
         const appHeight = (): void => {
             const doc = document.documentElement;
             doc.style.setProperty(`--app-height`, `${window.innerHeight}px`);
@@ -31,49 +27,18 @@ export class AppComponent {
         window.addEventListener(`resize`, appHeight);
         appHeight();
 
-        this._walletEventService.removeWallet.subscribe(() => {
-            this._snackbar.open('Removed Wallet', closeActionText, { duration });
-        });
-
-        this._walletEventService.backupSeed.subscribe((data: { seed: string; openSnackbar: boolean }) => {
-            this._util.clipboardCopy(data.seed);
-            if (data.openSnackbar) {
-                this._snackbar.open('Wallet Seed Copied!', closeActionText, { duration });
-            }
-        });
-
-        this._walletEventService.backupMnemonic.subscribe((data: { mnemonic: string; openSnackbar: boolean }) => {
-            this._util.clipboardCopy(data.mnemonic);
-            if (data.openSnackbar) {
-                this._snackbar.open('Wallet Mnemonic Phrase Copied!', closeActionText, { duration });
-            }
-        });
-
-        this._walletEventService.copiedAddress.subscribe((data: { address: string }) => {
-            this._util.clipboardCopy(data.address);
-            if (data.address) {
-                this._snackbar.open('Address Copied!', closeActionText, { duration });
-            }
-        });
-
-        this._walletEventService.clearLocalStorage.subscribe(() => {
-            this._snackbar.open('All Wallets Removed!', closeActionText, { duration });
+        this._appStoreService.store.subscribe((data) => {
+            // eslint-disable-next-line no-console
+            console.log(data);
         });
     }
 
     ngOnInit(): void {
-        //  this.initializePowService();
+        this.initializePowService();
     }
 
     initializePowService(): void {
         this._powService.overrideDefaultBananoJSPowSource();
-    }
-
-    showBanana(): boolean {
-        // const unlocked = this._secretService.isLocalSecretUnlocked() || this._secretService.isLocalLedgerUnlocked();
-        // const isBigScreen = !this._vp.isSmall() && !this._vp.isMedium();
-        //  return !unlocked && isBigScreen;
-        return false;
     }
 
     prepareRoute(outlet: RouterOutlet): Data {

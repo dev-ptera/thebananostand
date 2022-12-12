@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { WalletEventsService } from '@app/services/wallet-events.service';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { COPY_MNEMONIC_TO_CLIPBOARD, COPY_SEED_TO_CLIPBOARD } from '@app/services/wallet-events.service';
 import { EnterSecretBottomSheetComponent } from '@app/overlays/bottom-sheet/enter-secret/enter-secret-bottom-sheet.component';
 import { EnterSecretDialogComponent } from '@app/overlays/dialogs/enter-secret/enter-secret-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ViewportService } from '@app/services/viewport.service';
+import { SecretService } from '@app/services/secret.service';
 
 @Component({
     selector: 'app-create-wallet-overlay',
@@ -23,12 +24,14 @@ import { ViewportService } from '@app/services/viewport.service';
                                 <div class="title-row">
                                     <div class="mat-title">Seed</div>
                                     <button mat-icon-button (click)="copySeed(); $event.stopPropagation()">
-                                        <mat-icon>{{ copiedSeed ? 'check_circle' : 'content_copy' }}</mat-icon>
+                                        <mat-icon>{{
+                                            hasRecentlyCopiedSeed ? 'check_circle' : 'content_copy'
+                                        }}</mat-icon>
                                     </button>
                                 </div>
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <div style="word-break: break-all">{{ data.seed }}</div>
+                        <div style="word-break: break-all">{{ seed }}</div>
                     </mat-expansion-panel>
                     <mat-expansion-panel>
                         <mat-expansion-panel-header>
@@ -36,7 +39,9 @@ import { ViewportService } from '@app/services/viewport.service';
                                 <div class="title-row">
                                     <div class="mat-title">Mnemonic Phrase</div>
                                     <button mat-icon-button (click)="copyMnemonic(); $event.stopPropagation()">
-                                        <mat-icon>{{ copiedMnemonic ? 'check_circle' : 'content_copy' }}</mat-icon>
+                                        <mat-icon>{{
+                                            hasRecentlyCopiedMnemonic ? 'check_circle' : 'content_copy'
+                                        }}</mat-icon>
                                     </button>
                                 </div>
                             </mat-panel-title>
@@ -71,12 +76,12 @@ import { ViewportService } from '@app/services/viewport.service';
                     Close
                 </button>
                 <button
-                    data-cy="add-account-overlay-button"
+                    data-cy="create-wallet-overlay-button"
                     mat-flat-button
                     style="width: 100px"
                     color="primary"
                     [disabled]="!hasConfirmedBackup"
-                    (click)="addAccounts()"
+                    (click)="createWallet()"
                 >
                     Create
                 </button>
@@ -84,45 +89,50 @@ import { ViewportService } from '@app/services/viewport.service';
         </div>
     `,
 })
-export class CreateWalletOverlayComponent {
-    @Input() data: { seed: string; mnemonic: string };
+export class CreateWalletOverlayComponent implements OnInit {
     @Output() close = new EventEmitter<void>();
 
     hasConfirmedBackup = false;
-    copiedSeed: boolean;
-    copiedMnemonic: boolean;
+    hasRecentlyCopiedSeed = false;
+    hasRecentlyCopiedMnemonic = false;
+
     iconSwapTimeMs = 1500;
 
+    seed: string;
+    mnemonic: string;
     mnemonicWords: string[] = [];
 
     constructor(
-        private readonly _walletEventService: WalletEventsService,
+        public vp: ViewportService,
         private readonly _dialog: MatDialog,
         private readonly _sheet: MatBottomSheet,
-        public vp: ViewportService
+        private readonly _secretService: SecretService
     ) {}
 
     ngOnInit(): void {
-        this.data.mnemonic.split(' ').map((word) => this.mnemonicWords.push(word));
+        const newWalletSecret = this._secretService.createNewSecretWallet();
+        this.seed = newWalletSecret.seed;
+        this.mnemonic = newWalletSecret.mnemonic;
+        this.mnemonicWords = newWalletSecret.mnemonic.split(' ');
     }
 
     copySeed(): void {
-        this._walletEventService.backupSeed.next({ seed: this.data.seed, openSnackbar: false });
-        this.copiedSeed = true;
+        COPY_SEED_TO_CLIPBOARD.next({ seed: this.seed, openSnackbar: false });
+        this.hasRecentlyCopiedSeed = true;
         setTimeout(() => {
-            this.copiedSeed = false;
+            this.hasRecentlyCopiedSeed = false;
         }, this.iconSwapTimeMs);
     }
 
     copyMnemonic(): void {
-        this._walletEventService.backupMnemonic.next({ mnemonic: this.data.mnemonic, openSnackbar: false });
-        this.copiedMnemonic = true;
+        COPY_MNEMONIC_TO_CLIPBOARD.next({ mnemonic: this.mnemonic, openSnackbar: false });
+        this.hasRecentlyCopiedMnemonic = true;
         setTimeout(() => {
-            this.copiedMnemonic = false;
+            this.hasRecentlyCopiedMnemonic = false;
         }, this.iconSwapTimeMs);
     }
 
-    addAccounts(): void {
+    createWallet(): void {
         this.close.emit();
         if (this.vp.sm) {
             this._sheet.open(EnterSecretBottomSheetComponent);
