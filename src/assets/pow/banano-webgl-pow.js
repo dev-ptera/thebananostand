@@ -1,44 +1,51 @@
-// banano-webgl-pow
-// Banano Currency Proof of Work Value generation using WebGL2
+// nano-webgl-pow
+// Nano Currency Proof of Work Value generation using WebGL2
 // Author:  numtel <ben@latenightsketches.com>
 // License: MIT
 
-// window.BananoWebglPow(hashHex, callback, progressCallback);
+// window.nanoWebglPow(hashHex, callback, progressCallback, threshold);
 // @param hashHex           String   Previous Block Hash as Hex String
 // @param callback          Function Called when work value found
 //   Receives single string argument, work value as hex
 // @param progressCallback  Function Optional
 //   Receives single argument: n, number of frames so far
 //   Return true to abort
+// @param threshold         Number|String   Optional difficulty threshold (default=0xFFFFFFF8 since v21)
 
-(function () {
+(function() {
     function array_hex(arr, index, length) {
-        let out = '';
-        for (let i = length - 1; i > -1; i--) {
-            out += (arr[i] > 15 ? '' : '0') + arr[i].toString(16);
+        let out='';
+        for (let i=length - 1; i>-1; i--) {
+            out+=(arr[i] > 15 ? '' : '0') + arr[i].toString(16);
         }
         return out;
     }
 
     function hex_reverse(hex) {
-        let out = '';
-        for (let i = hex.length; i > 0; i -= 2) {
-            out += hex.slice(i - 2, i);
+        let out='';
+        for (let i=hex.length; i>0; i-=2) {
+            out+=hex.slice(i-2, i);
         }
         return out;
     }
 
-    function calculate(hashHex, callback, progressCallback) {
+    function calculate(hashHex, callback, progressCallback, threshold = '0xFFFFFFF8') {
+        if (typeof threshold === 'number') threshold = '0x' + threshold.toString(16);
+
         const canvas = document.createElement('canvas');
 
-        canvas.width = window.BananoWebglPow.width;
-        canvas.height = window.BananoWebglPow.height;
+        canvas.width = window.nanoWebglPow.width;
+        canvas.height = window.nanoWebglPow.height;
 
         const gl = canvas.getContext('webgl2');
 
-        if (!gl) throw new Error('webgl2_required');
+        if (!gl) {
+            throw new Error('webgl2_required');
+        }
 
-        if (!/^[A-F-a-f0-9]{64}$/.test(hashHex)) throw new Error('invalid_hash');
+        if (!/^[A-F-a-f0-9]{64}$/.test(hashHex)) {
+            throw new Error('invalid_hash');
+        }
 
         gl.clearColor(0, 0, 0, 1);
 
@@ -209,7 +216,7 @@
 
       // Threshold test, first 4 bytes not significant,
       //  only calculate digest of the second 4 bytes
-      if((BLAKE2B_IV32_1 ^ v[1] ^ v[17]) > 0xFFFFFE00u) {
+      if((BLAKE2B_IV32_1 ^ v[1] ^ v[17]) > ` + threshold + `u) {
         // Success found, return pixel data so work value can be constructed
         fragColor = vec4(
           float(x_index + 1u)/255., // +1 to distinguish from 0 (unsuccessful) pixels
@@ -224,20 +231,26 @@
         gl.shaderSource(vertexShader, vsSource);
         gl.compileShader(vertexShader);
 
-        if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) throw gl.getShaderInfoLog(vertexShader);
+        if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
+            throw gl.getShaderInfoLog(vertexShader);
+        }
 
         const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
         gl.shaderSource(fragmentShader, fsSource);
         gl.compileShader(fragmentShader);
 
-        if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) throw gl.getShaderInfoLog(fragmentShader);
+        if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
+            throw gl.getShaderInfoLog(fragmentShader);
+        }
 
         const program = gl.createProgram();
         gl.attachShader(program, vertexShader);
         gl.attachShader(program, fragmentShader);
         gl.linkProgram(program);
 
-        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw gl.getProgramInfoLog(program);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+            throw gl.getProgramInfoLog(program);
+        }
 
         gl.useProgram(program);
 
@@ -246,7 +259,10 @@
         gl.bindVertexArray(triangleArray);
 
         // Vertex Positions, 2 triangles
-        const positions = new Float32Array([-1, -1, 0, -1, 1, 0, 1, 1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0]);
+        const positions = new Float32Array([
+            -1, -1, 0, -1, 1, 0, 1, 1, 0,
+            1, -1, 0, 1, 1, 0, -1, -1, 0,
+        ]);
         const positionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
@@ -254,7 +270,9 @@
         gl.enableVertexAttribArray(0);
 
         // Texture Positions
-        const uvPosArray = new Float32Array([1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1]);
+        const uvPosArray = new Float32Array([
+            1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1,
+        ]);
         const uvBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, uvPosArray, gl.STATIC_DRAW);
@@ -267,7 +285,7 @@
         // Draw output until success or progressCallback says to stop
         const work0 = new Uint8Array(4);
         const work1 = new Uint8Array(4);
-        let n = 0;
+        let n=0;
 
         function draw() {
             n++;
@@ -278,7 +296,9 @@
             gl.uniform4uiv(work1Location, Array.from(work1));
 
             // Check with progressCallback every 100 frames
-            if (typeof progressCallback === 'function' && progressCallback(n)) return;
+            if (n%1===0 && typeof progressCallback === 'function' && progressCallback(n)) {
+                return;
+            }
 
             gl.clear(gl.COLOR_BUFFER_BIT);
             gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -286,24 +306,18 @@
             gl.readPixels(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
 
             // Check the pixels for any success
-            for (let i = 0; i < pixels.length; i += 4) {
+            for (let i=0; i<pixels.length; i+=4) {
                 if (pixels[i] !== 0) {
                     // Return the work value with the custom bits
                     typeof callback === 'function' &&
                     callback(
                         array_hex(work1, 0, 4) +
-                        array_hex(
-                            [
-                                pixels[i + 2],
-                                pixels[i + 3],
-                                work0[2] ^ (pixels[i] - 1),
-                                work0[3] ^ (pixels[i + 1] - 1),
-                            ],
-                            0,
-                            4
-                        ),
-                        n
-                    );
+                        array_hex([
+                            pixels[i+2],
+                            pixels[i+3],
+                            work0[2] ^ (pixels[i]-1),
+                            work0[3] ^ (pixels[i+1]-1),
+                        ], 0, 4), n);
                     return;
                 }
             }
@@ -315,10 +329,10 @@
         window.requestAnimationFrame(draw);
     }
 
-    window.BananoWebglPow = calculate;
+    window.nanoWebglPow = calculate;
     // Both width and height must be multiple of 256, (one byte)
     // but do not need to be the same,
     // matching GPU capabilities is the aim
-    window.BananoWebglPow.width = 256 * 2;
-    window.BananoWebglPow.height = 256 * 2;
+    window.nanoWebglPow.width = 256 * 2;
+    window.nanoWebglPow.height = 256 * 2;
 })();

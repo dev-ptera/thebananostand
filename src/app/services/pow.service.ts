@@ -6,6 +6,7 @@ export type BananoifiedWindow = {
     bananocoinBananojs: any;
     shouldHaltClientSideWorkGeneration: boolean;
     isClientActivelyGeneratingWork: boolean;
+    nanoWebglPow: any;
 } & Window;
 
 declare let window: BananoifiedWindow;
@@ -46,11 +47,12 @@ export class PowService {
 
     /** Generate PoW using WebGL */
     private _getHashWebGL(hash): Promise<string> {
+        const threshold = '0xFFFFFE00';
         window.isClientActivelyGeneratingWork = true;
         return new Promise((resolve, reject) => {
             const start = Date.now();
             try {
-                window['BananoWebglPow'](
+                window.nanoWebglPow(
                     hash,
                     (work, n) => {
                         log(
@@ -67,7 +69,8 @@ export class PowService {
                             log('Terminating client pow generate; server pow generated faster.');
                             return true;
                         }
-                    }
+                    },
+                    threshold
                 );
             } catch (error) {
                 console.error(error);
@@ -79,9 +82,7 @@ export class PowService {
     /** Generate PoW using Client CPU (slow as shit) */
     private _getJsBlakeWork(hash): string {
         const start = new Date().getTime();
-        // @ts-ignore
         const workBytes = window.bananocoinBananojs.getZeroedWorkBytes();
-        // @ts-ignore
         const work = window.bananocoinBananojs.getWorkUsingCpu(hash, workBytes);
         const end = new Date().getTime();
         const time = end - start;
@@ -93,6 +94,7 @@ export class PowService {
         log('Racing Client-side PoW.');
         try {
             if (this.isWebGLAvailable) {
+                log('Using WebGL for Client-side PoW.');
                 const clientWork = await this._getHashWebGL(hash);
                 void this._rpcService.cancelWorkGenerate(hash);
                 return clientWork;
