@@ -188,16 +188,22 @@ export class WalletEventsService {
         COPY_MNEMONIC_TO_CLIPBOARD.subscribe((data: { mnemonic: string; openSnackbar: boolean }) => {
             this._util.clipboardCopy(data.mnemonic);
             if (data.openSnackbar) {
-                this._snackbar.open('Wallet Mnemonic Phrase Copied!', SNACKBAR_CLOSE_ACTION_TEXT, {
-                    duration: SNACKBAR_DURATION,
-                });
+                setTimeout(() => {
+                    this._snackbar.open('Wallet Mnemonic Phrase Copied!', SNACKBAR_CLOSE_ACTION_TEXT, {
+                        duration: SNACKBAR_DURATION,
+                    });
+                }, 100);
             }
         });
 
         COPY_SEED_TO_CLIPBOARD.subscribe((data: { seed: string; openSnackbar: boolean }) => {
             this._util.clipboardCopy(data.seed);
             if (data.openSnackbar) {
-                this._snackbar.open('Wallet Seed Copied!', SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION });
+                setTimeout(() => {
+                    this._snackbar.open('Wallet Seed Copied!', SNACKBAR_CLOSE_ACTION_TEXT, {
+                        duration: SNACKBAR_DURATION,
+                    });
+                }, 100);
             }
         });
 
