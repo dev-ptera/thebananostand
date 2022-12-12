@@ -202,13 +202,6 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/flex-layout@^14.0.0-beta.41":
-  version "14.0.0-beta.41"
-  resolved "https://registry.yarnpkg.com/@angular/flex-layout/-/flex-layout-14.0.0-beta.41.tgz#94903664670090c3ba0d4824b0135882a7f1bda9"
-  integrity sha512-x1YcxqkdFlcbVXEy9ebCgW/F+7n/MXkEkwEcVEIPf5v5qn7HZsjQxgIj35Lf0amvMyF7h35prpoxO1uX5+ntFg==
-  dependencies:
-    tslib "^2.3.0"
-
 "@angular/forms@^14.2.12":
   version "14.2.12"
   resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-14.2.12.tgz#2174e4e3b87390b0f1ebde0b3fc6c4d2ae793a1a"
@@ -1634,6 +1627,30 @@
   version "14.2.10"
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-14.2.10.tgz#d33ff1147d01bd1f5d936a3d1744c81a28e2ca6a"
   integrity sha512-sLHapZLVub6mEz5b19tf1VfIV1w3tYfg7FNPLeni79aldxu1FbP1v2WmiFAnMzrswqyK0bhTtxrl+Z/CLKqyoQ==
+
+"@node-minify/core@^6.1.0":
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/@node-minify/core/-/core-6.4.0.tgz#fb0cd4d7636e60a664d9bd075f2ef7783ee45020"
+  integrity sha512-tgfV6r+/4EBr+IvasZsOhlKMLZ5oLJtapUzEtiiTTokRQKFNCOnI/UXFbkXNsFq4wW7USVWjxiNScA+eBd5e1g==
+  dependencies:
+    "@node-minify/utils" "^6.4.0"
+    globby "11.0.4"
+    mkdirp "1.0.4"
+
+"@node-minify/terser@^6.1.0":
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/@node-minify/terser/-/terser-6.4.0.tgz#18a5721871db760fe51a38fb87896adbcbc0b1de"
+  integrity sha512-62dCsMFkJ8JnCFiLkItjTVKrSoI8pJe58bQfjBapXCJe68acf8skbfmkVmyIZyLBJS52ef2yyGBusyilzy2jfA==
+  dependencies:
+    "@node-minify/utils" "^6.4.0"
+    terser "5.14.2"
+
+"@node-minify/utils@^6.4.0":
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/@node-minify/utils/-/utils-6.4.0.tgz#0a55c81b8a9c6fe2820c8e3483d3b0664de73ab9"
+  integrity sha512-mx6oZCmAdibRWuBhJV3Fx6jXwgCY2bCasVb7sXh06H28jqAd9BDcufLEoBoAXPuNrfz0t/wptoKbjmXuE8YXdg==
+  dependencies:
+    gzip-size "6.0.0"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -3590,7 +3607,7 @@ duplexer3@^0.1.4:
   resolved "https://registry.yarnpkg.com/duplexer3/-/duplexer3-0.1.5.tgz#0b5e4d7bad5de8901ea4440624c8e1d20099217e"
   integrity sha512-1A8za6ws41LQgv9HrE/66jyC5yuSjQ3L/KOpFtoBilsAK2iA2wuS5rTt1OCzIvtS2V7nVmedsUU+DGRcjBmOYA==
 
-duplexer@~0.1.1:
+duplexer@^0.1.2, duplexer@~0.1.1:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/duplexer/-/duplexer-0.1.2.tgz#3abe43aef3835f8ae077d136ddce0f276b0400e6"
   integrity sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==
@@ -4235,7 +4252,7 @@ fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
   integrity sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
 
-fast-glob@^3.2.11, fast-glob@^3.2.9:
+fast-glob@^3.1.1, fast-glob@^3.2.11, fast-glob@^3.2.9:
   version "3.2.12"
   resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.2.12.tgz#7f39ec99c2e6ab030337142da9e0c18f37afae80"
   integrity sha512-DVj4CQIYYow0BlaelwK1pHl5n5cRSJfM60UA0zK891sVInoPri2Ekj7+e1CT3/3qxXenpI+nBBmQAcJPJgaj4w==
@@ -4658,6 +4675,18 @@ globals@^13.15.0:
   dependencies:
     type-fest "^0.20.2"
 
+globby@11.0.4:
+  version "11.0.4"
+  resolved "https://registry.yarnpkg.com/globby/-/globby-11.0.4.tgz#2cbaff77c2f2a62e71e9b2813a67b97a3a3001a5"
+  integrity sha512-9O4MVG9ioZJ08ffbcyVYyLOJLk5JQ688pJ4eMGLpdWLHq/Wr1D9BlriLQyL0E+jbkuePVZXYFj47QM/v093wHg==
+  dependencies:
+    array-union "^2.1.0"
+    dir-glob "^3.0.1"
+    fast-glob "^3.1.1"
+    ignore "^5.1.4"
+    merge2 "^1.3.0"
+    slash "^3.0.0"
+
 globby@^11.0.4, globby@^11.1.0:
   version "11.1.0"
   resolved "https://registry.yarnpkg.com/globby/-/globby-11.1.0.tgz#bd4be98bb042f83d796f7e3811991fbe82a0d34b"
@@ -4707,6 +4736,13 @@ grapheme-splitter@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/grapheme-splitter/-/grapheme-splitter-1.0.4.tgz#9cf3a665c6247479896834af35cf1dbb4400767e"
   integrity sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==
+
+gzip-size@6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/gzip-size/-/gzip-size-6.0.0.tgz#065367fd50c239c0671cbcbad5be3e2eeb10e462"
+  integrity sha512-ax7ZYomf6jqPTQ4+XCpUGyXKHk5WweS+e05MBO4/y3WJ5RkmPXNKvX+bx1behVILVwr6JSQvZAku021CHPXG3Q==
+  dependencies:
+    duplexer "^0.1.2"
 
 handle-thing@^2.0.0:
   version "2.0.1"
@@ -4945,6 +4981,11 @@ ignore-walk@^5.0.1:
   integrity sha512-yemi4pMf51WKT7khInJqAvsIGzoqYXblnsz0ql8tM+yi1EKYTY1evX4NAbJrLL/Aanr2HyZeluqU+Oi7MGHokw==
   dependencies:
     minimatch "^5.0.1"
+
+ignore@^5.1.4:
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.2.1.tgz#c2b1f76cb999ede1502f3a226a9310fdfe88d46c"
+  integrity sha512-d2qQLzTJ9WxQftPAuEQpSPmKqzxePjzVbpAVv62AQ64NTL+wR4JkrVqR/LqFsFEUsHDAiId52mJteHDFuDkElA==
 
 ignore@^5.2.0:
   version "5.2.0"
@@ -5962,6 +6003,15 @@ mini-css-extract-plugin@2.6.1:
   dependencies:
     schema-utils "^4.0.0"
 
+minify-all-js@^0.1.9:
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/minify-all-js/-/minify-all-js-0.1.9.tgz#562901c3c17225c6870ec5593060f543bad3b34c"
+  integrity sha512-5aG57jLvbcRuHxrxxA3VbstFeZDXQns9avwmM2SGEWFkXudZF+mvUlfz3sXSP/0LO7FH2nCq86GlVvM+owlJqA==
+  dependencies:
+    "@node-minify/core" "^6.1.0"
+    "@node-minify/terser" "^6.1.0"
+    promise.series "^0.2.0"
+
 minimalistic-assert@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/minimalistic-assert/-/minimalistic-assert-1.0.1.tgz#2e194de044626d4a10e7f7fbc00ce73e83e4d5c7"
@@ -6053,17 +6103,17 @@ mkdirp-classic@^0.5.2, mkdirp-classic@^0.5.3:
   resolved "https://registry.yarnpkg.com/mkdirp-classic/-/mkdirp-classic-0.5.3.tgz#fa10c9115cc6d8865be221ba47ee9bed78601113"
   integrity sha512-gKLcREMhtuZRwRAfqP3RFW+TK4JqApVBtOIftVgjuABpAtpxhPGaDcfvbhNvD0B8iD1oUr/txX35NjcaY6Ns/A==
 
+mkdirp@1.0.4, mkdirp@^1.0.3, mkdirp@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
+  integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
+
 mkdirp@^0.5.5:
   version "0.5.6"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.6.tgz#7def03d2432dcae4ba1d611445c48396062255f6"
   integrity sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw==
   dependencies:
     minimist "^1.2.6"
-
-mkdirp@^1.0.3, mkdirp@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
-  integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
 ms@2.0.0:
   version "2.0.0"
@@ -7188,6 +7238,11 @@ promise-retry@^2.0.1:
   dependencies:
     err-code "^2.0.2"
     retry "^0.12.0"
+
+promise.series@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/promise.series/-/promise.series-0.2.0.tgz#2cc7ebe959fc3a6619c04ab4dbdc9e452d864bbd"
+  integrity sha512-VWQJyU2bcDTgZw8kpfBpB/ejZASlCrzwz5f2hjb/zlujOEB4oeiAhHygAWq8ubsX2GVkD4kCU5V2dwOTaCY5EQ==
 
 prompts@^2.4.2:
   version "2.4.2"

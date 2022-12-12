@@ -5,7 +5,7 @@
         "ng": "ng",
         "start": "ng serve --open --host 0.0.0.0",
         "serve": "ng serve --host 0.0.0.0",
-        "build": "ng build",
+        "build": "ng build && yarn minify-assets",
         "watch": "ng build --watch --configuration development",
         "test": "ng test",
         "test:ci": "ng test --watch false --browsers=ChromeHeadless",
@@ -17,7 +17,8 @@
         "lint:fix": "eslint \"src/**/**.ts\" --fix",
         "preflight": "yarn upgrade && yarn npm-check-updates && yarn ng update && yarn && yarn audit fix && yarn lint:fix && yarn prettier && yarn outdated",
         "prettier": "prettier \"src/app/**/**.{ts,js,json,css,scss,html}\" --write",
-        "prettier:check": "prettier \"src/app/**/**.{ts,js,json,css,scss,html}\" --check"
+        "prettier:check": "prettier \"src/app/**/**.{ts,js,json,css,scss,html}\" --check",
+        "minify-assets": "minify-all-js dist/thebananostand/assets/"
     },
     "private": true,
     "dependencies": {
@@ -26,7 +27,6 @@
         "@angular/common": "^14.2.12",
         "@angular/compiler": "^14.2.12",
         "@angular/core": "^14.2.12",
-        "@angular/flex-layout": "^14.0.0-beta.41",
         "@angular/forms": "^14.2.12",
         "@angular/material": "^14.2.7",
         "@angular/platform-browser": "^14.2.12",
@@ -64,6 +64,7 @@
         "karma-coverage": "~2.0.3",
         "karma-jasmine": "~4.0.2",
         "karma-jasmine-html-reporter": "~1.5.4",
+        "minify-all-js": "^0.1.9",
         "npm-check-updates": "^12.5.12",
         "prettier": "^2.4.1",
         "start-server-and-test": "^1.14.0",
