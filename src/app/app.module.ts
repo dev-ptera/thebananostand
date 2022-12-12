@@ -8,7 +8,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -135,7 +134,6 @@ import { LedgerSnackbarErrorComponent } from '@app/pages/home/ledger-error-snack
         BrowserAnimationsModule,
         BrowserModule,
         CommonModule,
-        FlexLayoutModule,
         FormsModule,
         HttpClientModule,
         MatButtonModule,
