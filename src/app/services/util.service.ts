@@ -1,11 +1,5 @@
 import { Injectable } from '@angular/core';
-import copy from 'copy-to-clipboard';
-
-
-export type BananoifiedWindow = {
-    clipboardData: any;
-} & Window;
-declare let window: BananoifiedWindow;
+import * as copy from 'copy-to-clipboard';
 
 @Injectable({
     providedIn: 'root',

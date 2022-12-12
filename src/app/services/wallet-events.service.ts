@@ -186,8 +186,6 @@ export class WalletEventsService {
         });
 
         COPY_MNEMONIC_TO_CLIPBOARD.subscribe((data: { mnemonic: string; openSnackbar: boolean }) => {
-            console.log(data.mnemonic);
-            console.log(data);
             this._util.clipboardCopy(data.mnemonic);
             if (data.openSnackbar) {
                 this._snackbar.open('Wallet Mnemonic Phrase Copied!', SNACKBAR_CLOSE_ACTION_TEXT, {
