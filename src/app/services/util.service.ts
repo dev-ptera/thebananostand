@@ -47,6 +47,7 @@ export class UtilService {
     }
 
     clipboardCopy(text: string): void {
+        console.log('requesting ' + text + ' to be copied to clipboard');
         /* https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript */
         if (window.clipboardData && window.clipboardData.setData) {
             // Internet Explorer-specific code path to prevent textarea being shown while dialog is visible.

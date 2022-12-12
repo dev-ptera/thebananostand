@@ -186,6 +186,8 @@ export class WalletEventsService {
         });
 
         COPY_MNEMONIC_TO_CLIPBOARD.subscribe((data: { mnemonic: string; openSnackbar: boolean }) => {
+            console.log(data.mnemonic);
+            console.log(data);
             this._util.clipboardCopy(data.mnemonic);
             if (data.openSnackbar) {
                 this._snackbar.open('Wallet Mnemonic Phrase Copied!', SNACKBAR_CLOSE_ACTION_TEXT, {
@@ -281,13 +283,15 @@ export class WalletEventsService {
             LOCK_WALLET.next();
         });
 
-        REQUEST_BACKUP_SECRET.subscribe(async ({ useMnemonic }) => {
-            if (useMnemonic) {
+        REQUEST_BACKUP_SECRET.subscribe(async (data) => {
+            console.log('USER WANTS TO BACKUP A SECRET');
+            console.log(data);
+            if (data.useMnemonic) {
                 const mnemonic = await this._secretService.getActiveWalletMnemonic();
-                COPY_MNEMONIC_TO_CLIPBOARD.next({ mnemonic, openSnackbar: true });
+                COPY_MNEMONIC_TO_CLIPBOARD.next({ mnemonic, openSnackbar: false });
             } else {
                 const seed = await this._secretService.getActiveWalletSeed();
-                COPY_SEED_TO_CLIPBOARD.next({ seed, openSnackbar: true });
+                COPY_SEED_TO_CLIPBOARD.next({ seed, openSnackbar: false });
             }
         });
 
