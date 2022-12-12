@@ -281,8 +281,8 @@ export class WalletEventsService {
             LOCK_WALLET.next();
         });
 
-        REQUEST_BACKUP_SECRET.subscribe(async ({ useMnemonic }) => {
-            if (useMnemonic) {
+        REQUEST_BACKUP_SECRET.subscribe(async (data) => {
+            if (data.useMnemonic) {
                 const mnemonic = await this._secretService.getActiveWalletMnemonic();
                 COPY_MNEMONIC_TO_CLIPBOARD.next({ mnemonic, openSnackbar: true });
             } else {

@@ -70,7 +70,7 @@ export class AccountService {
             return undefined;
         }
         try {
-            return await this._rpcService.getAccountInfo(index);
+            return await this._rpcService.getAccountInfoFromIndex(index);
         } catch (err) {
             return undefined;
         }

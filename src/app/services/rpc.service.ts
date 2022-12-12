@@ -60,12 +60,15 @@ export class RpcService {
 
     /** Returns a modified account info object, given an index. */
     // Make this accept a public address, yeah? // TODO
-    async getAccountInfo(index: number): Promise<AccountOverview> {
-        const address = await this._signerService.getAccountFromIndex(index);
+    async getAccountInfoFromIndex(index: number, address?: string): Promise<AccountOverview> {
+        let publicAddress = address;
+        if (!publicAddress) {
+            publicAddress = await this._signerService.getAccountFromIndex(index);
+        }
         const client = await this._datasourceService.getRpcClient();
         const [pending, accountInfoRpc] = await Promise.all([
-            this.getReceivable(address),
-            client.account_info(address, { representative: true }).catch((err) => {
+            this.getReceivable(publicAddress),
+            client.account_info(publicAddress, { representative: true }).catch((err) => {
                 if (err.error === 'Account not found') {
                     return Promise.resolve({
                         unopenedAccount: true,
@@ -74,7 +77,7 @@ export class RpcService {
                 LOG_ERR(err);
             }),
         ]);
-        const accountOverview = await this._formatAccountInfoResponse(index, address, pending, accountInfoRpc);
+        const accountOverview = await this._formatAccountInfoResponse(index, publicAddress, pending, accountInfoRpc);
         return accountOverview;
     }
 
