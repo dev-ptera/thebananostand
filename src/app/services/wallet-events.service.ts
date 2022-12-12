@@ -284,14 +284,12 @@ export class WalletEventsService {
         });
 
         REQUEST_BACKUP_SECRET.subscribe(async (data) => {
-            console.log('USER WANTS TO BACKUP A SECRET');
-            console.log(data);
             if (data.useMnemonic) {
                 const mnemonic = await this._secretService.getActiveWalletMnemonic();
-                COPY_MNEMONIC_TO_CLIPBOARD.next({ mnemonic, openSnackbar: false });
+                COPY_MNEMONIC_TO_CLIPBOARD.next({ mnemonic, openSnackbar: true });
             } else {
                 const seed = await this._secretService.getActiveWalletSeed();
-                COPY_SEED_TO_CLIPBOARD.next({ seed, openSnackbar: false });
+                COPY_SEED_TO_CLIPBOARD.next({ seed, openSnackbar: true });
             }
         });
 
