@@ -5,6 +5,7 @@ import { SignerService } from '@app/services/signer.service';
 import { RpcService } from '@app/services/rpc.service';
 import { PowService } from '@app/services/pow.service';
 import { ReceivableHash } from '@app/types/ReceivableHash';
+import { AccountOverview } from '@app/types/AccountOverview';
 
 export type BananoifiedWindow = {
     bananocoin: any;
@@ -42,6 +43,9 @@ const getPublicKeyFromPrivateKey = (privateKey: string): Promise<string> =>
 const getPublicKeyFromAccount = (privateKey: string): string =>
     window.bananocoinBananojs.BananoUtil.getAccountPublicKey(privateKey);
 
+const getAddressFromPublicKey = async (publicKey: string): Promise<string> =>
+    await window.bananocoinBananojs.getBananoAccount(publicKey);
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -71,13 +75,21 @@ export class TransactionService {
         }
     }
 
+    private async _getEssentials(
+        accountIndex
+    ): Promise<{ privateKey: string; publicKey: string; publicAddress: string; accountInfo: AccountOverview }> {
+        const privateKey = await this._signerService.getAccountSigner(accountIndex);
+        const publicKey = await getPublicKeyFromPrivateKey(privateKey);
+        const publicAddress = await getAddressFromPublicKey(publicKey);
+        const accountInfo = await this._rpcService.getAccountInfoFromIndex(accountIndex, publicAddress);
+        return { privateKey, publicKey, publicAddress, accountInfo };
+    }
+
     /** Attempts a withdrawal.  On success, returns transaction hash. */
     async withdraw(recipientAddress: string, withdrawAmount: number, accountIndex: number): Promise<string> {
         log('** Begin Send Transaction **');
         await this._configApi(window.bananocoinBananojs.bananodeApi);
-        const privateKey = await this._signerService.getAccountSigner(accountIndex);
-        await sleep(100); // Ledger device is in use in prior fn call
-        const accountInfo = await this._rpcService.getAccountInfo(accountIndex);
+        const { privateKey, accountInfo } = await this._getEssentials(accountIndex);
         const balanceRaw = accountInfo.balanceRaw;
         const amountRaw = window.bananocoinBananojs.getBananoDecimalAmountAsRaw(withdrawAmount);
 
@@ -130,11 +142,7 @@ export class TransactionService {
     async receive(accountIndex: number, incoming: ReceivableHash): Promise<string> {
         log('** Begin Receive Transaction **');
         await this._configApi(window.bananocoinBananojs.bananodeApi);
-        const privateKey = await this._signerService.getAccountSigner(accountIndex);
-        await sleep(100); // Ledger device is in use in prior fn call
-        const accountInfo = await this._rpcService.getAccountInfo(accountIndex);
-        await sleep(100); // Ledger device is in use in prior fn call
-        const publicKey = await getPublicKeyFromPrivateKey(privateKey);
+        const { privateKey, publicKey, accountInfo } = await this._getEssentials(accountIndex);
         const accountBalanceRaw = accountInfo.balanceRaw;
         const valueRaw = (BigInt(incoming.receivableRaw) + BigInt(accountBalanceRaw)).toString();
         const isOpeningAccount = !accountInfo.representative;
@@ -185,9 +193,7 @@ export class TransactionService {
     async changeRepresentative(newRep: string, address: string, accountIndex: number): Promise<string> {
         log('** Begin Change Transaction **');
         await this._configApi(window.bananocoinBananojs.bananodeApi);
-        const privateKey = await this._signerService.getAccountSigner(accountIndex);
-        await sleep(100); // Ledger device is in use in prior fn call
-        const accountInfo = await this._rpcService.getAccountInfo(accountIndex);
+        const { privateKey, accountInfo } = await this._getEssentials(accountIndex);
         const block: Block = {
             type: 'state',
             account: accountInfo.fullAddress,
