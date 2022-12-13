@@ -6148,6 +6148,11 @@ nano-base32@^1.0.1:
   resolved "https://registry.yarnpkg.com/nano-base32/-/nano-base32-1.0.1.tgz#ba548c879efcfb90da1c4d9e097db4a46c9255ef"
   integrity sha512-sxEtoTqAPdjWVGv71Q17koMFGsOMSiHsIFEvzOM7cNp8BXB4AnEwmDabm5dorusJf/v1z7QxaZYxUorU9RKaAw==
 
+nano-webgl-pow@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/nano-webgl-pow/-/nano-webgl-pow-1.1.1.tgz#b3ba7ab5a5329b229158f73f9cef2c091ac51e0a"
+  integrity sha512-IKAg7qx2y4n9dnT7tYYypOun/aV+35SfRxJCVnc63GboWQ5/woVIVAZcdX5VfXM1mLYBzADvXxoWZ39G3iPOFA==
+
 nanoid@^3.3.4:
   version "3.3.4"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.4.tgz#730b67e3cd09e2deacf03c027c81c9d9dbc5e8ab"

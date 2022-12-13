@@ -127,9 +127,9 @@ export class TransactionService {
         };
 
         try {
-            return Promise.any([sendUsingClientPow(), sendUsingServerPow()]).then((sentHash: string) => {
+            return Promise.any([sendUsingClientPow()]).then((sentHash: string) => {
                 window.shouldHaltClientSideWorkGeneration = true;
-                log(`Work Completed for Tx ${sentHash}.\n`);
+                log(`Completed TX ${sentHash}.\n`);
                 return Promise.resolve(sentHash);
             });
         } catch (err) {
@@ -180,7 +180,7 @@ export class TransactionService {
         try {
             return Promise.any([receiveUsingServerPow(), receiveUsingClientPow()]).then((sentHash: string) => {
                 window.shouldHaltClientSideWorkGeneration = true;
-                log(`Work Completed for Tx ${sentHash}.\n`);
+                log(`Completed TX ${sentHash}.\n`);
                 return Promise.resolve(sentHash);
             });
         } catch (err) {
@@ -216,10 +216,10 @@ export class TransactionService {
         };
 
         try {
-            return Promise.any([changeUsingServerPow(), changeUsingClientPow()]).then((sentHash: string) => {
+            return Promise.any([changeUsingServerPow(), changeUsingClientPow()]).then((changeHash: string) => {
                 window.shouldHaltClientSideWorkGeneration = true;
-                log(`Work Completed for Tx ${sentHash}.\n`);
-                return Promise.resolve(sentHash);
+                log(`Completed TX ${changeHash}.\n`);
+                return Promise.resolve(changeHash);
             });
         } catch (err) {
             console.error(err);
