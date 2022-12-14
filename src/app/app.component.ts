@@ -34,11 +34,7 @@ export class AppComponent {
     }
 
     ngOnInit(): void {
-        this.initializePowService();
-    }
-
-    initializePowService(): void {
-        this._powService.overrideDefaultBananoJSPowSource();
+        this._powService.initializePowService();
     }
 
     prepareRoute(outlet: RouterOutlet): Data {

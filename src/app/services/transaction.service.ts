@@ -127,8 +127,8 @@ export class TransactionService {
         };
 
         try {
-            return Promise.any([sendUsingClientPow()]).then((sentHash: string) => {
-                window.shouldHaltClientSideWorkGeneration = true;
+            return Promise.any([sendUsingClientPow(), sendUsingServerPow()]).then((sentHash: string) => {
+                this._powService.terminateClientSidePow();
                 log(`Completed TX ${sentHash}.\n`);
                 return Promise.resolve(sentHash);
             });
@@ -179,7 +179,7 @@ export class TransactionService {
 
         try {
             return Promise.any([receiveUsingServerPow(), receiveUsingClientPow()]).then((sentHash: string) => {
-                window.shouldHaltClientSideWorkGeneration = true;
+                this._powService.terminateClientSidePow();
                 log(`Completed TX ${sentHash}.\n`);
                 return Promise.resolve(sentHash);
             });
@@ -217,7 +217,7 @@ export class TransactionService {
 
         try {
             return Promise.any([changeUsingServerPow(), changeUsingClientPow()]).then((changeHash: string) => {
-                window.shouldHaltClientSideWorkGeneration = true;
+                this._powService.terminateClientSidePow();
                 log(`Completed TX ${changeHash}.\n`);
                 return Promise.resolve(changeHash);
             });
