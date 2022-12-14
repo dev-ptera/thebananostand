@@ -12,7 +12,6 @@ describe('AppComponent', () => {
     it('should create the app', () => {
         const fixture = TestBed.createComponent(AppComponent);
         const app = fixture.debugElement.componentInstance;
-        spyOn(app, 'initializePowService').and.stub();
         fixture.detectChanges();
         void expect(app).toBeTruthy();
     });
