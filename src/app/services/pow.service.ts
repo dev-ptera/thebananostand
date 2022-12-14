@@ -19,7 +19,9 @@ const log = (msg: string): void => console.log(msg);
 
 const BAN_WORK_THRESHOLD = '0xFFFFFE00';
 
-/** Responsible for remembering use settings & executing client-side pow via webgl or cpu when requested. */
+/** Contains the proof-of-work generation logic, which is required to process transactions.
+ *  Supports server-side pow generation & client-side webgl & web assembly options.
+ *  For client-side pow, webgl is the default method.  If a browser does not support webgl, then wasm-pow is attempted.  */
 @Injectable({
     providedIn: 'root',
 })
@@ -28,7 +30,6 @@ export class PowService {
 
     constructor(private readonly _datasourceService: DatasourceService, private readonly _rpcService: RpcService) {}
 
-    /** Changes the getGeneratedWork method of BananoJS */
     initializePowService(): void {
         this._testWebGLSupport();
         log('Pow Service Initialized');
