@@ -8,11 +8,7 @@ import { ReceivableHash } from '@app/types/ReceivableHash';
 import { AccountOverview } from '@app/types/AccountOverview';
 
 export type BananoifiedWindow = {
-    bananocoin: any;
     bananocoinBananojs: any;
-    bananocoinBananojsHw: any;
-    TransportWebUSB: any;
-    banotils: any;
     shouldHaltClientSideWorkGeneration: boolean;
     isClientActivelyGeneratingWork: boolean;
 } & Window;
@@ -55,7 +51,12 @@ const log = (msg: string): void => console.log(msg);
 @Injectable({
     providedIn: 'root',
 })
-/** Services that handle send, receive, change transactions. */
+/** Handles send, receive, & change transactions.
+ *  Each transaction that is processed has to perform a Proof-of-Work (PoW) before the transaction is valid & broadcasted.
+ *
+ *  Each transaction attempts to generate PoW, in a race, via RPC node (server-side) & locally (client-side).
+ *  The faster proof-of-work provider returns the work which is used to send the transaction.
+ * */
 export class TransactionService {
     constructor(
         private readonly _powService: PowService,
@@ -68,6 +69,8 @@ export class TransactionService {
     private async _configApi(bananodeApi): Promise<void> {
         const client = await this._datasource.getRpcClient();
         bananodeApi.setUrl(client.nodeAddress);
+
+        // Waits for the client to stop attempting to process work before continuing onto the next transaction.
         while (window.isClientActivelyGeneratingWork) {
             log('I am not doing anything until the client stops trying to do work...');
             // eslint-disable-next-line no-await-in-loop
@@ -128,8 +131,8 @@ export class TransactionService {
 
         try {
             return Promise.any([sendUsingClientPow(), sendUsingServerPow()]).then((sentHash: string) => {
-                window.shouldHaltClientSideWorkGeneration = true;
-                log(`Work Completed for Tx ${sentHash}.\n`);
+                this._powService.terminateClientSidePow();
+                log(`Completed TX ${sentHash}.\n`);
                 return Promise.resolve(sentHash);
             });
         } catch (err) {
@@ -179,8 +182,8 @@ export class TransactionService {
 
         try {
             return Promise.any([receiveUsingServerPow(), receiveUsingClientPow()]).then((sentHash: string) => {
-                window.shouldHaltClientSideWorkGeneration = true;
-                log(`Work Completed for Tx ${sentHash}.\n`);
+                this._powService.terminateClientSidePow();
+                log(`Completed TX ${sentHash}.\n`);
                 return Promise.resolve(sentHash);
             });
         } catch (err) {
@@ -216,10 +219,10 @@ export class TransactionService {
         };
 
         try {
-            return Promise.any([changeUsingServerPow(), changeUsingClientPow()]).then((sentHash: string) => {
-                window.shouldHaltClientSideWorkGeneration = true;
-                log(`Work Completed for Tx ${sentHash}.\n`);
-                return Promise.resolve(sentHash);
+            return Promise.any([changeUsingServerPow(), changeUsingClientPow()]).then((changeHash: string) => {
+                this._powService.terminateClientSidePow();
+                log(`Completed TX ${changeHash}.\n`);
+                return Promise.resolve(changeHash);
             });
         } catch (err) {
             console.error(err);

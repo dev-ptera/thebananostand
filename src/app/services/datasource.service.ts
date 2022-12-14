@@ -4,10 +4,9 @@ import { Subject } from 'rxjs';
 import { NanoClient } from '@dev-ptera/nano-node-rpc';
 
 export type Datasource = {
-    // alias: 'Batman' | 'Creeper' | 'Jungle Tv' | 'Booster' | 'Kalium';
-    alias: string;
+    alias: 'Batman' | 'Creeper' | 'Jungle Tv' | 'Booster' | 'Kalium';
     url: string;
-    isAccessible?: boolean;
+    isAccessible: boolean;
     isSelected: boolean;
 };
 
@@ -15,7 +14,7 @@ export type Datasource = {
     providedIn: 'root',
 })
 
-/** Which datasource should we use? RPC nodes & Spyglass API. */
+/** Returns which datasource we should use, for RPC nodes & Spyglass API. */
 export class DatasourceService {
     availableSpyglassApiSources: Datasource[] = [
         {
@@ -32,7 +31,7 @@ export class DatasourceService {
         },
     ];
 
-    availableRpcDataSources = [
+    availableRpcDataSources: Datasource[] = [
         /* { alias: 'Vault', url: 'https://vault.banano.cc/api/node-api', isAccessible: false, isSelected: false }, */ // CORS error
         /* { alias: 'Jungle TV', url: 'https://public.node.jungletv.live/rpc', isAccessible: false, isSelected: false }, */ // Can't do work_generate
         { alias: 'Booster', url: 'https://booster.dev-ptera.com/banano-rpc', isAccessible: false, isSelected: false },
@@ -53,21 +52,15 @@ export class DatasourceService {
         };
 
         // Ping available RPC Sources
-        this.availableRpcDataSources.map((source) => {
+        this.availableRpcDataSources.map((source: Datasource) => {
             http.post(source.url, { action: 'block_count' })
                 .toPromise()
                 .then(() => {
                     source.isAccessible = true;
-                    if (!this.rpcSource) {
+                    /** We want to default the RPC node to Kalium since it is configured to work with Boom-PoW. */
+                    if (!this.rpcSource || source.alias === 'Kalium') {
                         // eslint-disable-next-line no-console
                         console.log(`Using ${source.alias} as RPC source.`);
-                        this.setRpcSource(source);
-                        this.rpcSourceLoadedSubject.next(source);
-                    }
-                    // DEFAULT TO KALIUM FOR NOW.
-                    if (source.alias === 'Kalium') {
-                        // eslint-disable-next-line no-console
-                        console.log(`Using ${source.alias} as RPC source; this is the default source.`);
                         this.setRpcSource(source);
                         this.rpcSourceLoadedSubject.next(source);
                     }

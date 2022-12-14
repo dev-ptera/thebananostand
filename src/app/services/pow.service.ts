@@ -7,6 +7,9 @@ export type BananoifiedWindow = {
     shouldHaltClientSideWorkGeneration: boolean;
     isClientActivelyGeneratingWork: boolean;
     nanoWebglPow: any;
+    wasmInitiate: any;
+    startWasm: any;
+    stopWasm: any;
 } & Window;
 
 declare let window: BananoifiedWindow;
@@ -14,7 +17,11 @@ declare let window: BananoifiedWindow;
 // eslint-disable-next-line no-console
 const log = (msg: string): void => console.log(msg);
 
-/** Responsible for remembering use settings & executing client-side pow via webgl or cpu when requested. */
+const BAN_WORK_THRESHOLD = '0xFFFFFE00';
+
+/** Contains the proof-of-work generation logic, which is required to process transactions.
+ *  Supports server-side pow generation & client-side webgl & web assembly options.
+ *  For client-side pow, webgl is the default method.  If a browser does not support webgl, then wasm-pow is attempted.  */
 @Injectable({
     providedIn: 'root',
 })
@@ -23,14 +30,9 @@ export class PowService {
 
     constructor(private readonly _datasourceService: DatasourceService, private readonly _rpcService: RpcService) {}
 
-    /** Changes the getGeneratedWork method of BananoJS */
-    overrideDefaultBananoJSPowSource(): void {
-        try {
-            this._testWebGLSupport();
-            log('Pow Service Initialized');
-        } catch (err) {
-            console.error(err);
-        }
+    initializePowService(): void {
+        this._testWebGLSupport();
+        log('Pow Service Initialized');
     }
 
     private _testWebGLSupport(): void {
@@ -46,8 +48,7 @@ export class PowService {
     }
 
     /** Generate PoW using WebGL */
-    private _getHashWebGL(hash): Promise<string> {
-        const threshold = '0xFFFFFE00';
+    private _startWorkWebGl(hash): Promise<string> {
         window.isClientActivelyGeneratingWork = true;
         return new Promise((resolve, reject) => {
             const start = Date.now();
@@ -66,11 +67,10 @@ export class PowService {
                     () => {
                         if (window.shouldHaltClientSideWorkGeneration) {
                             window.isClientActivelyGeneratingWork = false;
-                            log('Terminating client pow generate; server pow generated faster.');
                             return true;
                         }
                     },
-                    threshold
+                    BAN_WORK_THRESHOLD
                 );
             } catch (error) {
                 console.error(error);
@@ -79,7 +79,23 @@ export class PowService {
         });
     }
 
-    /** Generate PoW using Client CPU (slow as shit) */
+    /** Generate PoW using Web Assembly */
+    private _startWorkWasm(hash: string): Promise<string> {
+        window.isClientActivelyGeneratingWork = true;
+        return new Promise((resolve, reject) => {
+            try {
+                window.startWasm(hash, (work) => {
+                    window.isClientActivelyGeneratingWork = false;
+                    resolve(work);
+                });
+            } catch (err) {
+                console.error(err);
+                reject(err);
+            }
+        });
+    }
+
+    /** Generate PoW using Client CPU (slow as shit & not used right now.) */
     private _getJsBlakeWork(hash): string {
         const start = new Date().getTime();
         const workBytes = window.bananocoinBananojs.getZeroedWorkBytes();
@@ -91,19 +107,41 @@ export class PowService {
     }
 
     async generateLocalWork(hash: string): Promise<string> {
-        log('Racing Client-side PoW.');
-        try {
-            if (this.isWebGLAvailable) {
-                log('Using WebGL for Client-side PoW.');
-                const clientWork = await this._getHashWebGL(hash);
+        const useWebgl = async (): Promise<string> => {
+            log('Using WebGL for Client-side PoW.');
+            const clientWork = await this._startWorkWebGl(hash);
+            if (clientWork) {
                 void this._rpcService.cancelWorkGenerate(hash);
                 return clientWork;
             }
-            log(`Client does not have support for webgl.`);
-            return Promise.reject();
+            throw new Error('Error using WebGL to generate local work.');
+        };
+
+        const useWasm = async (): Promise<string> => {
+            log('Using Web Assembly for Client-side PoW.');
+            const clientWork = await this._startWorkWasm(hash);
+            if (clientWork) {
+                void this._rpcService.cancelWorkGenerate(hash);
+                return clientWork;
+            }
+            throw new Error('Error using Wasm to generate local work.');
+        };
+
+        log('Racing Client-side PoW.');
+        try {
+            if (this.isWebGLAvailable) {
+                try {
+                    return await useWebgl();
+                } catch (err) {
+                    console.error(err);
+                    return await useWasm();
+                }
+            }
+            log(`Client does not have support for WebGL, defaulting to Web Assembly PoW.`);
+            return await useWasm();
         } catch (err) {
             console.error(err);
-            log(`Error using webgl to generate local work.`);
+            log(`Could not generate work locally.`);
             return Promise.reject();
         }
     }
@@ -119,5 +157,13 @@ export class PowService {
             console.error(err);
             return undefined;
         }
+    }
+
+    terminateClientSidePow(): void {
+        if (window.isClientActivelyGeneratingWork) {
+            log('Terminating client pow generate; server pow generated faster.');
+        }
+        window.shouldHaltClientSideWorkGeneration = true;
+        window.stopWasm();
     }
 }
