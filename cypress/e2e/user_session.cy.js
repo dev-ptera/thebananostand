@@ -30,13 +30,13 @@ describe("User Session", () => {
         cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
     }
 
-    const logInWithoutPassword = ( => {
+    const logInWithoutPassword = (() => {
         cy.get('[data-cy=enter-secret]').click();
         cy.get('[data-cy=secret-input]').type(LOW_FUND_SEED);
         cy.get('[data-cy=secret-next]').click();
         cy.get('[data-cy=secret-next]').click();
         cy.get('[data-cy=secret-next]').should('not.exist'); // Waits for the New Seed window to dismiss.
-    };
+    });
 
     it("should login with just a seed (no password)", () => {
         logInWithoutPassword();
