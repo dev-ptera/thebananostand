@@ -41,7 +41,7 @@ export class AccountService {
 
     /** Opens a hash in an explorer. */
     showBlockInExplorer(hash: string): void {
-        const explorerBlockPage = 'https://www.yellowspyglass.com/hash';
+        const explorerBlockPage = 'https://creeper.banano.cc/hash';
         window.open(`${explorerBlockPage}/${hash}`);
     }
 

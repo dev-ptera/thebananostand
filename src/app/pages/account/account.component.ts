@@ -21,7 +21,11 @@ import { SendBottomSheetComponent } from '@app/overlays/bottom-sheet/send/send-b
 import { SendDialogComponent } from '@app/overlays/dialogs/send/send-dialog.component';
 import { ChangeRepBottomSheetComponent } from '@app/overlays/bottom-sheet/change-rep/change-rep-bottom-sheet.component';
 import { ChangeRepDialogComponent } from '@app/overlays/dialogs/change-rep/change-rep-dialog.component';
-import { COPY_ADDRESS_TO_CLIPBOARD, REFRESH_SPECIFIC_ACCOUNT_BY_INDEX } from '@app/services/wallet-events.service';
+import {
+    COPY_ADDRESS_TO_CLIPBOARD,
+    REFRESH_SPECIFIC_ACCOUNT_BY_INDEX,
+    TRANSACTION_COMPLETED_SUCCESS,
+} from '@app/services/wallet-events.service';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -81,6 +85,11 @@ export class AccountComponent implements OnInit, OnDestroy {
                 }
             });
         });
+
+        // TODO: This might be better placed in the wallet actions.
+        TRANSACTION_COMPLETED_SUCCESS.pipe(untilDestroyed(this)).subscribe(() => {
+            this.refreshCurrentAccountInfo();
+        });
     }
 
     ngOnInit(): void {
@@ -136,12 +145,10 @@ export class AccountComponent implements OnInit, OnDestroy {
         };
         if (this.vp.sm) {
             setTimeout(() => {
-                const ref = this._sheet.open(ReceiveBottomSheetComponent, overlayData);
-                ref.afterDismissed().subscribe((hash) => this._postOverlayActions(hash));
+                this._sheet.open(ReceiveBottomSheetComponent, overlayData);
             }, this.bottomSheetDismissDelayMs);
         } else {
-            const ref = this._dialog.open(ReceiveDialogComponent, overlayData);
-            ref.afterClosed().subscribe((hash) => this._postOverlayActions(hash));
+            this._dialog.open(ReceiveDialogComponent, overlayData);
         }
     }
 
@@ -156,12 +163,10 @@ export class AccountComponent implements OnInit, OnDestroy {
         };
         if (this.vp.sm) {
             setTimeout(() => {
-                const ref = this._sheet.open(SendBottomSheetComponent, overlayData);
-                ref.afterDismissed().subscribe((hash) => this._postOverlayActions(hash));
+                this._sheet.open(SendBottomSheetComponent, overlayData);
             }, this.bottomSheetDismissDelayMs);
         } else {
-            const ref = this._dialog.open(SendDialogComponent, overlayData);
-            ref.afterClosed().subscribe((hash) => this._postOverlayActions(hash));
+            this._dialog.open(SendDialogComponent, overlayData);
         }
     }
 
@@ -177,21 +182,11 @@ export class AccountComponent implements OnInit, OnDestroy {
         };
         if (this.vp.sm) {
             setTimeout(() => {
-                const ref = this._sheet.open(ChangeRepBottomSheetComponent, overlayData);
-                ref.afterDismissed().subscribe((hash) => this._postOverlayActions(hash));
+                this._sheet.open(ChangeRepBottomSheetComponent, overlayData);
             }, this.bottomSheetDismissDelayMs);
         } else {
-            const ref = this._dialog.open(ChangeRepDialogComponent, overlayData);
-            ref.afterClosed().subscribe((hash) => this._postOverlayActions(hash));
+            this._dialog.open(ChangeRepDialogComponent, overlayData);
         }
-    }
-
-    /** Call this after an overlay is dismissed.  Will refresh data if a new transaction has been broadcasted. */
-    private _postOverlayActions(hash?: string): void {
-        if (!hash) {
-            return;
-        }
-        this.refreshCurrentAccountInfo();
     }
 
     openFilterDialog(): void {

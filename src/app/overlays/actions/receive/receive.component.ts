@@ -3,6 +3,7 @@ import * as Colors from '@brightlayer-ui/colors';
 import { TransactionService } from '@app/services/transaction.service';
 import { AppStateService } from '@app/services/app-state.service';
 import { ReceivableHash } from '@app/types/ReceivableHash';
+import { TRANSACTION_COMPLETED_SUCCESS } from '@app/services/wallet-events.service';
 
 export type ReceiveOverlayData = {
     address: string;
@@ -154,6 +155,7 @@ export class ReceiveComponent implements OnInit {
                 this.activeStep++;
                 this.bufferValue = (100 / this.maxSteps) * this.activeStep;
                 this.hasSuccess = this.maxSteps === this.activeStep;
+                TRANSACTION_COMPLETED_SUCCESS.next(receivedHash);
             } catch (err) {
                 console.error(err);
                 this.hasErrorReceiving = true;

@@ -5,6 +5,7 @@ import { TransactionService } from '@app/services/transaction.service';
 import { AccountService } from '@app/services/account.service';
 import { SpyglassService } from '@app/services/spyglass.service';
 import { UtilService } from '@app/services/util.service';
+import { TRANSACTION_COMPLETED_SUCCESS } from '@app/services/wallet-events.service';
 
 export type RepScore = {
     address: string;
@@ -307,10 +308,11 @@ export class ChangeRepComponent implements OnInit {
         this.isChangingRepresentative = true;
         this._transactionService
             .changeRepresentative(this.getUseSelectedRepresentative(), this.data.address, this.data.index)
-            .then((response) => {
-                this.txHash = response;
+            .then((hash) => {
+                this.txHash = hash;
                 this.hasSuccess = true;
                 this.isChangingRepresentative = false;
+                TRANSACTION_COMPLETED_SUCCESS.next(hash);
             })
             .catch((err) => {
                 console.error(err);

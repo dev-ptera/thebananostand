@@ -3,6 +3,7 @@ import * as Colors from '@brightlayer-ui/colors';
 import { UtilService } from '@app/services/util.service';
 import { AccountService } from '@app/services/account.service';
 import { TransactionService } from '@app/services/transaction.service';
+import { TRANSACTION_COMPLETED_SUCCESS } from '@app/services/wallet-events.service';
 
 export type SendOverlayData = {
     address: string;
@@ -215,6 +216,7 @@ export class SendComponent {
                 this.txHash = hash;
                 this.hasSuccess = true;
                 this.isProcessingTx = false;
+                TRANSACTION_COMPLETED_SUCCESS.next(hash);
             })
             .catch(() => {
                 this.hasSuccess = false;

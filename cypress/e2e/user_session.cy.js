@@ -11,7 +11,7 @@ describe("User Session", () => {
     }
 
     beforeEach(() => {
-        Cypress.config('defaultCommandTimeout', 10000);
+        Cypress.config('defaultCommandTimeout', 20000);
         cy.clearLocalStorage();
         reload();
     });
@@ -30,18 +30,24 @@ describe("User Session", () => {
         cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
     }
 
-    it("should login with just a seed (no password)", () => {
+    const logInWithoutPassword = (() => {
         cy.get('[data-cy=enter-secret]').click();
         cy.get('[data-cy=secret-input]').type(LOW_FUND_SEED);
         cy.get('[data-cy=secret-next]').click();
         cy.get('[data-cy=secret-next]').click();
         cy.get('[data-cy=secret-next]').should('not.exist'); // Waits for the New Seed window to dismiss.
+    });
+
+    it("should login with just a seed (no password)", () => {
+        logInWithoutPassword();
+    });
+
+    it("should log a user out on page refresh", () => {
+        logInWithoutPassword();
         reload();
-        cy.window().then(() => {
-            cy.get('[data-cy=login-wrapper]');
-            cy.get('[data-cy=account-unlock-button]').click();
-            cy.get('[data-cy=dashboard-wrapper]');
-        });
+        cy.get('[data-cy=login-wrapper]');
+        cy.get('[data-cy=account-unlock-button]').click();
+        cy.get('[data-cy=dashboard-wrapper]');
     });
 
     it("should login with a seed and password", () => {
