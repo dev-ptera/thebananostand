@@ -94,7 +94,7 @@ export class TransactionService {
         await this._configApi(window.bananocoinBananojs.bananodeApi);
         const { privateKey, accountInfo } = await this._getEssentials(accountIndex);
         const balanceRaw = accountInfo.balanceRaw;
-        const amountRaw = window.bananocoinBananojs.getBananoDecimalAmountAsRaw(withdrawAmount);
+        const amountRaw = window.bananocoinBananojs.getBananoDecimalAmountAsRaw(withdrawAmount.toFixed(29));
 
         if (BigInt(balanceRaw) < BigInt(amountRaw)) {
             const balance = getAmountPartsFromRaw(balanceRaw);

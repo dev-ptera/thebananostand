@@ -86,7 +86,7 @@ export const UNLOCK_WALLET = new Subject<{ isLedger: boolean; password: string }
 export const UNLOCK_WALLET_WITH_PASSWORD_ERROR = new Subject<void>();
 
 /** A transaction has been broadcast onto the network successfully. */
-export const TRANSACTION_COMPLETED_SUCCESS = new Subject<string>();
+export const TRANSACTION_COMPLETED_SUCCESS = new Subject<string | undefined>();
 
 @Injectable({
     providedIn: 'root',

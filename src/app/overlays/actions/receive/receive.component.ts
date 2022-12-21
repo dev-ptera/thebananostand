@@ -155,7 +155,6 @@ export class ReceiveComponent implements OnInit {
                 this.activeStep++;
                 this.bufferValue = (100 / this.maxSteps) * this.activeStep;
                 this.hasSuccess = this.maxSteps === this.activeStep;
-                TRANSACTION_COMPLETED_SUCCESS.next(receivedHash);
             } catch (err) {
                 console.error(err);
                 this.hasErrorReceiving = true;
@@ -163,5 +162,6 @@ export class ReceiveComponent implements OnInit {
                 return;
             }
         }
+        TRANSACTION_COMPLETED_SUCCESS.next(undefined);
     }
 }
