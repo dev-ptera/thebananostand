@@ -77,20 +77,22 @@ export type SendOverlayData = {
                                 data-cy="send-amount-input"
                                 [max]="data.maxSendAmount"
                                 [(ngModel)]="sendAmount"
-                                (ngModelChange)="sendAll = (sendAmount === data.maxSendAmount)"
+                                (ngModelChange)="sendAll = sendAmount === data.maxSendAmount"
                             />
                             <button
                                 matSuffix
                                 mat-icon-button
                                 aria-label="Send All"
-                                (click)="sendAll = !sendAll; toggleSendAll();"
+                                (click)="sendAll = !sendAll; toggleSendAll()"
                             >
                                 <mat-icon>account_balance_wallet</mat-icon>
                             </button>
                         </mat-form-field>
-                        <mat-hint *ngIf="sendAmount > data.maxSendAmount"
-                            style="margin-top: -8px; margin-bottom: 8px; display: flex">
-                            Max transferable amount is {{data.maxSendAmount}}.
+                        <mat-hint
+                            *ngIf="sendAmount > data.maxSendAmount"
+                            style="margin-top: -8px; margin-bottom: 8px; display: flex"
+                        >
+                            Max transferable amount is {{ data.maxSendAmount }}.
                         </mat-hint>
                         <mat-checkbox [(ngModel)]="sendAll" (change)="toggleSendAll()">Send All</mat-checkbox>
                     </ng-container>
