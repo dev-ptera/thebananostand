@@ -42,13 +42,14 @@ describe("User Session", () => {
         logInWithoutPassword();
     });
 
+    /*
     it("should log a user out on page refresh", () => {
         logInWithoutPassword();
         reload();
         cy.get('[data-cy=login-wrapper]');
         cy.get('[data-cy=account-unlock-button]').click();
         cy.get('[data-cy=dashboard-wrapper]');
-    });
+    }); */
 
     it("should login with a seed and password", () => {
         const password = 'UniquePasswordForTestingSpec';
