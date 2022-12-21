@@ -8,6 +8,44 @@ import * as copy from 'copy-to-clipboard';
  * This a generic utilities service.  Any one-off functions can be found here.
  * */
 export class UtilService {
+    /* eslint-disable */
+    removeExponents(n) {
+        let sign = +n < 0 ? '-' : '',
+            toStr = n.toString();
+        if (!/e/i.test(toStr)) {
+            return n;
+        }
+        let [lead, decimal, pow] = n
+            .toString()
+            .replace(/^-/, '')
+            .replace(/^([0-9]+)(e.*)/, '$1.$2')
+            .split(/e|\./);
+        return +pow < 0
+            ? sign + '0.' + '0'.repeat(Math.max(Math.abs(pow) - 1 || 0, 0)) + lead + decimal
+            : sign +
+                  lead +
+                  (+pow >= decimal.length
+                      ? decimal + '0'.repeat(Math.max(+pow - decimal.length || 0, 0))
+                      : decimal.slice(0, +pow) + '.' + decimal.slice(+pow));
+    }
+    /* eslint-enable */
+
+    /** Given raw, converts BAN to a decimal. */
+    async convertRawToBan(raw: string): Promise<number> {
+        // @ts-ignore
+        const bananoJs = window.bananocoinBananojs;
+        const balanceParts = await bananoJs.getBananoPartsFromRaw(raw);
+        if (balanceParts.raw === '0') {
+            delete balanceParts.raw;
+        }
+        return await bananoJs.getBananoPartsAsDecimal(balanceParts);
+    }
+
+    convertBanToRaw(ban: number): string {
+        // @ts-ignore
+        return window.bananocoinBananojs.getBananoDecimalAmountAsRaw(ban);
+    }
+
     numberWithCommas(x: number | string, precision = 6): string {
         if (!x && x !== 0) {
             return '';

@@ -9,6 +9,7 @@ export type SendOverlayData = {
     address: string;
     index: number;
     maxSendAmount: number;
+    maxSendAmountRaw: string;
 };
 
 @Component({
@@ -57,7 +58,7 @@ export type SendOverlayData = {
 
             <ng-container *ngIf="hasSuccess === undefined">
                 <h1 mat-dialog-title>Send Amount</h1>
-                <div mat-dialog-content style="margin-bottom: 32px;">
+                <div mat-dialog-content style="margin-bottom: 32px; height: 100%">
                     <ng-container *ngIf="activeStep === 0">
                         <div style="margin-bottom: 8px">You are attempting to withdraw funds from:</div>
                         <div
@@ -77,16 +78,24 @@ export type SendOverlayData = {
                                 data-cy="send-amount-input"
                                 [max]="data.maxSendAmount"
                                 [(ngModel)]="sendAmount"
+                                (ngModelChange)="sendAll = sendAmount === data.maxSendAmount"
                             />
                             <button
                                 matSuffix
                                 mat-icon-button
                                 aria-label="Send All"
-                                (click)="sendAmount = data.maxSendAmount"
+                                (click)="sendAll = !sendAll; toggleSendAll()"
                             >
                                 <mat-icon>account_balance_wallet</mat-icon>
                             </button>
                         </mat-form-field>
+                        <mat-hint
+                            *ngIf="sendAmount > data.maxSendAmount"
+                            style="margin-top: -8px; margin-bottom: 8px; display: flex"
+                        >
+                            Max transferable amount is {{ data.maxSendAmount }}.
+                        </mat-hint>
+                        <mat-checkbox [(ngModel)]="sendAll" (change)="toggleSendAll()">Send All</mat-checkbox>
                     </ng-container>
 
                     <ng-container *ngIf="activeStep === 2">
@@ -106,7 +115,7 @@ export type SendOverlayData = {
                     <ng-container *ngIf="activeStep === 3">
                         <div style="margin-bottom: 24px">Please confirm the transaction details below:</div>
                         <div style="font-weight: 600">Send</div>
-                        <div style="margin-bottom: 16px;">{{ util.numberWithCommas(sendAmount, 10) }}</div>
+                        <div style="margin-bottom: 16px;">{{ util.removeExponents(sendAmount) }}</div>
                         <div style="font-weight: 600">To</div>
                         <div
                             style="word-break: break-all; font-family: monospace"
@@ -157,6 +166,7 @@ export class SendComponent {
     maxSteps = 4;
     lastStep = this.maxSteps - 1;
     sendAmount: number;
+    sendAll: boolean;
 
     txHash: string;
     recipient: string;
@@ -200,6 +210,14 @@ export class SendComponent {
         this.closeWithHash.emit(this.txHash);
     }
 
+    toggleSendAll(): void {
+        if (this.sendAll) {
+            this.sendAmount = this.data.maxSendAmount;
+        } else {
+            this.sendAmount = undefined;
+        }
+    }
+
     openLink(): void {
         this._accountService.showBlockInExplorer(this.txHash);
     }
@@ -210,8 +228,12 @@ export class SendComponent {
         }
 
         this.isProcessingTx = true;
+
+        const amountRaw = this.sendAll
+            ? this.data.maxSendAmountRaw
+            : this.util.convertBanToRaw(this.util.removeExponents(this.sendAmount));
         this._transactionService
-            .withdraw(this.recipient, this.sendAmount, this.data.index)
+            .withdraw(this.recipient, amountRaw, this.data.index)
             .then((hash) => {
                 this.txHash = hash;
                 this.hasSuccess = true;

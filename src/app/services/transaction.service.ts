@@ -89,12 +89,11 @@ export class TransactionService {
     }
 
     /** Attempts a withdrawal.  On success, returns transaction hash. */
-    async withdraw(recipientAddress: string, withdrawAmount: number, accountIndex: number): Promise<string> {
+    async withdraw(recipientAddress: string, amountRaw: string, accountIndex: number): Promise<string> {
         log('** Begin Send Transaction **');
         await this._configApi(window.bananocoinBananojs.bananodeApi);
         const { privateKey, accountInfo } = await this._getEssentials(accountIndex);
         const balanceRaw = accountInfo.balanceRaw;
-        const amountRaw = window.bananocoinBananojs.getBananoDecimalAmountAsRaw(withdrawAmount);
 
         if (BigInt(balanceRaw) < BigInt(amountRaw)) {
             const balance = getAmountPartsFromRaw(balanceRaw);
