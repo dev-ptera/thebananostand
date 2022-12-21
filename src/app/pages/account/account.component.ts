@@ -159,6 +159,7 @@ export class AccountComponent implements OnInit, OnDestroy {
                 address: this.account.fullAddress,
                 maxSendAmount: this.account.balance,
                 index: this.account.index,
+                maxSendAmountRaw: this.account.balanceRaw,
             },
         };
         if (this.vp.sm) {

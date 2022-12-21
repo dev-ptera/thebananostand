@@ -9,6 +9,7 @@ export type SendOverlayData = {
     address: string;
     index: number;
     maxSendAmount: number;
+    maxSendAmountRaw: string;
 };
 
 @Component({
@@ -114,7 +115,7 @@ export type SendOverlayData = {
                     <ng-container *ngIf="activeStep === 3">
                         <div style="margin-bottom: 24px">Please confirm the transaction details below:</div>
                         <div style="font-weight: 600">Send</div>
-                        <div style="margin-bottom: 16px;">{{ util.numberWithCommas(sendAmount, 20) }}</div>
+                        <div style="margin-bottom: 16px;">{{ util.removeExponents(sendAmount) }}</div>
                         <div style="font-weight: 600">To</div>
                         <div
                             style="word-break: break-all; font-family: monospace"
@@ -227,8 +228,12 @@ export class SendComponent {
         }
 
         this.isProcessingTx = true;
+
+        const amountRaw = this.sendAll
+            ? this.data.maxSendAmountRaw
+            : this.util.convertBanToRaw(this.util.removeExponents(this.sendAmount));
         this._transactionService
-            .withdraw(this.recipient, this.sendAmount, this.data.index)
+            .withdraw(this.recipient, amountRaw, this.data.index)
             .then((hash) => {
                 this.txHash = hash;
                 this.hasSuccess = true;

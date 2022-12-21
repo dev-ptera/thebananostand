@@ -81,17 +81,6 @@ export class RpcService {
         return accountOverview;
     }
 
-    /** Given raw, converts BAN to a decimal. */
-    private async _convertRawToBan(raw: string): Promise<number> {
-        // @ts-ignore
-        const bananoJs = window.bananocoinBananojs;
-        const balanceParts = await bananoJs.getBananoPartsFromRaw(raw);
-        if (balanceParts.raw === '0') {
-            delete balanceParts.raw;
-        }
-        return await bananoJs.getBananoPartsAsDecimal(balanceParts);
-    }
-
     /** Handles some data formatting; transforms account_info rpc data into some formatted dashboard data. */
     private async _formatAccountInfoResponse(
         index: number,
@@ -115,7 +104,7 @@ export class RpcService {
         }
 
         const accountInfo = rpcData as AccountInfoResponse;
-        const balance = await this._convertRawToBan(accountInfo.balance);
+        const balance = await this._util.convertRawToBan(accountInfo.balance);
 
         return {
             index,
@@ -164,11 +153,4 @@ export class RpcService {
         const response = await client['_send']('process', processReq);
         return response.hash;
     }
-
-    /*
-    async getPending(account: string): Promise<any> {
-        const client = await this._datasourceService.getRpcClient();
-        const response = await client.accounts_pending([account], 1);
-        return response.blocks;
-    } */
 }
