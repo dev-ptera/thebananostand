@@ -104,7 +104,7 @@ export class RpcService {
         }
 
         const accountInfo = rpcData as AccountInfoResponse;
-        const balance = await this._util.convertRawToBan(accountInfo.balance);
+        const balance = this._util.convertRawToBan(accountInfo.balance);
 
         return {
             index,

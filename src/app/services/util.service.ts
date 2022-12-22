@@ -31,17 +31,17 @@ export class UtilService {
     /* eslint-enable */
 
     /** Given raw, converts BAN to a decimal. */
-    async convertRawToBan(raw: string): Promise<number> {
+    convertRawToBan(raw: string): number {
         // @ts-ignore
         const bananoJs = window.bananocoinBananojs;
-        const balanceParts = await bananoJs.getBananoPartsFromRaw(raw);
+        const balanceParts = bananoJs.getBananoPartsFromRaw(raw);
         if (balanceParts.raw === '0') {
             delete balanceParts.raw;
         }
-        return await bananoJs.getBananoPartsAsDecimal(balanceParts);
+        return bananoJs.getBananoPartsAsDecimal(balanceParts);
     }
 
-    convertBanToRaw(ban: number): string {
+    convertBanToRaw(ban: number | string): string {
         // @ts-ignore
         return window.bananocoinBananojs.getBananoDecimalAmountAsRaw(ban);
     }
