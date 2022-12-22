@@ -200,7 +200,7 @@ export class TransactionService {
             type: 'state',
             account: accountInfo.fullAddress,
             previous: accountInfo.frontier,
-            representative: accountInfo.representative,
+            representative: newRep,
             balance: accountInfo.balanceRaw,
             link: '0000000000000000000000000000000000000000000000000000000000000000',
             signature: '',
