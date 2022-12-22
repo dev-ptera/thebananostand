@@ -115,7 +115,7 @@ export type SendOverlayData = {
                     <ng-container *ngIf="activeStep === 3">
                         <div style="margin-bottom: 24px">Please confirm the transaction details below:</div>
                         <div style="font-weight: 600">Send</div>
-                        <div style="margin-bottom: 16px;">{{ util.removeExponents(sendAmount) }}</div>
+                        <div style="margin-bottom: 16px;">{{ confirmedSendAmount }}</div>
                         <div style="font-weight: 600">To</div>
                         <div
                             style="word-break: break-all; font-family: monospace"
@@ -162,19 +162,23 @@ export type SendOverlayData = {
 export class SendComponent {
     @Input() data: SendOverlayData;
     @Output() closeWithHash: EventEmitter<string> = new EventEmitter<string>();
+
     activeStep = 0;
     maxSteps = 4;
     lastStep = this.maxSteps - 1;
     sendAmount: number;
+
     sendAll: boolean;
 
     txHash: string;
     recipient: string;
+    confirmedSendAmount: string; // The number that users see on the last screen, which is used to send funds.
 
     hasSuccess: boolean;
     isProcessingTx: boolean;
 
     colors = Colors;
+
 
     constructor(
         public util: UtilService,
@@ -192,6 +196,11 @@ export class SendComponent {
     next(): void {
         if (this.activeStep === this.lastStep) {
             return this.withdraw();
+        }
+        if (this.activeStep === 1) {
+            this.confirmedSendAmount = this.sendAll
+                ? this.util.removeExponents(this.util.convertRawToBan(this.data.maxSendAmountRaw))
+                : this.util.removeExponents(this.sendAmount);
         }
         this.activeStep++;
     }
@@ -228,12 +237,8 @@ export class SendComponent {
         }
 
         this.isProcessingTx = true;
-
-        const amountRaw = this.sendAll
-            ? this.data.maxSendAmountRaw
-            : this.util.convertBanToRaw(this.util.removeExponents(this.sendAmount));
         this._transactionService
-            .withdraw(this.recipient, amountRaw, this.data.index)
+            .withdraw(this.recipient, this.util.convertBanToRaw(this.confirmedSendAmount), this.data.index)
             .then((hash) => {
                 this.txHash = hash;
                 this.hasSuccess = true;
