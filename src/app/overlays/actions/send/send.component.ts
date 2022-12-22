@@ -179,7 +179,6 @@ export class SendComponent {
 
     colors = Colors;
 
-
     constructor(
         public util: UtilService,
         private readonly _transactionService: TransactionService,

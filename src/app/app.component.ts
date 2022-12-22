@@ -6,7 +6,7 @@ import { SecretService } from '@app/services/secret.service';
 import { WalletEventsService } from '@app/services/wallet-events.service';
 import { PowService } from '@app/services/pow.service';
 import { AppStateService } from '@app/services/app-state.service';
-import {environment} from "../environments/environment";
+import { environment } from '../environments/environment';
 
 @Component({
     selector: 'app-root',
