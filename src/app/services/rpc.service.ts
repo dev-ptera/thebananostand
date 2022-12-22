@@ -77,17 +77,17 @@ export class RpcService {
                 LOG_ERR(err);
             }),
         ]);
-        const accountOverview = await this._formatAccountInfoResponse(index, publicAddress, pending, accountInfoRpc);
+        const accountOverview = this._formatAccountInfoResponse(index, publicAddress, pending, accountInfoRpc);
         return accountOverview;
     }
 
     /** Handles some data formatting; transforms account_info rpc data into some formatted dashboard data. */
-    private async _formatAccountInfoResponse(
+    private _formatAccountInfoResponse(
         index: number,
         address: string,
         pending: ReceivableHash[],
         rpcData: AccountInfoResponse | UnopenedAccountResponse
-    ): Promise<AccountOverview> {
+    ): AccountOverview {
         // If account is not opened, return a placeholder account.
         if ((rpcData as UnopenedAccountResponse).unopenedAccount) {
             return {
@@ -104,7 +104,7 @@ export class RpcService {
         }
 
         const accountInfo = rpcData as AccountInfoResponse;
-        const balance = await this._util.convertRawToBan(accountInfo.balance);
+        const balance = this._util.convertRawToBan(accountInfo.balance);
 
         return {
             index,

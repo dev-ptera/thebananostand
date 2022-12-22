@@ -6,6 +6,7 @@ import { SecretService } from '@app/services/secret.service';
 import { WalletEventsService } from '@app/services/wallet-events.service';
 import { PowService } from '@app/services/pow.service';
 import { AppStateService } from '@app/services/app-state.service';
+import { environment } from '../environments/environment';
 
 @Component({
     selector: 'app-root',
@@ -28,8 +29,10 @@ export class AppComponent {
         appHeight();
 
         this._appStoreService.store.subscribe((data) => {
-            // eslint-disable-next-line no-console
-            console.log(data);
+            if (!environment.production) {
+                // eslint-disable-next-line no-console
+                console.log(data);
+            }
         });
     }
 
