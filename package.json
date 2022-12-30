@@ -22,16 +22,16 @@
     },
     "private": true,
     "dependencies": {
-        "@angular/animations": "^14.2.12",
-        "@angular/cdk": "^14.2.7",
-        "@angular/common": "^14.2.12",
-        "@angular/compiler": "^14.2.12",
-        "@angular/core": "^14.2.12",
-        "@angular/forms": "^14.2.12",
-        "@angular/material": "^14.2.7",
-        "@angular/platform-browser": "^14.2.12",
-        "@angular/platform-browser-dynamic": "^14.2.12",
-        "@angular/router": "^14.2.12",
+        "@angular/animations": "^15.0.4",
+        "@angular/cdk": "^15.0.3",
+        "@angular/common": "^15.0.4",
+        "@angular/compiler": "^15.0.4",
+        "@angular/core": "^15.0.4",
+        "@angular/forms": "^15.0.4",
+        "@angular/material": "^15.0.3",
+        "@angular/platform-browser": "^15.0.4",
+        "@angular/platform-browser-dynamic": "^15.0.4",
+        "@angular/router": "^15.0.4",
         "@bananocoin/bananojs-hw": "^1.2.14",
         "@brightlayer-ui/angular-components": "8.0.0",
         "@brightlayer-ui/angular-themes": "^8.0.0",
@@ -45,9 +45,9 @@
         "zone.js": "^0.11.8"
     },
     "devDependencies": {
-        "@angular-devkit/build-angular": "^14.2.10",
-        "@angular/cli": "^14.2.10",
-        "@angular/compiler-cli": "^14.2.12",
+        "@angular-devkit/build-angular": "^15.0.4",
+        "@angular/cli": "^15.0.4",
+        "@angular/compiler-cli": "^15.0.4",
         "@brightlayer-ui/eslint-config": "^3.0.1",
         "@brightlayer-ui/prettier-config": "^1.0.3",
         "@types/jasmine": "~3.6.11",
@@ -68,7 +68,7 @@
         "npm-check-updates": "^12.5.12",
         "prettier": "^2.4.1",
         "start-server-and-test": "^1.14.0",
-        "typescript": "~4.6.4"
+        "typescript": "~4.8.4"
     },
     "prettier": "@brightlayer-ui/prettier-config"
 }
