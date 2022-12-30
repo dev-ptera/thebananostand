@@ -6,7 +6,6 @@ import { RpcService } from '@app/services/rpc.service';
 import { PowService } from '@app/services/pow.service';
 import { ReceivableHash } from '@app/types/ReceivableHash';
 import { AccountOverview } from '@app/types/AccountOverview';
-import { ProcessBody } from '@dev-ptera/nano-node-rpc';
 import { TransactionBlock } from '@app/types/TransactionBlock';
 
 type BananoifiedWindow = {
@@ -187,7 +186,7 @@ export class TransactionService {
         log('** Begin Change Transaction **');
         await this._configApi(window.bananocoinBananojs.bananodeApi);
         const { privateKey, accountInfo } = await this._getEssentials(accountIndex);
-        const block: ProcessBody['block'] = {
+        const block: TransactionBlock = {
             type: 'state',
             account: accountInfo.fullAddress,
             previous: accountInfo.frontier,
