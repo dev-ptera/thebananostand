@@ -6,31 +6,19 @@ import { RpcService } from '@app/services/rpc.service';
 import { PowService } from '@app/services/pow.service';
 import { ReceivableHash } from '@app/types/ReceivableHash';
 import { AccountOverview } from '@app/types/AccountOverview';
+import { TransactionBlock } from '@app/types/TransactionBlock';
 
-export type BananoifiedWindow = {
+type BananoifiedWindow = {
     bananocoinBananojs: any;
     shouldHaltClientSideWorkGeneration: boolean;
     isClientActivelyGeneratingWork: boolean;
 } & Window;
 declare let window: BananoifiedWindow;
 
-declare type Block = {
-    type: string;
-    account: string;
-    previous: string;
-    representative: string;
-    balance: string;
-    link: string;
-    signature: string;
-    work?: string;
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    do_work?: string;
-};
-
 const getAmountPartsFromRaw = (amountRawStr: string): any =>
     window.bananocoinBananojs.BananoUtil.getAmountPartsFromRaw(amountRawStr, window.bananocoinBananojs.BANANO_PREFIX);
 
-const signBlock = async (privateKey: string, block: Block): Promise<string> =>
+const signBlock = async (privateKey: string, block: TransactionBlock): Promise<string> =>
     await window.bananocoinBananojs.BananoUtil.sign(privateKey, block);
 
 const getPublicKeyFromPrivateKey = (privateKey: string): Promise<string> =>
@@ -107,7 +95,7 @@ export class TransactionService {
         const remaining = BigInt(balanceRaw) - BigInt(amountRaw);
         const remainingDecimal = remaining.toString(10);
         const destPublicKey = getPublicKeyFromAccount(recipientAddress);
-        const block: Block = {
+        const block: TransactionBlock = {
             type: 'state',
             account: accountInfo.fullAddress,
             previous: accountInfo.frontier,
@@ -115,6 +103,7 @@ export class TransactionService {
             balance: remainingDecimal,
             link: destPublicKey,
             signature: '',
+            work: undefined,
         };
         block.signature = await signBlock(privateKey, block);
 
@@ -157,7 +146,7 @@ export class TransactionService {
             ? '0000000000000000000000000000000000000000000000000000000000000000'
             : accountInfo.frontier;
         const subtype = isOpeningAccount ? 'open' : 'receive';
-        const block: Block = {
+        const block: TransactionBlock = {
             type: 'state',
             account: accountInfo.fullAddress,
             previous,
@@ -165,6 +154,7 @@ export class TransactionService {
             balance: valueRaw,
             link: incoming.hash,
             signature: '',
+            work: undefined,
         };
         block.signature = await signBlock(privateKey, block);
 
@@ -196,7 +186,7 @@ export class TransactionService {
         log('** Begin Change Transaction **');
         await this._configApi(window.bananocoinBananojs.bananodeApi);
         const { privateKey, accountInfo } = await this._getEssentials(accountIndex);
-        const block: Block = {
+        const block: TransactionBlock = {
             type: 'state',
             account: accountInfo.fullAddress,
             previous: accountInfo.frontier,
@@ -204,6 +194,7 @@ export class TransactionService {
             balance: accountInfo.balanceRaw,
             link: '0000000000000000000000000000000000000000000000000000000000000000',
             signature: '',
+            work: undefined,
         };
         block.signature = await signBlock(privateKey, block);
 

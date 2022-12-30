@@ -5,6 +5,7 @@ import { AccountOverview } from '@app/types/AccountOverview';
 import { DatasourceService } from '@app/services/datasource.service';
 import { SignerService } from '@app/services/signer.service';
 import { ReceivableHash } from '@app/types/ReceivableHash';
+import { TransactionBlock } from '@app/types/TransactionBlock';
 
 const LOG_ERR = (err: any): any => {
     console.error(`ERROR: Issue fetching RPC data.  ${err}`);
@@ -120,28 +121,27 @@ export class RpcService {
     }
 
     /** Given a hash, tells our RPC datasource to stop calculating work to process a transaction. */
-    async cancelWorkGenerate(hash: string): Promise<void> {
+    async cancelWorkGenerate(hash: string): Promise<any> {
         const client = await this._datasourceService.getRpcClient();
         // eslint-disable-next-line no-console
         console.log('Canceling server-side work generate request');
         return new Promise((resolve) => {
-            // @ts-ignore
-            client._send('work_cancel', { hash }).then(resolve).catch(resolve);
+            client.work_cancel(hash).then(resolve).catch(resolve);
         });
     }
 
     async generateWork(hash: string): Promise<string> {
         const client = await this._datasourceService.getRpcClient();
-        const response = await client['_send']('work_generate', { hash });
+        const response = await client.work_generate(hash);
         return response.work;
     }
 
-    async process(block: any, type: 'send' | 'receive' | 'change' | 'open'): Promise<string> {
+    async process(block: TransactionBlock, type: 'send' | 'receive' | 'change' | 'open'): Promise<string> {
         const client = await this._datasourceService.getRpcClient();
         const datasource = await this._datasourceService.getRpcSource();
         const processReq = {
             // eslint-disable-next-line @typescript-eslint/naming-convention
-            json_block: 'true',
+            json_block: true,
             subtype: type,
             block: block,
         };
@@ -150,7 +150,7 @@ export class RpcService {
         if (block.work === undefined && datasource.alias === 'Kalium') {
             processReq['do_work'] = true;
         }
-        const response = await client['_send']('process', processReq);
+        const response = await client.process(processReq);
         return response.hash;
     }
 }
