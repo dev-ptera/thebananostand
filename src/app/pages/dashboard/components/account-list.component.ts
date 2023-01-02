@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { AccountOverview } from '@app/types/AccountOverview';
 import * as Colors from '@brightlayer-ui/colors';
 import { COPY_ADDRESS_TO_CLIPBOARD, REMOVE_ACCOUNTS_BY_INDEX } from '@app/services/wallet-events.service';
@@ -18,7 +18,7 @@ import { AppStateService } from '@app/services/app-state.service';
             <ng-template #accountMoreOptionsTrigger>
                 <button
                     mat-icon-button
-                    style="margin-left: 8px"
+                    style="margin-left: 8px; margin-right: -4px"
                     (click)="account.moreOptionsOpen = !account.moreOptionsOpen; $event.stopPropagation()"
                 >
                     <mat-icon>more_vert</mat-icon>
@@ -61,7 +61,7 @@ import { AppStateService } from '@app/services/app-state.service';
 
         <!-- Statuses that are shown beneath an address.  Includes "Rep Offline" & "Has Receivable" information. -->
         <ng-template #statusBadges let-account="account">
-            <div>
+            <div style="display: flex; align-items: center">
                 <blui-list-item-tag
                     *ngIf="account.pending.length > 0"
                     [label]="vp.sm ? 'Receivable' : 'Has Receivable'"
@@ -92,8 +92,8 @@ import { AppStateService } from '@app/services/app-state.service';
                     let account of accounts;
                     let i = index;
                     let even = even;
-                    trackBy: markUniqueAccount;
-                    let last = last
+                    let last = last;
+                    trackBy: markUniqueAccount
                 "
                 (mouseenter)="hoverRowNumber = i"
                 (mouseleave)="hoverRowNumber = undefined"
@@ -149,7 +149,6 @@ import { AppStateService } from '@app/services/app-state.service';
 export class AccountListComponent {
     colors = Colors;
     hoverRowNumber: number;
-    hoverMoreVert: number;
 
     @Input() accounts: AccountOverview[] = [];
 

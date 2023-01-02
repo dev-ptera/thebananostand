@@ -192,6 +192,7 @@
                             mat-stroked-button
                             matTooltip="Refresh account balances"
                             style="margin-right: 16px"
+                            [disabled]="store.isLoadingAccounts"
                             (click)="refreshDashboard()"
                         >
                             <mat-icon>refresh</mat-icon>
@@ -214,8 +215,10 @@
                         >
                             <mat-icon>123</mat-icon>
                         </button>
-                        <button mat-stroked-button matTooltip="Sort by balance">
-                            <mat-icon>swap_vert</mat-icon>
+                        <button mat-stroked-button matTooltip="Sort by balance" (click)="sortAccountsByBalance()">
+                            <mat-icon *ngIf="sortDirection === 'none'">swap_vert</mat-icon>
+                            <mat-icon *ngIf="sortDirection === 'asc'">arrow_upward</mat-icon>
+                            <mat-icon *ngIf="sortDirection === 'desc'">arrow_downward</mat-icon>
                         </button>
                     </div>
                 </div>

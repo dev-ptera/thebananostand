@@ -2,10 +2,8 @@ import { Component } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
 import { Router } from '@angular/router';
 import { UtilService } from '@app/services/util.service';
-import { AccountService } from '@app/services/account.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewportService } from '@app/services/viewport.service';
-import { ThemeService } from '@app/services/theme.service';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { AddIndexDialogComponent } from '@app/overlays/dialogs/add-index/add-index-dialog.component';
 import { AddIndexBottomSheetComponent } from '@app/overlays/bottom-sheet/add-index/add-index-bottom-sheet.component';
@@ -37,6 +35,7 @@ export class DashboardComponent {
     switchWalletOverlayOpen = false;
     walletActionsOverlayOpen = false;
     accountActionsOverlayOpen = false;
+    sortDirection: 'none' | 'asc' | 'desc' = 'none';
 
     store: AppStore;
     colors = Colors;
@@ -145,6 +144,30 @@ export class DashboardComponent {
 
     isLedgerDevice(): boolean {
         return this._appStateService.store.getValue().hasUnlockedLedger;
+    }
+
+    sortAccountsByBalance(): void {
+        if (this.sortDirection === 'asc') {
+            this.sortDirection = 'none';
+        } else if (this.sortDirection === 'desc') {
+            this.sortDirection = 'asc';
+        } else {
+            this.sortDirection = 'desc';
+        }
+
+        this.store.accounts.sort((a, b) => {
+            if (this.sortDirection === 'none') {
+                return a.index > b.index ? 1 : -1;
+            }
+            if (!a.representative || !b.representative) {
+                return 1;
+            }
+
+            if (this.sortDirection === 'asc') {
+                return a.balance < b.balance ? -1 : 1;
+            }
+            return a.balance < b.balance ? 1 : -1;
+        });
     }
 
     isShowMultiWalletSelect(): boolean {
