@@ -33,6 +33,10 @@ $headerHeight: 90px;
 }
 
 .dashboard-account-list {
+    padding: 8px 0;
+    overflow: auto;
+    max-height: calc(100vh - 344px);
+
     .account-number {
         position: absolute;
         top: 2px;
@@ -43,8 +47,8 @@ $headerHeight: 90px;
     * {
         transition: all 200ms;
     }
-    max-height: calc(100vh - 360px);
     &.sm {
+        padding: 0;
         max-height: calc(100vh - (56px + $headerHeight + 1px)); // Don't forget the divider height. 1px
         max-height: calc(var(--app-height) - (56px + $headerHeight + 1px));
     }

@@ -79,14 +79,14 @@ export const REQUEST_BACKUP_SECRET = new Subject<{ useMnemonic: boolean }>();
 /** An account is being added to the dashboard. Can be either true or false. */
 export const SET_DASHBOARD_ACCOUNT_LOADING = new BehaviorSubject<boolean>(true);
 
+/** A transaction has been broadcast onto the network successfully. */
+export const TRANSACTION_COMPLETED_SUCCESS = new Subject<string | undefined>();
+
 /** A wallet (either secret or ledger) has been unlocked. */
 export const UNLOCK_WALLET = new Subject<{ isLedger: boolean; password: string }>();
 
 /** User has provided an incorrect password to unlock the wallet. */
 export const UNLOCK_WALLET_WITH_PASSWORD_ERROR = new Subject<void>();
-
-/** A transaction has been broadcast onto the network successfully. */
-export const TRANSACTION_COMPLETED_SUCCESS = new Subject<string | undefined>();
 
 @Injectable({
     providedIn: 'root',
