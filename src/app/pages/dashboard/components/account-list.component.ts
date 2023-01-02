@@ -89,7 +89,7 @@ import { AppStateService } from '@app/services/app-state.service';
         >
             <blui-info-list-item
                 *ngFor="
-                    let account of accounts;
+                    let account of accounts | sort: sortDirection:accounts.length;
                     let i = index;
                     let even = even;
                     let last = last;
@@ -102,7 +102,11 @@ import { AppStateService } from '@app/services/app-state.service';
                 [style.backgroundColor]="getItemBackgroundColor(even)"
                 (click)="openAccount(account.fullAddress)"
             >
-                <div blui-left-content style="display: flex; align-items: center; min-width: 72px">
+                <div
+                    blui-left-content
+                    style="display: flex; align-items: center; min-width: 72px;"
+                    [style.marginLeft.px]="vp.sm ? -8 : 0"
+                >
                     <img [src]="getMonkeyUrl(account.fullAddress)" loading="lazy" [height]="72" />
                     <div class="account-number mat-hint" [class.primary]="hoverRowNumber === i">
                         #{{ _util.numberWithCommas(account.index) }}
@@ -133,10 +137,12 @@ import { AppStateService } from '@app/services/app-state.service';
                         <ng-template *ngTemplateOutlet="statusBadges; context: { account: this.account }"></ng-template>
                     </div>
                 </div>
-                <div blui-right-content *ngIf="!vp.sm">
-                    <ng-template *ngTemplateOutlet="statusBadges; context: { account: this.account }"></ng-template>
-                    <ng-container *ngIf="account.representative; else unopenedAccountTag">
-                        <span> {{ account.formattedBalance }} BAN </span>
+                <div blui-right-content>
+                    <ng-container *ngIf="!vp.sm">
+                        <ng-template *ngTemplateOutlet="statusBadges; context: { account: this.account }"></ng-template>
+                        <ng-container *ngIf="account.representative; else unopenedAccountTag">
+                            <span> {{ account.formattedBalance }} BAN </span>
+                        </ng-container>
                     </ng-container>
                     <ng-template
                         *ngTemplateOutlet="accountMoreOptions; context: { account: this.account }"
@@ -151,6 +157,7 @@ export class AccountListComponent {
     hoverRowNumber: number;
 
     @Input() accounts: AccountOverview[] = [];
+    @Input() sortDirection: 'none' | 'asc' | 'desc';
 
     constructor(
         public vp: ViewportService,

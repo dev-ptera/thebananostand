@@ -118,10 +118,6 @@
         <button mat-menu-item (click)="addAccountFromIndex()" data-cy="add-specific-account-button">
             <mat-icon blui-icon>pin</mat-icon>Add Specific
         </button>
-        <button mat-menu-item (click)="toggleSelectAccounts()" data-cy="select-accounts-button">
-            <mat-icon blui-icon>{{ hasHideAccountToggle ? 'visibility_off' : 'visibility' }}</mat-icon>
-            Toggle Hide
-        </button>
     </ng-template>
     <ng-template #accountActionsDesktopTrigger>
         <button mat-stroked-button blui-inline data-cy="account-actions-desktop-menu" style="min-width: 115px">
@@ -130,7 +126,7 @@
         </button>
     </ng-template>
     <ng-template #accountActionsMobileTrigger>
-        <mat-icon data-cy="account-actions-mobile-menu">more_vert</mat-icon>
+        <mat-icon data-cy="account-actions-mobile-menu" style="margin-right: -16px">account_circle</mat-icon>
     </ng-template>
     <responsive-menu
         menuTitle="Account Actions"
@@ -224,7 +220,7 @@
                 </div>
                 <mat-divider></mat-divider>
                 <ng-template [ngTemplateOutlet]="noAccountsEmptyState"></ng-template>
-                <app-account-list [accounts]="store.accounts"></app-account-list>
+                <app-account-list [accounts]="store.accounts" [sortDirection]="sortDirection"></app-account-list>
             </mat-card>
         </div>
     </div>

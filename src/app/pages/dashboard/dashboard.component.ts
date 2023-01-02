@@ -39,7 +39,6 @@ export class DashboardComponent {
 
     store: AppStore;
     colors = Colors;
-    selectedItems: Set<number> = new Set();
 
     bottomSheetOpenDelayMs = 250;
 
@@ -131,12 +130,6 @@ export class DashboardComponent {
         return this.store.localStorageWallets.length >= 2;
     }
 
-    toggleSelectAccounts(): void {
-        this.hasHideAccountToggle = !this.hasHideAccountToggle;
-        this.accountActionsOverlayOpen = false;
-        this.selectedItems.clear();
-    }
-
     changeActiveWallet(wallet: LocalStorageWallet): void {
         CHANGE_ACTIVE_WALLET.next(wallet);
         this.switchWalletOverlayOpen = false;
@@ -154,20 +147,6 @@ export class DashboardComponent {
         } else {
             this.sortDirection = 'desc';
         }
-
-        this.store.accounts.sort((a, b) => {
-            if (this.sortDirection === 'none') {
-                return a.index > b.index ? 1 : -1;
-            }
-            if (!a.representative || !b.representative) {
-                return 1;
-            }
-
-            if (this.sortDirection === 'asc') {
-                return a.balance < b.balance ? -1 : 1;
-            }
-            return a.balance < b.balance ? 1 : -1;
-        });
     }
 
     isShowMultiWalletSelect(): boolean {
