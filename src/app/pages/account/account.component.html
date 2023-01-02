@@ -188,10 +188,12 @@
                         *ngIf="!hideTransactionFilters"
                         class="fade"
                     >
-                        <div class="mat-subheading-2" style="margin: 0; margin-right: 12px">
-                            {{ vp.sm ? '' : 'Transaction ' }} Filters
-                        </div>
-                        <button mat-icon-button style="cursor: pointer" (click)="openFilterDialog()">
+                        <button
+                            mat-stroked-button
+                            style="cursor: pointer"
+                            (click)="openFilterDialog()"
+                            matTooltip="Transaction Filters"
+                        >
                             <mat-icon>
                                 {{ isFilterApplied() ? 'filter_list' : 'filter_list_off' }}
                             </mat-icon>

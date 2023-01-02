@@ -1,0 +1,54 @@
+:host {
+    width: 100%;
+}
+
+.fade blui-info-list-item {
+    -webkit-animation: fadein 250ms; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadein 250ms; /* Firefox < 16 */
+    -ms-animation: fadein 250ms; /* Internet Explorer */
+    -o-animation: fadein 250ms; /* Opera < 12.1 */
+    animation: fadein 250ms;
+}
+
+$headerHeight: 90px;
+
+::ng-deep .sm.dashboard-account-list {
+    .mat-list-item.blui-info-list-item-content .mat-list-item-content {
+        height: 6rem !important;
+    }
+}
+
+::ng-deep .dashboard-account-list {
+    .blui-info-list-item-icon-wrapper {
+        display: none !important;
+        margin-right: 8px !important;
+    }
+    .blui-info-list-item-content .mat-list-item-content,
+    .mat-list-base .mat-list-item.blui-info-list-item-content .mat-list-item-content {
+        padding: 0.5rem 24px !important;
+    }
+    .hovered .blui-info-list-item-left-content-wrapper img {
+        transform: rotate(-5deg);
+    }
+}
+
+.dashboard-account-list {
+    .account-number {
+        position: absolute;
+        top: 2px;
+        left: 8px;
+        font-size: 10px;
+        z-index: 3;
+    }
+    * {
+        transition: all 200ms;
+    }
+    max-height: calc(100vh - 360px);
+    &.sm {
+        max-height: calc(100vh - (56px + $headerHeight + 1px)); // Don't forget the divider height. 1px
+        max-height: calc(var(--app-height) - (56px + $headerHeight + 1px));
+    }
+    .unopened-account-tag.sm {
+        margin: 4px 0;
+    }
+}
