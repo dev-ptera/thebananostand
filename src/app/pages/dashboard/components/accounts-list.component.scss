@@ -10,8 +10,6 @@
     animation: fadein 250ms;
 }
 
-$headerHeight: 90px;
-
 ::ng-deep .sm.dashboard-account-list {
     .mat-list-item.blui-info-list-item-content .mat-list-item-content {
         height: 6rem !important;
@@ -31,6 +29,10 @@ $headerHeight: 90px;
     }
 }
 
+$mobileDashboardHeaderHeight: 120px;
+::ng-deep .dashboard-header.sm {
+    height: 120px;
+}
 .dashboard-account-list {
     padding: 8px 0;
     overflow: auto;
@@ -48,8 +50,8 @@ $headerHeight: 90px;
     }
     &.sm {
         padding: 0;
-        max-height: calc(100vh - (56px + $headerHeight + 1px)); // Don't forget the divider height. 1px
-        max-height: calc(var(--app-height) - (56px + $headerHeight + 1px));
+        max-height: calc(100vh - (56px + $mobileDashboardHeaderHeight + 1px)); // Don't forget the divider height. 1px
+        max-height: calc(var(--app-height) - (56px + $mobileDashboardHeaderHeight + 1px));
     }
     .unopened-account-tag.sm {
         margin: 4px 0;

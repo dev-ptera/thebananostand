@@ -33,7 +33,6 @@
     }
 }
 
-$headerHeight: 90px;
 .dashboard-header {
     display: flex;
     justify-content: space-between;
@@ -41,7 +40,6 @@ $headerHeight: 90px;
     margin-bottom: 24px;
     padding: 16px 24px;
     &.sm {
-        height: $headerHeight;
         padding-top: 16px;
         padding-bottom: 16px;
         margin-bottom: 0px;

@@ -172,8 +172,9 @@
                     *ngIf="store.isLoadingAccounts"
                     color="primary"
                     mode="indeterminate"
-                    style="position: absolute; left: 0"
-                    [style.top.px]="vp.sm ? -4 : 0"
+                    style="left: 0"
+                    [style.position]="vp.sm ? 'fixed' : 'absolute'"
+                    [style.top.px]="vp.sm ? 56 : 0"
                 >
                 </mat-progress-bar>
                 <div
