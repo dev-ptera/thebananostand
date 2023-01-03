@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {BreakpointObserver} from '@angular/cdk/layout';
-import {BehaviorSubject} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { BehaviorSubject } from 'rxjs';
 
 export type Breakpoint = 'sm' | 'md' | undefined;
 
