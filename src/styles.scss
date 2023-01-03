@@ -199,7 +199,7 @@ input[type='number'] {
 
 .loading-button {
     display: flex !important;
-    height: 36px;
+    height: 100%;
 
     justify-content: center;
     align-items: center;
@@ -324,6 +324,14 @@ input[type='number'] {
     mat-dialog-container {
         border-radius: 1rem !important;
     }
+    button.mat-flat-button,
+    button.mat-stroked-button {
+        border-radius: 0.25rem !important;
+    }
+    .blui-list-item-tag,
+    .blui-list-item-tag-content {
+        border-radius: 0.875rem !important;
+    }
     .sm {
         mat-card,
         mat-nav-list,
@@ -332,6 +340,13 @@ input[type='number'] {
         mat-list-item-content,
         mat-dialog-container {
             border-radius: 0rem !important;
+        }
+        button.mat-flat-button,
+        button.mat-stroked-button {
+            &:not(.preserve-non-mobile) {
+                border-radius: 1rem !important;
+                padding: 4px 0 !important;
+            }
         }
     }
 
@@ -364,17 +379,9 @@ cdk-virtual-scroll-content-wrapper {
     border-bottom-right-radius: 1rem !important;
 }
 
-button.mat-flat-button,
-button.mat-stroked-button {
-    border-radius: 0.25rem !important;
-}
 
 .blui-list-item-tag-content {
     padding: 0 0.5rem !important;
-}
-.blui-list-item-tag,
-.blui-list-item-tag-content {
-    border-radius: 0.875rem !important;
 }
 
 .mat-bottom-sheet-container {

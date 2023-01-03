@@ -205,17 +205,25 @@ export class WalletEventsService {
         });
 
         IMPORT_NEW_WALLET_FROM_SECRET.subscribe(async (data): Promise<void> => {
-            const password = this.store.hasUnlockedSecret ? this.store.walletPassword : data.password;
-            const { encryptedSecret, walletPassword } = await this._secretService.storeSecret(data.secret, password);
-            const { activeWallet, localStorageWallets } =
-                this._walletStorageService.createNewLocalStorageWallet(encryptedSecret);
-            this._dispatch({
-                hasSecret: true,
-                hasUnlockedSecret: true,
-                localStorageWallets,
-                walletPassword,
-            });
-            CHANGE_ACTIVE_WALLET.next(activeWallet);
+            try {
+                const password = this.store.hasUnlockedSecret ? this.store.walletPassword : data.password;
+                const { encryptedSecret, walletPassword } = await this._secretService.storeSecret(
+                    data.secret,
+                    password
+                );
+                const { activeWallet, localStorageWallets } =
+                    this._walletStorageService.createNewLocalStorageWallet(encryptedSecret);
+                this._dispatch({
+                    hasSecret: true,
+                    hasUnlockedSecret: true,
+                    localStorageWallets,
+                    walletPassword,
+                });
+                CHANGE_ACTIVE_WALLET.next(activeWallet);
+            } catch (err: any) {
+                console.error(err);
+                this._snackbar.open(err.message, SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION * 10 });
+            }
         });
 
         LOCK_WALLET.subscribe(() => {

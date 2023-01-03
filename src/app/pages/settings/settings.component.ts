@@ -51,6 +51,7 @@ export class DatasourceAvailablePipe implements PipeTransform {
                                 mat-stroked-button
                                 blui-inline
                                 color="primary"
+                                class="preserve-non-mobile"
                                 (click)="openChangePasswordOverlay()"
                                 data-cy="change-password-button"
                             >
@@ -70,6 +71,7 @@ export class DatasourceAvailablePipe implements PipeTransform {
                                 mat-stroked-button
                                 blui-inline
                                 color="warn"
+                                class="preserve-non-mobile"
                                 longPress
                                 (mouseLongPress)="clearStorage()"
                                 data-cy="clear-storage-button"

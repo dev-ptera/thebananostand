@@ -89,13 +89,14 @@
         max-height: calc($height - 40px);
     }
     @include fade;
+    $sendReceiveRowHeight: 76px;
     &.sm {
-        max-height: calc(100vh - 56px - 104px - 64px);
-        max-height: calc(var(--app-height) - 56px - 104px - 64px);
+        max-height: calc(100vh - 56px - 104px - $sendReceiveRowHeight);
+        max-height: calc(var(--app-height) - 56px - 104px - $sendReceiveRowHeight);
         &.repBanner {
             $mobileBannerHeight: 82px;
-            max-height: calc(100vh - 56px - 104px - 64px - $mobileBannerHeight);
-            max-height: calc(var(--app-height) - 56px - 104px - 64px - $mobileBannerHeight);
+            max-height: calc(100vh - 56px - 104px - $sendReceiveRowHeight - $mobileBannerHeight);
+            max-height: calc(var(--app-height) - 56px - 104px - $sendReceiveRowHeight - $mobileBannerHeight);
         }
     }
 }
