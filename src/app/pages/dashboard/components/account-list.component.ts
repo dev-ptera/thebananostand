@@ -156,6 +156,7 @@ import { AppStateService } from '@app/services/app-state.service';
 export class AccountListComponent {
     colors = Colors;
     hoverRowNumber: number;
+    bottomSheetDismissTimeMS = 350;
 
     @Input() accounts: AccountOverview[] = [];
     @Input() sortDirection: 'none' | 'asc' | 'desc';
@@ -178,11 +179,21 @@ export class AccountListComponent {
     }
 
     hideAccount(account: AccountOverview): void {
-        REMOVE_ACCOUNTS_BY_INDEX.next([account.index]);
+        setTimeout(
+            () => {
+                REMOVE_ACCOUNTS_BY_INDEX.next([account.index]);
+            },
+            this.vp.sm ? this.bottomSheetDismissTimeMS : 0
+        );
     }
 
     copyAccountAddressMobile(account: AccountOverview): void {
-        COPY_ADDRESS_TO_CLIPBOARD.next({ address: account.fullAddress });
+        setTimeout(
+            () => {
+                COPY_ADDRESS_TO_CLIPBOARD.next({ address: account.fullAddress });
+            },
+            this.vp.sm ? this.bottomSheetDismissTimeMS : 0
+        );
     }
 
     formatRepresentative(rep: string): string {

@@ -4,7 +4,7 @@
             <mat-icon>content_copy</mat-icon>
             <span>Copy Address</span>
         </button>
-        <button mat-menu-item (click)="openFilterDialog()">
+        <button mat-menu-item (click)="openFilterDialog()" *ngIf="account.representative">
             <mat-icon>filter_list</mat-icon>
             <span>Filter Transactions</span>
         </button>
