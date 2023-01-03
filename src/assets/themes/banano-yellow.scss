@@ -147,6 +147,10 @@ $banano-yellow: map-merge(
         color: black !important;
     }
 
+    .mat-stroked-button:not(.mat-button-disabled):not(.mat-button-warn) {
+        border-color: map-get(blui.$blui-black, 500) !important;
+    }
+
     .mat-stroked-button.mat-primary:not(.mat-button-disabled) {
         color: map-get(blui.$blui-yellow, 500) !important;
         border-color: map-get(blui.$blui-yellow, 500) !important;

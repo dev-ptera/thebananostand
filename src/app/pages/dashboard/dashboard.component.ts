@@ -22,6 +22,7 @@ import { RenameWalletDialogComponent } from '@app/overlays/dialogs/rename-wallet
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { hoverDashboardActions } from '../../animation';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @UntilDestroy()
 @Component({
@@ -31,7 +32,6 @@ import { hoverDashboardActions } from '../../animation';
     animations: [hoverDashboardActions],
 })
 export class DashboardComponent {
-    hasHideAccountToggle = false;
     switchWalletOverlayOpen = false;
     walletActionsOverlayOpen = false;
     accountActionsOverlayOpen = false;
@@ -50,6 +50,7 @@ export class DashboardComponent {
         private readonly _dialog: MatDialog,
         private readonly _util: UtilService,
         private readonly _sheet: MatBottomSheet,
+        private readonly _snackbar: MatSnackBar,
         private readonly _appStateService: AppStateService
     ) {
         this._appStateService.store.pipe(untilDestroyed(this)).subscribe((store) => {
@@ -140,12 +141,16 @@ export class DashboardComponent {
     }
 
     sortAccountsByBalance(): void {
+        const SNACKBAR_DURATION = 2000;
         if (this.sortDirection === 'asc') {
             this.sortDirection = 'none';
+            this._snackbar.open('Sorting by account number', undefined, { duration: SNACKBAR_DURATION });
         } else if (this.sortDirection === 'desc') {
             this.sortDirection = 'asc';
+            this._snackbar.open('Sorting by balance, ascending', undefined, { duration: SNACKBAR_DURATION });
         } else {
             this.sortDirection = 'desc';
+            this._snackbar.open('Sorting by balance, descending', undefined, { duration: SNACKBAR_DURATION });
         }
     }
 

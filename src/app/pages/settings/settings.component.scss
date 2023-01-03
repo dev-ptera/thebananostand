@@ -30,8 +30,8 @@ $card-horizontal-padding: 16px;
 
     &.sm {
         mat-card {
-            padding-left: $card-horizontal-padding;
-            padding-right: $card-horizontal-padding;
+            padding-left: 24px;
+            padding-right: 24px;
         }
     }
     .account-security-option {
