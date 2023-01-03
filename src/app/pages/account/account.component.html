@@ -8,7 +8,7 @@
             <mat-icon>filter_list</mat-icon>
             <span>Filter Transactions</span>
         </button>
-        <button mat-menu-item (click)="changeRep()">
+        <button mat-menu-item (click)="changeRep()" *ngIf="account.representative">
             <mat-icon>how_to_vote</mat-icon>
             <span>Change Representative</span>
         </button>
