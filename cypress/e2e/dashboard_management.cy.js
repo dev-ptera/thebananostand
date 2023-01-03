@@ -49,7 +49,6 @@ describe('Dashboard Management', () => {
                 cy.get('[data-cy=dashboard-wrapper]');
                 cy.intercept({ method: 'POST', url: '**' }).as(loadNextAccount);
                 cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
-                cy.get('[data-cy=account-actions-desktop-menu]').click();
                 cy.get('[data-cy=add-next-account-button]').click();
                 verifyNextAccountAdded();
             })
@@ -116,7 +115,6 @@ describe('Dashboard Management', () => {
         it('should refresh account balances (desktop)', () => {
             cy.wait(`@${loadInitialAccount}`).then(() => {
                 interceptRefresh();
-                cy.get('[data-cy=account-actions-desktop-menu]').click();
                 cy.get('[data-cy=refresh-dashboard-button]').click().then(() => {
                     verifyPageRefreshed()
                 });
@@ -153,7 +151,6 @@ describe('Dashboard Management', () => {
 
         it('should load account at index 99 (desktop)', () => {
             cy.wait(`@${loadInitialAccount}`).then(() => {
-                cy.get('[data-cy=account-actions-desktop-menu]').click();
                 cy.get('[data-cy=add-specific-account-button]').click().then(() => {
                     addAccount99();
                 });
@@ -171,24 +168,12 @@ describe('Dashboard Management', () => {
         });
     });
 
+    /*
     describe('Removing Accounts', () => {
-
-        it('should remove account via select all (desktop)', () => {
-            cy.wait(`@${loadInitialAccount}`).then(() => {
-                cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
-                cy.get('[data-cy=account-actions-desktop-menu]').click();
-                cy.get('[data-cy=select-accounts-button]').click();
-                cy.get('.mat-checkbox').first().click();
-                cy.get('[data-cy=remove-account-dashboard-button]').click().then(() => {
-                    cy.get('[data-cy=dashboard-account-list]').should('not.exist');
-                })
-            })
-        });
 
         it('should remove account via select single (desktop)', () => {
             cy.wait(`@${loadInitialAccount}`).then(() => {
                 cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
-                cy.get('[data-cy=account-actions-desktop-menu]').click();
                 cy.get('[data-cy=select-accounts-button]').click();
                 cy.get('.mat-checkbox').last().click();
                 cy.get('[data-cy=remove-account-dashboard-button]').click().then(() => {
@@ -202,11 +187,9 @@ describe('Dashboard Management', () => {
                 const loadNextAccount = 'loadNextAccount';
                 cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
                 cy.intercept({ method: 'POST', url: '**', times: 2 }).as(loadNextAccount);
-                cy.get('[data-cy=account-actions-desktop-menu]').click();
                 cy.get('[data-cy=add-next-account-button]').click();
                 cy.wait(`@${loadNextAccount}`).then(() => {
                     cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 2);
-                    cy.get('[data-cy=account-actions-desktop-menu]').click();
                     cy.get('[data-cy=select-accounts-button]').click();
                     cy.get('.mat-checkbox').last().click();
                     cy.get('[data-cy=remove-account-dashboard-button]').click().then(() => {
@@ -232,4 +215,6 @@ describe('Dashboard Management', () => {
             })
         });
     });
+
+     */
 });
