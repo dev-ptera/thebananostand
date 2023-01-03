@@ -124,11 +124,11 @@
         </button>
     </ng-template>
     <ng-template #accountActionsMobileTrigger>
-        <mat-icon data-cy="account-actions-mobile-menu" style="margin-right: -16px">account_circle</mat-icon>
+        <mat-icon data-cy="account-actions-mobile-menu">account_circle</mat-icon>
     </ng-template>
     <responsive-menu
         menuTitle="Account Actions"
-        [style.marginRight.px]="vp.sm ? -8 : 0"
+        style="margin-left: 8px; margin-right: -16px"
         [(open)]="accountActionsOverlayOpen"
         [menu]="accountActionsMenu"
         [desktopTrigger]="accountActionsDesktopTrigger"
