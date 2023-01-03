@@ -345,7 +345,7 @@ input[type='number'] {
         button.mat-stroked-button {
             &:not(.preserve-non-mobile) {
                 border-radius: 1rem !important;
-                padding: 4px 0 !important;
+                padding: 4px 16px !important;
             }
         }
     }
