@@ -340,23 +340,6 @@ input[type='number'] {
 }
 @include border-radius();
 
-.mat-dialog-container,
-.mat-bottom-sheet-container {
-    overflow: hidden !important;
-}
-
-.mat-bottom-sheet-container {
-    padding: 2rem 2rem 0rem 2rem !important;
-    border-top-left-radius: 32px !important;
-    border-top-right-radius: 32px !important;
-    .blui-user-menu-header-content {
-        margin-bottom: 1rem !important;
-    }
-    .mat-dialog-title {
-        margin-bottom: 2rem !important;
-    }
-}
-
 cdk-virtual-scroll-viewport,
 cdk-virtual-scroll-content-wrapper {
     border-bottom-left-radius: 1rem !important;
@@ -375,11 +358,34 @@ cdk-virtual-scroll-content-wrapper {
     .create-wallet-overlay,
     .enter-secret-overlay,
     .rename-wallet-overlay,
+    .change-password-overlay,
     .change-rep-overlay {
         .mat-stroked-button,
         .mat-flat-button {
             max-width: 120px;
+            min-width: 100px;
             width: 100% !important;
         }
     }
+}
+
+
+.mat-dialog-container,
+.mat-bottom-sheet-container {
+    overflow: hidden !important;
+}
+
+.mat-bottom-sheet-container {
+    padding: 2rem 2rem 0rem 2rem!important;
+    border-top-left-radius: 32px !important;
+    border-top-right-radius: 32px !important;
+    .blui-user-menu-header-content {
+        margin-bottom: 1rem !important;
+    }
+    .mat-dialog-title {
+        margin-bottom: 2rem !important;
+    }
+}
+.responsive-menu-bottomsheet .mat-bottom-sheet-container {
+    padding-bottom: 8px!important;
 }

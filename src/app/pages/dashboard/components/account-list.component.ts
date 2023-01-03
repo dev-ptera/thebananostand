@@ -29,9 +29,7 @@ import { AppStateService } from '@app/services/app-state.service';
                 <button mat-menu-item (click)="copyAccountAddressMobile(account); account.moreOptionsOpen = false">
                     Copy Address
                 </button>
-                <button mat-menu-item (click)="hideAccount(account); account.moreOptionsOpen = false">
-                    Hide Account
-                </button>
+                <button mat-menu-item (click)="hideAccount(account)">Hide Account</button>
                 <!--
                 <button mat-menu-item (click)="openRenameWalletOverlay()">
                     Rename Account
@@ -156,7 +154,6 @@ import { AppStateService } from '@app/services/app-state.service';
 export class AccountListComponent {
     colors = Colors;
     hoverRowNumber: number;
-    bottomSheetDismissTimeMS = 350;
 
     @Input() accounts: AccountOverview[] = [];
     @Input() sortDirection: 'none' | 'asc' | 'desc';
@@ -179,21 +176,15 @@ export class AccountListComponent {
     }
 
     hideAccount(account: AccountOverview): void {
-        setTimeout(
-            () => {
-                REMOVE_ACCOUNTS_BY_INDEX.next([account.index]);
-            },
-            this.vp.sm ? this.bottomSheetDismissTimeMS : 0
-        );
+        // Dismiss sheet and then hide account.
+        account.moreOptionsOpen = false;
+        setTimeout(() => {
+            REMOVE_ACCOUNTS_BY_INDEX.next([account.index]);
+        }, 100);
     }
 
     copyAccountAddressMobile(account: AccountOverview): void {
-        setTimeout(
-            () => {
-                COPY_ADDRESS_TO_CLIPBOARD.next({ address: account.fullAddress });
-            },
-            this.vp.sm ? this.bottomSheetDismissTimeMS : 0
-        );
+        COPY_ADDRESS_TO_CLIPBOARD.next({ address: account.fullAddress });
     }
 
     formatRepresentative(rep: string): string {
