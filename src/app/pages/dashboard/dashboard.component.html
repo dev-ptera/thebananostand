@@ -108,15 +108,13 @@
 <ng-template #accountActions>
     <ng-template #accountActionsMenu>
         <button mat-menu-item (click)="refreshDashboard()" data-cy="refresh-dashboard-button">
-            <mat-icon blui-icon>refresh</mat-icon>Refresh
+            <mat-icon blui-icon>refresh</mat-icon>Refresh Dashboard
         </button>
-        <div class="mat-overline" style="margin-top: 24px; padding-left: 16px">Show / Hide</div>
-        <mat-divider></mat-divider>
         <button mat-menu-item (click)="addAccount()" data-cy="add-next-account-button">
-            <mat-icon blui-icon>add_circle_outline</mat-icon>Add Account
+            <mat-icon blui-icon>add_circle_outline</mat-icon>Add Next Account
         </button>
         <button mat-menu-item (click)="addAccountFromIndex()" data-cy="add-specific-account-button">
-            <mat-icon blui-icon>pin</mat-icon>Add Specific
+            <mat-icon blui-icon>pin</mat-icon>Add Specific Account
         </button>
     </ng-template>
     <ng-template #accountActionsDesktopTrigger>

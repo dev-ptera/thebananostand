@@ -18,7 +18,8 @@ import { AppStateService } from '@app/services/app-state.service';
             <ng-template #accountMoreOptionsTrigger>
                 <button
                     mat-icon-button
-                    style="margin-left: 8px; margin-right: -4px"
+                    style="margin-left: 8px"
+                    [style.marginRight.px]="vp.sm ? -24 : -8"
                     (click)="account.moreOptionsOpen = !account.moreOptionsOpen; $event.stopPropagation()"
                 >
                     <mat-icon>more_vert</mat-icon>
@@ -38,7 +39,7 @@ import { AppStateService } from '@app/services/app-state.service';
                 -->
             </ng-template>
             <responsive-menu
-                menuTitle="Account Options"
+                menuTitle="Account"
                 [(open)]="account.moreOptionsOpen"
                 [menu]="accountMoreOptionsMenu"
                 [desktopTrigger]="accountMoreOptionsTrigger"
