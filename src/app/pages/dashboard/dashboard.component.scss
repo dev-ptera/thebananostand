@@ -2,19 +2,6 @@
     width: 100%;
 }
 
-::ng-deep {
-    .mat-list-item-disabled {
-        opacity: 1 !important;
-        pointer-events: auto !important;
-        .mat-list-item-content > * {
-            &:not(.mat-list-icon) {
-                opacity: 0.5 !important;
-                pointer-events: none !important;
-            }
-        }
-    }
-}
-
 .switch-wallet-user-menu ::ng-deep .blui-user-menu-avatar-content {
     height: unset;
     width: unset;
@@ -46,60 +33,15 @@
     }
 }
 
-::ng-deep .blui-info-list-item-icon-wrapper {
-    margin-right: 8px !important;
-}
-
-.fade blui-info-list-item {
-    -webkit-animation: fadein 250ms; /* Safari, Chrome and Opera > 12.1 */
-    -moz-animation: fadein 250ms; /* Firefox < 16 */
-    -ms-animation: fadein 250ms; /* Internet Explorer */
-    -o-animation: fadein 250ms; /* Opera < 12.1 */
-    animation: fadein 250ms;
-}
-
-::ng-deep .sm .dashboard-account-list .mat-list-item.blui-info-list-item-content .mat-list-item-content {
-    height: 6rem !important;
-}
-
-$headerHeight: 90px;
 .dashboard-header {
-    padding: 16px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 24px;
+    padding: 16px 24px;
     &.sm {
-        height: $headerHeight;
-    }
-}
-.dashboard-account-list {
-    .account-number {
-        position: absolute;
-        top: 2px;
-        left: 8px;
-        font-size: 10px;
-        z-index: 3;
-    }
-    * {
-        transition: all 200ms;
-    }
-    blui-info-list-item {
-        overflow: hidden;
-    }
-    ::ng-deep .blui-info-list-item-icon-wrapper {
-        display: none !important;
-    }
-    .hovered {
-        ::ng-deep .blui-info-list-item-left-content-wrapper img {
-            transform: rotate(-5deg);
-        }
-    }
-    max-height: calc(100vh - 250px);
-    &.sm {
-        max-height: calc(100vh - (56px + $headerHeight + 1px)); // Don't forget the divider height. 1px
-        max-height: calc(var(--app-height) - (56px + $headerHeight + 1px));
-    }
-    .unopened-account-tag.sm {
-        margin: 4px 0;
+        padding-top: 16px;
+        padding-bottom: 16px;
+        margin-bottom: 0px;
     }
 }

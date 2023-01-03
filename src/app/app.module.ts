@@ -84,6 +84,8 @@ import { LongPressDirective } from './directives/long-press.directive';
 import { MatRadioModule } from '@angular/material/radio';
 import { AddressBookComponent } from '@app/pages/address-book/address-book.component';
 import { LedgerSnackbarErrorComponent } from '@app/pages/home/ledger-error-snackbar.component';
+import { AccountListComponent } from '@app/pages/dashboard/components/account-list.component';
+import { DashboardPipe } from '@app/pages/dashboard/dashboard.pipe';
 
 @NgModule({
     declarations: [
@@ -100,6 +102,8 @@ import { LedgerSnackbarErrorComponent } from '@app/pages/home/ledger-error-snack
         AddressBookComponent,
         EnterSecretBottomSheetComponent,
         SendDialogComponent,
+        DashboardPipe,
+        AccountListComponent,
         AddIndexOverlayComponent,
         AddIndexBottomSheetComponent,
         AddIndexDialogComponent,

@@ -199,24 +199,20 @@ input[type='number'] {
 
 .loading-button {
     display: flex !important;
-    height: 36px;
+    height: 100%;
 
     justify-content: center;
     align-items: center;
     $duration: 200ms;
     $animationTimingFunction: ease-out;
-    .button-text-container {
-        animation: fadeInAnimation $duration $animationTimingFunction;
-        &.isLoading {
-            display: none;
-        }
-    }
     .spinner-container {
+        height: 36px;
         animation: fadeInAnimation $duration $animationTimingFunction;
         display: none;
         margin: 0 auto;
         &.isLoading {
-            display: block;
+            display: flex;
+            align-items: center;
         }
 
         .mat-progress-spinner,
@@ -250,18 +246,6 @@ input[type='number'] {
     -ms-animation: fadein 300ms; /* Internet Explorer */
     -o-animation: fadein 300ms; /* Opera < 12.1 */
     animation: fadein 300ms;
-}
-
-// Mat ripples in buttons are causing issues here; must take time here.
-.change-rep-dialog,
-.receive-dialog,
-.send-dialog {
-    .mat-dialog-content div {
-        //   @include dialog-content-fade;
-        .no-fade {
-            //      @include no-fade;
-        }
-    }
 }
 
 @keyframes fadein {
@@ -324,6 +308,14 @@ input[type='number'] {
     mat-dialog-container {
         border-radius: 1rem !important;
     }
+    button.mat-flat-button,
+    button.mat-stroked-button {
+        border-radius: 0.25rem !important;
+    }
+    .blui-list-item-tag,
+    .blui-list-item-tag-content {
+        border-radius: 0.875rem !important;
+    }
     .sm {
         mat-card,
         mat-nav-list,
@@ -333,6 +325,13 @@ input[type='number'] {
         mat-dialog-container {
             border-radius: 0rem !important;
         }
+        button.mat-flat-button,
+        button.mat-stroked-button {
+            &:not(.preserve-non-mobile) {
+                border-radius: 1rem !important;
+                padding: 4px 16px !important;
+            }
+        }
     }
 
     .home-body mat-card {
@@ -341,13 +340,43 @@ input[type='number'] {
 }
 @include border-radius();
 
+cdk-virtual-scroll-viewport,
+cdk-virtual-scroll-content-wrapper {
+    border-bottom-left-radius: 1rem !important;
+    border-bottom-right-radius: 1rem !important;
+}
+
+
+.blui-list-item-tag-content {
+    padding: 0 0.5rem !important;
+}
+
+.mat-bottom-sheet-container {
+    .receive-overlay,
+    .send-overlay,
+    .filter-overlay,
+    .create-wallet-overlay,
+    .enter-secret-overlay,
+    .rename-wallet-overlay,
+    .change-password-overlay,
+    .change-rep-overlay {
+        .mat-stroked-button,
+        .mat-flat-button {
+            max-width: 120px;
+            min-width: 100px;
+            width: 100% !important;
+        }
+    }
+}
+
+
 .mat-dialog-container,
 .mat-bottom-sheet-container {
     overflow: hidden !important;
 }
 
 .mat-bottom-sheet-container {
-    padding: 2rem 2rem 0rem 2rem !important;
+    padding: 2rem 2rem 0rem 2rem!important;
     border-top-left-radius: 32px !important;
     border-top-right-radius: 32px !important;
     .blui-user-menu-header-content {
@@ -357,34 +386,6 @@ input[type='number'] {
         margin-bottom: 2rem !important;
     }
 }
-
-cdk-virtual-scroll-viewport,
-cdk-virtual-scroll-content-wrapper {
-    border-bottom-left-radius: 1rem !important;
-    border-bottom-right-radius: 1rem !important;
-}
-
-button.mat-flat-button,
-button.mat-stroked-button {
-    border-radius: 0.25rem !important;
-}
-
-.blui-list-item-tag-content {
-    padding: 0 0.5rem !important;
-}
-.blui-list-item-tag,
-.blui-list-item-tag-content {
-    border-radius: 0.875rem !important;
-}
-
-.mat-bottom-sheet-container {
-    .receive-overlay,
-    .send-overlay,
-    .filter-overlay,
-    .change-rep-overlay {
-        .mat-stroked-button,
-        .mat-flat-button {
-            width: 110px !important;
-        }
-    }
+.responsive-menu-bottomsheet .mat-bottom-sheet-container {
+    padding-bottom: 8px!important;
 }

@@ -18,7 +18,7 @@ import { SecretService } from '@app/services/secret.service';
             </div>
             <div mat-dialog-content style="margin-bottom: 16px; overflow: auto">
                 <mat-accordion>
-                    <mat-expansion-panel [expanded]="true">
+                    <mat-expansion-panel [expanded]="true" class="mat-elevation-z0 divider-border">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 <div class="title-row">
@@ -33,7 +33,7 @@ import { SecretService } from '@app/services/secret.service';
                         </mat-expansion-panel-header>
                         <div style="word-break: break-all">{{ seed }}</div>
                     </mat-expansion-panel>
-                    <mat-expansion-panel>
+                    <mat-expansion-panel class="mat-elevation-z0 divider-border">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 <div class="title-row">
@@ -68,10 +68,7 @@ import { SecretService } from '@app/services/secret.service';
             </div>
             <blui-spacer></blui-spacer>
             <mat-divider style="margin-left: -48px; margin-right: -48px"></mat-divider>
-            <div
-                mat-dialog-actions
-                style="display: flex; justify-content: space-between; margin-bottom: 0; padding: 8px 0"
-            >
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0; padding: 16px 0">
                 <button mat-stroked-button mat-dialog-close style="width: 100px" color="primary" (click)="close.emit()">
                     Close
                 </button>

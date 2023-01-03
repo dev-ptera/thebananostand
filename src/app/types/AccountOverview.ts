@@ -10,4 +10,5 @@ export type AccountOverview = {
     representative: string;
     pending: ReceivableHash[];
     frontier: string;
+    moreOptionsOpen?: boolean;
 };

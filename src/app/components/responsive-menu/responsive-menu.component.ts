@@ -129,7 +129,10 @@ export class ResponsiveMenuComponent implements OnInit, OnChanges, OnDestroy {
         if (changes.open) {
             // State changes from closed to open.
             const openState = changes.open;
-            if (openState.currentValue === true && (openState.previousValue === false || openState.isFirstChange())) {
+            if (
+                openState.currentValue === true &&
+                (Boolean(openState.previousValue) === false || openState.isFirstChange())
+            ) {
                 this.shouldUseBottomSheet() ? this._openBottomSheet() : this._openMenu();
             }
             // State changes from open to closed.

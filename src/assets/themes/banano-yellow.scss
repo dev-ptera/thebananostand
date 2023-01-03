@@ -67,6 +67,10 @@ $banano-yellow: map-merge(
         color: $primary;
     }
 
+    .divider-border {
+        border: solid 1px $divider;
+    }
+
     .mat-checkbox-indeterminate.mat-warn,
     .mat-checkbox-checked.mat-warn {
         .mat-checkbox-background {
@@ -145,6 +149,10 @@ $banano-yellow: map-merge(
     .rep-offline-banner {
         background-color: map-get(blui.$blui-red, 300) !important;
         color: black !important;
+    }
+
+    .mat-stroked-button:not(.mat-button-disabled):not(.mat-button-warn) {
+        border-color: map-get(blui.$blui-black, 500) !important;
     }
 
     .mat-stroked-button.mat-primary:not(.mat-button-disabled) {

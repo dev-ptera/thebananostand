@@ -1,4 +1,4 @@
-import { animate, animateChild, group, query, style, transition, trigger } from '@angular/animations';
+import { animate, animateChild, group, query, state, style, transition, trigger } from '@angular/animations';
 
 const slideIn = [
     style({ position: 'relative' }),
@@ -45,4 +45,10 @@ export const slideInAnimation = trigger('routeAnimations', [
     transition('Settings => *', slideOut),
     transition('* => AddressBook', slideIn),
     transition('AddressBook => *', slideOut),
+]);
+
+export const hoverDashboardActions = trigger('slide', [
+    state('in', style({ transform: 'translateX(0)' })),
+    transition('void => *', [style({ transform: 'translateX(100%)' }), animate(250)]),
+    transition('* => void', [animate(250, style({ transform: 'translateX(200%)' }))]),
 ]);

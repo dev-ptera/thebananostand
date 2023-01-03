@@ -2,12 +2,8 @@ import { Component } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
 import { Router } from '@angular/router';
 import { UtilService } from '@app/services/util.service';
-import { AccountService } from '@app/services/account.service';
-import { AccountOverview } from '@app/types/AccountOverview';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewportService } from '@app/services/viewport.service';
-import { ThemeService } from '@app/services/theme.service';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { AddIndexDialogComponent } from '@app/overlays/dialogs/add-index/add-index-dialog.component';
 import { AddIndexBottomSheetComponent } from '@app/overlays/bottom-sheet/add-index/add-index-bottom-sheet.component';
@@ -15,10 +11,9 @@ import { EnterSecretBottomSheetComponent } from '@app/overlays/bottom-sheet/ente
 import { EnterSecretDialogComponent } from '@app/overlays/dialogs/enter-secret/enter-secret-dialog.component';
 import { LocalStorageWallet } from '@app/services/wallet-storage.service';
 import {
-    CHANGE_ACTIVE_WALLET,
     ADD_NEXT_ACCOUNT_BY_INDEX,
+    CHANGE_ACTIVE_WALLET,
     REFRESH_DASHBOARD_ACCOUNTS,
-    REMOVE_ACCOUNTS_BY_INDEX,
     REMOVE_ACTIVE_WALLET,
     REQUEST_BACKUP_SECRET,
 } from '@app/services/wallet-events.service';
@@ -26,24 +21,25 @@ import { RenameWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/ren
 import { RenameWalletDialogComponent } from '@app/overlays/dialogs/rename-wallet/rename-wallet-dialog.component';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { hoverDashboardActions } from '../../animation';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @UntilDestroy()
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
+    animations: [hoverDashboardActions],
 })
 export class DashboardComponent {
-    hasHideAccountToggle = false;
     switchWalletOverlayOpen = false;
     walletActionsOverlayOpen = false;
     accountActionsOverlayOpen = false;
+    sortDirection: 'none' | 'asc' | 'desc' = 'none';
 
     store: AppStore;
     colors = Colors;
-    selectedItems: Set<number> = new Set();
 
-    hoverRowNumber: number;
     bottomSheetOpenDelayMs = 250;
 
     totalBalance = '--';
@@ -54,8 +50,7 @@ export class DashboardComponent {
         private readonly _dialog: MatDialog,
         private readonly _util: UtilService,
         private readonly _sheet: MatBottomSheet,
-        private readonly _themeService: ThemeService,
-        private readonly _accountService: AccountService,
+        private readonly _snackbar: MatSnackBar,
         private readonly _appStateService: AppStateService
     ) {
         this._appStateService.store.pipe(untilDestroyed(this)).subscribe((store) => {
@@ -132,57 +127,8 @@ export class DashboardComponent {
         this.accountActionsOverlayOpen = false;
     }
 
-    getMonkeyUrl(address: string): string {
-        return this._accountService.createMonKeyUrl(address);
-    }
-
     hasAlternativeWallets(): boolean {
         return this.store.localStorageWallets.length >= 2;
-    }
-
-    showRepresentativeOffline(address: string): boolean {
-        return !this._accountService.isRepOnline(address);
-    }
-
-    formatRepresentative(rep: string): string {
-        return this._appStateService.knownAccounts.get(rep) || this._util.shortenAddress(rep);
-    }
-
-    openAccount(address: string): void {
-        void this._router.navigate([`/account/${address}`]);
-    }
-
-    markUniqueAccount(index: number, item: AccountOverview): any {
-        return item.shortAddress;
-    }
-
-    toggleSelectAccounts(): void {
-        this.hasHideAccountToggle = !this.hasHideAccountToggle;
-        this.accountActionsOverlayOpen = false;
-        this.selectedItems.clear();
-    }
-
-    hideSelected(): void {
-        REMOVE_ACCOUNTS_BY_INDEX.next(Array.from(this.selectedItems.values()));
-        this.selectedItems.clear();
-    }
-
-    toggleAll(e: MatCheckboxChange): void {
-        if (e.checked) {
-            this.store.accounts.map((account) => {
-                this.selectedItems.add(account.index);
-            });
-        } else {
-            this.selectedItems.clear();
-        }
-    }
-
-    toggleCheck(e: MatCheckboxChange, account: AccountOverview): void {
-        if (e.checked) {
-            this.selectedItems.add(account.index);
-        } else {
-            this.selectedItems.delete(account.index);
-        }
     }
 
     changeActiveWallet(wallet: LocalStorageWallet): void {
@@ -190,15 +136,22 @@ export class DashboardComponent {
         this.switchWalletOverlayOpen = false;
     }
 
-    getItemBackgroundColor(even: boolean): string {
-        if (even) {
-            return this._themeService.isDark() ? this.colors.darkBlack[300] : this.colors.white[100];
-        }
-        return this._themeService.isDark() ? this.colors.darkBlack[200] : this.colors.white[50];
-    }
-
     isLedgerDevice(): boolean {
         return this._appStateService.store.getValue().hasUnlockedLedger;
+    }
+
+    sortAccountsByBalance(): void {
+        const SNACKBAR_DURATION = 2000;
+        if (this.sortDirection === 'asc') {
+            this.sortDirection = 'none';
+            this._snackbar.open('Sorting by account number', undefined, { duration: SNACKBAR_DURATION });
+        } else if (this.sortDirection === 'desc') {
+            this.sortDirection = 'asc';
+            this._snackbar.open('Sorting by balance, ascending', undefined, { duration: SNACKBAR_DURATION });
+        } else {
+            this.sortDirection = 'desc';
+            this._snackbar.open('Sorting by balance, descending', undefined, { duration: SNACKBAR_DURATION });
+        }
     }
 
     isShowMultiWalletSelect(): boolean {
