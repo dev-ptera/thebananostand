@@ -44,7 +44,7 @@ mat-form-field {
             .login-card-content {
                 padding: 16px;
                 .top-divider {
-                    margin: 40px -16px 32px;
+                    margin: 16px -16px 32px;
                 }
             }
             .mat-card-actions:last-child {
@@ -71,10 +71,11 @@ mat-form-field {
     overflow: auto;
     flex-direction: column;
     .login-card-subtitle {
+        padding: 24px 0;
         margin-bottom: 0;
     }
     .top-divider {
-        margin: 40px -24px 32px;
+        margin: 16px -24px 32px;
         position: relative;
         width: auto !important;
     }

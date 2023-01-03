@@ -205,18 +205,14 @@ input[type='number'] {
     align-items: center;
     $duration: 200ms;
     $animationTimingFunction: ease-out;
-    .button-text-container {
-        animation: fadeInAnimation $duration $animationTimingFunction;
-        &.isLoading {
-            display: none;
-        }
-    }
     .spinner-container {
+        height: 36px;
         animation: fadeInAnimation $duration $animationTimingFunction;
         display: none;
         margin: 0 auto;
         &.isLoading {
-            display: block;
+            display: flex;
+            align-items: center;
         }
 
         .mat-progress-spinner,
@@ -250,18 +246,6 @@ input[type='number'] {
     -ms-animation: fadein 300ms; /* Internet Explorer */
     -o-animation: fadein 300ms; /* Opera < 12.1 */
     animation: fadein 300ms;
-}
-
-// Mat ripples in buttons are causing issues here; must take time here.
-.change-rep-dialog,
-.receive-dialog,
-.send-dialog {
-    .mat-dialog-content div {
-        //   @include dialog-content-fade;
-        .no-fade {
-            //      @include no-fade;
-        }
-    }
 }
 
 @keyframes fadein {
@@ -388,10 +372,14 @@ cdk-virtual-scroll-content-wrapper {
     .receive-overlay,
     .send-overlay,
     .filter-overlay,
+    .create-wallet-overlay,
+    .enter-secret-overlay,
+    .rename-wallet-overlay,
     .change-rep-overlay {
         .mat-stroked-button,
         .mat-flat-button {
-            width: 110px !important;
+            max-width: 120px;
+            width: 100% !important;
         }
     }
 }
