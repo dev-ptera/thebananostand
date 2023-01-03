@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { BehaviorSubject, Subject } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {BreakpointObserver} from '@angular/cdk/layout';
+import {BehaviorSubject} from 'rxjs';
 
 export type Breakpoint = 'sm' | 'md' | undefined;
 
@@ -20,7 +20,7 @@ export class ViewportService {
     md: boolean;
     sm: boolean;
 
-    private _getInitialVp = (): Breakpoint => {
+    private readonly _getInitialVp = (): Breakpoint => {
         if (window.outerWidth > MID) {
             return undefined;
         }
@@ -46,7 +46,6 @@ export class ViewportService {
             });
 
         this.vpChange.subscribe((breakpoint) => {
-            console.log(breakpoint);
             document.body.classList.remove('sm');
             document.body.classList.remove('md');
             document.body.classList.add(breakpoint);
