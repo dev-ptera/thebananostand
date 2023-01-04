@@ -1,11 +1,13 @@
 @use 'node_modules/@brightlayer-ui/colors/palette.scss' as blui;
-@use 'assets/themes/banano-yellow';
+//@use 'assets/themes/banano-yellow';
 @use 'assets/themes/jungle-green';
 @use 'assets/themes/nano-blue';
-@use 'assets/themes/typography';
+// @use 'assets/themes/typography';
+@use 'assets/themes/common';
+@use '@angular/material' as mat;
 
-// Again, why is this required for tooltips?
-@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+@include mat.core();
+
 
 html * {
     box-sizing: border-box;
@@ -29,15 +31,100 @@ body,
     height: var(--app-height);
 }
 
+.app-root {
+    display: flex;
+    flex-direction: column;
+}
+.app-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1;
+    width: 100%;
+    padding: 32px 24px;
+    box-sizing: border-box;
+    &.sm {
+        padding: 0px;
+    }
+
+    .app-body-content {
+        max-width: 1050px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .app-title {
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        mat-divider.mat-divider.blui-info-list-item-partial-divider {
+            position: relative;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            width: calc(100%);
+        }
+    }
+}
+
+.link {
+    color: map-get(blui.$blui-blue, 500);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#qr-code {
+    width: 110px !important;
+    height: 110px !important;
+    border-radius: 4px;
+    border: 1px solid #cbcbcb78;
+}
+
+.loading-button {
+    display: flex !important;
+    height: 100%;
+
+    justify-content: center;
+    align-items: center;
+    $duration: 200ms;
+    $animationTimingFunction: ease-out;
+    .spinner-container {
+        height: 36px;
+        animation: fadeInAnimation $duration $animationTimingFunction;
+        display: none;
+        margin: 0 auto;
+        &.isLoading {
+            display: flex;
+            align-items: center;
+        }
+
+        .mat-progress-spinner,
+        .mat-spinner {
+            circle {
+                stroke: white !important;
+            }
+        }
+    }
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+
+/*
 // Input overrides.
 textarea.mat-input-element,
 .mat-input-element {
     margin: 0 !important;
-}
-
-.app-root {
-    display: flex;
-    flex-direction: column;
 }
 
 .add-accounts-example {
@@ -88,7 +175,6 @@ textarea {
     min-height: 64px;
 }
 
-/** Apply styles to a mat menu item outside of a menu context. */
 .mat-menu-item {
     -webkit-user-select: none;
     user-select: none;
@@ -122,52 +208,10 @@ textarea {
     pointer-events: none;
 }
 
-.app-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex-grow: 1;
-    width: 100%;
-    padding: 32px 24px;
-    box-sizing: border-box;
-    &.sm {
-        padding: 0px;
-    }
 
-    .app-body-content {
-        max-width: 1050px;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        .app-title {
-            margin-bottom: 16px;
-            text-align: center;
-        }
+ */
 
-        mat-divider.mat-divider.blui-info-list-item-partial-divider {
-            position: relative;
-            bottom: 0;
-            right: 0;
-            left: 0;
-            width: calc(100%);
-        }
-    }
-}
-
-.link {
-    color: map-get(blui.$blui-blue, 500);
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-#qr-code {
-    width: 110px !important;
-    height: 110px !important;
-    border-radius: 4px;
-    border: 1px solid #cbcbcb78;
-}
-
+/*
 .mat-dialog-container {
     padding-bottom: 0 !important;
 }
@@ -185,45 +229,7 @@ textarea {
     }
 }
 
-/* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-/* Firefox */
-input[type='number'] {
-    -moz-appearance: textfield;
-}
-
-.loading-button {
-    display: flex !important;
-    height: 100%;
-
-    justify-content: center;
-    align-items: center;
-    $duration: 200ms;
-    $animationTimingFunction: ease-out;
-    .spinner-container {
-        height: 36px;
-        animation: fadeInAnimation $duration $animationTimingFunction;
-        display: none;
-        margin: 0 auto;
-        &.isLoading {
-            display: flex;
-            align-items: center;
-        }
-
-        .mat-progress-spinner,
-        .mat-spinner {
-            circle {
-                stroke: white !important;
-            }
-        }
-    }
-}
-
+/*
 // BLUI style overrides.
 .blui-mobile-stepper-back-button-wrapper button {
     margin-left: 0 !important;
@@ -238,63 +244,6 @@ input[type='number'] {
 
 .mat-chip {
     cursor: pointer !important;
-}
-
-@mixin dialog-content-fade {
-    -webkit-animation: fadein 300ms; /* Safari, Chrome and Opera > 12.1 */
-    -moz-animation: fadein 300ms; /* Firefox < 16 */
-    -ms-animation: fadein 300ms; /* Internet Explorer */
-    -o-animation: fadein 300ms; /* Opera < 12.1 */
-    animation: fadein 300ms;
-}
-
-@keyframes fadein {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-/* Firefox < 16 */
-@-moz-keyframes fadein {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-/* Safari, Chrome and Opera > 12.1 */
-@-webkit-keyframes fadein {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-/* Internet Explorer */
-@-ms-keyframes fadein {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-/* Opera < 12.1 */
-@-o-keyframes fadein {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
 }
 
 // Theme overrides
@@ -389,3 +338,6 @@ cdk-virtual-scroll-content-wrapper {
 .responsive-menu-bottomsheet .mat-bottom-sheet-container {
     padding-bottom: 8px!important;
 }
+
+
+ */

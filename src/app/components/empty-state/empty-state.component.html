@@ -1,0 +1,18 @@
+<div class="blui-empty-state-content">
+    <div class="blui-empty-state-empty-icon-wrapper" #emptyIcon>
+        <ng-content select="[blui-empty-icon]"></ng-content>
+    </div>
+    <h2 class="blui-empty-state-title">
+        <ng-content select="[blui-title]" *ngIf="!title"></ng-content>
+        {{ title }}
+    </h2>
+    <p class="mat-subheading-2 blui-empty-state-description">
+        <ng-content select="[blui-description]" *ngIf="!description"></ng-content>
+        {{ description }}
+    </p>
+    <div
+        class="blui-empty-state-actions-wrapper"
+    >
+        <ng-content select="[blui-actions]"></ng-content>
+    </div>
+</div>

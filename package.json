@@ -33,8 +33,6 @@
         "@angular/platform-browser-dynamic": "^15.0.4",
         "@angular/router": "^15.0.4",
         "@bananocoin/bananojs-hw": "^1.2.14",
-        "@brightlayer-ui/angular-components": "8.0.0",
-        "@brightlayer-ui/angular-themes": "^8.0.0",
         "@brightlayer-ui/colors": "^3.0.1",
         "@dev-ptera/nano-node-rpc": "^2.1.0",
         "@ngneat/until-destroy": "^9.2.2",

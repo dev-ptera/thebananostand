@@ -19,18 +19,9 @@ import { HomeComponent } from './pages/home/home.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import {
-    EmptyStateModule,
-    InfoListItemModule,
-    ListItemTagModule,
-    MobileStepperModule,
-    SpacerModule,
-    UserMenuModule,
-} from '@brightlayer-ui/angular-components';
 import { MatCardModule } from '@angular/material/card';
 import { AccountComponent } from './pages/account/account.component';
 import { AppRoutingModule } from './app-routing.module';
-import { QrDialogComponent } from './components/qr.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -86,6 +77,12 @@ import { AddressBookComponent } from '@app/pages/address-book/address-book.compo
 import { LedgerSnackbarErrorComponent } from '@app/pages/home/ledger-error-snackbar.component';
 import { AccountListComponent } from '@app/pages/dashboard/components/account-list.component';
 import { DashboardPipe } from '@app/pages/dashboard/dashboard.pipe';
+import {EmptyStateModule} from "@app/components/empty-state/empty-state.module";
+import {MobileStepperModule} from "@app/components/mobile-stepper/mobile-stepper.module";
+import {ListItemTagModule} from "@app/components/list-item-tag/list-item-tag.module";
+import {SpacerModule} from "@app/components/spacer/spacer.module";
+import {InfoListItemModule} from "@app/components/info-list-item/info-list-item.module";
+import {QrDialogComponent} from "@app/components/qr/qr.component";
 
 @NgModule({
     declarations: [
@@ -151,7 +148,6 @@ import { DashboardPipe } from '@app/pages/dashboard/dashboard.pipe';
         MatIconModule,
         ScrollingModule,
         InfoListItemModule,
-        UserMenuModule,
         ListItemTagModule,
         MobileStepperModule,
         SpacerModule,
@@ -174,3 +170,4 @@ import { DashboardPipe } from '@app/pages/dashboard/dashboard.pipe';
     bootstrap: [AppComponent],
 })
 export class AppModule {}
+

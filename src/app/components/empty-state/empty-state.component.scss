@@ -1,0 +1,49 @@
+.blui-empty-state {
+    display: flex;
+}
+
+.blui-empty-state-content {
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .blui-empty-state-title {
+        margin-bottom: 0;
+    }
+
+    .blui-empty-state-title,
+    .blui-empty-state-description {
+        text-align: center;
+        font-weight: 600;
+    }
+
+    .blui-empty-state-empty-icon-wrapper {
+        margin-bottom: 1rem;
+        line-height: 1;
+        > * {
+            $size: 96px;
+            display: block;
+            font-size: $size;
+            height: $size;
+            width: $size;
+            text-align: center;
+        }
+    }
+
+    .blui-empty-state-actions-wrapper {
+        margin-top: 1rem;
+        &.blui-empty-state-actions-wrapper-no-action {
+            margin-top: 0;
+        }
+    }
+
+    .blui-empty-state-actions-wrapper .mat-button-wrapper {
+        display: flex;
+        align-items: center;
+    }
+}

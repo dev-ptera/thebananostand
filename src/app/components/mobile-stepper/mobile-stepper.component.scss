@@ -1,0 +1,48 @@
+.blui-mobile-stepper {
+    display: flex;
+    width: 100%;
+}
+
+.blui-mobile-stepper-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-grow: 1;
+    button {
+        margin: 1rem 16px;
+    }
+}
+
+.blui-mobile-stepper-dots {
+    display: flex;
+    flex-direction: row;
+}
+
+.blui-mobile-stepper-dot {
+    height: 0.5rem;
+    width: 0.5rem;
+    background-color: gray;
+    border-radius: 100%;
+    margin: 0 0.25rem;
+}
+
+.blui-mobile-stepper-dot-active {
+    background-color: var(--primary);
+}
+
+.blui-mobile-stepper-display-none {
+    display: none;
+}
+
+.blui-mobile-stepper-next-button-wrapper,
+.blui-mobile-stepper-back-button-wrapper {
+    display: flex;
+    flex: 1;
+}
+
+.blui-mobile-stepper-next-button-wrapper {
+    justify-content: flex-end;
+}
+.blui-mobile-stepper-back-button-wrapper {
+    justify-content: flex-start;
+}

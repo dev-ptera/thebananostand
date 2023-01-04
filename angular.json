@@ -40,7 +40,7 @@
                                 "output": "./assets/bip39"
                             }
                         ],
-                        "styles": ["./node_modules/@brightlayer-ui/angular-themes/theme.scss", "src/styles.scss"],
+                        "styles": ["src/styles.scss"],
                         "scripts": []
                     },
                     "configurations": {

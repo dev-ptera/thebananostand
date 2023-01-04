@@ -1,13 +1,6 @@
 @use 'node_modules/@brightlayer-ui/colors/palette' as blui;
 @use 'node_modules/@angular/material' as mat;
 
-@use 'node_modules/@brightlayer-ui/angular-themes/blui-component-theme';
-@use 'node_modules/@brightlayer-ui/angular-themes/blueTheme';
-@use 'node_modules/@brightlayer-ui/angular-themes/margins';
-@use 'node_modules/@brightlayer-ui/angular-themes/fonts';
-@use 'node_modules/@brightlayer-ui/angular-themes/typography';
-@use 'node_modules/@brightlayer-ui/angular-themes/common';
-
 $material-theme-primary: mat.define-palette(blui.$blui-blue, 500);
 $material-theme-accent: mat.define-palette(blui.$blui-blue, 800);
 $material-theme-warn: mat.define-palette(blui.$blui-red, 500);
@@ -53,17 +46,13 @@ $nano-blue-theme: map-merge(
 
 .nano-blue {
     @include mat.all-component-themes($nano-blue-theme);
-    @include blui-component-theme.blui-components-theme($nano-blue-theme);
-    @include blueTheme.bluetheme($nano-blue-theme);
-    @include fonts.bodyfont();
-    @include typography.typography();
-    @include common.common();
     $primary: mat.get-color-from-palette($material-theme-primary, 500);
     $foreground: map-get($nano-blue-theme, foreground);
-    .primary,
-    .primary * {
-        color: $primary;
-    }
+
+
+    --primary: blue;
+    --warn: red;
+
     .divider-border {
         border: solid 1px $divider;
     }
@@ -80,9 +69,6 @@ $nano-blue-theme: map-merge(
         background-color: map-get(blui.$blui-white, 50);
     }
 
-    .warn * {
-        color: map-get($material-theme-warn, 500);
-    }
     .dashboard-account-list {
         .hovered {
             .mat-list-item:hover {

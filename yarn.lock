@@ -1377,22 +1377,7 @@
   dependencies:
     package "^1.0.1"
 
-"@brightlayer-ui/angular-components@8.0.0":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@brightlayer-ui/angular-components/-/angular-components-8.0.0.tgz#f9c2aaad4cb334a6c432c46ffa930f6df1d06953"
-  integrity sha512-yt4IvsaEvKkho9n+MStbYJYWosMkb5rP0e/GEUrh6+/D3M5IzAfYcgCv1rkh0pta76UJtQ18ktDv0uoO8oVxCg==
-  dependencies:
-    tslib "^2.3.0"
-
-"@brightlayer-ui/angular-themes@^8.0.0":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@brightlayer-ui/angular-themes/-/angular-themes-8.0.0.tgz#25d813b0efa0815b06e2c227c3115821e2b0edf8"
-  integrity sha512-BOemaG+VCHTQ+hAG+ubiFVaX7BGrhNezj1Ki4TA1Uo0rMqLsqmu+weYD0gUJb5y7iietWCXnCJ35el1v+H7AWA==
-  dependencies:
-    "@brightlayer-ui/colors" "^3.0.0"
-    "@fontsource/open-sans" "^4.1.0"
-
-"@brightlayer-ui/colors@^3.0.0", "@brightlayer-ui/colors@^3.0.1":
+"@brightlayer-ui/colors@^3.0.1":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@brightlayer-ui/colors/-/colors-3.1.1.tgz#7bc86498e30172c410ba4c3237149b16a2eed4c6"
   integrity sha512-fV10E5JDuVGDQ0gCY3pEfDwUo1+lvDFC5pmOAAGpN7YDramS6ggUpJ/LmYavKAudw7FNcaJnPi7tsQWJjvv/7w==
@@ -1492,11 +1477,6 @@
     js-yaml "^4.1.0"
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
-
-"@fontsource/open-sans@^4.1.0":
-  version "4.5.13"
-  resolved "https://registry.yarnpkg.com/@fontsource/open-sans/-/open-sans-4.5.13.tgz#2c99e4c055d129a75f14c11b77d040282e0388b8"
-  integrity sha512-/UzqP7ZFk145XAq8KG4pvFPP7UQhtreDGXgqXZjagCDreKxcrhwn/x7DYz9rPcycWkLUVApIybcoczGZiM0cRg==
 
 "@gar/promisify@^1.1.3":
   version "1.1.3"

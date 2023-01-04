@@ -1,0 +1,23 @@
+.primary,
+.primary * {
+    color: var(--primary);
+}
+.warn * {
+    color: var(--warn);
+}
+
+.secondary {
+    color: var(--secondary);
+}
+
+.hint {
+    color: var(--hint);
+}
+
+.divider {
+    color: var(--divider);
+}
+
+.divider-border {
+    border: solid 1px var(--divider);
+}
