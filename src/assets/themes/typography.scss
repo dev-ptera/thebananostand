@@ -1,9 +1,5 @@
 @use '@angular/material' as mat;
 
-// Custom Typography Sizes & Weights
-$custom-typography: mat.define-typography-config(
-    $font-family: 'spaceGrotesk, "Open Sans", Arial, Helvetica, sans-serif;',
-);
 
 @font-face {
     font-family: spaceGrotesk;
@@ -18,6 +14,13 @@ $custom-typography: mat.define-typography-config(
 @font-face {
     font-family: sourceCodePro;
     src: url(~assets/fonts/source-code-pro/SourceCodePro-Regular.otf);
+}
+
+// Custom Typography Sizes & Weights
+$custom-typography: mat.define-typography-config();
+
+* {
+    font-family:  spaceGrotesk, "Open Sans", Arial, Helvetica, sans-serif;
 }
 
 .mono,

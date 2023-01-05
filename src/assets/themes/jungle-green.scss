@@ -42,17 +42,13 @@ $my-accent: mat.define-palette($greenPalette, 900);
 $my-warn: mat.define-palette(blui.$blui-red, 500);
 $divider: rgba(66, 78, 84, 0.12);
 
-$kids-typography: mat.define-typography-config(
-    $font-family: 'Comic Sans',
-);
-
 $jungle-green-theme: mat.define-light-theme((
     color: (
         primary: $my-primary,
         accent: $my-accent,
         warn: $my-warn,
     ),
-    typography: $kids-typography,
+    typography: typography.$custom-typography,
     density: 0,
 ));
 
