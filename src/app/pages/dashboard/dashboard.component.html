@@ -9,7 +9,7 @@
                         class="primary"
                         style="margin: 0; font-weight: 600"
                         [class.blui-headline-6]="vp.sm"
-                        [class.mat-headline]="!vp.sm"
+                        [class.mat-headline-5]="!vp.sm"
                     >
                         {{ store.activeWallet.name }}
                     </div>
@@ -138,14 +138,14 @@
 </ng-template>
 
 <ng-template #dashboardHeader>
-    <mat-card class="dashboard-header" responsive>
+    <mat-card appearance="outlined" class="dashboard-header" responsive>
         <div style="width: 100%; display: flex; align-items: center">
             <div>
                 <!-- Wallet Name & Selector -->
                 <ng-template [ngTemplateOutlet]="walletNameDropdown"></ng-template>
                 <!-- Account Balance -->
                 <div>
-                    <span class="mat-subheading-1" style="margin-right: 8px"> Accounts Balance: </span>
+                    <span class="mat-body-1" style="margin-right: 8px"> Accounts Balance: </span>
                     <span> {{ totalBalance }}</span>
                     <ng-container *ngIf="!vp.sm"> BAN</ng-container>
                 </div>
@@ -165,7 +165,7 @@
         >
             <ng-template [ngTemplateOutlet]="dashboardHeader"></ng-template>
 
-            <mat-card style="padding: 0" [style.overflow]="vp.sm ? 'auto' : 'hidden'">
+            <mat-card appearance="outlined" style="padding: 0" [style.overflow]="vp.sm ? 'auto' : 'hidden'">
                 <mat-progress-bar
                     *ngIf="store.isLoadingAccounts"
                     color="primary"
@@ -180,7 +180,7 @@
                     style="display: flex; justify-content: space-between; align-items: center; padding: 16px 24px"
                 >
                     <div style="display: flex; align-items: center">
-                        <div class="mat-headline" style="margin-bottom: 0">Accounts</div>
+                        <div class="mat-headline-5" style="margin-bottom: 0">Accounts</div>
                     </div>
                     <div style="display: flex; align-items: center">
                         <button

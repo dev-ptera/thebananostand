@@ -5,7 +5,7 @@
     max-height: 600px;
     display: flex;
     flex-direction: column;
-    .mat-title {
+    .mat-headline-6 {
         margin-bottom: 0;
     }
     ::ng-deep .mat-expansion-panel-body {
@@ -28,7 +28,7 @@
             height: $size;
             line-height: $size;
         }
-        .mat-icon-button {
+        .mat-mdc-icon-button {
             height: 32px;
             width: 32px;
             line-height: 32px;

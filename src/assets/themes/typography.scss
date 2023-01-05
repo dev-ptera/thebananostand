@@ -25,7 +25,7 @@ $custom-typography: mat.define-typography-config(
 
 .mono,
 input::placeholder,
-.mat-input-element {
+.mat-mdc-input-element {
     font-family: sourceCodePro, monospace !important;
     * {
         font-family: sourceCodePro, monospace !important;

@@ -11,7 +11,7 @@
             [class.blui-mobile-stepper-dot-unvisited]="index > activeStep"
         ></div>
     </div>
-    <div *ngIf="variant === 'text'" class="mat-subheading-2">{{ activeStep + 1 }} / {{ stepsArray.length }}</div>
+    <div *ngIf="variant === 'text'" class="mat-subtitle-1">{{ activeStep + 1 }} / {{ stepsArray.length }}</div>
     <mat-progress-bar *ngIf="variant === 'progress'" mode="determinate" [value]="getProgressFill()"></mat-progress-bar>
 
     <div class="blui-mobile-stepper-next-button-wrapper">

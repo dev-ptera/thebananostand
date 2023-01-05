@@ -23,17 +23,17 @@
         <blui-spacer></blui-spacer>
 
         <div class="app-body-content home-content">
-            <div *ngIf="!vp.sm" class="mat-display-1 home-logo-wrapper">
+            <div *ngIf="!vp.sm" class="mat-headline-4 home-logo-wrapper">
                 <mat-icon class="home-bananostand-logo-icon" [style.color]="colors.yellow[300]"> storefront </mat-icon>
                 <div>The Banano Stand</div>
             </div>
 
-            <div class="mat-body-1" style="padding: 0 24px; margin-bottom: 16px">
+            <div class="mat-body-2" style="padding: 0 24px; margin-bottom: 16px">
                 The Banano Stand is an online wallet used to send or receive Banano.
             </div>
 
             <div style="display: flex; flex-wrap: wrap; justify-content: center">
-                <mat-card>
+                <mat-card appearance="outlined">
                     <blui-empty-state>
                         <mat-icon blui-empty-icon>lock</mat-icon>
                         <div blui-title>Seed / Mnemonic</div>
@@ -50,7 +50,7 @@
                     </blui-empty-state>
                 </mat-card>
 
-                <mat-card>
+                <mat-card appearance="outlined">
                     <blui-empty-state>
                         <mat-icon blui-empty-icon>usb</mat-icon>
                         <div blui-title>Nano Ledger</div>
@@ -85,9 +85,9 @@
 </ng-template>
 
 <ng-template #ledgerTroubleshootText>
-    <mat-card class="home-ledger-error-card" [@fade]="'active'">
+    <mat-card appearance="outlined" class="home-ledger-error-card" [@fade]="'active'">
         <div style="margin-bottom: 16px">Follow these steps for help connecting your Ledger device:</div>
-        <div class="mat-body-2 instructions">
+        <div class="mat-subtitle-2 instructions">
             <div><strong>#1</strong> Connect your Ledger Device via USB.</div>
             <div><strong>#2</strong> Ensure the Banano app is installed and the version is up-to-date (>v1.2.6).</div>
             <div><strong>#3</strong> Ensure no other wallet software is attempting to access your ledger device.</div>

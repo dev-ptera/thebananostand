@@ -71,7 +71,7 @@ $nano-blue-theme: map-merge(
 
     .dashboard-account-list {
         .hovered {
-            .mat-list-item:hover {
+            .mat-mdc-list-item:hover {
                 background-color: rgba($primary, 0.05);
             }
         }

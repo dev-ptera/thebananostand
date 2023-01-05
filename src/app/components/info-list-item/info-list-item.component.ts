@@ -38,7 +38,7 @@ type DividerType = 'full' | 'partial' | undefined;
                 <ng-content select="[blui-left-content]"></ng-content>
             </div>
             <div
-                class="mat-body-1 blui-info-list-item-title-wrapper"
+                class="mat-body-2 blui-info-list-item-title-wrapper"
                 matLine
                 [class.blui-info-list-item-wrap]="wrapTitle"
                 #title
@@ -46,14 +46,14 @@ type DividerType = 'full' | 'partial' | undefined;
                 <ng-content select="[blui-title]"></ng-content>
             </div>
             <div
-                class="mat-body-2 blui-info-list-item-subtitle-wrapper"
+                class="mat-subtitle-2 blui-info-list-item-subtitle-wrapper"
                 matLine
                 [class.blui-info-list-item-wrap]="wrapSubtitle"
             >
                 <ng-content select="[blui-subtitle]"></ng-content>
             </div>
             <div
-                class="mat-body-2 blui-info-list-item-info-wrapper"
+                class="mat-subtitle-2 blui-info-list-item-info-wrapper"
                 matLine
                 [class.blui-info-list-item-wrap]="wrapInfo"
             >

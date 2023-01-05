@@ -22,7 +22,7 @@ import { SecretService } from '@app/services/secret.service';
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 <div class="title-row">
-                                    <div class="mat-title">Seed</div>
+                                    <div class="mat-headline-6">Seed</div>
                                     <button mat-icon-button (click)="copySeed(); $event.stopPropagation()">
                                         <mat-icon>{{
                                             hasRecentlyCopiedSeed ? 'check_circle' : 'content_copy'
@@ -37,7 +37,7 @@ import { SecretService } from '@app/services/secret.service';
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 <div class="title-row">
-                                    <div class="mat-title">Mnemonic Phrase</div>
+                                    <div class="mat-headline-6">Mnemonic Phrase</div>
                                     <button mat-icon-button (click)="copyMnemonic(); $event.stopPropagation()">
                                         <mat-icon>{{
                                             hasRecentlyCopiedMnemonic ? 'check_circle' : 'content_copy'
@@ -55,7 +55,7 @@ import { SecretService } from '@app/services/secret.service';
                 </mat-accordion>
 
                 <mat-divider style="margin: 16px 0"></mat-divider>
-                <div class="mat-body-2">
+                <div class="mat-subtitle-2">
                     This secret text allows you to access your Banano using any wallet, such as
                     <a href="https://kalium.banano.cc/" target="_blank" class="link">Kalium</a> or
                     <a href="https://vault.banano.cc/" target="_blank" class="link">Banano Vault</a>. Losing this secret

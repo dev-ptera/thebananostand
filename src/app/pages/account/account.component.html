@@ -104,7 +104,7 @@
         class="mat-elevation-z2 app-toolbar rep-offline-banner"
         *ngIf="isRepOffline() && !warnBannerDismissed"
     >
-        <div class="mat-body-2">
+        <div class="mat-subtitle-2">
             Your current representative is <strong>offline</strong>. If this happens often, it is suggested that you
             update to a recommended rep.
             <span class="link" style="color: unset" (click)="openChangeRepDocs()">Why is this important?</span>
@@ -120,9 +120,9 @@
 
     <div class="app-body" *ngIf="account" responsive>
         <div class="app-body-content">
-            <mat-card *ngIf="vp.sm">
+            <mat-card appearance="outlined" *ngIf="vp.sm">
                 <div style="display: flex; justify-content: space-between; align-items: center">
-                    <div class="mat-subheading-2" style="margin-bottom: 0">
+                    <div class="mat-subtitle-1" style="margin-bottom: 0">
                         <strong>{{ account.formattedBalance }} BAN </strong>Balance
                     </div>
                     <ng-template [ngTemplateOutlet]="accountActions"></ng-template>
@@ -131,6 +131,7 @@
             </mat-card>
 
             <mat-card
+                appearance="outlined"
                 *ngIf="!vp.sm"
                 style="
                     display: flex;
@@ -147,7 +148,7 @@
                         [src]="getMonkeyUrl()"
                     />
                     <div style="display: flex; flex-direction: column; justify-content: center; height: 150px">
-                        <div class="mat-headline">
+                        <div class="mat-headline-5">
                             <strong>{{ account.formattedBalance }} BAN </strong>Balance
                         </div>
                         <div style="display: flex">
@@ -170,11 +171,11 @@
                 <app-qr *ngIf="!vp.sm" [address]="account.fullAddress"></app-qr>
             </mat-card>
 
-            <mat-card style="padding-bottom: 0px" [style.paddingTop.px]="vp.sm ? 0 : 16">
+            <mat-card appearance="outlined" style="padding-bottom: 0px" [style.paddingTop.px]="vp.sm ? 0 : 16">
                 <div
                     *ngIf="!vp.sm"
-                    [class.mat-headline]="!vp.sm"
-                    [class.mat-subheading-2]="vp.sm"
+                    [class.mat-headline-5]="!vp.sm"
+                    [class.mat-subtitle-1]="vp.sm"
                     style="padding: 0 4px; display: flex; align-items: center; justify-content: space-between"
                 >
                     <div style="display: flex; align-items: center">
