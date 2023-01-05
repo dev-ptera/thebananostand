@@ -17,11 +17,11 @@
 }
 
 // Custom Typography Sizes & Weights
-$custom-typography: mat.define-typography-config();
-
-* {
-    font-family:  spaceGrotesk, "Open Sans", Arial, Helvetica, sans-serif;
-}
+$custom-typography: mat.define-typography-config(
+    //$font-family:  "'spaceGrotesk, "Open Sans", Arial, Helvetica, sans-serif'"
+    $font-family: 'Comic Sans',
+    $headline-5: mat.define-typography-level(24px, 32px, 400),
+);
 
 .mono,
 input::placeholder,
