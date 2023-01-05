@@ -9,15 +9,28 @@
     src: url(~assets/fonts/space-grotesk/SpaceGrotesk-Bold.ttf);
     font-weight: bold;
 }
-
 @font-face {
     font-family: sourceCodePro;
     src: url(~assets/fonts/source-code-pro/SourceCodePro-Regular.otf);
 }
 
+$custom-font: 'spaceGrotesk, Arial, Helvetica, sans-serif';
+
 // Custom Typography Sizes & Weights
+/* https://m2.material.io/design/typography/the-type-system.html#type-scale */
 $custom-typography: mat.define-typography-config(
-    $font-family:  'spaceGrotesk, Arial, Helvetica, sans-serif'
+    $font-family:  $custom-font,
+    $headline-1: mat.define-typography-level(96px, 1.167, 300, $custom-font, -1.5px),
+    $headline-2: mat.define-typography-level(60px, 1.2, 300, $custom-font, -0.5px),
+    $headline-3: mat.define-typography-level(48px, 1.167, 400, $custom-font, 0),
+    $headline-4: mat.define-typography-level(34px, 1.2, 400, $custom-font, .25px),
+    $headline-5: mat.define-typography-level(24px, 1.334, 400, $custom-font, 0),
+    $headline-6: mat.define-typography-level(20px, 1.6, 600, $custom-font, 0.15px),
+    $subtitle-1: mat.define-typography-level(16px, 1.75, 400, $custom-font, .15px),
+    $subtitle-2: mat.define-typography-level(14px, 1.6, 600, $custom-font, .1px),
+    $body-1: mat.define-typography-level(16px, 1.5, 400, $custom-font, .5px),
+    $body-2: mat.define-typography-level(14px, 1.4, 400, $custom-font, .25px),
+    $caption: mat.define-typography-level(12px, 1.67, 400, $custom-font, .4px),
 );
 
 .mat-overline {

@@ -77,12 +77,12 @@ import { AddressBookComponent } from '@app/pages/address-book/address-book.compo
 import { LedgerSnackbarErrorComponent } from '@app/pages/home/ledger-error-snackbar.component';
 import { AccountListComponent } from '@app/pages/dashboard/components/account-list.component';
 import { DashboardPipe } from '@app/pages/dashboard/dashboard.pipe';
-import {EmptyStateModule} from "@app/components/empty-state/empty-state.module";
-import {MobileStepperModule} from "@app/components/mobile-stepper/mobile-stepper.module";
-import {ListItemTagModule} from "@app/components/list-item-tag/list-item-tag.module";
-import {SpacerModule} from "@app/components/spacer/spacer.module";
-import {InfoListItemModule} from "@app/components/info-list-item/info-list-item.module";
-import {QrDialogComponent} from "@app/components/qr/qr.component";
+import { EmptyStateModule } from '@app/components/empty-state/empty-state.module';
+import { MobileStepperModule } from '@app/components/mobile-stepper/mobile-stepper.module';
+import { ListItemTagModule } from '@app/components/list-item-tag/list-item-tag.module';
+import { SpacerModule } from '@app/components/spacer/spacer.module';
+import { InfoListItemModule } from '@app/components/info-list-item/info-list-item.module';
+import { QrDialogComponent } from '@app/components/qr/qr.component';
 
 @NgModule({
     declarations: [
@@ -170,4 +170,3 @@ import {QrDialogComponent} from "@app/components/qr/qr.component";
     bootstrap: [AppComponent],
 })
 export class AppModule {}
-

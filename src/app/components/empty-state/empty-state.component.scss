@@ -1,8 +1,4 @@
-.blui-empty-state {
-    display: flex;
-}
-
-.blui-empty-state-content {
+.content {
     height: 100%;
     width: 100%;
     box-sizing: border-box;
@@ -12,20 +8,20 @@
     align-items: center;
     justify-content: center;
 
-    .blui-empty-state-title {
-        margin-bottom: 0;
+    .title {
+        margin-bottom: 16px;
     }
 
-    .blui-empty-state-title,
-    .blui-empty-state-description {
+    .title,
+    .description {
         text-align: center;
         font-weight: 600;
     }
 
-    .blui-empty-state-empty-icon-wrapper {
+    .icon-wrapper {
         margin-bottom: 1rem;
         line-height: 1;
-        > * {
+        ::ng-deep > * {
             $size: 96px;
             display: block;
             font-size: $size;
@@ -35,15 +31,7 @@
         }
     }
 
-    .blui-empty-state-actions-wrapper {
+    .actions-wrapper {
         margin-top: 1rem;
-        &.blui-empty-state-actions-wrapper-no-action {
-            margin-top: 0;
-        }
-    }
-    /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
-    .blui-empty-state-actions-wrapper .mat-button-wrapper {
-        display: flex;
-        align-items: center;
     }
 }

@@ -60,7 +60,6 @@ import { AppStateService } from '@app/services/app-state.service';
     encapsulation: ViewEncapsulation.None,
 })
 export class AppAccountSettingsComponent {
-
     userMenuOpen = false;
 
     constructor(

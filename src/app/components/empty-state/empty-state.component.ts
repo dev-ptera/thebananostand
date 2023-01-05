@@ -1,35 +1,27 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    Input,
-    ViewChild,
-    ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-/**
- * [EmptyState Component](https://brightlayer-ui-components.github.io/angular/?path=/info/components-empty-state--readme)
- *
- * The `<blui-empty-state>` component can display a particular icon, text, and actions.
- * Icon components are passed as a child element with the `emptyIcon` attribute - these will typically be a Material icon, Brightlayer UI icon, or Progress Icon.
- */
 @Component({
-    selector: 'blui-empty-state',
-    templateUrl: './empty-state.component.html',
+    host: {
+        class: 'app-empty-state',
+    },
+    selector: 'app-empty-state',
     styleUrls: ['./empty-state.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    host: {
-        class: 'blui-empty-state',
-    },
+    template: `
+        <div class="content">
+            <div class="icon-wrapper">
+                <ng-content select="mat-icon"></ng-content>
+            </div>
+            <div class="mat-headline-5 title">
+                <ng-content select="[title]"></ng-content>
+            </div>
+            <p class="mat-subtitle-1 description">
+                <ng-content select="[description]"></ng-content>
+            </p>
+            <div class="actions-wrapper">
+                <ng-content select="button"></ng-content>
+            </div>
+        </div>
+    `,
 })
-export class EmptyStateComponent  {
-    /** The secondary text to display (second line) */
-    @Input() description: string;
-    /** The primary text to display (first line) */
-    @Input() title: string;
-
-    /** Used to check if an icon has been provided ngAfterViewInit */
-    @ViewChild('emptyIcon') emptyIcon: ElementRef;
-
-}
+export class EmptyStateComponent {}

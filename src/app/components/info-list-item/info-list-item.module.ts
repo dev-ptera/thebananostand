@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { InfoListItemComponent } from './info-list-item.component';
 import { MatDividerModule } from '@angular/material/divider';
-import {SpacerModule} from "@app/components/spacer/spacer.module";
+import { SpacerModule } from '@app/components/spacer/spacer.module';
 
 @NgModule({
     declarations: [InfoListItemComponent],

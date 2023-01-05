@@ -1,4 +1,3 @@
-
 $statusWidth: 6px;
 $contentPaddingLeft: 16px;
 $normalHeight: 4.5rem;
@@ -141,7 +140,7 @@ $denseHeight: 3.25rem;
         padding: 0;
         > * {
             /* mat-icon, font-icon, etc */
-           // @include scale-icon-content();
+            // @include scale-icon-content();
         }
         &.blui-info-list-item-hide-padding:empty {
             width: 0;

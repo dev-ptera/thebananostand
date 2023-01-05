@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, ElementRef, Input, ViewChild, ViewEncapsulation,} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewChild, ViewEncapsulation } from '@angular/core';
 
 type IconAlignType = 'left' | 'center' | 'right' | undefined;
 type DividerType = 'full' | 'partial' | undefined;
@@ -131,7 +131,4 @@ export class InfoListItemComponent {
      * @default false
      * */
     @Input() wrapTitle = false;
-
-    @ViewChild('title') titleEl: ElementRef;
-    @ViewChild('right') rightEl: ElementRef;
 }
