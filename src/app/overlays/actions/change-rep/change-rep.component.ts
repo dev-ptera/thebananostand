@@ -32,7 +32,7 @@ export type ChangeRepOverlayData = {
                 mat-dialog-content
                 style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
-                <blui-empty-state>
+                <app-empty-state>
                     <mat-icon blui-empty-icon> check_circle</mat-icon>
                     <div blui-title>Representative Changed</div>
                     <div blui-description>
@@ -51,7 +51,7 @@ export type ChangeRepOverlayData = {
                             Close
                         </button>
                     </div>
-                </blui-empty-state>
+                </app-empty-state>
             </div>
 
             <div
@@ -60,7 +60,7 @@ export type ChangeRepOverlayData = {
                 class="dialog-content"
                 style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
-                <blui-empty-state>
+                <app-empty-state>
                     <mat-icon blui-empty-icon> error</mat-icon>
                     <div blui-title>Representative Change Failed</div>
                     <div blui-description>Your representative could not be changed.</div>
@@ -75,7 +75,7 @@ export type ChangeRepOverlayData = {
                             Close
                         </button>
                     </div>
-                </blui-empty-state>
+                </app-empty-state>
             </div>
 
             <ng-container *ngIf="hasSuccess === undefined">

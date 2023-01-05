@@ -21,7 +21,7 @@ export type ReceiveOverlayData = {
                 mat-dialog-content
                 style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
-                <blui-empty-state data-cy="receive-success-state">
+                <app-empty-state data-cy="receive-success-state">
                     <mat-icon blui-empty-icon> check_circle</mat-icon>
                     <div blui-title>Received Successfully</div>
                     <div blui-description>
@@ -32,7 +32,7 @@ export type ReceiveOverlayData = {
                             Close
                         </button>
                     </div>
-                </blui-empty-state>
+                </app-empty-state>
             </div>
 
             <div
@@ -41,7 +41,7 @@ export type ReceiveOverlayData = {
                 class="dialog-content"
                 style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
-                <blui-empty-state>
+                <app-empty-state>
                     <mat-icon blui-empty-icon> error</mat-icon>
                     <div blui-title>Transaction Failed</div>
                     <div blui-description>Your transaction could not be completed.</div>
@@ -50,7 +50,7 @@ export type ReceiveOverlayData = {
                             Close
                         </button>
                     </div>
-                </blui-empty-state>
+                </app-empty-state>
             </div>
 
             <ng-container *ngIf="!hasSuccess && !hasErrorReceiving">

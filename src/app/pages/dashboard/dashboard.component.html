@@ -42,14 +42,14 @@
 
 <!-- Is shown whenever a seed is loaded, but no individual addresses are shown yet. -->
 <ng-template #noAccountsEmptyState>
-    <blui-empty-state
+    <app-empty-state
         *ngIf="store.accounts.length === 0 && !store.isLoadingAccounts"
         style="margin: 64px 0 48px 0"
         title="No Accounts Displayed"
         description="Use the buttons above to add an account."
     >
         <mat-icon blui-empty-icon>search</mat-icon>
-    </blui-empty-state>
+    </app-empty-state>
 </ng-template>
 
 <!-- Wallet-level actions -->

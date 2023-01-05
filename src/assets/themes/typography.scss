@@ -1,6 +1,5 @@
 @use '@angular/material' as mat;
 
-
 @font-face {
     font-family: spaceGrotesk;
     src: url(~assets/fonts/space-grotesk/SpaceGrotesk-Regular.ttf);
@@ -18,10 +17,16 @@
 
 // Custom Typography Sizes & Weights
 $custom-typography: mat.define-typography-config(
-    //$font-family:  "'spaceGrotesk, "Open Sans", Arial, Helvetica, sans-serif'"
-    $font-family: 'Comic Sans',
-    $headline-5: mat.define-typography-level(24px, 32px, 400),
+    $font-family:  'spaceGrotesk, Arial, Helvetica, sans-serif'
 );
+
+.mat-overline {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.125rem;
+    line-height: 2.66;
+    text-transform: uppercase;
+}
 
 .mono,
 input::placeholder,

@@ -57,10 +57,10 @@ import { AppStateService } from '@app/services/app-state.service';
         >
         </responsive-menu>
     `,
-    styleUrls: ['./account-settings.component.scss'],
     encapsulation: ViewEncapsulation.None,
 })
 export class AppAccountSettingsComponent {
+
     userMenuOpen = false;
 
     constructor(

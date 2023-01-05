@@ -1,13 +1,12 @@
 @use 'node_modules/@brightlayer-ui/colors/palette.scss' as blui;
 //@use 'assets/themes/banano-yellow';
 @use 'assets/themes/jungle-green';
-@use 'assets/themes/nano-blue';
+//@use 'assets/themes/nano-blue';
 // @use 'assets/themes/typography';
 @use 'assets/themes/common';
 @use '@angular/material' as mat;
 
 @include mat.core();
-
 
 html * {
     box-sizing: border-box;

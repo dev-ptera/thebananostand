@@ -1,5 +1,6 @@
 @use 'node_modules/@brightlayer-ui/colors/palette' as blui;
 @use 'node_modules/@angular/material' as mat;
+@use 'typography';
 @use 'sass:map';
 
 /* For use in src/lib/core/theming/_palette.scss */
@@ -48,11 +49,12 @@ $jungle-green-theme: mat.define-light-theme((
         accent: $my-accent,
         warn: $my-warn,
     ),
-    typography: $my-typography
+    typography: typography.$custom-typography
 ));
 
 .jungle-green {
     @include mat.all-component-themes($jungle-green-theme);
+    @include mat.typography-hierarchy($jungle-green-theme);
 
     --primary: map.get($jungle-green-theme, 'primary');
     --warn: $map-get($my-warn, 500);

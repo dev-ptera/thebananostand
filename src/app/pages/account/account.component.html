@@ -213,20 +213,20 @@
                     [class.slow-fade-in]="showProgressBar()"
                 >
                     <ng-container *ngIf="showNoFilteredResultsEmptyState()">
-                        <blui-empty-state style="margin: 24px 0">
+                        <app-empty-state style="margin: 24px 0">
                             <mat-icon blui-empty-icon>waterfall_chart</mat-icon>
                             <div blui-title>No Results</div>
                             <div blui-description>
                                 No transactions meet your filter criteria. Please adjust your filters and try again.
                             </div>
-                        </blui-empty-state>
+                        </app-empty-state>
                     </ng-container>
                     <ng-container *ngIf="unopenedAccount">
-                        <blui-empty-state style="margin: 24px 0">
+                        <app-empty-state style="margin: 24px 0">
                             <mat-icon blui-empty-icon>no_accounts</mat-icon>
                             <div blui-title>Unopened Account</div>
                             <div blui-description>To open this account, it must receive an incoming transaction.</div>
-                        </blui-empty-state>
+                        </app-empty-state>
                     </ng-container>
                     <ng-container *ngIf="showProgressBar()">
                         <mat-progress-bar

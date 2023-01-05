@@ -22,7 +22,7 @@ export type SendOverlayData = {
                 mat-dialog-content
                 style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
-                <blui-empty-state data-cy="send-success-state">
+                <app-empty-state data-cy="send-success-state">
                     <mat-icon blui-empty-icon> check_circle</mat-icon>
                     <div blui-title>Transaction Sent</div>
                     <div blui-description>
@@ -35,7 +35,7 @@ export type SendOverlayData = {
                             Close
                         </button>
                     </div>
-                </blui-empty-state>
+                </app-empty-state>
             </div>
 
             <div
@@ -44,7 +44,7 @@ export type SendOverlayData = {
                 class="dialog-content"
                 style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
-                <blui-empty-state>
+                <app-empty-state>
                     <mat-icon blui-empty-icon> error</mat-icon>
                     <div blui-title>Transaction Failed</div>
                     <div blui-description>Your transaction could not be completed.</div>
@@ -53,7 +53,7 @@ export type SendOverlayData = {
                             Close
                         </button>
                     </div>
-                </blui-empty-state>
+                </app-empty-state>
             </div>
 
             <ng-container *ngIf="hasSuccess === undefined">
