@@ -15,7 +15,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             <div class="mat-headline-5 title">
                 <ng-content select="[title]"></ng-content>
             </div>
-            <p class="mat-subtitle-1 description">
+            <p class="mat-subtitle-2 description">
                 <ng-content select="[description]"></ng-content>
             </p>
             <div class="actions-wrapper">

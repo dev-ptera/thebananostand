@@ -8,43 +8,6 @@ $denseHeight: 3.25rem;
     width: 100%;
 }
 
-/* RTL */
-[dir='rtl'] {
-    .blui-info-list-item-content,
-    .mat-mdc-list-base .mat-mdc-list-item.blui-info-list-item-content {
-        /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version. */
-        &.blui-info-list-item-status .mat-list-item-content {
-            border-right: solid $statusWidth;
-            border-right-color: inherit;
-            padding-right: $contentPaddingLeft - $statusWidth;
-            padding-left: $contentPaddingLeft;
-            border-left: unset;
-        }
-        /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version. */
-        .mat-list-item-content .mat-list-text {
-            padding-right: 0;
-        }
-
-        .blui-info-list-item-icon-wrapper {
-            margin-right: 0;
-            margin-left: 16px;
-        }
-
-        .blui-info-list-item-left-content-wrapper > * {
-            margin-left: 16px;
-            margin-right: 0;
-        }
-        .blui-info-list-item-right-content {
-            margin-right: 16px;
-            margin-left: 0;
-        }
-    }
-    mat-divider.mat-divider.blui-info-list-item-partial-divider {
-        left: 0;
-        right: 4.5rem;
-    }
-}
-
 .blui-info-list-item-content,
 .mat-mdc-list-base .mat-mdc-list-item.blui-info-list-item-content {
     width: 100%;

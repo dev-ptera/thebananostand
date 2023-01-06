@@ -31,21 +31,26 @@ $custom-typography: mat.define-typography-config(
     $body-1: mat.define-typography-level(16px, 1.5, 400, $custom-font, .5px),
     $body-2: mat.define-typography-level(14px, 1.4, 400, $custom-font, .25px),
     $caption: mat.define-typography-level(12px, 1.67, 400, $custom-font, .4px),
+    $button: mat.define-typography-config(14px, 1.75, 600, $custom-font, 0) // not applied to buttons? bug
 );
 
-.mat-overline {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.125rem;
-    line-height: 2.66;
-    text-transform: uppercase;
-}
-
-.mono,
-input::placeholder,
-.mat-mdc-input-element {
-    font-family: sourceCodePro, monospace !important;
-    * {
+@mixin custom-typography-rules {
+    .mat-body-1 {
+        margin-bottom: 0;
+    }
+    .mat-overline {
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.125rem;
+        line-height: 2.66;
+        text-transform: uppercase;
+    }
+    .mono,
+    input::placeholder,
+    .mat-mdc-input-element {
         font-family: sourceCodePro, monospace !important;
+        * {
+            font-family: sourceCodePro, monospace !important;
+        }
     }
 }

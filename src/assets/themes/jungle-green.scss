@@ -55,7 +55,11 @@ $jungle-green-theme: mat.define-light-theme((
 .jungle-green {
     @include mat.all-component-themes($jungle-green-theme);
     @include mat.typography-hierarchy($jungle-green-theme);
+    @include typography.custom-typography-rules();
 
     --primary: map.get($jungle-green-theme, 'primary');
     --warn: $map-get($my-warn, 500);
+    .mat-mdc-card-outlined {
+    //    --mdc-outlined-card-outline-color: rgba(138, 138, 138, 0.12);
+    }
 }

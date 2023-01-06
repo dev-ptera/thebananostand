@@ -2,7 +2,6 @@
 //@use 'assets/themes/banano-yellow';
 @use 'assets/themes/jungle-green';
 //@use 'assets/themes/nano-blue';
-// @use 'assets/themes/typography';
 @use 'assets/themes/common';
 @use '@angular/material' as mat;
 
@@ -33,6 +32,7 @@ body,
 .app-root {
     display: flex;
     flex-direction: column;
+    --mdc-elevated-card-container-shape: 16px;
 }
 .app-body {
     display: flex;
