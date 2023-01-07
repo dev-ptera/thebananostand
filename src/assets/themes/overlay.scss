@@ -1,0 +1,48 @@
+@use '@angular/material' as mat;
+@use 'typography';
+
+@mixin overlay-common() {
+
+    .mat-mdc-dialog-container .mdc-dialog__surface {
+        --mdc-dialog-container-shape: 1rem;
+    }
+
+    .overlay-header {
+        $class: 'headline-6';
+        font-size: mat.font-size(typography.$custom-typography, $class);
+        font-weight: mat.font-weight(typography.$custom-typography, $class);
+        font-family: mat.font-family(typography.$custom-typography, $class);
+        margin-bottom: 1rem;
+    }
+
+    .cdk-overlay-container .mat-bottom-sheet-container .mat-mdc-button-base {
+        border-radius: 1rem;
+        height: 42px;
+    }
+
+    .cdk-overlay-container .mat-bottom-sheet-container {
+        padding: 0;
+        border-top-left-radius: 32px;
+        border-top-right-radius: 32px;
+
+    }
+    .overlay-content {
+        $horizontal-padding: 24px;
+        padding: 24px $horizontal-padding 0 $horizontal-padding;
+        display: flex;
+        flex: 1 1 0px;
+        flex-direction: column;
+        mat-divider {
+            margin-left: -$horizontal-padding;
+            margin-right: -$horizontal-padding;
+        }
+        .overlay-footer .mat-mdc-button-base {
+            max-width: 120px;
+            min-width: 80px;
+        }
+    }
+
+    .sm .overlay-footer .mat-mdc-button-base {
+        min-width: 100px;
+    }
+}

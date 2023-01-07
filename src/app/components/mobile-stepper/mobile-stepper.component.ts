@@ -2,20 +2,14 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges, ViewEncapsulation
 
 export type MobileStepperVariant = 'dots' | 'text' | 'progress';
 
-/**
- * [MobileStepper Component](https://brightlayer-ui-components.github.io/angular/?path=/info/components-mobile-stepper--readme)
- *
- * The <MobileStepper> is used to minimally display progress when completing a workflow that requires multiple steps.
- *  There are three types of progress indicators supported, dots (default), text, and progress.
- */
 @Component({
-    selector: 'blui-mobile-stepper',
+    selector: 'mobile-stepper',
     templateUrl: './mobile-stepper.component.html',
     styleUrls: ['./mobile-stepper.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'blui-mobile-stepper',
+        class: 'mobile-stepper',
     },
 })
 export class MobileStepperComponent implements OnChanges {

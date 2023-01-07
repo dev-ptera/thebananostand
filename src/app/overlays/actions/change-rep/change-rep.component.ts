@@ -57,7 +57,7 @@ export type ChangeRepOverlayData = {
             <div
                 *ngIf="hasSuccess === false"
                 mat-dialog-content
-                class="dialog-content"
+                class="overlay-content"
                 style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
                 <app-empty-state>

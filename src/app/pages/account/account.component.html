@@ -214,18 +214,18 @@
                 >
                     <ng-container *ngIf="showNoFilteredResultsEmptyState()">
                         <app-empty-state style="margin: 24px 0">
-                            <mat-icon blui-empty-icon>waterfall_chart</mat-icon>
-                            <div blui-title>No Results</div>
-                            <div blui-description>
+                            <mat-icon empty-icon>waterfall_chart</mat-icon>
+                            <div title>No Results</div>
+                            <div description>
                                 No transactions meet your filter criteria. Please adjust your filters and try again.
                             </div>
                         </app-empty-state>
                     </ng-container>
                     <ng-container *ngIf="unopenedAccount">
                         <app-empty-state style="margin: 24px 0">
-                            <mat-icon blui-empty-icon>no_accounts</mat-icon>
-                            <div blui-title>Unopened Account</div>
-                            <div blui-description>To open this account, it must receive an incoming transaction.</div>
+                            <mat-icon empty-icon>no_accounts</mat-icon>
+                            <div title>Unopened Account</div>
+                            <div description>To open this account, it must receive an incoming transaction.</div>
                         </app-empty-state>
                     </ng-container>
                     <ng-container *ngIf="showProgressBar()">
@@ -249,7 +249,8 @@
                     responsive
                 >
                     <div *cdkVirtualFor="let item of ds; let i = index; let even = even">
-                        <blui-info-list-item
+                        <!--
+                        <info-list-item
                             *ngIf="item"
                             [style.height.px]="getTransactionRowHeight()"
                             [style.backgroundColor]="
@@ -262,14 +263,14 @@
                                     : colors.white[50]
                             "
                         >
-                            <div blui-icon class="tx-state-icon">
+                            <div icon class="tx-state-icon">
                                 <mat-icon *ngIf="item.type === 'receive'" class="receive">add_circle_outline</mat-icon>
                                 <mat-icon *ngIf="item.type === 'send'" class="send">remove_circle_outline</mat-icon>
                                 <mat-icon *ngIf="item.type === 'change'" class="change">change_history</mat-icon>
                             </div>
-                            <div blui-title>{{ item.type }}</div>
-                            <div blui-subtitle>{{ item.amount }}</div>
-                            <div blui-right-content>
+                            <div title>{{ item.type }}</div>
+                            <div subtitle>{{ item.amount }}</div>
+                            <div right-content>
                                 <div
                                     (mouseenter)="item.hover = true"
                                     (mouseleave)="item.hover = false"
@@ -312,16 +313,19 @@
                                     tx #{{ util.numberWithCommas(item.height) }}
                                 </span>
                             </div>
-                        </blui-info-list-item>
+                        </info-list-item>
+
+
                         <blui-info-list-item *ngIf="!item" [style.height.px]="getTransactionRowHeight()">
-                            <mat-icon blui-icon>sync</mat-icon>
-                            <div blui-title>Loading</div>
-                            <div blui-right-content>
+                            <mat-icon icon>sync</mat-icon>
+                            <div title>Loading</div>
+                            <div right-content>
                                 <span *ngIf="!vp.sm" [style.marginLeft.px]="32">
                                     tx #{{ util.numberWithCommas(accountHeight - i) }}
                                 </span>
                             </div>
                         </blui-info-list-item>
+                        -->
                     </div>
                 </cdk-virtual-scroll-viewport>
             </mat-card>

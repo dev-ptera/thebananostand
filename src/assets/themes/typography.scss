@@ -27,12 +27,16 @@ $custom-typography: mat.define-typography-config(
     $headline-5: mat.define-typography-level(24px, 1.334, 400, $custom-font, 0),
     $headline-6: mat.define-typography-level(20px, 1.6, 600, $custom-font, 0.15px),
     $subtitle-1: mat.define-typography-level(16px, 1.75, 400, $custom-font, .15px),
-    $subtitle-2: mat.define-typography-level(14px, 1.6, 600, $custom-font, .1px),
-    $body-1: mat.define-typography-level(16px, 1.5, 400, $custom-font, .5px),
+    $subtitle-2: mat.define-typography-level(14px, 1.4, 600, $custom-font, .1px),
+    $body-1: mat.define-typography-level(16px, 1.5, 400, $custom-font, normal),
     $body-2: mat.define-typography-level(14px, 1.4, 400, $custom-font, .25px),
     $caption: mat.define-typography-level(12px, 1.67, 400, $custom-font, .4px),
     $button: mat.define-typography-config(14px, 1.75, 600, $custom-font, 0) // not applied to buttons? bug
 );
+
+.mat-headline-1, .mat-headline-2, .mat-headline-3, .mat-headline-4, .mat-headline-5, .mat-headline-6, .mat-subtitle-1, .mat-subtitle-2, .mat-body-1, .mat-body-2, .mat-caption, .mat-button {
+    color: var(--text);
+}
 
 @mixin custom-typography-rules {
     .mat-body-1 {
@@ -54,3 +58,4 @@ $custom-typography: mat.define-typography-config(
         }
     }
 }
+

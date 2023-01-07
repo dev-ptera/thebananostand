@@ -50,8 +50,8 @@ $nano-blue-theme: map-merge(
     $foreground: map-get($nano-blue-theme, foreground);
 
 
-    --primary: blue;
-    --warn: red;
+    --primary: yellow;
+    --warn: yellow;
 
     .divider-border {
         border: solid 1px $divider;

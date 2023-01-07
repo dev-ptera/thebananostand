@@ -1,24 +1,28 @@
-.blui-mobile-stepper {
+.mobile-stepper {
     display: flex;
     width: 100%;
 }
 
-.blui-mobile-stepper-content {
+.mobile-stepper-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-grow: 1;
     button {
-        margin: 1rem 16px;
+        margin: 1rem 0px;
     }
 }
 
-.blui-mobile-stepper-dots {
+.mobile-stepper-progress-indicator {
+    margin: 0 16px;
+}
+
+.mobile-stepper-dots {
     display: flex;
     flex-direction: row;
 }
 
-.blui-mobile-stepper-dot {
+.mobile-stepper-dot {
     height: 0.5rem;
     width: 0.5rem;
     background-color: gray;
@@ -26,23 +30,10 @@
     margin: 0 0.25rem;
 }
 
-.blui-mobile-stepper-dot-active {
+.mobile-stepper-dot-active {
     background-color: var(--primary);
 }
 
-.blui-mobile-stepper-display-none {
+.mobile-stepper-display-none {
     display: none;
-}
-
-.blui-mobile-stepper-next-button-wrapper,
-.blui-mobile-stepper-back-button-wrapper {
-    display: flex;
-    flex: 1;
-}
-
-.blui-mobile-stepper-next-button-wrapper {
-    justify-content: flex-end;
-}
-.blui-mobile-stepper-back-button-wrapper {
-    justify-content: flex-start;
 }

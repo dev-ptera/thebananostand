@@ -41,11 +41,11 @@ import { AppStateService } from '@app/services/app-state.service';
         </ng-template>
         <ng-template #desktopTrigger>
             <button mat-icon-button>
-                <mat-icon>settings</mat-icon>
+                <mat-icon class="account-settings-icon-trigger">settings</mat-icon>
             </button>
         </ng-template>
         <ng-template #mobileTrigger>
-            <mat-icon>settings</mat-icon>
+            <mat-icon class="account-settings-icon-trigger">settings</mat-icon>
         </ng-template>
         <responsive-menu
             menuTitle="Settings"
@@ -58,6 +58,7 @@ import { AppStateService } from '@app/services/app-state.service';
         </responsive-menu>
     `,
     encapsulation: ViewEncapsulation.None,
+    styleUrls: ['account-settings.component.scss'],
 })
 export class AppAccountSettingsComponent {
     userMenuOpen = false;

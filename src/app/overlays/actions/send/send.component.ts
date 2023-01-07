@@ -23,14 +23,14 @@ export type SendOverlayData = {
                 style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
                 <app-empty-state data-cy="send-success-state">
-                    <mat-icon blui-empty-icon> check_circle</mat-icon>
-                    <div blui-title>Transaction Sent</div>
-                    <div blui-description>
+                    <mat-icon empty-icon> check_circle</mat-icon>
+                    <div title>Transaction Sent</div>
+                    <div description>
                         Your transaction has been successfully sent and can be viewed
                         <span class="link" [style.color]="colors.blue[500]" (click)="openLink()">here.</span>
                         You can now close this window.
                     </div>
-                    <div blui-actions>
+                    <div actions>
                         <button mat-flat-button color="primary" class="close-button" (click)="closeDialog()">
                             Close
                         </button>
@@ -41,14 +41,14 @@ export type SendOverlayData = {
             <div
                 *ngIf="hasSuccess === false"
                 mat-dialog-content
-                class="dialog-content"
+                class="overlay-content"
                 style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
                 <app-empty-state>
-                    <mat-icon blui-empty-icon> error</mat-icon>
-                    <div blui-title>Transaction Failed</div>
-                    <div blui-description>Your transaction could not be completed.</div>
-                    <div blui-actions>
+                    <mat-icon empty-icon> error</mat-icon>
+                    <div title>Transaction Failed</div>
+                    <div description>Your transaction could not be completed.</div>
+                    <div actions>
                         <button mat-flat-button color="primary" class="close-button" (click)="closeDialog()">
                             Close
                         </button>
@@ -123,23 +123,16 @@ export type SendOverlayData = {
                         ></div>
                     </ng-container>
                 </div>
-
-                <blui-spacer></blui-spacer>
+                <spacer></spacer>
                 <mat-divider style="margin-left: -48px; margin-right: -48px"></mat-divider>
-                <blui-mobile-stepper [activeStep]="activeStep" [steps]="maxSteps">
-                    <button
-                        mat-stroked-button
-                        blui-back-button
-                        color="primary"
-                        (click)="back()"
-                        data-cy="send-close-button"
-                    >
+                <mobile-stepper [activeStep]="activeStep" [steps]="maxSteps">
+                    <button mat-stroked-button back-button color="primary" (click)="back()" data-cy="send-close-button">
                         <ng-container *ngIf="activeStep === 0">Close</ng-container>
                         <ng-container *ngIf="activeStep > 0">Back</ng-container>
                     </button>
                     <button
                         mat-flat-button
-                        blui-next-button
+                        next-button
                         color="primary"
                         (click)="next()"
                         class="loading-button"
@@ -154,7 +147,7 @@ export type SendOverlayData = {
                             <span *ngIf="!isProcessingTx"> Send </span>
                         </ng-container>
                     </button>
-                </blui-mobile-stepper>
+                </mobile-stepper>
             </ng-container>
         </div>
     `,

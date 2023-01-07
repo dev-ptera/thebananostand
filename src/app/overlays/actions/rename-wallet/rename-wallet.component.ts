@@ -24,7 +24,7 @@ import { AppStateService } from '@app/services/app-state.service';
                     </mat-form-field>
                 </form>
             </div>
-            <blui-spacer></blui-spacer>
+            <spacer></spacer>
             <mat-divider style="margin-left: -48px; margin-right: -48px"></mat-divider>
             <div style="display: flex; justify-content: space-between; margin-bottom: 0; padding: 16px 0">
                 <button mat-stroked-button color="primary" (click)="close.emit()" style="width: 100px;">Close</button>

@@ -48,34 +48,34 @@ import { AppStateService } from '@app/services/app-state.service';
 
         <!-- Indicates an account has not yet received any transactions -->
         <ng-template #unopenedAccountTag>
-            <blui-list-item-tag
+            <list-item-tag
                 responsive
                 label="Unopened Account"
                 class="unopened-account-tag"
                 [fontColor]="colors.black[500]"
                 [backgroundColor]="colors.gray[100]"
             >
-            </blui-list-item-tag>
+            </list-item-tag>
         </ng-template>
 
         <!-- Statuses that are shown beneath an address.  Includes "Rep Offline" & "Has Receivable" information. -->
         <ng-template #statusBadges let-account="account">
             <div style="display: flex; align-items: center">
-                <blui-list-item-tag
+                <list-item-tag
                     *ngIf="account.pending.length > 0"
                     [label]="vp.sm ? 'Receivable' : 'Has Receivable'"
                     class="receivable-tag"
                     style="margin-right: 16px"
                     [backgroundColor]="colors.orange[500]"
                 >
-                </blui-list-item-tag>
-                <blui-list-item-tag
+                </list-item-tag>
+                <list-item-tag
                     *ngIf="showRepresentativeOffline(account.representative)"
                     label="Rep Offline"
                     class="rep-offline-tag"
                     [backgroundColor]="colors.red[500]"
                     style="margin-right: 16px"
-                ></blui-list-item-tag>
+                ></list-item-tag>
             </div>
         </ng-template>
 
@@ -86,41 +86,63 @@ import { AppStateService } from '@app/services/app-state.service';
             class="dashboard-account-list fade"
             [disableRipple]="true"
         >
-            <blui-info-list-item
+            <mat-list-item
                 *ngFor="
                     let account of accounts | sort: sortDirection:accounts.length;
                     let i = index;
                     let even = even;
                     let last = last;
+                    let first = first;
                     trackBy: markUniqueAccount
                 "
+                style="position: relative"
                 (mouseenter)="hoverRowNumber = i"
                 (mouseleave)="hoverRowNumber = undefined"
                 [class.hovered]="hoverRowNumber === i"
-                [divider]="last ? undefined : 'full'"
                 [style.backgroundColor]="getItemBackgroundColor(even)"
                 (click)="openAccount(account.fullAddress)"
             >
-                <div
-                    blui-left-content
-                    style="display: flex; align-items: center; min-width: 72px;"
-                    [style.marginLeft.px]="vp.sm ? -8 : 0"
-                >
+                <div matListItemIcon [style.marginLeft.px]="vp.sm ? -8 : 0" style="width: 56px">
                     <img [src]="getMonkeyUrl(account.fullAddress)" loading="lazy" [height]="72" />
                     <div class="account-number mat-hint" [class.primary]="hoverRowNumber === i">
                         #{{ _util.numberWithCommas(account.index) }}
                     </div>
                 </div>
+                <div style="justify-content: space-between">
+                    <div style="flex-direction: column; align-items: flex-start; justify-content: center">
+                        <div class="mono mat-body-1 row-title" [class.primary]="hoverRowNumber === i">
+                            {{account.shortAddress}}
+                        </div>
+                        <div class="mat-body-2">represented by {{ formatRepresentative(account.representative) }}</div>
+                    </div>
+                    <div>
+                        <ng-container *ngIf="!vp.sm">
+                            <ng-template *ngTemplateOutlet="statusBadges; context: { account: this.account }"></ng-template>
+                            <ng-container *ngIf="account.representative; else unopenedAccountTag">
+                                <span> {{ account.formattedBalance }} BAN </span>
+                            </ng-container>
+                        </ng-container>
+                        <ng-template
+                            *ngTemplateOutlet="accountMoreOptions; context: { account: this.account }"
+                        ></ng-template>
+                    </div>
+                </div>
+                <mat-divider *ngIf="!last"></mat-divider>
+                <!--
+
+
+
+
                 <div
-                    blui-title
+                    matListItemTitle
+                    style="padding: 1px 0; z-index: 2"
                     class="mono"
                     [class.primary]="hoverRowNumber === i"
-                    style="padding: 1px 0; z-index: 2"
                     [style.fontSize.px]="vp.sm ? 15 : 'inherit'"
                 >
                     {{ account.shortAddress }}
                 </div>
-                <div blui-subtitle style="padding: 1px 0; display: flex; align-items: center">
+                <div matListItemLine style="padding: 1px 0; display: flex; align-items: center">
                     <ng-container *ngIf="!vp.sm && account.representative">
                         represented by {{ formatRepresentative(account.representative) }}
                     </ng-container>
@@ -131,12 +153,12 @@ import { AppStateService } from '@app/services/app-state.service';
                         </ng-container>
                     </ng-container>
                 </div>
-                <div blui-info *ngIf="vp.sm" style="margin-top: 4px">
+                <div info *ngIf="vp.sm" style="margin-top: 4px">
                     <div style="display: flex">
                         <ng-template *ngTemplateOutlet="statusBadges; context: { account: this.account }"></ng-template>
                     </div>
                 </div>
-                <div blui-right-content>
+                <div right-content>
                     <ng-container *ngIf="!vp.sm">
                         <ng-template *ngTemplateOutlet="statusBadges; context: { account: this.account }"></ng-template>
                         <ng-container *ngIf="account.representative; else unopenedAccountTag">
@@ -147,7 +169,8 @@ import { AppStateService } from '@app/services/app-state.service';
                         *ngTemplateOutlet="accountMoreOptions; context: { account: this.account }"
                     ></ng-template>
                 </div>
-            </blui-info-list-item>
+                -->
+            </mat-list-item>
         </mat-nav-list>
     `,
 })

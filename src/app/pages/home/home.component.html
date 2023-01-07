@@ -17,7 +17,7 @@
 
 <ng-template #home>
     <div class="app-body home-body" data-cy="home-wrapper" responsive>
-        <blui-spacer></blui-spacer>
+        <spacer></spacer>
 
         <div class="app-body-content home-content">
             <div *ngIf="!vp.sm" class="mat-headline-4 home-logo-wrapper">
@@ -64,11 +64,13 @@
             <strong style="visibility: hidden"><!-- Load error font styles --></strong>
         </div>
 
-        <blui-spacer></blui-spacer>
+        <spacer></spacer>
 
         <div style="display: flex; align-items: center; margin-top: 16px">
             <img src="assets/images/github-icon.svg" style="margin-right: 8px" />
-            <a [href]="githubUrl" target="_blank" style="text-align: center; margin: 8px 0px" class="link mat-body-1">GitHub</a>
+            <a [href]="githubUrl" target="_blank" style="text-align: center; margin: 8px 0px" class="link mat-body-1"
+                >GitHub</a
+            >
         </div>
     </div>
 </ng-template>

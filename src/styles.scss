@@ -1,11 +1,13 @@
 @use 'node_modules/@brightlayer-ui/colors/palette.scss' as blui;
 //@use 'assets/themes/banano-yellow';
-@use 'assets/themes/jungle-green';
+@use 'assets/themes/palettes/jungle-green';
 //@use 'assets/themes/nano-blue';
 @use 'assets/themes/common';
 @use '@angular/material' as mat;
+@use 'assets/themes/overlay';
 
 @include mat.core();
+@include overlay.overlay-common();
 
 html * {
     box-sizing: border-box;
@@ -105,6 +107,11 @@ body,
             }
         }
     }
+}
+
+.mdc-button__label {
+    font-size: .875rem;
+    letter-spacing: .5px;
 }
 
 /* Chrome, Safari, Edge, Opera */

@@ -69,7 +69,7 @@ export type FilterOverlayData = {
                     ></textarea>
                 </mat-form-field>
 
-                <blui-spacer></blui-spacer>
+                <spacer></spacer>
                 <mat-divider style="margin-left: -24px; margin-right: -24px"></mat-divider>
                 <div style="display: flex; justify-content: space-between; padding: 16px 0">
                     <button color="primary" mat-stroked-button (click)="closeDialog()" style="width: 100px;">

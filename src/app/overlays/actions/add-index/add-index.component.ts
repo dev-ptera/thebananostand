@@ -25,7 +25,7 @@ import { ADD_SPECIFIC_ACCOUNTS_BY_INDEX } from '@app/services/wallet-events.serv
                 </form>
             </div>
             {{ errorMessage }}
-            <blui-spacer></blui-spacer>
+            <spacer></spacer>
             <mat-divider style="margin-left: -48px; margin-right: -48px"></mat-divider>
             <div
                 mat-dialog-actions
