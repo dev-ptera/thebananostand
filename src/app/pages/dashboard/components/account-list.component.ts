@@ -111,13 +111,15 @@ import { AppStateService } from '@app/services/app-state.service';
                 <div style="justify-content: space-between">
                     <div style="flex-direction: column; align-items: flex-start; justify-content: center">
                         <div class="mono mat-body-1 row-title" [class.primary]="hoverRowNumber === i">
-                            {{account.shortAddress}}
+                            {{ account.shortAddress }}
                         </div>
                         <div class="mat-body-2">represented by {{ formatRepresentative(account.representative) }}</div>
                     </div>
                     <div>
                         <ng-container *ngIf="!vp.sm">
-                            <ng-template *ngTemplateOutlet="statusBadges; context: { account: this.account }"></ng-template>
+                            <ng-template
+                                *ngTemplateOutlet="statusBadges; context: { account: this.account }"
+                            ></ng-template>
                             <ng-container *ngIf="account.representative; else unopenedAccountTag">
                                 <span> {{ account.formattedBalance }} BAN </span>
                             </ng-container>

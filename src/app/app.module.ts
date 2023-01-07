@@ -82,7 +82,7 @@ import { MobileStepperModule } from '@app/components/mobile-stepper/mobile-stepp
 import { ListItemTagModule } from '@app/components/list-item-tag/list-item-tag.module';
 import { SpacerModule } from '@app/components/spacer/spacer.module';
 import { QrDialogComponent } from '@app/components/qr/qr.component';
-import {MatListModule} from "@angular/material/list";
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
     declarations: [
