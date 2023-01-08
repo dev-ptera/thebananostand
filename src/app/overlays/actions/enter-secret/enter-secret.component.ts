@@ -10,7 +10,7 @@ import { IMPORT_NEW_WALLET_FROM_SECRET } from '@app/services/wallet-events.servi
             <div class="overlay-content">
                 <div class="overlay-header">Enter Seed or Mnemonic</div>
                 <ng-container *ngIf="activeStep === 0">
-                    <div class="mat-body-1" style="margin-bottom: 24px">
+                    <div class="mat-body-1" style="margin-bottom: 32px">
                         Your secret phrase never leaves this website.
                     </div>
                     <mat-form-field appearance="fill">

@@ -138,16 +138,6 @@ textarea.mat-input-element,
     background: #dedede;
 }
 
-.blui-empty-state-description {
-    font-size: 0.875rem !important;
-    line-height: 1.57 !important;
-}
-
-.blui-list-item-tag-content .blui-list-item-tag-label {
-    text-transform: unset !important;
-    font-size: 11px !important;
-}
-
 .app-toolbar {
     display: flex;
     padding: 0 24px !important;
@@ -163,14 +153,6 @@ textarea.mat-input-element,
     }
 }
 
-.blui-user-menu-avatar {
-    background-color: unset !important;
-}
-
-.blui-toolbar-menu-label {
-    font-size: 20px !important;
-    font-weight: 600 !important;
-}
 
 .transition,
 .transition * {
@@ -226,28 +208,6 @@ textarea {
     max-width: unset !important;
 }
 
-.blui-mobile-stepper {
-    .mat-subheading-2 {
-        margin-bottom: 0 !important;
-    }
-    .mat-button-base {
-        width: 80px;
-    }
-}
-
-/*
-// BLUI style overrides.
-.blui-mobile-stepper-back-button-wrapper button {
-    margin-left: 0 !important;
-}
-.blui-mobile-stepper-next-button-wrapper button {
-    margin-right: 0 !important;
-}
-//HACK
-.blui-info-list-item-content .blui-info-list-item-title-wrapper {
-    line-height: 1.3 !important;
-}
-
 .mat-chip {
     cursor: pointer !important;
 }
@@ -266,10 +226,6 @@ textarea {
     button.mat-flat-button,
     button.mat-stroked-button {
         border-radius: 0.25rem !important;
-    }
-    .blui-list-item-tag,
-    .blui-list-item-tag-content {
-        border-radius: 0.875rem !important;
     }
     .sm {
         mat-card,
@@ -301,11 +257,6 @@ cdk-virtual-scroll-content-wrapper {
     border-bottom-right-radius: 1rem !important;
 }
 
-
-.blui-list-item-tag-content {
-    padding: 0 0.5rem !important;
-}
-
 .mat-bottom-sheet-container {
     .receive-overlay,
     .send-overlay,
@@ -334,9 +285,6 @@ cdk-virtual-scroll-content-wrapper {
     padding: 2rem 2rem 0rem 2rem!important;
     border-top-left-radius: 32px !important;
     border-top-right-radius: 32px !important;
-    .blui-user-menu-header-content {
-        margin-bottom: 1rem !important;
-    }
     .mat-dialog-title {
         margin-bottom: 2rem !important;
     }

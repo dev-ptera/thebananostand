@@ -38,7 +38,14 @@
         --mdc-outlined-button-outline-color: var(--primary);
     }
 
+    .mat-expansion-panel-header.mat-expanded {
+        border-bottom: solid 1px var(--divider);
+    }
+
     .mat-mdc-card-outlined {
         //    --mdc-outlined-card-outline-color: rgba(138, 138, 138, 0.12);
+    }
+    .mat-divider {
+        border-top-color: var(--divider);
     }
 }

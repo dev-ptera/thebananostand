@@ -12,7 +12,7 @@
         font-size: mat.font-size(typography.$custom-typography, $class);
         font-weight: mat.font-weight(typography.$custom-typography, $class);
         font-family: mat.font-family(typography.$custom-typography, $class);
-        margin-bottom: 1rem;
+        margin-bottom: 2rem;
     }
 
     .cdk-overlay-container .mat-bottom-sheet-container .mat-mdc-button-base {
@@ -27,6 +27,7 @@
 
     }
     .overlay-content {
+        max-width: 600px;
         $horizontal-padding: 24px;
         padding: 24px $horizontal-padding 0 $horizontal-padding;
         display: flex;
@@ -39,6 +40,11 @@
         .overlay-footer .mat-mdc-button-base {
             max-width: 120px;
             min-width: 80px;
+        }
+        .overlay-footer {
+            display: flex;
+            justify-content: space-between;
+            margin: 1rem 0;
         }
     }
 

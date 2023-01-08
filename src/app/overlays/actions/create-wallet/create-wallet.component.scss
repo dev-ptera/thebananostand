@@ -28,10 +28,14 @@
             height: $size;
             line-height: $size;
         }
-        .mat-mdc-icon-button {
-            height: 32px;
-            width: 32px;
-            line-height: 32px;
+        .mat-mdc-icon-button,
+        .mat-mdc-icon-button .mat-mdc-button-touch-target {
+            --mdc-icon-button-state-layer-size: 32px;
+            padding: 0;
+            height: var(--mdc-icon-button-state-layer-size);
+            width: var(--mdc-icon-button-state-layer-size);
+            line-height: var(--mdc-icon-button-state-layer-size);
+            font-size: var(--mdc-icon-button-state-layer-size);
         }
     }
 }
