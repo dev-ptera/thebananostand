@@ -28,14 +28,7 @@ import { ADD_SPECIFIC_ACCOUNTS_BY_INDEX } from '@app/services/wallet-events.serv
                 {{ errorMessage }}
             </div>
             <div class="overlay-footer">
-                <button
-                    mat-stroked-button
-                    mat-dialog-close
-                    color="primary"
-                    (click)="close.emit()"
-                >
-                    Close
-                </button>
+                <button mat-stroked-button mat-dialog-close color="primary" (click)="close.emit()">Close</button>
                 <button
                     data-cy="add-account-overlay-button"
                     mat-flat-button

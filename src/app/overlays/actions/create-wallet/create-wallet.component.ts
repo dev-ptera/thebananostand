@@ -23,7 +23,7 @@ import { SecretService } from '@app/services/secret.service';
                                     <button mat-icon-button (click)="copySeed(); $event.stopPropagation()">
                                         <mat-icon>{{
                                             hasRecentlyCopiedSeed ? 'check_circle' : 'content_copy'
-                                            }}</mat-icon>
+                                        }}</mat-icon>
                                     </button>
                                 </div>
                             </mat-panel-title>
@@ -38,7 +38,7 @@ import { SecretService } from '@app/services/secret.service';
                                     <button mat-icon-button (click)="copyMnemonic(); $event.stopPropagation()">
                                         <mat-icon>{{
                                             hasRecentlyCopiedMnemonic ? 'check_circle' : 'content_copy'
-                                            }}</mat-icon>
+                                        }}</mat-icon>
                                     </button>
                                 </div>
                             </mat-panel-title>
@@ -62,13 +62,7 @@ import { SecretService } from '@app/services/secret.service';
                 </mat-checkbox>
             </div>
             <div class="overlay-footer">
-                <button
-                    mat-stroked-button
-                    mat-dialog-close
-                    style="width: 100px"
-                    color="primary"
-                    (click)="close.emit()"
-                >
+                <button mat-stroked-button mat-dialog-close style="width: 100px" color="primary" (click)="close.emit()">
                     Close
                 </button>
                 <button

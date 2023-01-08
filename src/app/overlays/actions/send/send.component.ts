@@ -18,9 +18,9 @@ export type SendOverlayData = {
     template: `
         <div class="send-overlay">
             <div
-                    *ngIf="hasSuccess === true"
-                    mat-dialog-content
-                    style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
+                *ngIf="hasSuccess === true"
+                mat-dialog-content
+                style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
                 <app-empty-state data-cy="send-success-state">
                     <mat-icon empty-icon> check_circle</mat-icon>
@@ -39,10 +39,10 @@ export type SendOverlayData = {
             </div>
 
             <div
-                    *ngIf="hasSuccess === false"
-                    mat-dialog-content
-                    class="overlay-body"
-                    style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
+                *ngIf="hasSuccess === false"
+                mat-dialog-content
+                class="overlay-body"
+                style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
                 <app-empty-state>
                     <mat-icon empty-icon> error</mat-icon>
@@ -62,9 +62,9 @@ export type SendOverlayData = {
                     <ng-container *ngIf="activeStep === 0">
                         <div style="margin-bottom: 8px">You are attempting to withdraw funds from:</div>
                         <div
-                                class="mono"
-                                style="word-break: break-all"
-                                [innerHTML]="util.formatHtmlAddress(data.address)"
+                            class="mono"
+                            style="word-break: break-all"
+                            [innerHTML]="util.formatHtmlAddress(data.address)"
                         ></div>
                     </ng-container>
 
@@ -73,25 +73,25 @@ export type SendOverlayData = {
                         <mat-form-field style="width: 100%;" appearance="fill">
                             <mat-label>Amount</mat-label>
                             <input
-                                    matInput
-                                    type="number"
-                                    data-cy="send-amount-input"
-                                    [max]="data.maxSendAmount"
-                                    [(ngModel)]="sendAmount"
-                                    (ngModelChange)="sendAll = sendAmount === data.maxSendAmount"
+                                matInput
+                                type="number"
+                                data-cy="send-amount-input"
+                                [max]="data.maxSendAmount"
+                                [(ngModel)]="sendAmount"
+                                (ngModelChange)="sendAll = sendAmount === data.maxSendAmount"
                             />
                             <button
-                                    matSuffix
-                                    mat-icon-button
-                                    aria-label="Send All"
-                                    (click)="sendAll = !sendAll; toggleSendAll()"
+                                matSuffix
+                                mat-icon-button
+                                aria-label="Send All"
+                                (click)="sendAll = !sendAll; toggleSendAll()"
                             >
                                 <mat-icon>account_balance_wallet</mat-icon>
                             </button>
                         </mat-form-field>
                         <mat-hint
-                                *ngIf="sendAmount > data.maxSendAmount"
-                                style="margin-top: -8px; margin-bottom: 8px; display: flex"
+                            *ngIf="sendAmount > data.maxSendAmount"
+                            style="margin-top: -8px; margin-bottom: 8px; display: flex"
                         >
                             Max transferable amount is {{ data.maxSendAmount }}.
                         </mat-hint>
@@ -103,11 +103,11 @@ export type SendOverlayData = {
                         <mat-form-field style="width: 100%;" appearance="fill">
                             <mat-label>Recipient Address</mat-label>
                             <textarea
-                                    data-cy="send-recipient-input"
-                                    style="resize: none"
-                                    matInput
-                                    type="value"
-                                    [(ngModel)]="recipient"
+                                data-cy="send-recipient-input"
+                                style="resize: none"
+                                matInput
+                                type="value"
+                                [(ngModel)]="recipient"
                             ></textarea>
                         </mat-form-field>
                     </ng-container>
@@ -118,8 +118,8 @@ export type SendOverlayData = {
                         <div style="margin-bottom: 16px;">{{ confirmedSendAmount }}</div>
                         <div style="font-weight: 600">To</div>
                         <div
-                                style="word-break: break-all; font-family: monospace"
-                                [innerHTML]="util.formatHtmlAddress(recipient)"
+                            style="word-break: break-all; font-family: monospace"
+                            [innerHTML]="util.formatHtmlAddress(recipient)"
                         ></div>
                     </ng-container>
                 </div>
@@ -131,13 +131,13 @@ export type SendOverlayData = {
                         <ng-container *ngIf="activeStep > 0">Back</ng-container>
                     </button>
                     <button
-                            mat-flat-button
-                            next-button
-                            color="primary"
-                            (click)="next()"
-                            class="loading-button"
-                            data-cy="send-next-button"
-                            [disabled]="!canContinue()"
+                        mat-flat-button
+                        next-button
+                        color="primary"
+                        (click)="next()"
+                        class="loading-button"
+                        data-cy="send-next-button"
+                        [disabled]="!canContinue()"
                     >
                         <ng-container *ngIf="activeStep < lastStep">Next</ng-container>
                         <ng-container *ngIf="activeStep === lastStep">
