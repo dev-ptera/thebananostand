@@ -17,9 +17,9 @@ export type ReceiveOverlayData = {
     template: `
         <div class="receive-overlay">
             <div
-                *ngIf="hasSuccess"
-                mat-dialog-content
-                style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
+                    *ngIf="hasSuccess"
+                    mat-dialog-content
+                    style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
                 <app-empty-state data-cy="receive-success-state">
                     <mat-icon blui-empty-icon> check_circle</mat-icon>
@@ -36,10 +36,10 @@ export type ReceiveOverlayData = {
             </div>
 
             <div
-                *ngIf="hasErrorReceiving"
-                mat-dialog-content
-                class="overlay-content"
-                style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
+                    *ngIf="hasErrorReceiving"
+                    mat-dialog-content
+                    class="overlay-body"
+                    style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
             >
                 <app-empty-state>
                     <mat-icon blui-empty-icon> error</mat-icon>
@@ -72,29 +72,29 @@ export type ReceiveOverlayData = {
 
                 <blui-spacer></blui-spacer>
                 <mat-progress-bar
-                    *ngIf="maxSteps !== 1"
-                    mode="determinate"
-                    [value]="bufferValue"
-                    style="margin-left: -24px; margin-right: -24px; width: unset;"
+                        *ngIf="maxSteps !== 1"
+                        mode="determinate"
+                        [value]="bufferValue"
+                        style="margin-left: -24px; margin-right: -24px; width: unset;"
                 ></mat-progress-bar>
                 <mat-divider *ngIf="maxSteps === 1" style="margin-left: -48px; margin-right: -48px"></mat-divider>
                 <blui-mobile-stepper [activeStep]="activeStep" [steps]="maxSteps" variant="text">
                     <button
-                        mat-stroked-button
-                        blui-back-button
-                        color="primary"
-                        data-cy="receive-close-button"
-                        (click)="closeDialog()"
+                            mat-stroked-button
+                            blui-back-button
+                            color="primary"
+                            data-cy="receive-close-button"
+                            (click)="closeDialog()"
                     >
                         Close
                     </button>
                     <button
-                        mat-flat-button
-                        blui-next-button
-                        color="primary"
-                        class="loading-button"
-                        data-cy="receive-button"
-                        (click)="receiveTransaction()"
+                            mat-flat-button
+                            blui-next-button
+                            color="primary"
+                            class="loading-button"
+                            data-cy="receive-button"
+                            (click)="receiveTransaction()"
                     >
                         <div class="spinner-container" data-cy="receive-loading" [class.isLoading]="isReceivingTx">
                             <mat-spinner class="primary-spinner" diameter="20"></mat-spinner>

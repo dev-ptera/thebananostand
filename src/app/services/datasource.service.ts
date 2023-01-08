@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { NanoClient } from '@dev-ptera/nano-node-rpc';
 
 export type Datasource = {
-    alias: 'Batman' | 'Creeper' | 'Jungle Tv' | 'Booster' | 'Kalium';
+    alias: 'Batman' | 'Creeper' | 'Jungle Tv' | 'Booster' | 'Kalium' | 'Rain City',
     url: string;
     isAccessible: boolean;
     isSelected: boolean;
@@ -36,6 +36,7 @@ export class DatasourceService {
         /* { alias: 'Jungle TV', url: 'https://public.node.jungletv.live/rpc', isAccessible: false, isSelected: false }, */ // Can't do work_generate
         { alias: 'Booster', url: 'https://booster.dev-ptera.com/banano-rpc', isAccessible: false, isSelected: false },
         { alias: 'Kalium', url: 'https://kaliumapi.appditto.com/api', isAccessible: false, isSelected: false },
+        // { alias: 'Rain City', url: 'https://rainstorm.city/api', isAccessible: false, isSelected: false } // Nano node, but can generate work (?)
     ];
 
     private rpcNode: NanoClient;

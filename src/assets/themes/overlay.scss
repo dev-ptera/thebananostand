@@ -7,48 +7,61 @@
         --mdc-dialog-container-shape: 1rem;
     }
 
+    .overlay-action-container {
+        display: flex;
+        flex-direction: column;
+    }
     .overlay-header {
         $class: 'headline-6';
         font-size: mat.font-size(typography.$custom-typography, $class);
         font-weight: mat.font-weight(typography.$custom-typography, $class);
         font-family: mat.font-family(typography.$custom-typography, $class);
-        margin-bottom: 2rem;
+        padding-bottom: 24px;
+        padding-top: 32px;
     }
-
-    .cdk-overlay-container .mat-bottom-sheet-container .mat-mdc-button-base {
-        border-radius: 1rem;
-        height: 42px;
+    .overlay-body {
+        height: 100%;
+        overflow: auto;
+        mat-form-field {
+            width: 100%;
+        }
     }
-
-    .cdk-overlay-container .mat-bottom-sheet-container {
-        padding: 0;
-        border-top-left-radius: 32px;
-        border-top-right-radius: 32px;
-
-    }
-    .overlay-content {
-        max-width: 600px;
-        $horizontal-padding: 24px;
-        padding: 24px $horizontal-padding 0 $horizontal-padding;
+    .overlay-footer {
+        padding-top: 16px;
+        padding-bottom: 16px;
+        border-top: solid 1px var(--divider);
         display: flex;
-        flex: 1 1 0px;
-        flex-direction: column;
+        justify-content: space-between;
+        .mat-mdc-button-base {
+            max-width: 130px;
+            min-width: 80px;
+        }
+    }
+    .overlay-body, .overlay-header, .overlay-footer {
+        $horizontal-padding: 24px;
+        padding-left: $horizontal-padding;
+        padding-right: $horizontal-padding;
         mat-divider {
             margin-left: -$horizontal-padding;
             margin-right: -$horizontal-padding;
         }
-        .overlay-footer .mat-mdc-button-base {
-            max-width: 120px;
-            min-width: 80px;
-        }
-        .overlay-footer {
-            display: flex;
-            justify-content: space-between;
-            margin: 1rem 0;
-        }
     }
 
-    .sm .overlay-footer .mat-mdc-button-base {
-        min-width: 100px;
+    /* Mobile Overlay Styles */
+    .cdk-overlay-container .mat-bottom-sheet-container {
+        padding: 0;
+        border-top-left-radius: 32px;
+        border-top-right-radius: 32px;
+        .overlay-action-container {
+            width: 100%;
+            max-width: unset;
+        }
+        .mat-mdc-button-base {
+            border-radius: 1rem;
+            height: 42px;
+        }
+        .overlay-footer .mat-mdc-button-base {
+            min-width: 100px;
+        }
     }
 }

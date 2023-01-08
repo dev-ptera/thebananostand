@@ -1,13 +1,5 @@
 .create-wallet-overlay {
-    max-width: 340px;
-    width: 340px;
-    height: 1000px;
-    max-height: 600px;
-    display: flex;
-    flex-direction: column;
-    .mat-headline-6 {
-        margin-bottom: 0;
-    }
+    width: 380px;
     ::ng-deep .mat-expansion-panel-body {
         padding-top: 16px;
     }

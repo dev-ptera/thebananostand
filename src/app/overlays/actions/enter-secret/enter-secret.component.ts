@@ -6,9 +6,9 @@ import { IMPORT_NEW_WALLET_FROM_SECRET } from '@app/services/wallet-events.servi
     selector: 'app-enter-secret-overlay',
     styleUrls: ['enter-secret.component.scss'],
     template: `
-        <div class="enter-secret-overlay">
-            <div class="overlay-content">
-                <div class="overlay-header">Enter Seed or Mnemonic</div>
+        <div class="enter-secret-overlay overlay-action-container">
+            <div class="overlay-header">Enter Seed or Mnemonic</div>
+            <div class="overlay-body">
                 <ng-container *ngIf="activeStep === 0">
                     <div class="mat-body-1" style="margin-bottom: 32px">
                         Your secret phrase never leaves this website.
@@ -46,14 +46,13 @@ import { IMPORT_NEW_WALLET_FROM_SECRET } from '@app/services/wallet-events.servi
                         </button>
                     </mat-form-field>
                 </ng-container>
-
                 <div *ngIf="error" style="display: flex; align-items: center;">
                     <mat-icon color="warn">error</mat-icon>
                     <span style="margin-left: 8px">{{ error }}</span>
                 </div>
-                <spacer></spacer>
-                <mat-divider></mat-divider>
-                <mobile-stepper [activeStep]="activeStep" [steps]="maxSteps" class="overlay-footer">
+            </div>
+            <div class="overlay-footer">
+                <mobile-stepper [activeStep]="activeStep" [steps]="maxSteps">
                     <button mat-stroked-button back-button color="primary" (click)="back()">
                         <ng-container *ngIf="activeStep === 0">Close</ng-container>
                         <ng-container *ngIf="activeStep > 0">Back</ng-container>

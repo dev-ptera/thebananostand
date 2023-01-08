@@ -11,9 +11,9 @@ import { SecretService } from '@app/services/secret.service';
     selector: 'app-create-wallet-overlay',
     styleUrls: ['create-wallet.component.scss'],
     template: `
-        <div class="create-wallet-overlay">
-            <div class="overlay-content">
-                <div class="overlay-header">Create a new wallet?</div>
+        <div class="create-wallet-overlay overlay-action-container">
+            <div class="overlay-header">Create a new wallet?</div>
+            <div class="overlay-body">
                 <mat-accordion style="margin-bottom: 24px">
                     <mat-expansion-panel [expanded]="true" class="mat-elevation-z0 divider-border">
                         <mat-expansion-panel-header>
@@ -23,7 +23,7 @@ import { SecretService } from '@app/services/secret.service';
                                     <button mat-icon-button (click)="copySeed(); $event.stopPropagation()">
                                         <mat-icon>{{
                                             hasRecentlyCopiedSeed ? 'check_circle' : 'content_copy'
-                                        }}</mat-icon>
+                                            }}</mat-icon>
                                     </button>
                                 </div>
                             </mat-panel-title>
@@ -38,7 +38,7 @@ import { SecretService } from '@app/services/secret.service';
                                     <button mat-icon-button (click)="copyMnemonic(); $event.stopPropagation()">
                                         <mat-icon>{{
                                             hasRecentlyCopiedMnemonic ? 'check_circle' : 'content_copy'
-                                        }}</mat-icon>
+                                            }}</mat-icon>
                                     </button>
                                 </div>
                             </mat-panel-title>
@@ -50,7 +50,7 @@ import { SecretService } from '@app/services/secret.service';
                         </div>
                     </mat-expansion-panel>
                 </mat-accordion>
-                <div class="mat-body-2">
+                <div class="mat-body-2" style="margin-top: 24px">
                     This secret text allows you to access your Banano using any wallet, such as
                     <a href="https://kalium.banano.cc/" target="_blank" class="link">Kalium</a> or
                     <a href="https://vault.banano.cc/" target="_blank" class="link">Banano Vault</a>. Losing this secret
@@ -60,29 +60,27 @@ import { SecretService } from '@app/services/secret.service';
                 <mat-checkbox style="margin: 16px 0" [(ngModel)]="hasConfirmedBackup">
                     I have saved my secret
                 </mat-checkbox>
-                <spacer></spacer>
-                <mat-divider></mat-divider>
-                <div class="overlay-footer">
-                    <button
-                        mat-stroked-button
-                        mat-dialog-close
-                        style="width: 100px"
-                        color="primary"
-                        (click)="close.emit()"
-                    >
-                        Close
-                    </button>
-                    <button
-                        data-cy="create-wallet-overlay-button"
-                        mat-flat-button
-                        style="width: 100px"
-                        color="primary"
-                        [disabled]="!hasConfirmedBackup"
-                        (click)="createWallet()"
-                    >
-                        Create
-                    </button>
-                </div>
+            </div>
+            <div class="overlay-footer">
+                <button
+                    mat-stroked-button
+                    mat-dialog-close
+                    style="width: 100px"
+                    color="primary"
+                    (click)="close.emit()"
+                >
+                    Close
+                </button>
+                <button
+                    data-cy="create-wallet-overlay-button"
+                    mat-flat-button
+                    style="width: 100px"
+                    color="primary"
+                    [disabled]="!hasConfirmedBackup"
+                    (click)="createWallet()"
+                >
+                    Create
+                </button>
             </div>
         </div>
     `,

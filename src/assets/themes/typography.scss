@@ -26,7 +26,7 @@ $custom-typography: mat.define-typography-config(
     $headline-4: mat.define-typography-level(34px, 1.2, 400, $custom-font, .25px),
     $headline-5: mat.define-typography-level(24px, 1.334, 400, $custom-font, 0),
     $headline-6: mat.define-typography-level(20px, 1.6, 600, $custom-font, 0.15px),
-    $subtitle-1: mat.define-typography-level(16px, 1.75, 400, $custom-font, .15px),
+    $subtitle-1: mat.define-typography-level(16px, 1.75, 600, $custom-font, .15px),
     $subtitle-2: mat.define-typography-level(14px, 1.4, 600, $custom-font, .1px),
     $body-1: mat.define-typography-level(16px, 1.5, 400, $custom-font, normal),
     $body-2: mat.define-typography-level(14px, 1.4, 400, $custom-font, .25px),
@@ -48,8 +48,8 @@ $custom-typography: mat.define-typography-config(
     .mat-body-2,
     .mat-caption,
     .mat-button {
-        color: var(--text);
         margin-bottom: 0;
+        color: var(--text);
     }
 
     .mat-overline {

@@ -75,6 +75,7 @@ import { AppStateService } from '@app/services/app-state.service';
                     label="Rep Offline"
                     class="rep-offline-tag"
                     [backgroundColor]="colors.red[500]"
+                    [fontColor]="colors.white[50]"
                     style="margin-right: 16px"
                 ></list-item-tag>
             </div>
