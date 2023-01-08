@@ -12,6 +12,7 @@
         flex-direction: column;
     }
     .overlay-header {
+        color: var(--text);
         $class: 'headline-6';
         font-size: mat.font-size(typography.$custom-typography, $class);
         font-weight: mat.font-weight(typography.$custom-typography, $class);

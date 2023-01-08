@@ -15,93 +15,75 @@ export type ReceiveOverlayData = {
     selector: 'app-receive-overlay',
     styleUrls: ['receive.component.scss'],
     template: `
-        <div class="receive-overlay">
-            <div
-                *ngIf="hasSuccess"
-                mat-dialog-content
-                style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
-            >
+        <div class="receive-overlay overlay-action-container">
+            <div *ngIf="hasSuccess" class="overlay-body">
                 <app-empty-state data-cy="receive-success-state">
-                    <mat-icon blui-empty-icon> check_circle</mat-icon>
-                    <div blui-title>Received Successfully</div>
-                    <div blui-description>
+                    <mat-icon empty-icon> check_circle</mat-icon>
+                    <div title>Received Successfully</div>
+                    <div description>
                         All transactions have been successfully received. You can now close this window.
                     </div>
-                    <div blui-actions>
-                        <button mat-flat-button color="primary" class="close-button" (click)="closeDialog()">
-                            Close
-                        </button>
-                    </div>
+                    <button mat-flat-button color="primary" class="close-button" (click)="closeDialog()">Close</button>
                 </app-empty-state>
             </div>
 
-            <div
-                *ngIf="hasErrorReceiving"
-                mat-dialog-content
-                class="overlay-body"
-                style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
-            >
+            <div *ngIf="hasErrorReceiving" class="overlay-body">
                 <app-empty-state>
-                    <mat-icon blui-empty-icon> error</mat-icon>
-                    <div blui-title>Transaction Failed</div>
-                    <div blui-description>Your transaction could not be completed.</div>
-                    <div blui-actions>
-                        <button mat-flat-button color="primary" class="close-button" (click)="closeDialog()">
-                            Close
-                        </button>
-                    </div>
+                    <mat-icon empty-icon> error</mat-icon>
+                    <div title>Transaction Failed</div>
+                    <div description>Your transaction could not be completed.</div>
+                    <button mat-flat-button color="primary" class="close-button" (click)="closeDialog()">Close</button>
                 </app-empty-state>
             </div>
 
             <ng-container *ngIf="!hasSuccess && !hasErrorReceiving">
-                <h1 mat-dialog-title>Receive Transaction</h1>
-                <div mat-dialog-content style="margin-bottom: 32px;">
-                    <ng-container>
-                        <div style="margin-bottom: 8px">
-                            You are attempting to receive an incoming transaction(s).
-                            <ng-container *ngIf="!isLedger"> Use the button below to receive each block.</ng-container>
-                            <ng-container *ngIf="isLedger">
-                                Use the button below and your ledger device to manually receive each block.
-                            </ng-container>
-                        </div>
-                        <div style="margin-bottom: 8px">
-                            <strong>{{ data.blocks.length - activeStep }}</strong> receivable transaction(s) remaining.
-                        </div>
-                    </ng-container>
+                <div class="overlay-header">Receive Transaction</div>
+                <div class="overlay-body">
+                    <div style="margin-bottom: 8px" class="mat-body-1">
+                        You are attempting to receive an incoming transaction(s).
+                        <ng-container *ngIf="!isLedger"> Use the button below to receive each block.</ng-container>
+                        <ng-container *ngIf="isLedger">
+                            Use the button below and your ledger device to manually receive each block.
+                        </ng-container>
+                    </div>
+                    <div style="margin-bottom: 8px" class="mat-body-1">
+                        <strong>{{ data.blocks.length - activeStep }}</strong> receivable transaction(s) remaining.
+                    </div>
+                    <spacer></spacer>
+                    <mat-progress-bar
+                        *ngIf="maxSteps !== 1"
+                        mode="determinate"
+                        [value]="bufferValue"
+                        style="margin-left: -24px; margin-right: -24px; width: unset;"
+                    ></mat-progress-bar>
                 </div>
 
-                <blui-spacer></blui-spacer>
-                <mat-progress-bar
-                    *ngIf="maxSteps !== 1"
-                    mode="determinate"
-                    [value]="bufferValue"
-                    style="margin-left: -24px; margin-right: -24px; width: unset;"
-                ></mat-progress-bar>
-                <mat-divider *ngIf="maxSteps === 1" style="margin-left: -48px; margin-right: -48px"></mat-divider>
-                <blui-mobile-stepper [activeStep]="activeStep" [steps]="maxSteps" variant="text">
-                    <button
-                        mat-stroked-button
-                        blui-back-button
-                        color="primary"
-                        data-cy="receive-close-button"
-                        (click)="closeDialog()"
-                    >
-                        Close
-                    </button>
-                    <button
-                        mat-flat-button
-                        blui-next-button
-                        color="primary"
-                        class="loading-button"
-                        data-cy="receive-button"
-                        (click)="receiveTransaction()"
-                    >
-                        <div class="spinner-container" data-cy="receive-loading" [class.isLoading]="isReceivingTx">
-                            <mat-spinner class="primary-spinner" diameter="20"></mat-spinner>
-                        </div>
-                        <span *ngIf="!isReceivingTx">Receive</span>
-                    </button>
-                </blui-mobile-stepper>
+                <div class="overlay-footer">
+                    <mobile-stepper [activeStep]="activeStep" [steps]="maxSteps" variant="text">
+                        <button
+                            mat-stroked-button
+                            back-button
+                            color="primary"
+                            data-cy="receive-close-button"
+                            (click)="closeDialog()"
+                        >
+                            Close
+                        </button>
+                        <button
+                            mat-flat-button
+                            next-button
+                            color="primary"
+                            class="loading-button"
+                            data-cy="receive-button"
+                            (click)="receiveTransaction()"
+                        >
+                            <div class="spinner-container" data-cy="receive-loading" [class.isLoading]="isReceivingTx">
+                                <mat-spinner class="primary-spinner" diameter="20"></mat-spinner>
+                            </div>
+                            <span *ngIf="!isReceivingTx">Receive</span>
+                        </button>
+                    </mobile-stepper>
+                </div>
             </ng-container>
         </div>
     `,

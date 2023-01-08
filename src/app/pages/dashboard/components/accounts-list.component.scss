@@ -18,7 +18,6 @@ $mobileDashboardHeaderHeight: 120px;
 
     .row-title {
         font-weight: 600;
-        font-size: 15px;
     }
 
     .mat-divider {
@@ -26,6 +25,14 @@ $mobileDashboardHeaderHeight: 120px;
         bottom: 0;
         left: 0;
         width: 100%;
+    }
+
+    .account-address-container {
+        flex-direction: column;
+        align-items: flex-start !important;
+        justify-content: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .mat-mdc-list-item.mdc-list-item.mat-mdc-list-item-interactive.mdc-list-item--with-leading-icon.mdc-list-item--with-one-line {

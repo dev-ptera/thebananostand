@@ -16,12 +16,15 @@
     }
 }
 
-.rep-offline-banner {
+.mat-toolbar.rep-offline-banner {
     height: unset;
     min-height: 36px;
     display: flex;
     justify-content: space-between;
     padding: 4px 36px 4px 36px !important;
+    * {
+        color: var(--text-contrast);
+    }
     &.sm {
         padding: 8px 12px 8px 20px !important;
     }

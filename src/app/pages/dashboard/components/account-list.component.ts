@@ -111,7 +111,7 @@ import { AppStateService } from '@app/services/app-state.service';
                     </div>
                 </div>
                 <div style="justify-content: space-between">
-                    <div style="flex-direction: column; align-items: flex-start; justify-content: center">
+                    <div class="account-address-container">
                         <div class="mono mat-body-1 row-title" [class.primary]="hoverRowNumber === i">
                             {{ account.shortAddress }}
                         </div>
@@ -119,7 +119,7 @@ import { AppStateService } from '@app/services/app-state.service';
                             represented by {{ formatRepresentative(account.representative) }}
                         </div>
                     </div>
-                    <div>
+                    <div style="margin-left: 16px">
                         <ng-container *ngIf="!vp.sm">
                             <ng-template
                                 *ngTemplateOutlet="statusBadges; context: { account: this.account }"

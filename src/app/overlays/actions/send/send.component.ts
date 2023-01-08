@@ -16,12 +16,8 @@ export type SendOverlayData = {
     selector: 'app-send-overlay',
     styleUrls: ['send.component.scss'],
     template: `
-        <div class="send-overlay">
-            <div
-                *ngIf="hasSuccess === true"
-                mat-dialog-content
-                style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
-            >
+        <div class="send-overlay overlay-action-container">
+            <div *ngIf="hasSuccess === true" class="overlay-body">
                 <app-empty-state data-cy="send-success-state">
                     <mat-icon empty-icon> check_circle</mat-icon>
                     <div title>Transaction Sent</div>
@@ -30,46 +26,35 @@ export type SendOverlayData = {
                         <span class="link" [style.color]="colors.blue[500]" (click)="openLink()">here.</span>
                         You can now close this window.
                     </div>
-                    <div actions>
-                        <button mat-flat-button color="primary" class="close-button" (click)="closeDialog()">
-                            Close
-                        </button>
-                    </div>
+                    <button mat-flat-button color="primary" (click)="closeDialog()">Close</button>
                 </app-empty-state>
             </div>
 
-            <div
-                *ngIf="hasSuccess === false"
-                mat-dialog-content
-                class="overlay-body"
-                style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
-            >
+            <div *ngIf="hasSuccess === false" class="overlay-body">
                 <app-empty-state>
                     <mat-icon empty-icon> error</mat-icon>
                     <div title>Transaction Failed</div>
                     <div description>Your transaction could not be completed.</div>
-                    <div actions>
-                        <button mat-flat-button color="primary" class="close-button" (click)="closeDialog()">
-                            Close
-                        </button>
-                    </div>
+                    <button mat-flat-button color="primary" (click)="closeDialog()">Close</button>
                 </app-empty-state>
             </div>
 
             <ng-container *ngIf="hasSuccess === undefined">
-                <h1 mat-dialog-title>Send Amount</h1>
-                <div mat-dialog-content style="margin-bottom: 32px; height: 100%">
+                <div class="overlay-header">Send Transaction</div>
+                <div class="overlay-body">
                     <ng-container *ngIf="activeStep === 0">
-                        <div style="margin-bottom: 8px">You are attempting to withdraw funds from:</div>
+                        <div class="mat-body-1" style="margin-bottom: 8px">
+                            You are attempting to withdraw funds from:
+                        </div>
                         <div
-                            class="mono"
+                            class="mono mat-body-1"
                             style="word-break: break-all"
                             [innerHTML]="util.formatHtmlAddress(data.address)"
                         ></div>
                     </ng-container>
 
                     <ng-container *ngIf="activeStep === 1">
-                        <div style="margin-bottom: 24px">Please enter the amount to transfer.</div>
+                        <div class="mat-body-1" style="margin-bottom: 24px">Please enter the amount to transfer.</div>
                         <mat-form-field style="width: 100%;" appearance="fill">
                             <mat-label>Amount</mat-label>
                             <input
@@ -99,8 +84,8 @@ export type SendOverlayData = {
                     </ng-container>
 
                     <ng-container *ngIf="activeStep === 2">
-                        <div style="margin-bottom: 24px">Please enter the recipient address.</div>
-                        <mat-form-field style="width: 100%;" appearance="fill">
+                        <div class="mat-body-1" style="margin-bottom: 24px">Please enter the recipient address.</div>
+                        <mat-form-field style="width: 100%; height: 140px" appearance="fill">
                             <mat-label>Recipient Address</mat-label>
                             <textarea
                                 data-cy="send-recipient-input"
@@ -112,7 +97,7 @@ export type SendOverlayData = {
                         </mat-form-field>
                     </ng-container>
 
-                    <ng-container *ngIf="activeStep === 3">
+                    <div *ngIf="activeStep === 3" class="mat-body-1">
                         <div style="margin-bottom: 24px">Please confirm the transaction details below:</div>
                         <div style="font-weight: 600">Send</div>
                         <div style="margin-bottom: 16px;">{{ confirmedSendAmount }}</div>
@@ -121,33 +106,43 @@ export type SendOverlayData = {
                             style="word-break: break-all; font-family: monospace"
                             [innerHTML]="util.formatHtmlAddress(recipient)"
                         ></div>
-                    </ng-container>
+                    </div>
                 </div>
-                <spacer></spacer>
-                <mat-divider style="margin-left: -48px; margin-right: -48px"></mat-divider>
-                <mobile-stepper [activeStep]="activeStep" [steps]="maxSteps">
-                    <button mat-stroked-button back-button color="primary" (click)="back()" data-cy="send-close-button">
-                        <ng-container *ngIf="activeStep === 0">Close</ng-container>
-                        <ng-container *ngIf="activeStep > 0">Back</ng-container>
-                    </button>
-                    <button
-                        mat-flat-button
-                        next-button
-                        color="primary"
-                        (click)="next()"
-                        class="loading-button"
-                        data-cy="send-next-button"
-                        [disabled]="!canContinue()"
-                    >
-                        <ng-container *ngIf="activeStep < lastStep">Next</ng-container>
-                        <ng-container *ngIf="activeStep === lastStep">
-                            <div class="spinner-container" [class.isLoading]="isProcessingTx" data-cy="send-loading">
-                                <mat-spinner class="primary-spinner" diameter="20"></mat-spinner>
-                            </div>
-                            <span *ngIf="!isProcessingTx"> Send </span>
-                        </ng-container>
-                    </button>
-                </mobile-stepper>
+                <div class="overlay-footer">
+                    <mobile-stepper [activeStep]="activeStep" [steps]="maxSteps">
+                        <button
+                            mat-stroked-button
+                            back-button
+                            color="primary"
+                            (click)="back()"
+                            data-cy="send-close-button"
+                        >
+                            <ng-container *ngIf="activeStep === 0">Close</ng-container>
+                            <ng-container *ngIf="activeStep > 0">Back</ng-container>
+                        </button>
+                        <button
+                            mat-flat-button
+                            next-button
+                            color="primary"
+                            (click)="next()"
+                            class="loading-button"
+                            data-cy="send-next-button"
+                            [disabled]="!canContinue()"
+                        >
+                            <ng-container *ngIf="activeStep < lastStep">Next</ng-container>
+                            <ng-container *ngIf="activeStep === lastStep">
+                                <div
+                                    class="spinner-container"
+                                    [class.isLoading]="isProcessingTx"
+                                    data-cy="send-loading"
+                                >
+                                    <mat-spinner class="primary-spinner" diameter="20"></mat-spinner>
+                                </div>
+                                <span *ngIf="!isProcessingTx"> Send </span>
+                            </ng-container>
+                        </button>
+                    </mobile-stepper>
+                </div>
             </ng-container>
         </div>
     `,

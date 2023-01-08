@@ -104,7 +104,7 @@
         class="mat-elevation-z2 app-toolbar rep-offline-banner"
         *ngIf="isRepOffline() && !warnBannerDismissed"
     >
-        <div class="mat-subtitle-2">
+        <div class="mat-body-2">
             Your current representative is <strong>offline</strong>. If this happens often, it is suggested that you
             update to a recommended rep.
             <span class="link" style="color: unset" (click)="openChangeRepDocs()">Why is this important?</span>
@@ -135,6 +135,7 @@
                 *ngIf="!vp.sm"
                 style="
                     display: flex;
+                    flex-direction: row;
                     align-items: center;
                     justify-content: space-between;
                     padding: 0 16px;
@@ -148,7 +149,7 @@
                         [src]="getMonkeyUrl()"
                     />
                     <div style="display: flex; flex-direction: column; justify-content: center; height: 150px">
-                        <div class="mat-headline-5">
+                        <div class="mat-headline-5" style="margin-bottom: 16px">
                             <strong>{{ account.formattedBalance }} BAN </strong>Balance
                         </div>
                         <div style="display: flex">
