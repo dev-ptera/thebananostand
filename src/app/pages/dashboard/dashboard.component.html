@@ -8,7 +8,7 @@
                         responsive-trigger
                         class="primary"
                         style="margin: 0; font-weight: 600"
-                        [class.blui-headline-6]="vp.sm"
+                        [class.mat-headline-6]="vp.sm"
                         [class.mat-headline-5]="!vp.sm"
                     >
                         {{ store.activeWallet.name }}
@@ -86,13 +86,13 @@
         </button>
     </ng-template>
     <ng-template #walletActionsDesktopTrigger>
-        <button mat-stroked-button blui-inline style="min-width: 110px" data-cy="wallet-actions-desktop-menu">
-            <span>Manage Wallet</span>
+        <button mat-stroked-button data-cy="wallet-actions-desktop-menu">
+            <div style="white-space: nowrap">Manage Wallet</div>
             <mat-icon>arrow_drop_down</mat-icon>
         </button>
     </ng-template>
     <ng-template #walletActionsMobileTrigger>
-        <mat-icon blui-avatar data-cy="wallet-actions-mobile-menu"> account_balance_wallet </mat-icon>
+        <mat-icon data-cy="wallet-actions-mobile-menu"> account_balance_wallet </mat-icon>
     </ng-template>
     <responsive-menu
         menuTitle="Wallet Actions"
@@ -108,17 +108,17 @@
 <ng-template #accountActions>
     <ng-template #accountActionsMenu>
         <button mat-menu-item (click)="refreshDashboard()" data-cy="refresh-dashboard-button">
-            <mat-icon blui-icon>refresh</mat-icon>Refresh Dashboard
+            <mat-icon>refresh</mat-icon>Refresh Dashboard
         </button>
         <button mat-menu-item (click)="addAccount()" data-cy="add-next-account-button">
-            <mat-icon blui-icon>add_circle_outline</mat-icon>Add Next Account
+            <mat-icon>add_circle_outline</mat-icon>Add Next Account
         </button>
         <button mat-menu-item (click)="addAccountFromIndex()" data-cy="add-specific-account-button">
-            <mat-icon blui-icon>pin</mat-icon>Add Specific Account
+            <mat-icon>pin</mat-icon>Add Specific Account
         </button>
     </ng-template>
     <ng-template #accountActionsDesktopTrigger>
-        <button mat-stroked-button blui-inline data-cy="account-actions-desktop-menu" style="min-width: 115px">
+        <button mat-stroked-button data-cy="account-actions-desktop-menu" style="min-width: 115px">
             <span>Account</span>
             <mat-icon>arrow_drop_down</mat-icon>
         </button>
@@ -144,10 +144,9 @@
                 <!-- Wallet Name & Selector -->
                 <ng-template [ngTemplateOutlet]="walletNameDropdown"></ng-template>
                 <!-- Account Balance -->
-                <div>
-                    <span class="mat-body-1" style="margin-right: 8px"> Accounts Balance: </span>
-                    <span> {{ totalBalance }}</span>
-                    <ng-container *ngIf="!vp.sm"> BAN</ng-container>
+                <div style="display: flex; align-items: center">
+                    <span class="mat-body-1" style="margin-right: 8px; font-weight: 600"> Accounts Balance: </span>
+                    <div class="mat-body-1">{{ totalBalance }} BAN</div>
                 </div>
             </div>
         </div>
@@ -185,6 +184,7 @@
                     <div style="display: flex; align-items: center">
                         <button
                             mat-stroked-button
+                            class="dashboard-action-button"
                             matTooltip="Refresh account balances"
                             style="margin-right: 16px"
                             [disabled]="store.isLoadingAccounts"
@@ -195,6 +195,7 @@
                         </button>
                         <button
                             mat-stroked-button
+                            class="dashboard-action-button"
                             matTooltip="Add next account"
                             style="margin-right: 16px"
                             (click)="addAccount()"
@@ -204,14 +205,20 @@
                         </button>
                         <button
                             mat-stroked-button
+                            class="dashboard-action-button"
                             matTooltip="Add specific account"
                             style="margin-right: 16px"
                             (click)="addAccountFromIndex()"
                             data-cy="add-specific-account-button"
                         >
-                            <mat-icon>123</mat-icon>
+                            <mat-icon>search</mat-icon>
                         </button>
-                        <button mat-stroked-button matTooltip="Sort by balance" (click)="sortAccountsByBalance()">
+                        <button
+                            mat-stroked-button
+                            class="dashboard-action-button"
+                            matTooltip="Sort by balance"
+                            (click)="sortAccountsByBalance()"
+                        >
                             <mat-icon *ngIf="sortDirection === 'none'">swap_vert</mat-icon>
                             <mat-icon *ngIf="sortDirection === 'asc'">arrow_upward</mat-icon>
                             <mat-icon *ngIf="sortDirection === 'desc'">arrow_downward</mat-icon>

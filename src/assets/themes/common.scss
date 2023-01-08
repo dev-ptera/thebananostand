@@ -1,27 +1,44 @@
-.primary,
-.primary * {
-    color: var(--primary);
-}
-.warn * {
-    color: var(--warn);
+@mixin utility-classes() {
+    .primary,
+    .primary * {
+        color: var(--primary);
+    }
+    .warn * {
+        color: var(--warn);
+    }
+
+    .secondary {
+        color: var(--secondary);
+    }
+
+    .hint {
+        color: var(--hint);
+    }
+
+    .divider {
+        color: var(--divider);
+    }
+
+    .divider-border {
+        border: solid 1px var(--divider);
+    }
+
+    .mat-icon {
+        color: var(--icon-primary);
+    }
+
 }
 
-.secondary {
-    color: var(--secondary);
-}
+@mixin mdc-overrides() {
+    .mat-mdc-menu-item .mat-icon-no-color, .mat-mdc-menu-submenu-icon {
+        color: var(--icon-secondary);
+    }
 
-.hint {
-    color: var(--hint);
-}
+    .mat-mdc-outlined-button:not(:disabled).mat-primary {
+        --mdc-outlined-button-outline-color: var(--primary);
+    }
 
-.divider {
-    color: var(--divider);
-}
-
-.divider-border {
-    border: solid 1px var(--divider);
-}
-
-.mat-icon {
-    color: var(--icon);
+    .mat-mdc-card-outlined {
+        //    --mdc-outlined-card-outline-color: rgba(138, 138, 138, 0.12);
+    }
 }

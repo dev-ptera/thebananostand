@@ -1,6 +1,7 @@
 @use 'node_modules/@brightlayer-ui/colors/palette' as blui;
 @use 'node_modules/@angular/material' as mat;
 @use '../typography';
+@use '../common';
 @use 'sass:map';
 
 /* For use in src/lib/core/theming/_palette.scss */
@@ -56,17 +57,14 @@ $jungle-green-theme: mat.define-light-theme((
     @include mat.all-component-themes($jungle-green-theme);
     @include mat.typography-hierarchy($jungle-green-theme);
     @include typography.custom-typography-rules();
+    @include common.mdc-overrides();
+    @include common.utility-classes();
 
-    --text-contrast:    #{map-get(blui.$blui-white, 50)};;
-    --text:             #{map-get(blui.$blui-black, 500)};
-    --icon:             #{map-get(blui.$blui-gray, 500)};
     --primary:          #{map-get($my-primary, 500)};
     --warn:             #{map-get($my-warn, 500)};
-    .mat-mdc-card-outlined {
-    //    --mdc-outlined-card-outline-color: rgba(138, 138, 138, 0.12);
-    }
-    .mat-mdc-outlined-button:not(:disabled).mat-primary {
-        --mdc-outlined-button-outline-color: var(--primary);
-    }
+    --text-contrast:    #{map-get(blui.$blui-white, 50)};
+    --text:             #{map-get(blui.$blui-black, 500)};
+    --icon-primary:     #{map-get(blui.$blui-black, 500)};
+    --icon-secondary:   #{map-get(blui.$blui-black, 300)};
 }
 //map.get($jungle-green-theme, 'primary');

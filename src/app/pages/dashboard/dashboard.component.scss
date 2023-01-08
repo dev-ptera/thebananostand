@@ -12,6 +12,15 @@
     cursor: pointer;
 }
 
+::ng-deep .dashboard-action-button .mat-icon {
+    margin: 0;
+    $font-size: 1.25rem;
+    height: $font-size;
+    line-height: $font-size;
+    width: $font-size;
+    font-size: $font-size;
+}
+
 .rename-wallet-button {
     $buttonSize: 24px;
     width: $buttonSize;
@@ -36,6 +45,7 @@
 .dashboard-header {
     display: flex;
     justify-content: space-between;
+    flex-direction: row;
     align-items: center;
     margin-bottom: 24px;
     padding: 16px 24px;

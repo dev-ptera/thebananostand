@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { AccountOverview } from '@app/types/AccountOverview';
 import * as Colors from '@brightlayer-ui/colors';
 import { COPY_ADDRESS_TO_CLIPBOARD, REMOVE_ACCOUNTS_BY_INDEX } from '@app/services/wallet-events.service';
@@ -12,6 +12,7 @@ import { AppStateService } from '@app/services/app-state.service';
 @Component({
     selector: 'app-account-list',
     styleUrls: ['accounts-list.component.scss'],
+    encapsulation: ViewEncapsulation.None,
     template: `
         <!-- Account-specific actions. -->
         <ng-template #accountMoreOptions let-account="account">
@@ -113,7 +114,9 @@ import { AppStateService } from '@app/services/app-state.service';
                         <div class="mono mat-body-1 row-title" [class.primary]="hoverRowNumber === i">
                             {{ account.shortAddress }}
                         </div>
-                        <div class="mat-body-2">represented by {{ formatRepresentative(account.representative) }}</div>
+                        <div *ngIf="account.representative" class="mat-body-2">
+                            represented by {{ formatRepresentative(account.representative) }}
+                        </div>
                     </div>
                     <div>
                         <ng-container *ngIf="!vp.sm">
