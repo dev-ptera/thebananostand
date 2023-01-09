@@ -3,14 +3,8 @@
     <div style="display: flex; align-items: center; width: 100%">
         <div style="display: flex; align-items: center" [class.clickable-header]="hasAlternativeWallets()">
             <ng-template #switchWalletNameTrigger>
-                <div style="display: flex; align-items: center">
-                    <div
-                        responsive-trigger
-                        class="primary"
-                        style="margin: 0; font-weight: 600"
-                        [class.mat-headline-6]="vp.sm"
-                        [class.mat-headline-5]="!vp.sm"
-                    >
+                <div style="display: flex; align-items: center; margin-bottom: 4px">
+                    <div responsive-trigger class="primary mat-headline-6">
                         {{ store.activeWallet.name }}
                     </div>
                     <mat-icon *ngIf="isShowMultiWalletSelect()">arrow_drop_down</mat-icon>
@@ -87,7 +81,7 @@
     </ng-template>
     <ng-template #walletActionsDesktopTrigger>
         <button mat-stroked-button data-cy="wallet-actions-desktop-menu">
-            <div class="mat-subtitle-1" style="white-space: nowrap">Manage Wallet</div>
+            <div class="mat-subtitle-2" style="white-space: nowrap">Manage Wallet</div>
             <mat-icon>arrow_drop_down</mat-icon>
         </button>
     </ng-template>

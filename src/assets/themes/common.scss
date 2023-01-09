@@ -20,13 +20,16 @@
     }
 
     .divider-border {
-        border: solid 1px var(--divider);
+        border: solid 1px var(--divider-border);
     }
 
     .mat-icon {
         color: var(--icon-primary);
     }
 
+    .text-contrast {
+        color: var(--text-contrast);
+    }
 }
 
 @mixin mdc-overrides() {
@@ -42,10 +45,19 @@
         border-bottom: solid 1px var(--divider);
     }
 
-    .mat-mdc-card-outlined {
-        //    --mdc-outlined-card-outline-color: rgba(138, 138, 138, 0.12);
-    }
     .mat-divider {
         border-top-color: var(--divider);
+    }
+
+    .mat-mdc-option .mdc-list-item__primary-text {
+        width: 100%;
+    }
+
+    .mat-mdc-card {
+        --mdc-outlined-card-outline-color: var(--divider-border);
+    }
+
+    .mdc-button__label {
+        font-weight: 600;
     }
 }

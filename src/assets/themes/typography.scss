@@ -14,7 +14,7 @@
     src: url(~assets/fonts/source-code-pro/SourceCodePro-Regular.otf);
 }
 
-$custom-font: 'spaceGrotesk, Arial, Helvetica, sans-serif';
+$custom-font: spaceGrotesk, Arial, Helvetica, sans-serif;
 
 // Custom Typography Sizes & Weights
 /* https://m2.material.io/design/typography/the-type-system.html#type-scale */
@@ -47,7 +47,8 @@ $custom-typography: mat.define-typography-config(
     .mat-body-1,
     .mat-body-2,
     .mat-caption,
-    .mat-button {
+    .mat-button,
+    .mat-overline {
         margin-bottom: 0;
         color: var(--text);
     }
@@ -58,6 +59,7 @@ $custom-typography: mat.define-typography-config(
         letter-spacing: 0.125rem;
         line-height: 2.66;
         text-transform: uppercase;
+        font-family: $custom-font;
     }
     .mono,
     input::placeholder,

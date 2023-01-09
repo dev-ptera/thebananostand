@@ -33,7 +33,6 @@
 
 <ng-template #receiveButton>
     <button
-        blui-inline
         mat-flat-button
         data-cy="receive-action"
         color="primary"
@@ -50,7 +49,6 @@
 
 <ng-template #sendButton>
     <button
-        blui-inline
         mat-flat-button
         data-cy="send-action"
         color="primary"
@@ -68,7 +66,7 @@
     <mat-toolbar color="primary" class="mat-elevation-z2 app-toolbar" responsive>
         <div style="display: flex; align-items: center">
             <button mat-icon-button (click)="goHome()">
-                <mat-icon>arrow_back</mat-icon>
+                <mat-icon class="text-contrast">arrow_back</mat-icon>
             </button>
             <div
                 [style.marginLeft.px]="8"
@@ -88,7 +86,7 @@
                 </div>
 
                 <button mat-icon-button (click)="copyAccountAddressDesktop()" style="margin-left: 8px" *ngIf="!vp.sm">
-                    <mat-icon>
+                    <mat-icon class="text-contrast">
                         {{ hasCopiedAccountAddress ? 'check_circle' : 'content_copy' }}
                     </mat-icon>
                 </button>
@@ -152,11 +150,10 @@
                         <div class="mat-headline-5" style="margin-bottom: 16px">
                             <strong>{{ account.formattedBalance }} BAN </strong>Balance
                         </div>
-                        <div style="display: flex">
+                        <div style="display: flex" class="account-tx-actions">
                             <ng-template [ngTemplateOutlet]="receiveButton"></ng-template>
                             <ng-template [ngTemplateOutlet]="sendButton"></ng-template>
                             <button
-                                blui-inline
                                 mat-flat-button
                                 data-cy="change-action"
                                 color="primary"
@@ -213,7 +210,7 @@
                     class="empty-states"
                     [class.slow-fade-in]="showProgressBar()"
                 >
-                    <ng-container *ngIf="showNoFilteredResultsEmptyState()">
+                    <div *ngIf="showNoFilteredResultsEmptyState()" class="results-empty-container">
                         <app-empty-state style="margin: 24px 0">
                             <mat-icon empty-icon>waterfall_chart</mat-icon>
                             <div title>No Results</div>
@@ -221,14 +218,14 @@
                                 No transactions meet your filter criteria. Please adjust your filters and try again.
                             </div>
                         </app-empty-state>
-                    </ng-container>
-                    <ng-container *ngIf="unopenedAccount">
-                        <app-empty-state style="margin: 24px 0">
+                    </div>
+                    <div *ngIf="unopenedAccount" class="results-empty-container">
+                        <app-empty-state>
                             <mat-icon empty-icon>no_accounts</mat-icon>
                             <div title>Unopened Account</div>
                             <div description>To open this account, it must receive an incoming transaction.</div>
                         </app-empty-state>
-                    </ng-container>
+                    </div>
                     <ng-container *ngIf="showProgressBar()">
                         <mat-progress-bar
                             *ngIf="showProgressBar()"

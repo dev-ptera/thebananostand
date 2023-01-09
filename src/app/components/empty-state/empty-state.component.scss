@@ -1,4 +1,4 @@
-.content {
+.empty-state-content {
     height: 100%;
     width: 100%;
     box-sizing: border-box;
@@ -13,6 +13,10 @@
         margin-bottom: 0px;
     }
 
+    .description {
+        margin: 0.5rem 0 1.5rem 0;
+    }
+
     .title,
     .description {
         text-align: center;
@@ -21,17 +25,20 @@
     .icon-wrapper {
         margin-bottom: 1rem;
         line-height: 1;
-        ::ng-deep > * {
+        * {
             $size: 96px;
             display: block;
             font-size: $size;
             height: $size;
             width: $size;
             text-align: center;
+            color: var(--icon-secondary);
         }
     }
 
     .actions-wrapper {
-        margin-top: 1rem;
+        button {
+            min-width: 100px;
+        }
     }
 }

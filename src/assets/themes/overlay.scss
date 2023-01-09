@@ -26,6 +26,13 @@
         mat-form-field {
             width: 100%;
         }
+        .address-input {
+            width: 100%; height: 140px;
+            textarea {
+                height: 80px;
+                resize: none;
+            }
+        }
     }
     .overlay-footer {
         padding-top: 16px;
@@ -54,6 +61,7 @@
         border-top-left-radius: 32px;
         border-top-right-radius: 32px;
         .overlay-action-container {
+            height: 100%;
             width: 100%;
             max-width: unset;
         }

@@ -16,6 +16,14 @@
     }
 }
 
+.account-tx-actions .mdc-button:not[disabled] .mat-icon {
+    color: var(--text-contrast);
+}
+
+.results-empty-container {
+    padding: 24px 0;
+}
+
 .mat-toolbar.rep-offline-banner {
     height: unset;
     min-height: 36px;

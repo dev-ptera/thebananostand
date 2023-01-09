@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
 @Component({
     host: {
@@ -7,17 +7,18 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     selector: 'app-empty-state',
     styleUrls: ['./empty-state.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     template: `
-        <div class="content">
+        <div class="empty-state-content">
             <div class="icon-wrapper">
                 <ng-content select="mat-icon"></ng-content>
             </div>
-            <div class="mat-headline-5 title">
+            <div class="mat-headline-6 title">
                 <ng-content select="[title]"></ng-content>
             </div>
-            <p class="mat-subtitle-2 description">
+            <div class="mat-body-2 description">
                 <ng-content select="[description]"></ng-content>
-            </p>
+            </div>
             <div class="actions-wrapper">
                 <ng-content select="button"></ng-content>
             </div>

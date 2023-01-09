@@ -5,7 +5,6 @@ import { SendOverlayData } from '@app/overlays/actions/send/send.component';
 @Component({
     selector: 'app-send-bottom-sheet',
     template: ` <app-send-overlay [data]="data" (closeWithHash)="closeSheet($event)"></app-send-overlay> `,
-    styleUrls: ['send-bottom-sheet.component.scss'],
 })
 export class SendBottomSheetComponent {
     constructor(

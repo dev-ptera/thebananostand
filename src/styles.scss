@@ -126,6 +126,17 @@ input[type='number'] {
     -moz-appearance: textfield;
 }
 
+.app-toolbar {
+    display: flex;
+    padding: 0 24px !important;
+    justify-content: space-between;
+    height: 64px;
+    &.sm {
+        padding: 0 8px !important;
+        height: 56px;
+    }
+}
+
 /*
 // Input overrides.
 textarea.mat-input-element,
@@ -136,21 +147,6 @@ textarea.mat-input-element,
 .add-accounts-example {
     font-family: monospace;
     background: #dedede;
-}
-
-.app-toolbar {
-    display: flex;
-    padding: 0 24px !important;
-    justify-content: space-between;
-    position: sticky;
-    position: -webkit-sticky;
-    top: 0;
-    z-index: 1000;
-    min-height: 64px;
-    &.sm {
-        padding: 0 8px !important;
-        min-height: 56px;
-    }
 }
 
 

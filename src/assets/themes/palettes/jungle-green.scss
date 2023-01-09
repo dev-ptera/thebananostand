@@ -66,5 +66,6 @@ $jungle-green-theme: mat.define-light-theme((
     --icon-primary:     #{map-get(blui.$blui-black, 500)};
     --icon-secondary:   #{map-get(blui.$blui-black, 300)};
     --divider:          rgba(66, 78, 84, 0.12);
+    --divider-border:   rgba(66, 78, 84, 0.12);
 }
 //map.get($jungle-green-theme, 'primary');

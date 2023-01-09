@@ -26,63 +26,49 @@ export type ChangeRepOverlayData = {
     selector: 'app-change-rep-overlay',
     styleUrls: ['change-rep.component.scss'],
     template: `
-        <div class="change-rep-overlay">
-            <div
-                *ngIf="hasSuccess === true"
-                mat-dialog-content
-                style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
-            >
+        <div class="change-rep-overlay overlay-action-container">
+            <div class="overlay-body" *ngIf="hasSuccess === true">
                 <app-empty-state>
-                    <mat-icon blui-empty-icon> check_circle</mat-icon>
-                    <div blui-title>Representative Changed</div>
-                    <div blui-description>
+                    <mat-icon empty-icon> check_circle</mat-icon>
+                    <div title>Representative Changed</div>
+                    <div description>
                         Your representative has been successfully updated and can be viewed
                         <span class="link" [style.color]="colors.blue[500]" (click)="openLink()">here.</span>
                         You can now close this window.
                     </div>
-                    <div blui-actions>
-                        <button
-                            mat-flat-button
-                            color="primary"
-                            class="close-button"
-                            (click)="closeOverlay()"
-                            data-cy="change-close-completed-button"
-                        >
-                            Close
-                        </button>
-                    </div>
+                    <button
+                        mat-flat-button
+                        color="primary"
+                        (click)="closeOverlay()"
+                        data-cy="change-close-completed-button"
+                    >
+                        Close
+                    </button>
                 </app-empty-state>
             </div>
 
-            <div
-                *ngIf="hasSuccess === false"
-                mat-dialog-content
-                class="overlay-body"
-                style="display: flex; justify-content: center; flex:  1 1 0px; padding-bottom: 16px;"
-            >
+            <div *ngIf="hasSuccess === false" class="overlay-body">
                 <app-empty-state>
-                    <mat-icon blui-empty-icon> error</mat-icon>
-                    <div blui-title>Representative Change Failed</div>
-                    <div blui-description>Your representative could not be changed.</div>
-                    <div blui-actions>
-                        <button
-                            mat-flat-button
-                            color="primary"
-                            class="close-button"
-                            (click)="closeOverlay()"
-                            data-cy="change-close-fail-button"
-                        >
-                            Close
-                        </button>
-                    </div>
+                    <mat-icon empty-icon> error</mat-icon>
+                    <div title>Representative Change Failed</div>
+                    <div description>Your representative could not be changed.</div>
+                    <button
+                        mat-flat-button
+                        color="primary"
+                        class="close-button"
+                        (click)="closeOverlay()"
+                        data-cy="change-close-fail-button"
+                    >
+                        Close
+                    </button>
                 </app-empty-state>
             </div>
 
             <ng-container *ngIf="hasSuccess === undefined">
-                <h1 mat-dialog-title>Change Representative</h1>
-                <div mat-dialog-content style="margin-bottom: 32px;">
+                <div class="overlay-header">Change Representative</div>
+                <div class="overlay-body mat-body-1">
                     <ng-container *ngIf="activeStep === 0">
-                        <div>Your current representative is:</div>
+                        <div style="margin-bottom: 8px">Your current representative is:</div>
                         <div
                             class="mono"
                             style="word-break: break-all"
@@ -107,11 +93,11 @@ export type ChangeRepOverlayData = {
                             <mat-label>Representative</mat-label>
                             <mat-select [formControl]="representativesListForm">
                                 <mat-option *ngFor="let rep of getRepsWithMinScore(75)" [value]="rep.address">
-                                    <div style="display: flex; justify-content: space-between">
+                                    <div style="display: flex; justify-content: space-between; align-items: center">
                                         <div style="text-overflow: ellipsis; overflow:hidden">
                                             {{ rep.alias || util.shortenAddress(rep.address) }}
                                         </div>
-                                        <div>
+                                        <div class="mat-caption">
                                             <strong style="margin-left: 8px">{{ rep.score }}</strong>
                                             /100
                                         </div>
@@ -120,9 +106,9 @@ export type ChangeRepOverlayData = {
                             </mat-select>
                         </mat-form-field>
 
-                        <mat-form-field style="width: 100%;" appearance="fill" *ngIf="!selectFromList">
+                        <mat-form-field appearance="fill" class="address-input" *ngIf="!selectFromList">
                             <mat-label>Representative Address</mat-label>
-                            <input matInput type="value" [(ngModel)]="manualEnteredNewRepresentative" />
+                            <textarea matInput type="value" [(ngModel)]="manualEnteredNewRepresentative"></textarea>
                         </mat-form-field>
                     </ng-container>
 
@@ -137,36 +123,36 @@ export type ChangeRepOverlayData = {
                         </ng-container>
                     </ng-container>
                 </div>
-                <blui-spacer></blui-spacer>
-                <mat-divider style="margin-left: -48px; margin-right: -48px"></mat-divider>
-                <blui-mobile-stepper [activeStep]="activeStep" [steps]="maxSteps">
-                    <button
-                        mat-stroked-button
-                        blui-back-button
-                        color="primary"
-                        (click)="back()"
-                        data-cy="change-close-button"
-                    >
-                        <ng-container *ngIf="activeStep === 0">Close</ng-container>
-                        <ng-container *ngIf="activeStep > 0">Back</ng-container>
-                    </button>
-                    <button
-                        class="loading-button"
-                        mat-flat-button
-                        blui-next-button
-                        color="primary"
-                        (click)="next()"
-                        [disabled]="!canContinue()"
-                    >
-                        <ng-container *ngIf="activeStep < lastStep">Next</ng-container>
-                        <ng-container *ngIf="activeStep === lastStep">
-                            <div class="spinner-container" [class.isLoading]="isChangingRepresentative">
-                                <mat-spinner class="primary-spinner" diameter="20"></mat-spinner>
-                            </div>
-                            <span *ngIf="!isChangingRepresentative"> Change </span>
-                        </ng-container>
-                    </button>
-                </blui-mobile-stepper>
+                <div class="overlay-footer">
+                    <mobile-stepper [activeStep]="activeStep" [steps]="maxSteps">
+                        <button
+                            mat-stroked-button
+                            back-button
+                            color="primary"
+                            (click)="back()"
+                            data-cy="change-close-button"
+                        >
+                            <ng-container *ngIf="activeStep === 0">Close</ng-container>
+                            <ng-container *ngIf="activeStep > 0">Back</ng-container>
+                        </button>
+                        <button
+                            class="loading-button"
+                            mat-flat-button
+                            next-button
+                            color="primary"
+                            (click)="next()"
+                            [disabled]="!canContinue()"
+                        >
+                            <ng-container *ngIf="activeStep < lastStep">Next</ng-container>
+                            <ng-container *ngIf="activeStep === lastStep">
+                                <div class="spinner-container" [class.isLoading]="isChangingRepresentative">
+                                    <mat-spinner class="primary-spinner" diameter="20"></mat-spinner>
+                                </div>
+                                <span *ngIf="!isChangingRepresentative"> Change </span>
+                            </ng-container>
+                        </button>
+                    </mobile-stepper>
+                </div>
             </ng-container>
         </div>
 
@@ -181,21 +167,21 @@ export type ChangeRepOverlayData = {
                     <div style="display: flex; align-items: center">
                         <strong>{{ metadata.score }}</strong
                         >/100
-                        <blui-list-item-tag
+                        <list-item-tag
                             *ngIf="metadata.score > 80"
                             [label]="metadata.score < 90 ? 'Good' : 'Excellent'"
                             [backgroundColor]="colors.green[500]"
                             [fontColor]="colors.black[900]"
                             style="margin-left: 16px"
                         >
-                        </blui-list-item-tag>
-                        <blui-list-item-tag
+                        </list-item-tag>
+                        <list-item-tag
                             *ngIf="metadata.score < 60"
                             [label]="'Not Recommended'"
                             [backgroundColor]="colors.red[500]"
                             style="margin-left: 16px"
                         >
-                        </blui-list-item-tag>
+                        </list-item-tag>
                     </div>
                 </ng-container>
             </ng-container>

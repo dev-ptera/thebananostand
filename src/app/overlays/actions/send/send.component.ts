@@ -74,23 +74,23 @@ export type SendOverlayData = {
                                 <mat-icon>account_balance_wallet</mat-icon>
                             </button>
                         </mat-form-field>
-                        <mat-hint
+                        <div
+                            class="mat-caption"
                             *ngIf="sendAmount > data.maxSendAmount"
                             style="margin-top: -8px; margin-bottom: 8px; display: flex"
                         >
                             Max transferable amount is {{ data.maxSendAmount }}.
-                        </mat-hint>
+                        </div>
                         <mat-checkbox [(ngModel)]="sendAll" (change)="toggleSendAll()">Send All</mat-checkbox>
                     </ng-container>
 
                     <ng-container *ngIf="activeStep === 2">
                         <div class="mat-body-1" style="margin-bottom: 24px">Please enter the recipient address.</div>
-                        <mat-form-field style="width: 100%; height: 140px" appearance="fill">
+                        <mat-form-field appearance="fill" class="address-input">
                             <mat-label>Recipient Address</mat-label>
                             <textarea
-                                data-cy="send-recipient-input"
-                                style="resize: none"
                                 matInput
+                                data-cy="send-recipient-input"
                                 type="value"
                                 [(ngModel)]="recipient"
                             ></textarea>

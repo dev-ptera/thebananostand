@@ -7,9 +7,9 @@ import { AppStateService } from '@app/services/app-state.service';
     selector: 'app-rename-wallet-overlay',
     styleUrls: ['rename-wallet.component.scss'],
     template: `
-        <div class="rename-wallet-overlay">
-            <h1 mat-dialog-title>Rename Wallet</h1>
-            <div mat-dialog-content style="margin-bottom: 32px;">
+        <div class="rename-wallet-overlay overlay-action-container">
+            <div class="overlay-header">Rename Wallet</div>
+            <div class="overlay-body mat-body-1">
                 <div>Rename "{{ currentWalletName }}" to something else?</div>
                 <form style="margin-top: 32px">
                     <mat-form-field style="width: 100%" appearance="fill">
@@ -24,9 +24,7 @@ import { AppStateService } from '@app/services/app-state.service';
                     </mat-form-field>
                 </form>
             </div>
-            <spacer></spacer>
-            <mat-divider style="margin-left: -48px; margin-right: -48px"></mat-divider>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 0; padding: 16px 0">
+            <div class="overlay-footer">
                 <button mat-stroked-button color="primary" (click)="close.emit()" style="width: 100px;">Close</button>
                 <button
                     data-cy="rename-wallet-overlay-button"
