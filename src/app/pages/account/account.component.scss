@@ -4,16 +4,6 @@
 
 /* Update these styles if the row height must change. */
 .app-body {
-    ::ng-deep .blui-info-list-item-content .mat-mdc-list-item-content,
-    .mat-mdc-list-base .mat-list-item.blui-info-list-item-content .mat-list-item-content {
-        height: 52px;
-    }
-    .sm {
-        ::ng-deep .blui-info-list-item-content .mat-mdc-list-item-content,
-        .mat-mdc-list-base .mat-list-item.blui-info-list-item-content .mat-list-item-content {
-            height: 72px;
-        }
-    }
 }
 
 .account-tx-actions .mdc-button:not[disabled] .mat-icon {

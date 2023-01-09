@@ -13,7 +13,7 @@ import { ADD_SPECIFIC_ACCOUNTS_BY_INDEX } from '@app/services/wallet-events.serv
                     Use the input field below to manually add accounts by their index number. e.g:
                     <span class="add-accounts-example mat-body-1" style="margin-left: 4px">1028, 1029, 1030</span>
                 </div>
-                <form style="margin-top: 32px">
+                <form style="margin: 32px 0 16px 0">
                     <mat-form-field style="width: 100%" appearance="fill">
                         <mat-label>Indexes</mat-label>
                         <input

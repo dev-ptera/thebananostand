@@ -247,72 +247,7 @@
                     responsive
                 >
                     <div *cdkVirtualFor="let item of ds; let i = index; let even = even">
-                        <!--
-                        <info-list-item
-                            *ngIf="item"
-                            [style.height.px]="getTransactionRowHeight()"
-                            [style.backgroundColor]="
-                                even
-                                    ? isDark()
-                                        ? colors.darkBlack[300]
-                                        : colors.white[100]
-                                    : isDark()
-                                    ? colors.darkBlack[200]
-                                    : colors.white[50]
-                            "
-                        >
-                            <div icon class="tx-state-icon">
-                                <mat-icon *ngIf="item.type === 'receive'" class="receive">add_circle_outline</mat-icon>
-                                <mat-icon *ngIf="item.type === 'send'" class="send">remove_circle_outline</mat-icon>
-                                <mat-icon *ngIf="item.type === 'change'" class="change">change_history</mat-icon>
-                            </div>
-                            <div title>{{ item.type }}</div>
-                            <div subtitle>{{ item.amount }}</div>
-                            <div right-content>
-                                <div
-                                    (mouseenter)="item.hover = true"
-                                    (mouseleave)="item.hover = false"
-                                    style="display: flex"
-                                >
-                                    <ng-container *ngIf="!vp.sm">
-                                        <span *ngIf="item.type === 'receive'">from </span>
-                                        <span *ngIf="item.type === 'send' || item.type === 'change'">to </span>
-                                    </ng-container>
-                                    <div
-                                        class="link accounts-hash-link"
-                                        [style.marginLeft.px]="8"
-                                        (click)="openLink(item.hash)"
-                                    >
-                                        <ng-container *ngIf="item.type === 'receive' || item.type === 'send'">
-                                            {{ formatAddress(item.address) }}
-                                        </ng-container>
-                                        <ng-container *ngIf="item.type === 'change'">
-                                            {{ formatAddress(item.newRepresentative) }}
-                                        </ng-container>
-                                    </div>
-                                    <button
-                                        mat-icon-button
-                                        *ngIf="item.hover"
-                                        (click)="copyTransactionAddress(item)"
-                                        style="
-                                            cursor: pointer;
-                                            margin-left: 8px;
-                                            height: 24px;
-                                            width: 24px;
-                                            line-height: 24px;
-                                        "
-                                    >
-                                        <mat-icon style="font-size: 16px">{{
-                                            item.showCopiedIcon ? 'check_circle' : 'content_copy'
-                                        }}</mat-icon>
-                                    </button>
-                                </div>
-                                <span *ngIf="!vp.sm" [style.marginLeft.px]="32">
-                                    tx #{{ util.numberWithCommas(item.height) }}
-                                </span>
-                            </div>
-                        </info-list-item>
-
+                        <ng-template *ngTemplateOutlet="transaction; context: { item: item, even: even }"></ng-template>
 
                         <blui-info-list-item *ngIf="!item" [style.height.px]="getTransactionRowHeight()">
                             <mat-icon icon>sync</mat-icon>
@@ -323,7 +258,6 @@
                                 </span>
                             </div>
                         </blui-info-list-item>
-                        -->
                     </div>
                 </cdk-virtual-scroll-viewport>
             </mat-card>
@@ -342,3 +276,57 @@
         </div>
     </div>
 </div>
+
+<ng-template #transaction let-item="item" let-even="even">
+    <mat-list-item
+        [style.height.px]="getTransactionRowHeight()"
+        [style.backgroundColor]="
+            even
+                ? isDark()
+                    ? colors.darkBlack[300]
+                    : colors.white[100]
+                : isDark()
+                ? colors.darkBlack[200]
+                : colors.white[50]
+        "
+    >
+        <div matListIcon class="tx-state-icon">
+            <mat-icon *ngIf="item.type === 'receive'" class="receive">add_circle_outline</mat-icon>
+            <mat-icon *ngIf="item.type === 'send'" class="send">remove_circle_outline</mat-icon>
+            <mat-icon *ngIf="item.type === 'change'" class="change">change_history</mat-icon>
+        </div>
+        <div style="display: flex; justify-content: space-between">
+            <div>
+                <div title>{{ item.type }}</div>
+                <div subtitle>{{ item.amount }}</div>
+            </div>
+            <div right-content>
+                <div (mouseenter)="item.hover = true" (mouseleave)="item.hover = false" style="display: flex">
+                    <ng-container *ngIf="!vp.sm">
+                        <span *ngIf="item.type === 'receive'">from </span>
+                        <span *ngIf="item.type === 'send' || item.type === 'change'">to </span>
+                    </ng-container>
+                    <div class="link accounts-hash-link" [style.marginLeft.px]="8" (click)="openLink(item.hash)">
+                        <ng-container *ngIf="item.type === 'receive' || item.type === 'send'">
+                            {{ formatAddress(item.address) }}
+                        </ng-container>
+                        <ng-container *ngIf="item.type === 'change'">
+                            {{ formatAddress(item.newRepresentative) }}
+                        </ng-container>
+                    </div>
+                    <button
+                        mat-icon-button
+                        *ngIf="item.hover"
+                        (click)="copyTransactionAddress(item)"
+                        style="cursor: pointer; margin-left: 8px; height: 24px; width: 24px; line-height: 24px"
+                    >
+                        <mat-icon style="font-size: 16px">{{
+                            item.showCopiedIcon ? 'check_circle' : 'content_copy'
+                        }}</mat-icon>
+                    </button>
+                </div>
+                <span *ngIf="!vp.sm" [style.marginLeft.px]="32"> tx #{{ util.numberWithCommas(item.height) }} </span>
+            </div>
+        </div>
+    </mat-list-item>
+</ng-template>

@@ -11,7 +11,7 @@ import { AppStateService } from '@app/services/app-state.service';
             <div class="overlay-header">Rename Wallet</div>
             <div class="overlay-body mat-body-1">
                 <div>Rename "{{ currentWalletName }}" to something else?</div>
-                <form style="margin-top: 32px">
+                <form style="margin: 32px 0 16px 0">
                     <mat-form-field style="width: 100%" appearance="fill">
                         <mat-label>New Wallet Name</mat-label>
                         <input
