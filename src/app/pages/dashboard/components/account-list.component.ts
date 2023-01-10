@@ -20,7 +20,7 @@ import { AppStateService } from '@app/services/app-state.service';
                 <button
                     mat-icon-button
                     style="margin-left: 8px"
-                    [style.marginRight.px]="vp.sm ? -24 : -8"
+                    [style.marginRight.px]="vp.sm ? 0 : -8"
                     (click)="account.moreOptionsOpen = !account.moreOptionsOpen; $event.stopPropagation()"
                 >
                     <mat-icon>more_vert</mat-icon>
@@ -109,7 +109,14 @@ import { AppStateService } from '@app/services/app-state.service';
                             {{ account.shortAddress }}
                         </div>
                         <div *ngIf="vp.sm">
-                            <span class="mat-body-2"> {{ account.formattedBalance }} BAN </span>
+                            <span class="mat-body-2" *ngIf="account.representative; else unopenedAccountTag">
+                                {{ account.formattedBalance }} BAN
+                            </span>
+                        </div>
+                        <div *ngIf="vp.sm">
+                            <ng-template
+                                *ngTemplateOutlet="statusBadges; context: { account: this.account }"
+                            ></ng-template>
                         </div>
                         <div *ngIf="!vp.sm && account.representative" class="mat-body-2">
                             represented by {{ formatRepresentative(account.representative) }}
@@ -127,7 +134,7 @@ import { AppStateService } from '@app/services/app-state.service';
                         *ngTemplateOutlet="accountMoreOptions; context: { account: this.account }"
                     ></ng-template>
                 </div>
-                <mat-divider *ngIf="!last"></mat-divider>
+                <mat-divider *ngIf="!last && !vp.sm"></mat-divider>
             </div>
         </div>
     `,
@@ -173,7 +180,7 @@ export class AccountListComponent {
     }
 
     getItemBackgroundColor(even: boolean): string {
-        if (even) {
+        if (even || this.vp.sm) {
             return this._themeService.isDark() ? this.colors.darkBlack[300] : this.colors.white[100];
         }
         return this._themeService.isDark() ? this.colors.darkBlack[200] : this.colors.white[50];

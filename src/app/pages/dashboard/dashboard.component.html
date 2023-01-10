@@ -138,7 +138,7 @@
 </ng-template>
 
 <ng-template #dashboardHeader>
-    <mat-card appearance="outlined" class="dashboard-header" responsive>
+    <mat-card appearance="outlined" class="dashboard-header" responsive [class.mat-elevation-z8]="vp.sm">
         <div style="width: 100%; display: flex; align-items: center">
             <div>
                 <!-- Wallet Name & Selector -->
@@ -166,7 +166,7 @@
         >
             <ng-template [ngTemplateOutlet]="dashboardHeader"></ng-template>
 
-            <mat-card appearance="outlined" style="padding: 0" [style.overflow]="vp.sm ? 'auto' : 'hidden'">
+            <mat-card appearance="outlined" class="dashboard-accounts-container" responsive>
                 <mat-progress-bar
                     *ngIf="store.isLoadingAccounts"
                     color="primary"

@@ -68,7 +68,6 @@ import { SecretService } from '@app/services/secret.service';
                 <button
                     data-cy="create-wallet-overlay-button"
                     mat-flat-button
-                    style="width: 100px"
                     color="primary"
                     [disabled]="!hasConfirmedBackup"
                     (click)="createWallet()"

@@ -16,7 +16,7 @@
     }
 }
 
-$mobileDashboardHeaderHeight: 112px;
+$mobileDashboardHeaderHeight: 96px;
 .sm .dashboard-header {
     height: $mobileDashboardHeaderHeight;
 }
@@ -25,7 +25,12 @@ $mobileDashboardHeaderHeight: 112px;
     max-height: calc(100vh - 344px);
     &.sm {
         padding: 0;
+        border: unset;
         max-height: calc(100vh - (56px + $mobileDashboardHeaderHeight + 1px)); // Don't forget the divider height. 1px
         max-height: calc(var(--app-height) - (56px + $mobileDashboardHeaderHeight + 1px));
     }
+}
+
+.dashboard-accounts-container.sm {
+    border: unset;
 }

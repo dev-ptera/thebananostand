@@ -1,5 +1,11 @@
 .sm .dashboard-account-list .row-wrapper {
     height: 6rem;
+    margin: 1rem;
+    border-radius: 1rem;
+    border: solid 1px var(--divider-border);
+    width: unset;
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
 .dashboard-account-list {
