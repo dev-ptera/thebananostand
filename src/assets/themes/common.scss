@@ -57,12 +57,16 @@
         --mdc-outlined-card-outline-color: var(--divider-border);
     }
 
-    .mdc-button__label {
-     //   font-weight: 600;
+    .mat-mdc-menu-item.mdc-list-item * {
+        font-weight: 400;
     }
 
     .mdc-button__label {
         font-size: .875rem;
         letter-spacing: .5px;
+    }
+
+    .sm .mat-mdc-card {
+        border-radius: 0;
     }
 }

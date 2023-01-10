@@ -15,3 +15,17 @@
         margin-bottom: 0px;
     }
 }
+
+$mobileDashboardHeaderHeight: 112px;
+.sm .dashboard-header {
+    height: $mobileDashboardHeaderHeight;
+}
+
+.dashboard-account-list {
+    max-height: calc(100vh - 344px);
+    &.sm {
+        padding: 0;
+        max-height: calc(100vh - (56px + $mobileDashboardHeaderHeight + 1px)); // Don't forget the divider height. 1px
+        max-height: calc(var(--app-height) - (56px + $mobileDashboardHeaderHeight + 1px));
+    }
+}

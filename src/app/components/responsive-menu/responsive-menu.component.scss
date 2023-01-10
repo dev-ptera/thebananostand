@@ -13,8 +13,23 @@
     transition: all 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.responsive-menu-overlay.responsive-menu-bottomsheet .mat-icon {
-    margin-right: 24px;
+.responsive-menu-overlay {
+    .category-separator {
+        padding: 0 16px;
+    }
+}
+
+.responsive-menu-overlay.responsive-menu-bottomsheet {
+    margin-bottom: 8px;
+    .mat-mdc-menu-item {
+        padding: 0 24px;
+    }
+    .category-separator {
+        padding: 0 24px;
+    }
+    .mat-icon {
+        margin-right: 24px;
+    }
 }
 
 .responsive-menu-trigger-wrapper {

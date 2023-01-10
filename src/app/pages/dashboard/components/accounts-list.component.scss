@@ -1,16 +1,10 @@
-$mobileDashboardHeaderHeight: 120px;
-::ng-deep .dashboard-header.sm {
-    height: $mobileDashboardHeaderHeight;
-}
-
 .sm .dashboard-account-list .row-wrapper {
-    height: 6.5rem;
+    height: 6rem;
 }
 
 .dashboard-account-list {
     padding: 8px 0;
     overflow: auto;
-    max-height: calc(100vh - 334px);
 
     div {
         display: flex;
@@ -49,23 +43,18 @@ $mobileDashboardHeaderHeight: 120px;
             left: 0;
             width: 100%;
         }
-    }
 
-    .account-number {
-        position: absolute;
-        top: 2px;
-        left: 8px;
-        font-size: 10px;
-        z-index: 3;
-    }
+        .account-number {
+            position: absolute;
+            top: 2px;
+            left: 8px;
+            font-size: 10px;
+            z-index: 3;
+        }
 
-    * {
-        transition: all 200ms;
-    }
-    &.sm {
-        padding: 0;
-        max-height: calc(100vh - (56px + $mobileDashboardHeaderHeight + 1px)); // Don't forget the divider height. 1px
-        max-height: calc(var(--app-height) - (56px + $mobileDashboardHeaderHeight + 1px));
+        * {
+            transition: all 200ms;
+        }
     }
 
     .unopened-account-tag.sm {

@@ -10,7 +10,7 @@ import { AppStateService } from '@app/services/app-state.service';
     selector: 'app-account-settings',
     template: `
         <ng-template #accountActionsMenu>
-            <div class="mat-overline" style="padding-left: 16px">Themes</div>
+            <div class="mat-overline category-separator">Themes</div>
             <mat-divider></mat-divider>
             <button mat-menu-item (click)="toggleJungleGreenTheme()">
                 <mat-icon>light_mode</mat-icon>
@@ -26,7 +26,7 @@ import { AppStateService } from '@app/services/app-state.service';
             </button>
 
             <ng-container *ngIf="isUserLoggedIn()">
-                <div class="mat-overline" style="margin-top: 24px; padding-left: 16px">Advanced</div>
+                <div class="mat-overline category-separator" style="margin-top: 24px">Advanced</div>
                 <!--
                 <button mat-menu-item (click)="navigateToAddressBook()">
                     <mat-icon>import_contacts</mat-icon>
