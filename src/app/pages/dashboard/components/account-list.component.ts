@@ -81,103 +81,55 @@ import { AppStateService } from '@app/services/app-state.service';
             </div>
         </ng-template>
 
-        <mat-nav-list
-            responsive
-            *ngIf="accounts.length > 0"
-            data-cy="dashboard-account-list"
-            class="dashboard-account-list fade"
-            [disableRipple]="true"
-        >
-            <mat-list-item
+        <div class="dashboard-account-list" responsive>
+            <div
                 *ngFor="
                     let account of accounts | sort: sortDirection:accounts.length;
                     let i = index;
                     let even = even;
                     let last = last;
-                    let first = first;
                     trackBy: markUniqueAccount
                 "
-                style="position: relative"
+                class="row-wrapper"
                 (mouseenter)="hoverRowNumber = i"
                 (mouseleave)="hoverRowNumber = undefined"
-                [class.hovered]="hoverRowNumber === i"
                 [style.backgroundColor]="getItemBackgroundColor(even)"
+                [class.hovered]="hoverRowNumber === i"
                 (click)="openAccount(account.fullAddress)"
             >
-                <div matListItemIcon [style.marginLeft.px]="vp.sm ? -8 : 0" style="width: 56px">
-                    <img [src]="getMonkeyUrl(account.fullAddress)" loading="lazy" [height]="72" />
-                    <div class="account-number mat-hint" [class.primary]="hoverRowNumber === i">
-                        #{{ _util.numberWithCommas(account.index) }}
+                <div class="left">
+                    <div [style.width.px]="vp.sm ? 88 : 96">
+                        <img [src]="getMonkeyUrl(account.fullAddress)" loading="lazy" [height]="72" />
+                        <div class="account-number mat-caption" [class.primary]="hoverRowNumber === i">
+                            #{{ _util.numberWithCommas(account.index) }}
+                        </div>
                     </div>
-                </div>
-                <div style="justify-content: space-between">
                     <div class="account-address-container">
-                        <div class="mono mat-body-1 row-title" [class.primary]="hoverRowNumber === i">
+                        <div class="mono mat-body-2 address" [class.primary]="hoverRowNumber === i">
                             {{ account.shortAddress }}
                         </div>
-                        <div *ngIf="account.representative" class="mat-body-2">
+                        <div *ngIf="vp.sm">
+                            <span class="mat-body-2"> {{ account.formattedBalance }} BAN </span>
+                        </div>
+                        <div *ngIf="!vp.sm && account.representative" class="mat-body-2">
                             represented by {{ formatRepresentative(account.representative) }}
                         </div>
                     </div>
-                    <div style="margin-left: 16px">
-                        <ng-container *ngIf="!vp.sm">
-                            <ng-template
-                                *ngTemplateOutlet="statusBadges; context: { account: this.account }"
-                            ></ng-template>
-                            <ng-container *ngIf="account.representative; else unopenedAccountTag">
-                                <span> {{ account.formattedBalance }} BAN </span>
-                            </ng-container>
-                        </ng-container>
-                        <ng-template
-                            *ngTemplateOutlet="accountMoreOptions; context: { account: this.account }"
-                        ></ng-template>
-                    </div>
                 </div>
-                <mat-divider *ngIf="!last"></mat-divider>
-                <!--
-
-
-
-
-                <div
-                    matListItemTitle
-                    style="padding: 1px 0; z-index: 2"
-                    class="mono"
-                    [class.primary]="hoverRowNumber === i"
-                    [style.fontSize.px]="vp.sm ? 15 : 'inherit'"
-                >
-                    {{ account.shortAddress }}
-                </div>
-                <div matListItemLine style="padding: 1px 0; display: flex; align-items: center">
-                    <ng-container *ngIf="!vp.sm && account.representative">
-                        represented by {{ formatRepresentative(account.representative) }}
-                    </ng-container>
-
-                    <ng-container *ngIf="vp.sm">
-                        <ng-container *ngIf="account.representative; else unopenedAccountTag">
-                            <span> {{ account.formattedBalance }} BAN </span>
-                        </ng-container>
-                    </ng-container>
-                </div>
-                <div info *ngIf="vp.sm" style="margin-top: 4px">
-                    <div style="display: flex">
-                        <ng-template *ngTemplateOutlet="statusBadges; context: { account: this.account }"></ng-template>
-                    </div>
-                </div>
-                <div right-content>
+                <div class="right">
                     <ng-container *ngIf="!vp.sm">
                         <ng-template *ngTemplateOutlet="statusBadges; context: { account: this.account }"></ng-template>
                         <ng-container *ngIf="account.representative; else unopenedAccountTag">
-                            <span> {{ account.formattedBalance }} BAN </span>
+                            <span class="mat-body-1"> {{ account.formattedBalance }} BAN </span>
                         </ng-container>
                     </ng-container>
                     <ng-template
                         *ngTemplateOutlet="accountMoreOptions; context: { account: this.account }"
                     ></ng-template>
                 </div>
-                -->
-            </mat-list-item>
-        </mat-nav-list>
+                <mat-divider *ngIf="!last"></mat-divider>
+            </div>
+        </div>
     `,
 })
 export class AccountListComponent {

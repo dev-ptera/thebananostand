@@ -4,6 +4,10 @@
 
 $card-horizontal-padding: 16px;
 .app-settings-page {
+    mat-card {
+        padding-left: $card-horizontal-padding;
+        padding-right: $card-horizontal-padding;
+    }
     ::ng-deep {
         .mat-mdc-radio-button {
             display: block;

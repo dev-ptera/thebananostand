@@ -4,10 +4,15 @@
         <div style="display: flex; align-items: center" [class.clickable-header]="hasAlternativeWallets()">
             <ng-template #switchWalletNameTrigger>
                 <div style="display: flex; align-items: center; margin-bottom: 4px">
-                    <div responsive-trigger class="primary mat-headline-6">
+                    <div
+                        responsive-trigger
+                        class="primary"
+                        [class.mat-headline-5]="!vp.sm"
+                        [class.mat-headline-6]="vp.sm"
+                    >
                         {{ store.activeWallet.name }}
                     </div>
-                    <mat-icon *ngIf="isShowMultiWalletSelect()">arrow_drop_down</mat-icon>
+                    <mat-icon *ngIf="isShowMultiWalletSelect()" style="margin-left: 4px">arrow_drop_down</mat-icon>
                 </div>
             </ng-template>
             <ng-template #switchWalletsMenu>
@@ -178,7 +183,7 @@
                     <div style="display: flex; align-items: center">
                         <button
                             mat-stroked-button
-                            class="dashboard-action-button"
+                            class="stroked-icon-action-button"
                             matTooltip="Refresh account balances"
                             style="margin-right: 16px"
                             [disabled]="store.isLoadingAccounts"
@@ -189,7 +194,7 @@
                         </button>
                         <button
                             mat-stroked-button
-                            class="dashboard-action-button"
+                            class="stroked-icon-action-button"
                             matTooltip="Add next account"
                             style="margin-right: 16px"
                             (click)="addAccount()"
@@ -199,7 +204,7 @@
                         </button>
                         <button
                             mat-stroked-button
-                            class="dashboard-action-button"
+                            class="stroked-icon-action-button"
                             matTooltip="Add specific account"
                             style="margin-right: 16px"
                             (click)="addAccountFromIndex()"
@@ -209,7 +214,7 @@
                         </button>
                         <button
                             mat-stroked-button
-                            class="dashboard-action-button"
+                            class="stroked-icon-action-button"
                             matTooltip="Sort by balance"
                             (click)="sortAccountsByBalance()"
                         >

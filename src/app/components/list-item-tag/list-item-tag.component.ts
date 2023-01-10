@@ -6,7 +6,11 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
     },
     selector: 'list-item-tag',
     template: `
-        <div class="list-item-tag-content" [style.backgroundColor]="backgroundColor" [style.color]="fontColor">
+        <div
+            class="list-item-tag-content mat-caption"
+            [style.backgroundColor]="backgroundColor"
+            [style.color]="fontColor"
+        >
             {{ label }}
         </div>
     `,

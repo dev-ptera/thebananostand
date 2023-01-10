@@ -83,9 +83,11 @@ import { ListItemTagModule } from '@app/components/list-item-tag/list-item-tag.m
 import { SpacerModule } from '@app/components/spacer/spacer.module';
 import { QrDialogComponent } from '@app/components/qr/qr.component';
 import { MatListModule } from '@angular/material/list';
+import { TransactionComponent } from '@app/pages/account/components/transaction/transaction.component';
 
 @NgModule({
     declarations: [
+        TransactionComponent,
         AppComponent,
         HomeComponent,
         DashboardComponent,

@@ -1,39 +1,5 @@
-:host {
-    width: 100%;
-}
-
 .clickable-header {
     cursor: pointer;
-}
-
-::ng-deep .dashboard-action-button .mat-icon {
-    margin: 0;
-    $font-size: 1.25rem;
-    height: $font-size;
-    line-height: $font-size;
-    width: $font-size;
-    font-size: $font-size;
-}
-
-.rename-wallet-button {
-    $buttonSize: 24px;
-    width: $buttonSize;
-    height: $buttonSize;
-    line-height: $buttonSize;
-    .mat-icon {
-        $iconSize: 10px;
-        height: $iconSize;
-        line-height: $iconSize;
-        font-size: $iconSize;
-        width: $iconSize;
-        &.bigger {
-            $iconSize: 16px;
-            height: $iconSize;
-            line-height: $iconSize;
-            font-size: $iconSize;
-            width: $iconSize;
-        }
-    }
 }
 
 .dashboard-header {

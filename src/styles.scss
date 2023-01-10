@@ -109,10 +109,15 @@ body,
     }
 }
 
-.mdc-button__label {
-    font-size: .875rem;
-    letter-spacing: .5px;
+button.stroked-icon-action-button > .mat-icon {
+    margin: 0;
+    $font-size: 1.25rem;
+    height: $font-size;
+    line-height: $font-size;
+    width: $font-size;
+    font-size: $font-size;
 }
+
 
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,

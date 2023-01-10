@@ -62,6 +62,19 @@
     </button>
 </ng-template>
 
+<ng-template #changeButton>
+    <button
+        mat-flat-button
+        data-cy="change-action"
+        color="primary"
+        (click)="changeRep()"
+        [disabled]="!account.representative"
+    >
+        <mat-icon>how_to_vote</mat-icon>
+        <span>Change {{ vp.md ? '' : 'Representative' }}</span>
+    </button>
+</ng-template>
+
 <div class="app-root">
     <mat-toolbar color="primary" class="mat-elevation-z2 app-toolbar" responsive>
         <div style="display: flex; align-items: center">
@@ -153,45 +166,32 @@
                         <div style="display: flex" class="account-tx-actions">
                             <ng-template [ngTemplateOutlet]="receiveButton"></ng-template>
                             <ng-template [ngTemplateOutlet]="sendButton"></ng-template>
-                            <button
-                                mat-flat-button
-                                data-cy="change-action"
-                                color="primary"
-                                (click)="changeRep()"
-                                [disabled]="!account.representative"
-                            >
-                                <mat-icon>how_to_vote</mat-icon>
-                                <span>Change {{ vp.md ? '' : 'Representative' }}</span>
-                            </button>
+                            <ng-template [ngTemplateOutlet]="changeButton"></ng-template>
                         </div>
                     </div>
                 </div>
                 <app-qr *ngIf="!vp.sm" [address]="account.fullAddress"></app-qr>
             </mat-card>
 
-            <mat-card appearance="outlined" style="padding-bottom: 0px" [style.paddingTop.px]="vp.sm ? 0 : 16">
-                <div
-                    *ngIf="!vp.sm"
-                    [class.mat-headline-5]="!vp.sm"
-                    [class.mat-subtitle-1]="vp.sm"
-                    style="padding: 0 4px; display: flex; align-items: center; justify-content: space-between"
-                >
-                    <div style="display: flex; align-items: center">
-                        <span>Account History</span>
-                        <button mat-icon-button (click)="refreshCurrentAccountInfo()" style="margin-left: 4px">
-                            <mat-icon> refresh </mat-icon>
-                        </button>
-                    </div>
-                    <div
-                        style="display: flex; align-items: center; align-items: center"
-                        *ngIf="!hideTransactionFilters"
-                        class="fade"
-                    >
+            <mat-card appearance="outlined" style="padding: 0">
+                <div *ngIf="!vp.sm" class="desktop-account-history">
+                    <div class="mat-headline-5">Account History</div>
+                    <div>
                         <button
                             mat-stroked-button
-                            style="cursor: pointer"
+                            class="stroked-icon-action-button"
+                            (click)="refreshCurrentAccountInfo()"
+                            matTooltip="Refresh account history"
+                        >
+                            <mat-icon>refresh</mat-icon>
+                        </button>
+                        <button
+                            *ngIf="!hideTransactionFilters"
+                            mat-stroked-button
+                            class="stroked-icon-action-button"
                             (click)="openFilterDialog()"
                             matTooltip="Transaction Filters"
+                            style="margin-left: 16px"
                         >
                             <mat-icon>
                                 {{ isFilterApplied() ? 'filter_list' : 'filter_list_off' }}
@@ -200,10 +200,7 @@
                     </div>
                 </div>
 
-                <mat-divider
-                    *ngIf="!showProgressBar() && !vp.sm"
-                    style="position: relative; margin-right: -16px; margin-left: -16px; width: calc(100% + 32px)"
-                ></mat-divider>
+                <mat-divider *ngIf="!showProgressBar() && !vp.sm"></mat-divider>
 
                 <div
                     *ngIf="showProgressBar() || showNoFilteredResultsEmptyState() || unopenedAccount"
@@ -242,22 +239,17 @@
                     [itemSize]="getTransactionRowHeight()"
                     data-cy="account-scroll-container"
                     [style.height.px]="countTotalDisplayableTxCount() * getTransactionRowHeight()"
-                    class="scroll-container"
+                    class="scroll-container fade"
                     [class.repBanner]="isRepOffline() && !warnBannerDismissed"
+                    style="border-radius: 16px"
                     responsive
                 >
                     <div *cdkVirtualFor="let item of ds; let i = index; let even = even">
-                        <ng-template *ngTemplateOutlet="transaction; context: { item: item, even: even }"></ng-template>
-
-                        <blui-info-list-item *ngIf="!item" [style.height.px]="getTransactionRowHeight()">
-                            <mat-icon icon>sync</mat-icon>
-                            <div title>Loading</div>
-                            <div right-content>
-                                <span *ngIf="!vp.sm" [style.marginLeft.px]="32">
-                                    tx #{{ util.numberWithCommas(accountHeight - i) }}
-                                </span>
-                            </div>
-                        </blui-info-list-item>
+                        <app-transaction
+                            [item]="item"
+                            [even]="even"
+                            [transactionRowHeight]="getTransactionRowHeight()"
+                        ></app-transaction>
                     </div>
                 </cdk-virtual-scroll-viewport>
             </mat-card>
@@ -276,57 +268,3 @@
         </div>
     </div>
 </div>
-
-<ng-template #transaction let-item="item" let-even="even">
-    <mat-list-item
-        [style.height.px]="getTransactionRowHeight()"
-        [style.backgroundColor]="
-            even
-                ? isDark()
-                    ? colors.darkBlack[300]
-                    : colors.white[100]
-                : isDark()
-                ? colors.darkBlack[200]
-                : colors.white[50]
-        "
-    >
-        <div matListIcon class="tx-state-icon">
-            <mat-icon *ngIf="item.type === 'receive'" class="receive">add_circle_outline</mat-icon>
-            <mat-icon *ngIf="item.type === 'send'" class="send">remove_circle_outline</mat-icon>
-            <mat-icon *ngIf="item.type === 'change'" class="change">change_history</mat-icon>
-        </div>
-        <div style="display: flex; justify-content: space-between">
-            <div>
-                <div title>{{ item.type }}</div>
-                <div subtitle>{{ item.amount }}</div>
-            </div>
-            <div right-content>
-                <div (mouseenter)="item.hover = true" (mouseleave)="item.hover = false" style="display: flex">
-                    <ng-container *ngIf="!vp.sm">
-                        <span *ngIf="item.type === 'receive'">from </span>
-                        <span *ngIf="item.type === 'send' || item.type === 'change'">to </span>
-                    </ng-container>
-                    <div class="link accounts-hash-link" [style.marginLeft.px]="8" (click)="openLink(item.hash)">
-                        <ng-container *ngIf="item.type === 'receive' || item.type === 'send'">
-                            {{ formatAddress(item.address) }}
-                        </ng-container>
-                        <ng-container *ngIf="item.type === 'change'">
-                            {{ formatAddress(item.newRepresentative) }}
-                        </ng-container>
-                    </div>
-                    <button
-                        mat-icon-button
-                        *ngIf="item.hover"
-                        (click)="copyTransactionAddress(item)"
-                        style="cursor: pointer; margin-left: 8px; height: 24px; width: 24px; line-height: 24px"
-                    >
-                        <mat-icon style="font-size: 16px">{{
-                            item.showCopiedIcon ? 'check_circle' : 'content_copy'
-                        }}</mat-icon>
-                    </button>
-                </div>
-                <span *ngIf="!vp.sm" [style.marginLeft.px]="32"> tx #{{ util.numberWithCommas(item.height) }} </span>
-            </div>
-        </div>
-    </mat-list-item>
-</ng-template>

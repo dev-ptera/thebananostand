@@ -50,11 +50,13 @@ import { SecretService } from '@app/services/secret.service';
                         </div>
                     </mat-expansion-panel>
                 </mat-accordion>
-                <div class="mat-body-2" style="margin-top: 24px">
+                <div class="mat-body-2" style="margin-top: 24px; margin-bottom: 16px">
                     This secret text allows you to access your Banano using any wallet, such as
                     <a href="https://kalium.banano.cc/" target="_blank" class="link">Kalium</a> or
-                    <a href="https://vault.banano.cc/" target="_blank" class="link">Banano Vault</a>. Losing this secret
-                    means losing access to your accounts.
+                    <a href="https://vault.banano.cc/" target="_blank" class="link">Banano Vault</a>.
+                </div>
+                <div class="mat-body-2">
+                    Losing this secret means losing access to your accounts.
                     <strong>Save your secret phrase in a secure place & don't lose it!</strong>
                 </div>
                 <mat-checkbox style="margin: 16px 0" [(ngModel)]="hasConfirmedBackup">
@@ -62,9 +64,7 @@ import { SecretService } from '@app/services/secret.service';
                 </mat-checkbox>
             </div>
             <div class="overlay-footer">
-                <button mat-stroked-button mat-dialog-close style="width: 100px" color="primary" (click)="close.emit()">
-                    Close
-                </button>
+                <button mat-stroked-button color="primary" (click)="close.emit()">Close</button>
                 <button
                     data-cy="create-wallet-overlay-button"
                     mat-flat-button

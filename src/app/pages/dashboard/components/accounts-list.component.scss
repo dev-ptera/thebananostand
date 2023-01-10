@@ -1,10 +1,10 @@
-:host {
-    width: 100%;
-}
-
 $mobileDashboardHeaderHeight: 120px;
 ::ng-deep .dashboard-header.sm {
     height: $mobileDashboardHeaderHeight;
+}
+
+.sm .dashboard-account-list .row-wrapper {
+    height: 6.5rem;
 }
 
 .dashboard-account-list {
@@ -12,36 +12,42 @@ $mobileDashboardHeaderHeight: 120px;
     overflow: auto;
     max-height: calc(100vh - 334px);
 
-    .hovered img {
-        transform: rotate(-5deg);
+    div {
+        display: flex;
+        align-items: center;
     }
-
-    .row-title {
-        font-size: 15px;
-        font-weight: 600;
-    }
-
-    .mat-divider {
-        position: absolute;
-        bottom: 0;
-        left: 0;
+    .row-wrapper {
+        position: relative;
         width: 100%;
-    }
-
-    .account-address-container {
-        flex-direction: column;
-        align-items: flex-start !important;
-        justify-content: center;
+        justify-content: space-between;
         overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .mat-mdc-list-item.mdc-list-item.mat-mdc-list-item-interactive.mdc-list-item--with-leading-icon.mdc-list-item--with-one-line {
-        height: 72px;
+        height: 4.5rem;
         padding: 0.5rem 24px;
-        div {
-            display: flex;
-            align-items: center;
+        cursor: pointer;
+        .right {
+            justify-content: flex-end;
+        }
+        .left {
+            justify-content: flex-start;
+        }
+        &.hovered img {
+            transform: rotate(-5deg);
+        }
+
+        .account-address-container {
+            flex-direction: column;
+            align-items: flex-start !important;
+            justify-content: center;
+            .address {
+                font-weight: 600;
+            }
+        }
+
+        .mat-divider {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
         }
     }
 

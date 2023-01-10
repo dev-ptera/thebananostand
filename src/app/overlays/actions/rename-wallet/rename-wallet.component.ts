@@ -25,12 +25,11 @@ import { AppStateService } from '@app/services/app-state.service';
                 </form>
             </div>
             <div class="overlay-footer">
-                <button mat-stroked-button color="primary" (click)="close.emit()" style="width: 100px;">Close</button>
+                <button mat-stroked-button color="primary" (click)="close.emit()">Close</button>
                 <button
                     data-cy="rename-wallet-overlay-button"
                     mat-flat-button
                     color="primary"
-                    style="width: 100px;"
                     [disabled]="isDisabled()"
                     (click)="renameWallet()"
                 >
