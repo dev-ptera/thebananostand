@@ -18,35 +18,35 @@ export type FilterOverlayData = {
             <h1 mat-dialog-title>Filter Transactions</h1>
             <div mat-dialog-content style="display: flex; flex: 1 1 0px; flex-direction: column">
                 <div style="margin-bottom: 8px">Use the knobs below to filter your transaction history.</div>
-                <mat-chip-list multiple style="display: flex; justify-content: space-between; margin-top: 16px;">
-                    <mat-chip
+                <mat-chip-listbox multiple style="display: flex; justify-content: space-between; margin-top: 16px;">
+                    <mat-chip-option
                         variant="outline"
                         color="primary"
                         (click)="adjustedFilters.includeReceive = !adjustedFilters.includeReceive"
-                        [selected]="adjustedFilters.includeReceive"
+                        [highlighted]="adjustedFilters.includeReceive"
                     >
                         <mat-icon matChipAvatar style="font-size: 16px">download</mat-icon>
                         Received
-                    </mat-chip>
-                    <mat-chip
+                    </mat-chip-option>
+                    <mat-chip-option
                         variant="outline"
                         color="primary"
                         (click)="adjustedFilters.includeSend = !adjustedFilters.includeSend"
-                        [selected]="adjustedFilters.includeSend"
+                        [highlighted]="adjustedFilters.includeSend"
                     >
                         <mat-icon matChipAvatar style="font-size: 16px">upload</mat-icon>
                         Sent
-                    </mat-chip>
-                    <mat-chip
+                    </mat-chip-option>
+                    <mat-chip-option
                         variant="outline"
                         color="primary"
                         (click)="adjustedFilters.includeChange = !adjustedFilters.includeChange"
-                        [selected]="adjustedFilters.includeChange"
+                        [highlighted]="adjustedFilters.includeChange"
                     >
                         <mat-icon matChipAvatar style="font-size: 16px">how_to_vote</mat-icon>
                         Change
-                    </mat-chip>
-                </mat-chip-list>
+                    </mat-chip-option>
+                </mat-chip-listbox>
 
                 <div style="display: flex; justify-content: space-between; margin-top: 24px">
                     <mat-form-field blui-input style="width: 130px" appearance="fill">
@@ -69,7 +69,7 @@ export type FilterOverlayData = {
                     ></textarea>
                 </mat-form-field>
 
-                <blui-spacer></blui-spacer>
+                <spacer></spacer>
                 <mat-divider style="margin-left: -24px; margin-right: -24px"></mat-divider>
                 <div style="display: flex; justify-content: space-between; padding: 16px 0">
                     <button color="primary" mat-stroked-button (click)="closeDialog()" style="width: 100px;">

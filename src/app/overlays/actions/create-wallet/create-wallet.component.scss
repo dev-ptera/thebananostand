@@ -1,13 +1,7 @@
+@use 'assets/themes/small-icon-button';
+
 .create-wallet-overlay {
-    max-width: 340px;
-    width: 340px;
-    height: 1000px;
-    max-height: 600px;
-    display: flex;
-    flex-direction: column;
-    .mat-title {
-        margin-bottom: 0;
-    }
+    width: 380px;
     ::ng-deep .mat-expansion-panel-body {
         padding-top: 16px;
     }
@@ -21,17 +15,6 @@
         button {
             margin-left: 8px;
         }
-        mat-icon {
-            $size: 16px;
-            font-size: $size;
-            width: $size;
-            height: $size;
-            line-height: $size;
-        }
-        .mat-icon-button {
-            height: 32px;
-            width: 32px;
-            line-height: 32px;
-        }
+        @include small-icon-button.small-icon-button(16px, 32px);
     }
 }

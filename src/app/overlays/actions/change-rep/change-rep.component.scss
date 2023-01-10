@@ -1,34 +1,5 @@
-@mixin fade {
-    -webkit-animation: fadein 250ms; /* Safari, Chrome and Opera > 12.1 */
-    -moz-animation: fadein 250ms; /* Firefox < 16 */
-    -ms-animation: fadein 250ms; /* Internet Explorer */
-    -o-animation: fadein 250ms; /* Opera < 12.1 */
-    animation: fadein 250ms;
-}
-
-:host {
-    display: flex;
-    width: 100%;
-}
-
 .change-rep-overlay {
-    max-width: 340px;
-    width: 340px;
-    height: 440px;
-    display: flex;
-    flex-direction: column;
-
-    .mat-form-field-wrapper {
-        padding-bottom: 0 !important;
-    }
-
-    .first-page-rep-metadata * {
-        @include fade;
-    }
-
-    .close-button {
-        width: 100px;
-        display: flex;
-        justify-content: center;
-    }
+    max-width: 360px;
+    width: 360px;
+    height: 470px;
 }

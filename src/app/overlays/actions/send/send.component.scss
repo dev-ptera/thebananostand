@@ -1,28 +1,5 @@
-:host {
-    display: flex;
-    width: 100%;
-}
-
 .send-overlay {
-    max-width: 340px;
-    width: 340px;
-    height: 360px;
-    display: flex;
-    flex-direction: column;
-
-    .dialog {
-        display: flex;
-        justify-content: center;
-        flex: 1 1 0px;
-        padding-bottom: 16px;
-    }
-    .mat-form-field-wrapper {
-        padding-bottom: 0 !important;
-    }
-
-    .close-button {
-        width: 100px;
-        display: flex;
-        justify-content: center;
-    }
+    max-width: 360px;
+    width: 360px;
+    height: 390px;
 }
