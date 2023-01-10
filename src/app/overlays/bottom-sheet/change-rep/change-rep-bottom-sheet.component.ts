@@ -5,8 +5,6 @@ import { ChangeRepOverlayData } from '@app/overlays/actions/change-rep/change-re
 @Component({
     selector: 'app-change-rep-bottom-sheet',
     template: ` <app-change-rep-overlay [data]="data" (closeWithHash)="closeSheet($event)"></app-change-rep-overlay> `,
-    styleUrls: ['change-rep-bottom-sheet.component.scss'],
-    host: { class: 'app-change-rep-bottom-sheet' },
 })
 export class ChangeRepBottomSheetComponent {
     constructor(

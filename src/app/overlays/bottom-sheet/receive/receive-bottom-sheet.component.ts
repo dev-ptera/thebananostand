@@ -5,8 +5,6 @@ import { ReceiveOverlayData } from '@app/overlays/actions/receive/receive.compon
 @Component({
     selector: 'app-receive-bottom-sheet',
     template: ` <app-receive-overlay [data]="data" (closeWithHash)="closeSheet($event)"></app-receive-overlay> `,
-    styleUrls: ['receive-bottom-sheet.component.scss'],
-    host: { class: 'app-receive-bottom-sheet' },
 })
 export class ReceiveBottomSheetComponent {
     constructor(

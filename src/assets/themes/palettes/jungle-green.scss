@@ -1,0 +1,71 @@
+@use 'node_modules/@brightlayer-ui/colors/palette' as blui;
+@use 'node_modules/@angular/material' as mat;
+@use '../typography';
+@use '../common';
+@use 'sass:map';
+
+/* For use in src/lib/core/theming/_palette.scss */
+$greenPalette: (
+    50 : #e5f1e6,
+    100 : #bdddc0,
+    200 : #92c696,
+    300 : #66af6c,
+    400 : #459e4d,
+    500 : #248d2d,
+    600 : #208528,
+    700 : #1b7a22,
+    800 : #16701c,
+    900 : #0d5d11,
+    A100 : #92ff95,
+    A200 : #5fff64,
+    A400 : #2cff32,
+    A700 : #13ff19,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #ffffff,
+        500 : #ffffff,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
+    )
+);
+
+$my-primary: mat.define-palette($greenPalette, 500);
+$my-accent: mat.define-palette($greenPalette, 700);
+$my-warn: mat.define-palette(blui.$blui-red, 500);
+$my-typography: mat.define-typography-config();
+
+$jungle-green-theme: mat.define-light-theme((
+    color: (
+        primary: $my-primary,
+        accent: $my-accent,
+        warn: $my-warn,
+    ),
+    typography: typography.$custom-typography
+));
+
+.jungle-green {
+    @include mat.all-component-themes($jungle-green-theme);
+    @include mat.typography-hierarchy($jungle-green-theme);
+    @include typography.custom-typography-rules();
+    @include common.mdc-overrides();
+    @include common.utility-classes();
+
+    --primary:          #{map-get($my-primary, 500)};
+    --warn:             #{map-get($my-warn, 500)};
+    --text-contrast:    #{map-get(blui.$blui-white, 50)};
+    --text:             #{map-get(blui.$blui-black, 500)};
+    --icon-primary:     #{map-get(blui.$blui-black, 500)};
+    --icon-secondary:   #{map-get(blui.$blui-black, 300)};
+    --divider:          rgba(66, 78, 84, 0.12);
+    --divider-border:   rgba(66, 78, 84, 0.12);
+}
+//map.get($jungle-green-theme, 'primary');

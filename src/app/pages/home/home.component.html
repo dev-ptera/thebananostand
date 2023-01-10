@@ -4,11 +4,8 @@
 
 <ng-template #appBar>
     <mat-toolbar color="primary" class="mat-elevation-z2 app-toolbar" responsive>
-        <div [style.marginLeft.px]="vp.sm ? 4 : 0" style="display: flex; align-items: center">
+        <div style="display: flex; align-items: center; justify-content: space-between; width: 100%">
             <mat-icon [style.color]="colors.yellow[300]">storefront</mat-icon>
-            <span style="margin-left: 12px">The Banano Stand</span>
-        </div>
-        <div style="display: flex">
             <app-account-settings></app-account-settings>
         </div>
     </mat-toolbar>
@@ -20,10 +17,10 @@
 
 <ng-template #home>
     <div class="app-body home-body" data-cy="home-wrapper" responsive>
-        <blui-spacer></blui-spacer>
+        <spacer></spacer>
 
         <div class="app-body-content home-content">
-            <div *ngIf="!vp.sm" class="mat-display-1 home-logo-wrapper">
+            <div *ngIf="!vp.sm" class="mat-headline-4 home-logo-wrapper">
                 <mat-icon class="home-bananostand-logo-icon" [style.color]="colors.yellow[300]"> storefront </mat-icon>
                 <div>The Banano Stand</div>
             </div>
@@ -33,40 +30,32 @@
             </div>
 
             <div style="display: flex; flex-wrap: wrap; justify-content: center">
-                <mat-card>
-                    <blui-empty-state>
-                        <mat-icon blui-empty-icon>lock</mat-icon>
-                        <div blui-title>Seed / Mnemonic</div>
-                        <div blui-description>Enter your seed or mnemonic phrase to view accounts.</div>
-                        <button
-                            data-cy="enter-secret"
-                            mat-flat-button
-                            blui-actions
-                            color="primary"
-                            (click)="openEnterSeedDialog()"
-                        >
+                <mat-card appearance="outlined">
+                    <app-empty-state>
+                        <mat-icon>lock</mat-icon>
+                        <div title>Seed / Mnemonic</div>
+                        <div description>Enter your seed or mnemonic phrase to view accounts.</div>
+                        <button data-cy="enter-secret" mat-flat-button color="primary" (click)="openEnterSeedDialog()">
                             Enter Secret
                         </button>
-                    </blui-empty-state>
+                    </app-empty-state>
                 </mat-card>
 
-                <mat-card>
-                    <blui-empty-state>
-                        <mat-icon blui-empty-icon>usb</mat-icon>
-                        <div blui-title>Nano Ledger</div>
-                        <div blui-description>
+                <mat-card appearance="outlined">
+                    <app-empty-state>
+                        <mat-icon>usb</mat-icon>
+                        <div title>Nano Ledger</div>
+                        <div description>
                             Load accounts by reading data from a USB-connected
                             <a [href]="ledgerUrl" target="_blank" class="link">Ledger</a>
                             device.
                         </div>
-                        <button mat-flat-button blui-actions color="primary" (click)="connectLedger()">
-                            Load Accounts
-                        </button>
-                    </blui-empty-state>
+                        <button mat-flat-button color="primary" (click)="connectLedger()">Load Ledger</button>
+                    </app-empty-state>
                 </mat-card>
             </div>
 
-            <div style="margin-top: 16px">
+            <div style="margin-top: 16px" class="mat-body-1">
                 <span>New wallet?</span>
                 <span class="link" style="margin-left: 4px" (click)="openNewWalletDialog()">Make me one!</span>
             </div>
@@ -75,19 +64,23 @@
             <strong style="visibility: hidden"><!-- Load error font styles --></strong>
         </div>
 
-        <blui-spacer></blui-spacer>
+        <spacer></spacer>
 
         <div style="display: flex; align-items: center; margin-top: 16px">
-            <img src="assets/github-icon.svg" style="margin-right: 8px" />
-            <a [href]="githubUrl" target="_blank" style="text-align: center; margin: 8px 0px" class="link">GitHub</a>
+            <img src="assets/images/github-icon.svg" style="margin-right: 8px" />
+            <a [href]="githubUrl" target="_blank" style="text-align: center; margin: 8px 0px" class="link mat-body-1"
+                >GitHub</a
+            >
         </div>
     </div>
 </ng-template>
 
 <ng-template #ledgerTroubleshootText>
-    <mat-card class="home-ledger-error-card" [@fade]="'active'">
-        <div style="margin-bottom: 16px">Follow these steps for help connecting your Ledger device:</div>
-        <div class="mat-body-2 instructions">
+    <mat-card appearance="outlined" class="home-ledger-error-card" [@fade]="'active'">
+        <div class="mat-body-1" style="margin-bottom: 16px">
+            Follow these steps for help connecting your Ledger device:
+        </div>
+        <div class="mat-body-1 instructions">
             <div><strong>#1</strong> Connect your Ledger Device via USB.</div>
             <div><strong>#2</strong> Ensure the Banano app is installed and the version is up-to-date (>v1.2.6).</div>
             <div><strong>#3</strong> Ensure no other wallet software is attempting to access your ledger device.</div>

@@ -1,41 +1,11 @@
-:host {
-    width: 100%;
-}
-
-.switch-wallet-user-menu ::ng-deep .blui-user-menu-avatar-content {
-    height: unset;
-    width: unset;
-    line-height: unset;
-}
-
 .clickable-header {
     cursor: pointer;
-}
-
-.rename-wallet-button {
-    $buttonSize: 24px;
-    width: $buttonSize;
-    height: $buttonSize;
-    line-height: $buttonSize;
-    .mat-icon {
-        $iconSize: 10px;
-        height: $iconSize;
-        line-height: $iconSize;
-        font-size: $iconSize;
-        width: $iconSize;
-        &.bigger {
-            $iconSize: 16px;
-            height: $iconSize;
-            line-height: $iconSize;
-            font-size: $iconSize;
-            width: $iconSize;
-        }
-    }
 }
 
 .dashboard-header {
     display: flex;
     justify-content: space-between;
+    flex-direction: row;
     align-items: center;
     margin-bottom: 24px;
     padding: 16px 24px;
@@ -43,5 +13,19 @@
         padding-top: 16px;
         padding-bottom: 16px;
         margin-bottom: 0px;
+    }
+}
+
+$mobileDashboardHeaderHeight: 112px;
+.sm .dashboard-header {
+    height: $mobileDashboardHeaderHeight;
+}
+
+.dashboard-account-list {
+    max-height: calc(100vh - 344px);
+    &.sm {
+        padding: 0;
+        max-height: calc(100vh - (56px + $mobileDashboardHeaderHeight + 1px)); // Don't forget the divider height. 1px
+        max-height: calc(var(--app-height) - (56px + $mobileDashboardHeaderHeight + 1px));
     }
 }

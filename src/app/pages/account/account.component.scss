@@ -4,24 +4,25 @@
 
 /* Update these styles if the row height must change. */
 .app-body {
-    ::ng-deep .blui-info-list-item-content .mat-list-item-content,
-    .mat-list-base .mat-list-item.blui-info-list-item-content .mat-list-item-content {
-        height: 52px;
-    }
-    .sm {
-        ::ng-deep .blui-info-list-item-content .mat-list-item-content,
-        .mat-list-base .mat-list-item.blui-info-list-item-content .mat-list-item-content {
-            height: 72px;
-        }
-    }
 }
 
-.rep-offline-banner {
+.account-tx-actions .mdc-button:not[disabled] .mat-icon {
+    color: var(--text-contrast);
+}
+
+.results-empty-container {
+    padding: 24px 0;
+}
+
+.mat-toolbar.rep-offline-banner {
     height: unset;
     min-height: 36px;
     display: flex;
     justify-content: space-between;
     padding: 4px 36px 4px 36px !important;
+    * {
+        color: var(--text-contrast);
+    }
     &.sm {
         padding: 8px 12px 8px 20px !important;
     }
@@ -64,6 +65,13 @@
     animation: fadein 3000ms;
 }
 
+.desktop-account-history {
+    padding: 16px 16px 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .empty-states {
     * {
         @include fade;
@@ -73,18 +81,21 @@
     }
 }
 
-.fade {
+.fade,
+.fade * {
     @include fade;
 }
 
 .scroll-container {
     border: 0 !important;
     box-sizing: content-box;
-    width: calc(100% + 32px);
-    margin-left: -16px;
-    margin-right: -16px;
+    //  width: calc(100% + 32px);
+    width: 100%;
+    //  margin-left: -16px;
+    //  margin-right: -16px;
     $height: calc(100vh - 420px);
     max-height: $height;
+
     &.repBanner {
         max-height: calc($height - 40px);
     }

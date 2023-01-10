@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
 import { Router } from '@angular/router';
 import { UtilService } from '@app/services/util.service';
@@ -21,7 +21,6 @@ import { RenameWalletBottomSheetComponent } from '@app/overlays/bottom-sheet/ren
 import { RenameWalletDialogComponent } from '@app/overlays/dialogs/rename-wallet/rename-wallet-dialog.component';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { hoverDashboardActions } from '../../animation';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @UntilDestroy()
@@ -29,7 +28,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
-    animations: [hoverDashboardActions],
+    encapsulation: ViewEncapsulation.None,
 })
 export class DashboardComponent {
     switchWalletOverlayOpen = false;

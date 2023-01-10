@@ -1,10 +1,12 @@
 <section class="login-section" [class.fullScreen]="!isMobileView">
-    <mat-card class="login-card">
+    <mat-card appearance="outlined" class="login-card">
         <mat-card-header *ngIf="isMobileView" class="password-form-card-header">
             <mat-card-title style="margin-bottom: 0">Welcome Back!</mat-card-title>
         </mat-card-header>
         <mat-card-content class="login-card-content">
-            <p class="login-card-subtitle">Your wallet is locked; enter your password below to access your account.</p>
+            <div class="login-card-subtitle mat-body-1">
+                Your wallet is locked; enter your password below to access your account.
+            </div>
             <mat-divider class="top-divider"></mat-divider>
             <form>
                 <mat-form-field appearance="fill">

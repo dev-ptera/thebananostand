@@ -1,0 +1,72 @@
+@mixin utility-classes() {
+    .primary,
+    .primary * {
+        color: var(--primary);
+    }
+    .warn * {
+        color: var(--warn);
+    }
+
+    .secondary {
+        color: var(--secondary);
+    }
+
+    .hint {
+        color: var(--hint);
+    }
+
+    .divider {
+        color: var(--divider);
+    }
+
+    .divider-border {
+        border: solid 1px var(--divider-border);
+    }
+
+    .mat-icon {
+        color: var(--icon-primary);
+    }
+
+    .text-contrast {
+        color: var(--text-contrast);
+    }
+}
+
+@mixin mdc-overrides() {
+    .mat-mdc-menu-item .mat-icon-no-color, .mat-mdc-menu-submenu-icon {
+        color: var(--icon-secondary);
+    }
+
+    .mat-mdc-outlined-button:not(:disabled).mat-primary {
+        --mdc-outlined-button-outline-color: var(--primary);
+    }
+
+    .mat-expansion-panel-header.mat-expanded {
+        border-bottom: solid 1px var(--divider);
+    }
+
+    .mat-divider {
+        border-top-color: var(--divider);
+    }
+
+    .mat-mdc-option .mdc-list-item__primary-text {
+        width: 100%;
+    }
+
+    .mat-mdc-card {
+        --mdc-outlined-card-outline-color: var(--divider-border);
+    }
+
+    .mat-mdc-menu-item.mdc-list-item * {
+        font-weight: 400;
+    }
+
+    .mdc-button__label {
+        font-size: .875rem;
+        letter-spacing: .5px;
+    }
+
+    .sm .mat-mdc-card {
+        border-radius: 0;
+    }
+}

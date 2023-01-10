@@ -16,10 +16,10 @@ import { Location } from '@angular/common';
 
         <div class="app-body" responsive>
             <div class="app-body-content">
-                <mat-card style="margin-bottom: 32px">
-                    <div class="mat-title">Account Security</div>
+                <mat-card appearance="outlined" style="margin-bottom: 32px">
+                    <div class="mat-headline-6">Account Security</div>
                     <mat-divider></mat-divider>
-                    <div class="mat-body-2">Bookmarks go here.</div>
+                    <div class="mat-subtitle-2">Bookmarks go here.</div>
                 </mat-card>
             </div>
         </div>

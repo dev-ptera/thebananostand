@@ -1,0 +1,32 @@
+@use 'assets/themes/small-icon-button';
+
+.transaction-row,
+.transaction-row div {
+    display: flex;
+    align-items: center;
+}
+
+.transaction-row {
+    padding: 8px 16px;
+    .type {
+        font-weight: 600;
+        margin-bottom: -4px;
+    }
+    .copy-address-button {
+        margin-left: 4px;
+        @include small-icon-button.small-icon-button(16px, 32px);
+    }
+}
+
+.tx-state-icon .mat-icon {
+    margin-right: 36px;
+    color: var(--icon-secondary);
+}
+.sm .tx-state-icon .mat-icon {
+    margin-right: 24px;
+}
+
+.transaction-row > div {
+    width: 100%;
+    justify-content: space-between;
+}

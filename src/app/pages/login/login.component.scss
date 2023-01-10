@@ -5,6 +5,7 @@ mat-form-field {
 .small mat-form-field {
     margin-bottom: 24px;
 }
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 ::ng-deep .password-form-card-header .mat-card-header-text {
     margin: 0 !important;
 }
@@ -26,9 +27,11 @@ mat-form-field {
         max-height: 450px;
         flex-direction: column;
         padding: 0;
+        /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
+        /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
         mat-card-header {
             padding: 32px 24px 0 24px;
-            .mat-card-title {
+            .mat-mdc-card-title {
                 margin-bottom: 0;
             }
         }
@@ -47,7 +50,7 @@ mat-form-field {
                     margin: 16px -16px 32px;
                 }
             }
-            .mat-card-actions:last-child {
+            .mat-mdc-card-actions:last-child {
                 margin: 0;
                 padding: 16px;
                 .cancel-button {
@@ -81,7 +84,7 @@ mat-form-field {
     }
 }
 
-.mat-card .mat-divider-horizontal.bottom-divider {
+.mat-mdc-card .mat-divider-horizontal.bottom-divider {
     position: relative;
 }
 .login-form-group {
@@ -93,6 +96,7 @@ mat-form-field {
         margin-bottom: 32px;
     }
 }
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card-actions {
     padding: 24px;
     display: flex;
@@ -104,8 +108,8 @@ mat-card-actions {
     }
 }
 
-.mat-card {
-    .mat-card-actions:last-child {
+.mat-mdc-card {
+    .mat-mdc-card-actions:last-child {
         margin-bottom: 0;
         padding: 24px 32px;
     }
