@@ -1,88 +1,38 @@
 @use 'node_modules/@brightlayer-ui/colors/palette' as blui;
 @use 'node_modules/@angular/material' as mat;
+@use '../mixins/typography';
+@use '../mixins/mdc-customization';
+@use 'palette-classes';
 
-$material-theme-primary: mat.define-palette(blui.$blui-blue, 500);
-$material-theme-accent: mat.define-palette(blui.$blui-blue, 800);
-$material-theme-warn: mat.define-palette(blui.$blui-red, 500);
-$divider: rgba(66, 78, 84, 0.12);
-$nano-blue-theme: map-merge(
-    mat.define-light-theme($material-theme-primary, $material-theme-accent, $material-theme-warn),
-    (
-        foreground: (
-            text: map-get(blui.$blui-black, 500),
-            secondary-text: map-get(blui.$blui-gray, 500),
-            hint-text: map-get(blui.$blui-black, 400),
-            base: map-get(blui.$blui-darkBlack, 900),
-            divider: $divider,
-            dividers: mat.get-color-from-palette(mat.$light-theme-foreground-palette, dividers),
-            disabled: rgba(66, 78, 84, 0.3),
-            disabled-button: rgba(black, 0.26),
-            disabled-text: rgba(66, 78, 84, 0.3),
-            elevation: map-get(blui.$blui-darkBlack, 900),
-            icon: rgba(black, 0.54),
-            icons: rgba(black, 0.54),
-            slider-min: rgba(black, 0.87),
-            slider-off: rgba(black, 0.26),
-            slider-off-active: rgba(black, 0.38),
-        ),
-        background: (
-            status-bar: mat.get-color-from-palette(mat.$light-theme-background-palette, status-bar),
-            app-bar: map-get(blui.$blui-gray, 50),
-            background: map-get(blui.$blui-white, 200),
-            hover: rgba(black, 0.04),
-            card: map-get(blui.$blui-white, 50),
-            dialog: map-get(blui.$blui-white, 50),
-            disabled-button: rgba(114, 126, 132, 0.12),
-            raised-button: map-get(blui.$blui-white, 50),
-            focused-button: mat.get-color-from-palette(mat.$light-theme-background-palette, focused-button),
-            selected-button: map-get(blui.$blui-gray, 300),
-            selected-disabled-button: map-get(blui.$blui-gray, 400),
-            disabled-button-toggle: map-get(blui.$blui-gray, 200),
-            unselected-chip: map-get(blui.$blui-gray, 300),
-            disabled-list-option: map-get(blui.$blui-gray, 200),
-        ),
-    )
-);
+$my-primary: mat.define-palette(blui.$blui-blue, 500);
+$my-accent: mat.define-palette(blui.$blui-blue, 700);
+$my-warn: mat.define-palette(blui.$blui-red, 500);
+$my-typography: mat.define-typography-config();
+
+$nano-blue-theme: mat.define-light-theme((
+    color: (
+        primary: $my-primary,
+        accent: $my-accent,
+        warn: $my-warn,
+    ),
+    typography: typography.$custom-typography
+));
 
 .nano-blue {
-    @include mat.all-component-themes($nano-blue-theme);
-    $primary: mat.get-color-from-palette($material-theme-primary, 500);
-    $foreground: map-get($nano-blue-theme, foreground);
+    @include mat.all-component-colors($nano-blue-theme);
+    @include mat.typography-hierarchy($nano-blue-theme);
+    @include typography.custom-typography-rules();
+    @include palette-classes.utility-classes();
+    @include mdc-customization.mdc-overrides();
 
-
-    --primary: yellow;
-    --warn: yellow;
-
-    .divider-border {
-        border: solid 1px $divider;
-    }
-    .app-toolbar .blui-user-menu-avatar {
-        color: map-get(blui.$blui-white, 500) !important;
-    }
-    .non-special-address-chars {
-        color: #b5b5b5;
-    }
-    .blui-user-menu-avatar {
-        color: map-get($foreground, secondary-text);
-    }
-    .account-mobile-footer {
-        background-color: map-get(blui.$blui-white, 50);
-    }
-
-    .dashboard-account-list {
-        .hovered {
-            .mat-mdc-list-item:hover {
-                background-color: rgba($primary, 0.05);
-            }
-        }
-    }
-
-    .mat-expansion-panel-header-title,
-    .mat-expansion-indicator::after {
-        color: $primary;
-    }
-
-    /*.blui-toolbar-menu-label {
-        color: $primary;
-    }*/
+    --primary:          #{map-get($my-primary, 500)};
+    --warn:             #{map-get($my-warn, 500)};
+    --card:             #{map-get(blui.$blui-white, 100)};
+    --text-contrast:    #{map-get(blui.$blui-white, 50)};
+    --text:             #{map-get(blui.$blui-black, 500)};
+    --link:             #{map-get(blui.$blui-blue, 500)};
+    --icon-primary:     #{map-get(blui.$blui-black, 500)};
+    --icon-secondary:   #{map-get(blui.$blui-black, 300)};
+    --divider:          rgba(66, 78, 84, 0.12);
+    --divider-border:   rgba(66, 78, 84, 0.12);
 }

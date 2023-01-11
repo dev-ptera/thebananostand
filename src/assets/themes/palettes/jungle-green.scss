@@ -54,7 +54,6 @@ $jungle-green-theme: mat.define-light-theme((
 ));
 
 .jungle-green {
-    @include mat.all-component-themes($jungle-green-theme);
     @include mat.typography-hierarchy($jungle-green-theme);
     @include typography.custom-typography-rules();
     @include palette-classes.utility-classes();
@@ -65,6 +64,7 @@ $jungle-green-theme: mat.define-light-theme((
     --card:             #{map-get(blui.$blui-white, 100)};
     --text-contrast:    #{map-get(blui.$blui-white, 50)};
     --text:             #{map-get(blui.$blui-black, 500)};
+    --link:             #{map-get(blui.$blui-blue, 500)};
     --icon-primary:     #{map-get(blui.$blui-black, 500)};
     --icon-secondary:   #{map-get(blui.$blui-black, 300)};
     --divider:          rgba(66, 78, 84, 0.12);

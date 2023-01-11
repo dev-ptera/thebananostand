@@ -26,6 +26,10 @@
         }
     }
 
+    .mat-bottom-sheet-container {
+        background: var(--card);
+    }
+
     .mat-expansion-panel-header.mat-expanded {
         border-bottom: solid 1px var(--divider);
     }
@@ -49,9 +53,5 @@
     .mdc-button__label {
         font-size: .875rem;
         letter-spacing: .5px;
-    }
-
-    .sm .mat-mdc-card {
-        border-radius: 0;
     }
 }

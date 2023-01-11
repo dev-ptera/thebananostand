@@ -12,7 +12,6 @@ $card-horizontal-padding: 16px;
             display: block;
             margin: 16px 0;
         }
-        /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
         .mat-radio-label-content {
             word-break: break-all;
             padding-left: 16px;
@@ -33,10 +32,10 @@ $card-horizontal-padding: 16px;
     }
 
     &.sm {
-        /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
         mat-card {
             padding-left: 24px;
             padding-right: 24px;
+            border-radius: 0;
         }
     }
     .account-security-option {

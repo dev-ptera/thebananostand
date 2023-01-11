@@ -52,7 +52,7 @@ export class SecretService {
         try {
             await this.unlockSecretWallet(currentUserPassword);
         } catch {
-            throw new Error('Current password incorrect');
+            throw new Error('Current password is incorrect');
         }
 
         const wallets = this._appStateService.store.getValue().localStorageWallets;

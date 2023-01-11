@@ -33,7 +33,7 @@ export class DatasourceAvailablePipe implements PipeTransform {
                     <button mat-icon-button (click)="back()">
                         <mat-icon style="color: var(--text-contrast)">close</mat-icon>
                     </button>
-                    <span style="margin-left: 12px">Settings</span>
+                    <span style="margin-left: 12px; color: var(--text-contrast)">Settings</span>
                 </div>
             </mat-toolbar>
 
@@ -149,7 +149,6 @@ export class DatasourceAvailablePipe implements PipeTransform {
 export class SettingsPageComponent implements OnInit {
     selectedRpcSource: any;
     selectedSpyglassApi: any;
-    bottomSheetOpenDelayMs = 250;
 
     constructor(
         public vp: ViewportService,
@@ -171,9 +170,7 @@ export class SettingsPageComponent implements OnInit {
 
     openChangePasswordOverlay(): void {
         if (this.vp.sm) {
-            setTimeout(() => {
-                this._sheet.open(ChangePasswordBottomSheetComponent);
-            }, this.bottomSheetOpenDelayMs);
+            this._sheet.open(ChangePasswordBottomSheetComponent);
         } else {
             this._dialog.open(ChangePasswordDialogComponent);
         }

@@ -1,4 +1,4 @@
-.clickable-header {
+.dashboard-clickable-header {
     cursor: pointer;
 }
 
@@ -13,6 +13,12 @@
         padding-top: 16px;
         padding-bottom: 16px;
         margin-bottom: 0px;
+    }
+}
+
+.sm .dashboard-wrapper {
+    mat-card {
+        border-radius: 0;
     }
 }
 

@@ -1,12 +1,16 @@
-@use 'node_modules/@brightlayer-ui/colors/palette.scss' as blui;
-//@use 'assets/themes/banano-yellow';
-@use 'assets/themes/palettes/jungle-green';
-//@use 'assets/themes/nano-blue';
 @use '@angular/material' as mat;
+@use 'assets/themes/palettes/jungle-green';
+@use 'assets/themes/palettes/nano-blue';
+@use 'assets/themes/palettes/banano-yellow';
 @use 'assets/themes/mixins/overlay';
+@use 'assets/themes/mixins/typography';
+@use 'assets/themes/mixins/mdc-customization';
+@use 'assets/themes/palettes/palette-classes';
 
+// Jungle Theme, base theme
 @include mat.core();
 @include overlay.overlay-common();
+@include mat.all-component-themes(jungle-green.$jungle-green-theme);
 
 html * {
     box-sizing: border-box;
@@ -57,19 +61,10 @@ body,
             margin-bottom: 16px;
             text-align: center;
         }
-
-        mat-divider.mat-divider.blui-info-list-item-partial-divider {
-            position: relative;
-            bottom: 0;
-            right: 0;
-            left: 0;
-            width: calc(100%);
-        }
     }
 }
 
 .link {
-    color: map-get(blui.$blui-blue, 500);
     text-decoration: underline;
     cursor: pointer;
 }
@@ -140,158 +135,3 @@ input[type='number'] {
         height: 56px;
     }
 }
-
-/*
-// Input overrides.
-textarea.mat-input-element,
-.mat-input-element {
-    margin: 0 !important;
-}
-
-.add-accounts-example {
-    font-family: monospace;
-    background: #dedede;
-}
-
-
-.transition,
-.transition * {
-    transition: all 250ms;
-}
-
-textarea {
-    min-height: 64px;
-}
-
-.mat-menu-item {
-    -webkit-user-select: none;
-    user-select: none;
-    cursor: pointer;
-    outline: none;
-    border: none;
-    -webkit-tap-highlight-color: transparent;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: flex;
-    align-items: center;
-    line-height: 48px;
-    height: 48px;
-    padding: 0 16px;
-    text-align: left;
-    text-decoration: none;
-    width: 100%;
-    position: relative;
-}
-.mat-menu-item .mat-icon {
-    margin-right: 16px;
-    vertical-align: middle;
-}
-.mat-menu-item .mat-menu-ripple {
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    position: absolute;
-    pointer-events: none;
-}
-
-
- */
-
-/*
-.mat-dialog-container {
-    padding-bottom: 0 !important;
-}
-
-.mat-snack-bar-container {
-    max-width: unset !important;
-}
-
-.mat-chip {
-    cursor: pointer !important;
-}
-
-// Theme overrides
-
-@mixin border-radius {
-    mat-card,
-    mat-nav-list,
-    .mat-list-item-ripple,
-    mat-list-item,
-    mat-list-item-content,
-    mat-dialog-container {
-        border-radius: 1rem !important;
-    }
-    button.mat-flat-button,
-    button.mat-stroked-button {
-        border-radius: 0.25rem !important;
-    }
-    .sm {
-        mat-card,
-        mat-nav-list,
-        .mat-list-item-ripple,
-        mat-list-item,
-        mat-list-item-content,
-        mat-dialog-container {
-            border-radius: 0rem !important;
-        }
-        button.mat-flat-button,
-        button.mat-stroked-button {
-            &:not(.preserve-non-mobile) {
-                border-radius: 1rem !important;
-                padding: 4px 16px !important;
-            }
-        }
-    }
-
-    .home-body mat-card {
-        border-radius: 1rem !important;
-    }
-}
-@include border-radius();
-
-cdk-virtual-scroll-viewport,
-cdk-virtual-scroll-content-wrapper {
-    border-bottom-left-radius: 1rem !important;
-    border-bottom-right-radius: 1rem !important;
-}
-
-.mat-bottom-sheet-container {
-    .receive-overlay,
-    .send-overlay,
-    .filter-overlay,
-    .create-wallet-overlay,
-    .enter-secret-overlay,
-    .rename-wallet-overlay,
-    .change-password-overlay,
-    .change-rep-overlay {
-        .mat-stroked-button,
-        .mat-flat-button {
-            max-width: 120px;
-            min-width: 100px;
-            width: 100% !important;
-        }
-    }
-}
-
-
-.mat-dialog-container,
-.mat-bottom-sheet-container {
-    overflow: hidden !important;
-}
-
-.mat-bottom-sheet-container {
-    padding: 2rem 2rem 0rem 2rem!important;
-    border-top-left-radius: 32px !important;
-    border-top-right-radius: 32px !important;
-    .mat-dialog-title {
-        margin-bottom: 2rem !important;
-    }
-}
-.responsive-menu-bottomsheet .mat-bottom-sheet-container {
-    padding-bottom: 8px!important;
-}
-
-
- */

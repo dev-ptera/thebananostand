@@ -1,7 +1,7 @@
 <!-- Displays wallet name & gives an option to change wallets. -->
 <ng-template #walletNameDropdown>
     <div style="display: flex; align-items: center; width: 100%">
-        <div style="display: flex; align-items: center" [class.clickable-header]="hasAlternativeWallets()">
+        <div style="display: flex; align-items: center" [class.dashboard-clickable-header]="hasAlternativeWallets()">
             <ng-template #switchWalletNameTrigger>
                 <div style="display: flex; align-items: center">
                     <div
@@ -159,7 +159,7 @@
 
 <!-- Page Layout -->
 <div class="app-body" responsive>
-    <div class="app-body-content">
+    <div class="app-body-content dashboard-wrapper">
         <div
             style="padding: 0; display: flex; flex-direction: column; width: 100%"
             [style.marginTop.px]="vp.sm ? 0 : 16"

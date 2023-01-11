@@ -61,13 +61,18 @@ import { AppStateService } from '@app/services/app-state.service';
 
         <!-- Statuses that are shown beneath an address.  Includes "Rep Offline" & "Has Receivable" information. -->
         <ng-template #statusBadges let-account="account">
-            <div style="display: flex; align-items: center">
+            <div
+                *ngIf="account.pending.length > 0 || showRepresentativeOffline(account.representative)"
+                style="display: flex; align-items: center"
+                [style.marginTop.px]="vp.sm ? 8 : 0"
+            >
                 <list-item-tag
                     *ngIf="account.pending.length > 0"
                     [label]="vp.sm ? 'Receivable' : 'Has Receivable'"
                     class="receivable-tag"
                     style="margin-right: 16px"
                     [backgroundColor]="colors.orange[500]"
+                    [fontColor]="colors.white[50]"
                 >
                 </list-item-tag>
                 <list-item-tag
@@ -105,19 +110,24 @@ import { AppStateService } from '@app/services/app-state.service';
                         </div>
                     </div>
                     <div class="account-address-container">
-                        <div class="mono mat-body-2 address" [class.primary]="hoverRowNumber === i">
+                        <div
+                            class="mono address"
+                            [class.primary]="hoverRowNumber === i"
+                            [class.mat-body-1]="!vp.sm"
+                            [class.mat-body-2]="vp.sm"
+                        >
                             {{ account.shortAddress }}
                         </div>
-                        <div *ngIf="vp.sm">
-                            <span class="mat-body-2" *ngIf="account.representative; else unopenedAccountTag">
+                        <ng-container *ngIf="vp.sm">
+                            <div class="mat-body-2" *ngIf="account.representative; else unopenedAccountTag">
                                 {{ account.formattedBalance }} BAN
-                            </span>
-                        </div>
-                        <div *ngIf="vp.sm">
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="vp.sm">
                             <ng-template
                                 *ngTemplateOutlet="statusBadges; context: { account: this.account }"
                             ></ng-template>
-                        </div>
+                        </ng-container>
                         <div *ngIf="!vp.sm && account.representative" class="mat-body-2">
                             represented by {{ formatRepresentative(account.representative) }}
                         </div>

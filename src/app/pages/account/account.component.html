@@ -84,8 +84,8 @@
             <div
                 [style.marginLeft.px]="8"
                 *ngIf="account"
-                style="font-size: 1.125rem; display: flex; align-items: center"
-                class="mono"
+                style="font-size: 1.125rem; display: flex; align-items: center; color: var(--text-contrast)"
+                class="mono mat-body-1"
             >
                 <div *ngIf="!vp.md && !vp.sm">
                     <span>{{ account?.fullAddress.substring(0, 12) }}</span>
@@ -130,7 +130,7 @@
     </mat-toolbar>
 
     <div class="app-body" *ngIf="account" responsive>
-        <div class="app-body-content">
+        <div class="app-body-content accounts-wrapper">
             <mat-card appearance="outlined" *ngIf="vp.sm" style="padding: 0 16px">
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0">
                     <div class="mat-body-1" style="margin-bottom: 0">
@@ -212,7 +212,6 @@
                 <div
                     *ngIf="showProgressBar() || showNoFilteredResultsEmptyState() || unopenedAccount"
                     class="empty-states"
-                    [class.slow-fade-in]="showProgressBar()"
                 >
                     <div *ngIf="showNoFilteredResultsEmptyState()" class="results-empty-container">
                         <app-empty-state style="margin: 24px 0">
@@ -237,9 +236,8 @@
                     [itemSize]="getTransactionRowHeight()"
                     data-cy="account-scroll-container"
                     [style.height.px]="countTotalDisplayableTxCount() * getTransactionRowHeight()"
-                    class="scroll-container fade"
+                    class="scroll-container"
                     [class.repBanner]="isRepOffline() && !warnBannerDismissed"
-                    style="border-radius: 16px"
                     responsive
                 >
                     <div *cdkVirtualFor="let item of ds; let i = index; let even = even">
