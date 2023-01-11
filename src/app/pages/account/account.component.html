@@ -131,14 +131,14 @@
 
     <div class="app-body" *ngIf="account" responsive>
         <div class="app-body-content">
-            <mat-card appearance="outlined" *ngIf="vp.sm">
-                <div style="display: flex; justify-content: space-between; align-items: center">
-                    <div class="mat-subtitle-1" style="margin-bottom: 0">
+            <mat-card appearance="outlined" *ngIf="vp.sm" style="padding: 0 16px">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0">
+                    <div class="mat-body-1" style="margin-bottom: 0">
                         <strong>{{ account.formattedBalance }} BAN </strong>Balance
                     </div>
                     <ng-template [ngTemplateOutlet]="accountActions"></ng-template>
                 </div>
-                <div class="mat-overline" style="margin-top: 8px; margin-bottom: -8px">Transactions</div>
+                <div class="mat-overline">Transactions</div>
             </mat-card>
 
             <mat-card
