@@ -1,14 +1,5 @@
-:host {
-    width: 100%;
-}
-
-/* Update these styles if the row height must change. */
-.app-body {
-}
-
-.account-tx-actions .mdc-button:not[disabled] .mat-icon {
-    color: var(--text-contrast);
-}
+@use 'assets/themes/mixins/mobile-action-button' as button;
+@use 'assets/themes/mixins/small-icon-button' as common;
 
 .results-empty-container {
     padding: 24px 0;
@@ -20,11 +11,12 @@
     display: flex;
     justify-content: space-between;
     padding: 4px 36px 4px 36px !important;
+    @include common.small-icon-button(16px, 32px);
     * {
         color: var(--text-contrast);
     }
     &.sm {
-        padding: 8px 12px 8px 20px !important;
+        padding: 8px 16px !important;
     }
     div {
         margin: 0;
@@ -33,11 +25,6 @@
     }
 }
 
-.sm {
-    .accounts-hash-link {
-        font-size: 1rem;
-    }
-}
 .accounts-hash-link {
     max-width: 210px;
     overflow: hidden;
@@ -86,6 +73,7 @@
     @include fade;
 }
 
+$sendReceiveRowHeight: 74px;
 .scroll-container {
     border: 0 !important;
     box-sizing: content-box;
@@ -100,14 +88,23 @@
         max-height: calc($height - 40px);
     }
     @include fade;
-    $sendReceiveRowHeight: 76px;
+    $toolbarHeight: 56px;
+    $accountInfoHeight: 90px;
     &.sm {
-        max-height: calc(100vh - 56px - 104px - $sendReceiveRowHeight);
-        max-height: calc(var(--app-height) - 56px - 104px - $sendReceiveRowHeight);
+        max-height: calc(100vh - $toolbarHeight - $accountInfoHeight - $sendReceiveRowHeight);
+        max-height: calc(var(--app-height) - $toolbarHeight - $accountInfoHeight - $sendReceiveRowHeight);
         &.repBanner {
             $mobileBannerHeight: 82px;
-            max-height: calc(100vh - 56px - 104px - $sendReceiveRowHeight - $mobileBannerHeight);
-            max-height: calc(var(--app-height) - 56px - 104px - $sendReceiveRowHeight - $mobileBannerHeight);
+            max-height: calc(100vh - $toolbarHeight - $accountInfoHeight - $sendReceiveRowHeight - $mobileBannerHeight);
+            max-height: calc(
+                var(--app-height) - $toolbarHeight - $accountInfoHeight - $sendReceiveRowHeight - $mobileBannerHeight
+            );
         }
     }
+}
+
+.account-mobile-footer {
+    height: $sendReceiveRowHeight;
+    background: var(--card);
+    @include button.mobile-button-styles();
 }

@@ -78,7 +78,7 @@
 <div class="app-root">
     <mat-toolbar color="primary" class="mat-elevation-z2 app-toolbar" responsive>
         <div style="display: flex; align-items: center">
-            <button mat-icon-button (click)="goHome()">
+            <button mat-icon-button (click)="goHome()" style="margin-left: -4px">
                 <mat-icon class="text-contrast">arrow_back</mat-icon>
             </button>
             <div
@@ -105,9 +105,7 @@
                 </button>
             </div>
         </div>
-        <div style="display: flex">
-            <app-account-settings></app-account-settings>
-        </div>
+        <app-account-settings></app-account-settings>
     </mat-toolbar>
     <mat-toolbar
         color="warn"
@@ -118,14 +116,16 @@
         <div class="mat-body-2">
             Your current representative is <strong>offline</strong>. If this happens often, it is suggested that you
             update to a recommended rep.
-            <span class="link" style="color: unset" (click)="openChangeRepDocs()">Why is this important?</span>
+            <a
+                href="https://nanotools.github.io/Change-Nano-Representative/"
+                target="_blank"
+                class="link"
+                style="color: unset"
+                >Why is this important?</a
+            >
         </div>
-        <button
-            mat-icon-button
-            (click)="dismissRepOfflineBanner()"
-            style="margin-left: 16px; height: 24px; width: 24px; line-height: 24px"
-        >
-            <mat-icon style="font-size: 16px">close</mat-icon>
+        <button mat-icon-button (click)="dismissRepOfflineBanner()" [style.paddingLeft.px]="4">
+            <mat-icon>close</mat-icon>
         </button>
     </mat-toolbar>
 
@@ -173,7 +173,16 @@
                 <app-qr *ngIf="!vp.sm" [address]="account.fullAddress"></app-qr>
             </mat-card>
 
-            <mat-card appearance="outlined" style="padding: 0">
+            <mat-card appearance="outlined" style="padding: 0; position: relative; overflow: hidden">
+                <mat-progress-bar
+                    *ngIf="showProgressBar()"
+                    color="primary"
+                    mode="indeterminate"
+                    style="left: 0"
+                    [style.position]="vp.sm ? 'fixed' : 'absolute'"
+                    [style.top.px]="vp.sm ? 56 : 0"
+                >
+                </mat-progress-bar>
                 <div *ngIf="!vp.sm" class="desktop-account-history">
                     <div class="mat-headline-5">Account History</div>
                     <div>
@@ -199,9 +208,7 @@
                         </button>
                     </div>
                 </div>
-
-                <mat-divider *ngIf="!showProgressBar() && !vp.sm"></mat-divider>
-
+                <mat-divider *ngIf="!vp.sm"></mat-divider>
                 <div
                     *ngIf="showProgressBar() || showNoFilteredResultsEmptyState() || unopenedAccount"
                     class="empty-states"
@@ -223,15 +230,6 @@
                             <div description>To open this account, it must receive an incoming transaction.</div>
                         </app-empty-state>
                     </div>
-                    <ng-container *ngIf="showProgressBar()">
-                        <mat-progress-bar
-                            *ngIf="showProgressBar()"
-                            color="primary"
-                            mode="indeterminate"
-                            style="margin-bottom: 16px"
-                        >
-                        </mat-progress-bar>
-                    </ng-container>
                 </div>
 
                 <cdk-virtual-scroll-viewport

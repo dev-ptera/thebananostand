@@ -1,44 +1,29 @@
-@mixin utility-classes() {
-    .primary,
-    .primary * {
-        color: var(--primary);
-    }
-    .warn * {
-        color: var(--warn);
-    }
-
-    .secondary {
-        color: var(--secondary);
-    }
-
-    .hint {
-        color: var(--hint);
-    }
-
-    .divider {
-        color: var(--divider);
-    }
-
-    .divider-border {
-        border: solid 1px var(--divider-border);
-    }
-
-    .mat-icon {
-        color: var(--icon-primary);
-    }
-
-    .text-contrast {
-        color: var(--text-contrast);
-    }
-}
-
 @mixin mdc-overrides() {
     .mat-mdc-menu-item .mat-icon-no-color, .mat-mdc-menu-submenu-icon {
         color: var(--icon-secondary);
     }
 
+    .mat-mdc-unelevated-button:not(:disabled).mat-primary * {
+        color: var(--text-contrast);
+    }
+    .mat-mdc-unelevated-button:disabled.mat-primary * {
+        color: rgba(var(--text), .5);
+    }
+
     .mat-mdc-outlined-button:not(:disabled).mat-primary {
         --mdc-outlined-button-outline-color: var(--primary);
+        --mdc-outlined-button-label-text-color: var(--primary);
+        .mat-icon {
+            color: var(--mdc-outlined-button-outline-color);
+        }
+    }
+
+    .mat-mdc-outlined-button:not(:disabled).mat-warn  {
+        --mdc-outlined-button-outline-color: var(--warn);
+        --mdc-outlined-button-label-text-color: var(--warn);
+        .mat-icon {
+            color: var(--mdc-outlined-button-outline-color);
+        }
     }
 
     .mat-expansion-panel-header.mat-expanded {

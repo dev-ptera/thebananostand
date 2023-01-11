@@ -1,12 +1,11 @@
-.mat-mdc-card {
-    width: 100%;
-}
-
 $card-horizontal-padding: 16px;
 .app-settings-page {
     mat-card {
-        padding-left: $card-horizontal-padding;
-        padding-right: $card-horizontal-padding;
+        width: 100%;
+        padding: 24px $card-horizontal-padding;
+    }
+    .mat-headline-6 {
+        margin-bottom: 16px;
     }
     ::ng-deep {
         .mat-mdc-radio-button {

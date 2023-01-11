@@ -31,6 +31,10 @@ $mobileDashboardHeaderHeight: 96px;
     }
 }
 
+.dashboard-accounts-container {
+    overflow: hidden; // Progress Bar hide corners
+}
+
 .dashboard-accounts-container.sm {
     border: unset !important;
 }

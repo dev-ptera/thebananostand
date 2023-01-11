@@ -1,7 +1,8 @@
 @use 'node_modules/@brightlayer-ui/colors/palette' as blui;
 @use 'node_modules/@angular/material' as mat;
-@use '../typography';
-@use '../common';
+@use '../mixins/typography';
+@use '../mixins/mdc-customization';
+@use 'palette-classes';
 @use 'sass:map';
 
 /* For use in src/lib/core/theming/_palette.scss */
@@ -56,11 +57,12 @@ $jungle-green-theme: mat.define-light-theme((
     @include mat.all-component-themes($jungle-green-theme);
     @include mat.typography-hierarchy($jungle-green-theme);
     @include typography.custom-typography-rules();
-    @include common.mdc-overrides();
-    @include common.utility-classes();
+    @include palette-classes.utility-classes();
+    @include mdc-customization.mdc-overrides();
 
     --primary:          #{map-get($my-primary, 500)};
     --warn:             #{map-get($my-warn, 500)};
+    --card:             #{map-get(blui.$blui-white, 100)};
     --text-contrast:    #{map-get(blui.$blui-white, 50)};
     --text:             #{map-get(blui.$blui-black, 500)};
     --icon-primary:     #{map-get(blui.$blui-black, 500)};

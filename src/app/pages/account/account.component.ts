@@ -282,11 +282,6 @@ export class AccountComponent implements OnInit, OnDestroy {
         return !this._accountService.isRepOnline(this.account?.representative);
     }
 
-    /** Opens a link to show why changing rep is important. */
-    openChangeRepDocs(): void {
-        window.open('https://nanotools.github.io/Change-Nano-Representative/');
-    }
-
     copyAccountAddressDesktop(): void {
         this.util.clipboardCopy(this.address);
         this.hasCopiedAccountAddress = true;

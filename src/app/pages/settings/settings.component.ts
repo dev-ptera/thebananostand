@@ -31,7 +31,7 @@ export class DatasourceAvailablePipe implements PipeTransform {
             <mat-toolbar color="primary" class="mat-elevation-z2 app-toolbar" responsive>
                 <div style="display: flex; align-items: center">
                     <button mat-icon-button (click)="back()">
-                        <mat-icon>close</mat-icon>
+                        <mat-icon style="color: var(--text-contrast)">close</mat-icon>
                     </button>
                     <span style="margin-left: 12px">Settings</span>
                 </div>

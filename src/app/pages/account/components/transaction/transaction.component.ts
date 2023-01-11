@@ -54,7 +54,12 @@ import { AppStateService } from '@app/services/app-state.service';
 
                 <!--Right Content -->
                 <div>
-                    <div (mouseenter)="item.hover = true" (mouseleave)="item.hover = false" class="mat-body-1">
+                    <div
+                        (mouseenter)="item.hover = true"
+                        (mouseleave)="item.hover = false"
+                        [class.mat-body-1]="!vp.sm"
+                        [class.mat-body-2]="vp.sm"
+                    >
                         <ng-container *ngIf="!vp.sm">
                             <span *ngIf="item.type === 'receive'">from </span>
                             <span *ngIf="item.type === 'send' || item.type === 'change'">to </span>

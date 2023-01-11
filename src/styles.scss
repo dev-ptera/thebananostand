@@ -2,9 +2,8 @@
 //@use 'assets/themes/banano-yellow';
 @use 'assets/themes/palettes/jungle-green';
 //@use 'assets/themes/nano-blue';
-@use 'assets/themes/common';
 @use '@angular/material' as mat;
-@use 'assets/themes/overlay';
+@use 'assets/themes/mixins/overlay';
 
 @include mat.core();
 @include overlay.overlay-common();

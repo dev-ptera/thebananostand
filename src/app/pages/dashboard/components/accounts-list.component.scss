@@ -30,8 +30,11 @@
         .left {
             justify-content: flex-start;
         }
-        &.hovered img {
-            transform: rotate(-5deg);
+        &.hovered {
+            filter: brightness(0.96);
+            img {
+                transform: rotate(-5deg);
+            }
         }
 
         .account-address-container {
