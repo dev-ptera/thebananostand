@@ -28,12 +28,16 @@ $mobileDashboardHeaderHeight: 96px;
 }
 
 .dashboard-account-list {
+    $smToolbarHeight: 40px;
     max-height: calc(100vh - 344px);
     &.sm {
         padding: 0;
         border: unset;
-        max-height: calc(100vh - (56px + $mobileDashboardHeaderHeight + 1px)); // Don't forget the divider height. 1px
-        max-height: calc(var(--app-height) - (56px + $mobileDashboardHeaderHeight + 1px));
+        max-height: unset;
+        height: calc(
+            100vh - ($smToolbarHeight + $mobileDashboardHeaderHeight + 1px)
+        ); // Don't forget the divider height. 1px
+        height: calc(var(--app-height) - ($smToolbarHeight + $mobileDashboardHeaderHeight + 1px));
     }
 }
 

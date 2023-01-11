@@ -31,7 +31,7 @@ $banano-yellow-theme: mat.define-dark-theme((
     --card:             #{map-get(blui.$blui-black, 900)};
     --text-contrast:    #{map-get(blui.$blui-black, 900)};
     --text:             #{map-get(blui.$blui-black, 100)};
-    --link:             var(--text);
+    --link:             var(--primary);
     --icon-primary:     #{map-get(blui.$blui-black, 100)};
     --icon-secondary:   #{map-get(blui.$blui-black, 300)};
     --divider:          rgba(183, 183, 183, 0.12);
@@ -56,6 +56,10 @@ $banano-yellow-theme: mat.define-dark-theme((
 
     .cdk-overlay-dark-backdrop {
         background: rgba(58, 58, 58, 0.71);
+    }
+
+    .accounts-hash-link {
+        color: var(--text)!important;
     }
 
     .mat-mdc-dialog-container {

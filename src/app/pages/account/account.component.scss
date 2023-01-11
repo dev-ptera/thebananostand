@@ -57,7 +57,7 @@
 }
 
 $sendReceiveRowHeight: 74px;
-.scroll-container {
+.account-history-scroll-container {
     border: 0 !important;
     border-radius: 0rem;
     box-sizing: content-box;
@@ -69,16 +69,18 @@ $sendReceiveRowHeight: 74px;
         max-height: calc($height - 40px);
     }
     @include fade.fade();
-    $toolbarHeight: 56px;
+    $smToolbarHeight: 40px;
     $accountInfoHeight: 90px;
     &.sm {
-        max-height: calc(100vh - $toolbarHeight - $accountInfoHeight - $sendReceiveRowHeight);
-        max-height: calc(var(--app-height) - $toolbarHeight - $accountInfoHeight - $sendReceiveRowHeight);
+        max-height: calc(100vh - $smToolbarHeight - $accountInfoHeight - $sendReceiveRowHeight);
+        max-height: calc(var(--app-height) - $smToolbarHeight - $accountInfoHeight - $sendReceiveRowHeight);
         &.repBanner {
             $mobileBannerHeight: 82px;
-            max-height: calc(100vh - $toolbarHeight - $accountInfoHeight - $sendReceiveRowHeight - $mobileBannerHeight);
             max-height: calc(
-                var(--app-height) - $toolbarHeight - $accountInfoHeight - $sendReceiveRowHeight - $mobileBannerHeight
+                100vh - $smToolbarHeight - $accountInfoHeight - $sendReceiveRowHeight - $mobileBannerHeight
+            );
+            max-height: calc(
+                var(--app-height) - $smToolbarHeight - $accountInfoHeight - $sendReceiveRowHeight - $mobileBannerHeight
             );
         }
     }

@@ -34,6 +34,7 @@ body,
     height: var(--app-height);
 }
 
+
 .app-root {
     display: flex;
     flex-direction: column;
@@ -130,8 +131,12 @@ input[type='number'] {
     padding: 0 24px !important;
     justify-content: space-between;
     height: 64px;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 1000;
     &.sm {
         padding: 0 8px !important;
-        height: 56px;
+        height: 40px;
     }
 }

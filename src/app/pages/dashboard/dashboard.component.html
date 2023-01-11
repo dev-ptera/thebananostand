@@ -145,10 +145,14 @@
                 <ng-template [ngTemplateOutlet]="walletNameDropdown"></ng-template>
                 <!-- Account Balance -->
                 <div style="display: flex; align-items: center">
-                    <div class="mat-body-1" style="margin-right: 8px; font-weight: 600">
-                        <ng-container *ngIf="!vp.sm">Accounts</ng-container> Balance:
+                    <div *ngIf="!vp.sm" class="mat-body-1" style="margin-right: 8px; font-weight: 600">
+                        Accounts Balance:
                     </div>
-                    <div class="mat-body-1">{{ totalBalance }} BAN</div>
+                    <div class="mat-body-1">
+                        <ng-container *ngIf="!vp.sm">{{ totalBalance }}</ng-container>
+                        <strong *ngIf="vp.sm">{{ totalBalance }}</strong>
+                        BAN
+                    </div>
                 </div>
             </div>
         </div>
@@ -173,7 +177,7 @@
                     mode="indeterminate"
                     style="left: 0"
                     [style.position]="vp.sm ? 'fixed' : 'absolute'"
-                    [style.top.px]="vp.sm ? 56 : 0"
+                    [style.top.px]="vp.sm ? 40 : 0"
                 >
                 </mat-progress-bar>
                 <div

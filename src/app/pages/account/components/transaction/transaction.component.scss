@@ -18,6 +18,11 @@
     }
 }
 
+.sm .transaction-row {
+    margin: 1rem;
+    border-radius: 1rem;
+}
+
 .tx-state-icon .mat-icon {
     margin-right: 36px;
     color: var(--icon-secondary);

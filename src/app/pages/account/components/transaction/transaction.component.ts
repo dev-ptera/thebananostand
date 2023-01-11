@@ -12,16 +12,9 @@ import { AppStateService } from '@app/services/app-state.service';
     template: `
         <div
             class="transaction-row"
+            [class.divider-border]="vp.sm"
             [style.height.px]="transactionRowHeight"
-            [style.backgroundColor]="
-                even
-                    ? isDark()
-                        ? colors.darkBlack[300]
-                        : colors.white[100]
-                    : isDark()
-                    ? colors.darkBlack[200]
-                    : colors.white[50]
-            "
+            [style.backgroundColor]="getRowBgColor(even)"
         >
             <div *ngIf="!item">
                 <!--Left Content -->
@@ -127,5 +120,15 @@ export class TransactionComponent {
     /** Useful for alternating row colors. */
     isDark(): boolean {
         return this._themeService.isDark();
+    }
+
+    getRowBgColor(even: boolean): string {
+        return even || this.vp.sm
+            ? this.isDark()
+                ? this.colors.darkBlack[300]
+                : this.colors.white[100]
+            : this.isDark()
+            ? this.colors.darkBlack[200]
+            : this.colors.white[50];
     }
 }
