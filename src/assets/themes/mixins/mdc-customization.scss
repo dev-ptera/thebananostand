@@ -1,0 +1,61 @@
+@mixin mdc-overrides() {
+    .mat-mdc-menu-item .mat-icon-no-color, .mat-mdc-menu-submenu-icon {
+        color: var(--icon-secondary);
+    }
+
+    .mat-mdc-unelevated-button:not(:disabled).mat-primary * {
+        color: var(--text-contrast);
+    }
+    .mat-mdc-unelevated-button:disabled.mat-primary * {
+        color: rgba(var(--text), .5);
+    }
+
+    .mat-mdc-outlined-button:not(:disabled).mat-primary {
+        --mdc-outlined-button-outline-color: var(--primary);
+        --mdc-outlined-button-label-text-color: var(--primary);
+        .mat-icon {
+            color: var(--mdc-outlined-button-outline-color);
+        }
+    }
+
+    .mat-mdc-outlined-button:not(:disabled).mat-warn  {
+        --mdc-outlined-button-outline-color: var(--warn);
+        --mdc-outlined-button-label-text-color: var(--warn);
+        .mat-icon {
+            color: var(--mdc-outlined-button-outline-color);
+        }
+    }
+
+    .mat-bottom-sheet-container {
+        background: var(--card);
+    }
+
+    .mat-expansion-panel-header.mat-expanded {
+        border-bottom: solid 1px var(--divider);
+    }
+
+    .mat-divider {
+        border-top-color: var(--divider);
+    }
+
+    .mat-mdc-option .mdc-list-item__primary-text {
+        width: 100%;
+    }
+
+    .mat-mdc-card {
+        --mdc-outlined-card-outline-color: var(--divider-border);
+    }
+
+    .mat-mdc-menu-item.mdc-list-item * {
+        font-weight: 400;
+    }
+
+    .mdc-button__label {
+        font-size: .875rem;
+        letter-spacing: .5px;
+    }
+
+    .mat-mdc-form-field-focus-overlay {
+        background: var(--input-focus-bg);
+    }
+}

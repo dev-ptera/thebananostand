@@ -31,21 +31,21 @@ export class DatasourceAvailablePipe implements PipeTransform {
             <mat-toolbar color="primary" class="mat-elevation-z2 app-toolbar" responsive>
                 <div style="display: flex; align-items: center">
                     <button mat-icon-button (click)="back()">
-                        <mat-icon>close</mat-icon>
+                        <mat-icon style="color: var(--text-contrast)">close</mat-icon>
                     </button>
-                    <span style="margin-left: 12px">Settings</span>
+                    <span style="margin-left: 12px; color: var(--text-contrast)">Settings</span>
                 </div>
             </mat-toolbar>
 
             <div class="app-body" responsive>
                 <div class="app-body-content">
-                    <mat-card style="margin-bottom: 32px">
-                        <div class="mat-title">Account Security</div>
+                    <mat-card appearance="outlined" style="margin-bottom: 32px">
+                        <div class="mat-headline-6">Account Security</div>
                         <mat-divider></mat-divider>
                         <div class="account-security-option" responsive>
                             <div style="padding-top: 16px; flex: 1">
                                 <div class="mat-overline">Account Password</div>
-                                <div class="mat-body-1">The password used to access all encrypted wallets.</div>
+                                <div class="mat-body-2">The password used to access all encrypted wallets.</div>
                             </div>
                             <button
                                 mat-stroked-button
@@ -63,7 +63,7 @@ export class DatasourceAvailablePipe implements PipeTransform {
                         <div class="account-security-option" responsive style="margin-bottom: 0">
                             <div style="padding-top: 16px; flex: 1">
                                 <div class="mat-overline">Clear Local Storage</div>
-                                <div class="mat-body-1">
+                                <div class="mat-body-2">
                                     Press & hold to remove all encrypted wallets and preferences from this browser.
                                 </div>
                             </div>
@@ -102,11 +102,11 @@ export class DatasourceAvailablePipe implements PipeTransform {
                         </div>
                     </mat-card>
                     -->
-                    <mat-card style="margin-bottom: 32px">
-                        <div class="mat-title">Data Sources</div>
+                    <mat-card appearance="outlined" style="margin-bottom: 32px">
+                        <div class="mat-headline-6">Data Sources</div>
                         <mat-divider></mat-divider>
                         <div class="mat-overline" style="margin-top: 16px">Node RPC Datasource</div>
-                        <div class="mat-body-1">The node which broadcasts send, receive and change transactions.</div>
+                        <div class="mat-body-2">The node which broadcasts send, receive and change transactions.</div>
                         <mat-radio-group
                             style="margin-bottom: 8px; display: inline-block"
                             aria-label="Select a RPC source"
@@ -123,7 +123,7 @@ export class DatasourceAvailablePipe implements PipeTransform {
                         </mat-radio-group>
                         <mat-divider></mat-divider>
                         <div class="mat-overline" style="margin-top: 16px">Spyglass API Datasource</div>
-                        <div class="mat-body-1" style="margin-bottom: 8px">
+                        <div class="mat-body-2" style="margin-bottom: 8px">
                             Provides a filtered transaction history, fetches representative scores and account aliases.
                         </div>
                         <mat-radio-group
@@ -149,7 +149,6 @@ export class DatasourceAvailablePipe implements PipeTransform {
 export class SettingsPageComponent implements OnInit {
     selectedRpcSource: any;
     selectedSpyglassApi: any;
-    bottomSheetOpenDelayMs = 250;
 
     constructor(
         public vp: ViewportService,
@@ -171,9 +170,7 @@ export class SettingsPageComponent implements OnInit {
 
     openChangePasswordOverlay(): void {
         if (this.vp.sm) {
-            setTimeout(() => {
-                this._sheet.open(ChangePasswordBottomSheetComponent);
-            }, this.bottomSheetOpenDelayMs);
+            this._sheet.open(ChangePasswordBottomSheetComponent);
         } else {
             this._dialog.open(ChangePasswordDialogComponent);
         }

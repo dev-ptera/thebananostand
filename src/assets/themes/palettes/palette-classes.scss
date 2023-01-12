@@ -1,0 +1,37 @@
+@mixin utility-classes() {
+    .primary,
+    .primary * {
+        color: var(--primary);
+    }
+    .warn * {
+        color: var(--warn);
+    }
+
+    .secondary {
+        color: var(--secondary);
+    }
+
+    .hint {
+        color: var(--hint);
+    }
+
+    .divider {
+        color: var(--divider);
+    }
+
+    .divider-border {
+        border: solid 1px var(--divider-border);
+    }
+
+    .mat-icon {
+        color: var(--icon-primary);
+    }
+
+    .text-contrast {
+        color: var(--text-contrast);
+    }
+
+    .link {
+        color: var(--link);
+    }
+}

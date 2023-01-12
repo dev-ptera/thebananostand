@@ -1,5 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import * as Colors from '@brightlayer-ui/colors';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MyDataSource } from '@app/pages/account/datasource';
@@ -8,7 +7,6 @@ import { SpyglassService } from '@app/services/spyglass.service';
 import { AccountService } from '@app/services/account.service';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { ThemeService } from '@app/services/theme.service';
-import { ConfirmedTx } from '@app/types/ConfirmedTx';
 import { RpcService } from '@app/services/rpc.service';
 import { ViewportService } from '@app/services/viewport.service';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
@@ -34,9 +32,9 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
     selector: 'app-account',
     templateUrl: './account.component.html',
     styleUrls: ['./account.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class AccountComponent implements OnInit, OnDestroy {
-    colors = Colors;
     store: AppStore;
     ds: MyDataSource;
     account: AccountOverview;
@@ -122,16 +120,6 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     getMonkeyUrl(): string {
         return this._accountService.createMonKeyUrl(this.address);
-    }
-
-    /** Open link in an explorer, defaults to YellowSpyglass. */
-    openLink(hash: string): void {
-        this._accountService.showBlockInExplorer(hash);
-    }
-
-    /** Shows alias (if exists) or shortened address. */
-    formatAddress(address: string): string {
-        return this._appStateService.knownAccounts.get(address) || this.util.shortenAddress(address);
     }
 
     /** Iterates through each pending transaction block and receives them. */
@@ -294,25 +282,6 @@ export class AccountComponent implements OnInit, OnDestroy {
         return !this._accountService.isRepOnline(this.account?.representative);
     }
 
-    /** Opens a link to show why changing rep is important. */
-    openChangeRepDocs(): void {
-        window.open('https://nanotools.github.io/Change-Nano-Representative/');
-    }
-
-    /** Useful for alternating row colors. */
-    isDark(): boolean {
-        return this._themeService.isDark();
-    }
-
-    /** Copies transaction sender, recipient, or new representative to clipboard. */
-    copyTransactionAddress(item: ConfirmedTx): void {
-        this.util.clipboardCopy(item.address || item.newRepresentative);
-        item.showCopiedIcon = true;
-        setTimeout(() => {
-            item.showCopiedIcon = false;
-        }, 700);
-    }
-
     copyAccountAddressDesktop(): void {
         this.util.clipboardCopy(this.address);
         this.hasCopiedAccountAddress = true;
@@ -324,11 +293,6 @@ export class AccountComponent implements OnInit, OnDestroy {
     copyAccountAddressMobile(): void {
         COPY_ADDRESS_TO_CLIPBOARD.next({ address: this.address });
         this.isAccountActionsMobileMenuOpen = false;
-    }
-
-    /** If these numbers need adjusted, see the `account.component.scss` file since there are styles there that need to match. */
-    getTransactionRowHeight(): number {
-        return this.vp.sm ? 72 : 52;
     }
 
     /** Hard Refresh for all information known about this account.
@@ -353,6 +317,11 @@ export class AccountComponent implements OnInit, OnDestroy {
                 this.filterData.minAmount ||
                 this.filterData.filterAddresses
         );
+    }
+
+    /** If these numbers need adjusted, see the `account.component.scss` file since there are styles there that need to match. */
+    getTransactionRowHeight(): number {
+        return this.vp.sm ? 88 : 52;
     }
 
     /** Screen height & transaction container height is normally fixed height since we know the height of all elements... except Rep is Offline banner.

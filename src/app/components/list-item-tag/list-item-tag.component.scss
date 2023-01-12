@@ -1,0 +1,18 @@
+.list-item-tag {
+    display: inline-block;
+}
+
+.list-item-tag,
+.list-item-tag-content {
+    border-radius: 0.5rem;
+}
+
+.list-item-tag-content {
+    padding: 0 0.5rem;
+    overflow: hidden;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-right: -1px;
+    line-height: 1rem;
+    font-size: 0.625rem;
+}

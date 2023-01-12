@@ -1,0 +1,39 @@
+.mobile-stepper {
+    display: flex;
+    width: 100%;
+}
+
+.mobile-stepper-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-grow: 1;
+    button {
+        margin: 0px;
+    }
+}
+
+.mobile-stepper-progress-indicator {
+    margin: 0 16px;
+}
+
+.mobile-stepper-dots {
+    display: flex;
+    flex-direction: row;
+}
+
+.mobile-stepper-dot {
+    height: 0.5rem;
+    width: 0.5rem;
+    background-color: gray;
+    border-radius: 100%;
+    margin: 0 0.25rem;
+}
+
+.mobile-stepper-dot-active {
+    background-color: var(--primary);
+}
+
+.mobile-stepper-display-none {
+    display: none;
+}

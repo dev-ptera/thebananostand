@@ -14,39 +14,35 @@ export type FilterOverlayData = {
     selector: 'app-filter-overlay',
     styleUrls: ['filter.component.scss'],
     template: `
-        <div class="filter-overlay">
-            <h1 mat-dialog-title>Filter Transactions</h1>
-            <div mat-dialog-content style="display: flex; flex: 1 1 0px; flex-direction: column">
-                <div style="margin-bottom: 8px">Use the knobs below to filter your transaction history.</div>
-                <mat-chip-list multiple style="display: flex; justify-content: space-between; margin-top: 16px;">
-                    <mat-chip
-                        variant="outline"
-                        color="primary"
+        <div class="filter-overlay overlay-action-container">
+            <div class="overlay-header">Filter Transactions</div>
+            <div class="overlay-body">
+                <div style="margin-bottom: 8px" class="mat-body-1">
+                    Use the knobs below to filter your transaction history.
+                </div>
+                <mat-chip-listbox multiple style="display: flex; justify-content: space-between; margin-top: 16px;">
+                    <mat-chip-option
                         (click)="adjustedFilters.includeReceive = !adjustedFilters.includeReceive"
                         [selected]="adjustedFilters.includeReceive"
                     >
                         <mat-icon matChipAvatar style="font-size: 16px">download</mat-icon>
                         Received
-                    </mat-chip>
-                    <mat-chip
-                        variant="outline"
-                        color="primary"
+                    </mat-chip-option>
+                    <mat-chip-option
                         (click)="adjustedFilters.includeSend = !adjustedFilters.includeSend"
                         [selected]="adjustedFilters.includeSend"
                     >
                         <mat-icon matChipAvatar style="font-size: 16px">upload</mat-icon>
                         Sent
-                    </mat-chip>
-                    <mat-chip
-                        variant="outline"
-                        color="primary"
+                    </mat-chip-option>
+                    <mat-chip-option
                         (click)="adjustedFilters.includeChange = !adjustedFilters.includeChange"
                         [selected]="adjustedFilters.includeChange"
                     >
                         <mat-icon matChipAvatar style="font-size: 16px">how_to_vote</mat-icon>
                         Change
-                    </mat-chip>
-                </mat-chip-list>
+                    </mat-chip-option>
+                </mat-chip-listbox>
 
                 <div style="display: flex; justify-content: space-between; margin-top: 24px">
                     <mat-form-field blui-input style="width: 130px" appearance="fill">
@@ -68,27 +64,22 @@ export type FilterOverlayData = {
                         placeholder="address1, address2, etc"
                     ></textarea>
                 </mat-form-field>
-
-                <blui-spacer></blui-spacer>
-                <mat-divider style="margin-left: -24px; margin-right: -24px"></mat-divider>
-                <div style="display: flex; justify-content: space-between; padding: 16px 0">
-                    <button color="primary" mat-stroked-button (click)="closeDialog()" style="width: 100px;">
-                        Close
-                    </button>
-                    <button
-                        color="primary"
-                        mat-flat-button
-                        (click)="apply()"
-                        style="width: 100px;"
-                        [disabled]="
-                            !adjustedFilters.includeReceive &&
-                            !adjustedFilters.includeChange &&
-                            !adjustedFilters.includeSend
-                        "
-                    >
-                        Apply
-                    </button>
-                </div>
+            </div>
+            <div class="overlay-footer">
+                <button color="primary" mat-stroked-button (click)="closeDialog()" style="width: 100px;">Close</button>
+                <button
+                    color="primary"
+                    mat-flat-button
+                    (click)="apply()"
+                    style="width: 100px;"
+                    [disabled]="
+                        !adjustedFilters.includeReceive &&
+                        !adjustedFilters.includeChange &&
+                        !adjustedFilters.includeSend
+                    "
+                >
+                    Apply
+                </button>
             </div>
         </div>
     `,

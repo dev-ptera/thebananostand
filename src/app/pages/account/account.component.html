@@ -33,7 +33,6 @@
 
 <ng-template #receiveButton>
     <button
-        blui-inline
         mat-flat-button
         data-cy="receive-action"
         color="primary"
@@ -50,7 +49,6 @@
 
 <ng-template #sendButton>
     <button
-        blui-inline
         mat-flat-button
         data-cy="send-action"
         color="primary"
@@ -64,17 +62,30 @@
     </button>
 </ng-template>
 
+<ng-template #changeButton>
+    <button
+        mat-flat-button
+        data-cy="change-action"
+        color="primary"
+        (click)="changeRep()"
+        [disabled]="!account.representative"
+    >
+        <mat-icon>how_to_vote</mat-icon>
+        <span>Change {{ vp.md ? '' : 'Representative' }}</span>
+    </button>
+</ng-template>
+
 <div class="app-root">
     <mat-toolbar color="primary" class="mat-elevation-z2 app-toolbar" responsive>
         <div style="display: flex; align-items: center">
-            <button mat-icon-button (click)="goHome()">
-                <mat-icon>arrow_back</mat-icon>
+            <button mat-icon-button (click)="goHome()" style="margin-left: -4px">
+                <mat-icon class="text-contrast">arrow_back</mat-icon>
             </button>
             <div
                 [style.marginLeft.px]="8"
                 *ngIf="account"
-                style="font-size: 1.125rem; display: flex; align-items: center"
-                class="mono"
+                style="font-size: 1.125rem; display: flex; align-items: center; color: var(--text-contrast)"
+                class="mono mat-body-1"
             >
                 <div *ngIf="!vp.md && !vp.sm">
                     <span>{{ account?.fullAddress.substring(0, 12) }}</span>
@@ -88,15 +99,13 @@
                 </div>
 
                 <button mat-icon-button (click)="copyAccountAddressDesktop()" style="margin-left: 8px" *ngIf="!vp.sm">
-                    <mat-icon>
+                    <mat-icon class="text-contrast">
                         {{ hasCopiedAccountAddress ? 'check_circle' : 'content_copy' }}
                     </mat-icon>
                 </button>
             </div>
         </div>
-        <div style="display: flex">
-            <app-account-settings></app-account-settings>
-        </div>
+        <app-account-settings></app-account-settings>
     </mat-toolbar>
     <mat-toolbar
         color="warn"
@@ -107,33 +116,37 @@
         <div class="mat-body-2">
             Your current representative is <strong>offline</strong>. If this happens often, it is suggested that you
             update to a recommended rep.
-            <span class="link" style="color: unset" (click)="openChangeRepDocs()">Why is this important?</span>
+            <a
+                href="https://nanotools.github.io/Change-Nano-Representative/"
+                target="_blank"
+                class="link"
+                style="color: unset"
+                >Why is this important?</a
+            >
         </div>
-        <button
-            mat-icon-button
-            (click)="dismissRepOfflineBanner()"
-            style="margin-left: 16px; height: 24px; width: 24px; line-height: 24px"
-        >
-            <mat-icon style="font-size: 16px">close</mat-icon>
+        <button mat-icon-button (click)="dismissRepOfflineBanner()" [style.paddingLeft.px]="4">
+            <mat-icon>close</mat-icon>
         </button>
     </mat-toolbar>
 
     <div class="app-body" *ngIf="account" responsive>
-        <div class="app-body-content">
-            <mat-card *ngIf="vp.sm">
-                <div style="display: flex; justify-content: space-between; align-items: center">
-                    <div class="mat-subheading-2" style="margin-bottom: 0">
+        <div class="app-body-content accounts-wrapper">
+            <mat-card appearance="outlined" *ngIf="vp.sm" style="padding: 0 16px">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0">
+                    <div class="mat-body-1" style="margin-bottom: 0">
                         <strong>{{ account.formattedBalance }} BAN </strong>Balance
                     </div>
                     <ng-template [ngTemplateOutlet]="accountActions"></ng-template>
                 </div>
-                <div class="mat-overline" style="margin-top: 8px; margin-bottom: -8px">Transactions</div>
+                <div class="mat-overline">Transactions</div>
             </mat-card>
 
             <mat-card
+                appearance="outlined"
                 *ngIf="!vp.sm"
                 style="
                     display: flex;
+                    flex-direction: row;
                     align-items: center;
                     justify-content: space-between;
                     padding: 0 16px;
@@ -147,52 +160,47 @@
                         [src]="getMonkeyUrl()"
                     />
                     <div style="display: flex; flex-direction: column; justify-content: center; height: 150px">
-                        <div class="mat-headline">
+                        <div class="mat-headline-5" style="margin-bottom: 16px">
                             <strong>{{ account.formattedBalance }} BAN </strong>Balance
                         </div>
-                        <div style="display: flex">
+                        <div style="display: flex" class="account-tx-actions">
                             <ng-template [ngTemplateOutlet]="receiveButton"></ng-template>
                             <ng-template [ngTemplateOutlet]="sendButton"></ng-template>
-                            <button
-                                blui-inline
-                                mat-flat-button
-                                data-cy="change-action"
-                                color="primary"
-                                (click)="changeRep()"
-                                [disabled]="!account.representative"
-                            >
-                                <mat-icon>how_to_vote</mat-icon>
-                                <span>Change {{ vp.md ? '' : 'Representative' }}</span>
-                            </button>
+                            <ng-template [ngTemplateOutlet]="changeButton"></ng-template>
                         </div>
                     </div>
                 </div>
                 <app-qr *ngIf="!vp.sm" [address]="account.fullAddress"></app-qr>
             </mat-card>
 
-            <mat-card style="padding-bottom: 0px" [style.paddingTop.px]="vp.sm ? 0 : 16">
-                <div
-                    *ngIf="!vp.sm"
-                    [class.mat-headline]="!vp.sm"
-                    [class.mat-subheading-2]="vp.sm"
-                    style="padding: 0 4px; display: flex; align-items: center; justify-content: space-between"
+            <mat-card appearance="outlined" style="padding: 0; position: relative; overflow: hidden">
+                <mat-progress-bar
+                    *ngIf="showProgressBar()"
+                    color="primary"
+                    mode="indeterminate"
+                    style="left: 0"
+                    [style.position]="vp.sm ? 'fixed' : 'absolute'"
+                    [style.top.px]="vp.sm ? 40 : 0"
                 >
-                    <div style="display: flex; align-items: center">
-                        <span>Account History</span>
-                        <button mat-icon-button (click)="refreshCurrentAccountInfo()" style="margin-left: 4px">
-                            <mat-icon> refresh </mat-icon>
-                        </button>
-                    </div>
-                    <div
-                        style="display: flex; align-items: center; align-items: center"
-                        *ngIf="!hideTransactionFilters"
-                        class="fade"
-                    >
+                </mat-progress-bar>
+                <div *ngIf="!vp.sm" class="desktop-account-history">
+                    <div class="mat-headline-5">Account History</div>
+                    <div>
                         <button
                             mat-stroked-button
-                            style="cursor: pointer"
+                            class="stroked-icon-action-button"
+                            (click)="refreshCurrentAccountInfo()"
+                            matTooltip="Refresh account history"
+                        >
+                            <mat-icon>refresh</mat-icon>
+                        </button>
+                        <button
+                            *ngIf="!hideTransactionFilters"
+                            mat-stroked-button
+                            class="stroked-icon-action-button"
                             (click)="openFilterDialog()"
                             matTooltip="Transaction Filters"
+                            style="margin-left: 16px"
                         >
                             <mat-icon>
                                 {{ isFilterApplied() ? 'filter_list' : 'filter_list_off' }}
@@ -200,42 +208,27 @@
                         </button>
                     </div>
                 </div>
-
-                <mat-divider
-                    *ngIf="!showProgressBar() && !vp.sm"
-                    style="position: relative; margin-right: -16px; margin-left: -16px; width: calc(100% + 32px)"
-                ></mat-divider>
-
+                <mat-divider *ngIf="!vp.sm"></mat-divider>
                 <div
                     *ngIf="showProgressBar() || showNoFilteredResultsEmptyState() || unopenedAccount"
                     class="empty-states"
-                    [class.slow-fade-in]="showProgressBar()"
                 >
-                    <ng-container *ngIf="showNoFilteredResultsEmptyState()">
-                        <blui-empty-state style="margin: 24px 0">
-                            <mat-icon blui-empty-icon>waterfall_chart</mat-icon>
-                            <div blui-title>No Results</div>
-                            <div blui-description>
+                    <div *ngIf="showNoFilteredResultsEmptyState()" class="results-empty-container">
+                        <app-empty-state style="margin: 24px 0">
+                            <mat-icon empty-icon>waterfall_chart</mat-icon>
+                            <div title>No Results</div>
+                            <div description>
                                 No transactions meet your filter criteria. Please adjust your filters and try again.
                             </div>
-                        </blui-empty-state>
-                    </ng-container>
-                    <ng-container *ngIf="unopenedAccount">
-                        <blui-empty-state style="margin: 24px 0">
-                            <mat-icon blui-empty-icon>no_accounts</mat-icon>
-                            <div blui-title>Unopened Account</div>
-                            <div blui-description>To open this account, it must receive an incoming transaction.</div>
-                        </blui-empty-state>
-                    </ng-container>
-                    <ng-container *ngIf="showProgressBar()">
-                        <mat-progress-bar
-                            *ngIf="showProgressBar()"
-                            color="primary"
-                            mode="indeterminate"
-                            style="margin-bottom: 16px"
-                        >
-                        </mat-progress-bar>
-                    </ng-container>
+                        </app-empty-state>
+                    </div>
+                    <div *ngIf="unopenedAccount" class="results-empty-container">
+                        <app-empty-state>
+                            <mat-icon empty-icon>no_accounts</mat-icon>
+                            <div title>Unopened Account</div>
+                            <div description>To open this account, it must receive an incoming transaction.</div>
+                        </app-empty-state>
+                    </div>
                 </div>
 
                 <cdk-virtual-scroll-viewport
@@ -243,84 +236,16 @@
                     [itemSize]="getTransactionRowHeight()"
                     data-cy="account-scroll-container"
                     [style.height.px]="countTotalDisplayableTxCount() * getTransactionRowHeight()"
-                    class="scroll-container"
+                    class="account-history-scroll-container"
                     [class.repBanner]="isRepOffline() && !warnBannerDismissed"
                     responsive
                 >
                     <div *cdkVirtualFor="let item of ds; let i = index; let even = even">
-                        <blui-info-list-item
-                            *ngIf="item"
-                            [style.height.px]="getTransactionRowHeight()"
-                            [style.backgroundColor]="
-                                even
-                                    ? isDark()
-                                        ? colors.darkBlack[300]
-                                        : colors.white[100]
-                                    : isDark()
-                                    ? colors.darkBlack[200]
-                                    : colors.white[50]
-                            "
-                        >
-                            <div blui-icon class="tx-state-icon">
-                                <mat-icon *ngIf="item.type === 'receive'" class="receive">add_circle_outline</mat-icon>
-                                <mat-icon *ngIf="item.type === 'send'" class="send">remove_circle_outline</mat-icon>
-                                <mat-icon *ngIf="item.type === 'change'" class="change">change_history</mat-icon>
-                            </div>
-                            <div blui-title>{{ item.type }}</div>
-                            <div blui-subtitle>{{ item.amount }}</div>
-                            <div blui-right-content>
-                                <div
-                                    (mouseenter)="item.hover = true"
-                                    (mouseleave)="item.hover = false"
-                                    style="display: flex"
-                                >
-                                    <ng-container *ngIf="!vp.sm">
-                                        <span *ngIf="item.type === 'receive'">from </span>
-                                        <span *ngIf="item.type === 'send' || item.type === 'change'">to </span>
-                                    </ng-container>
-                                    <div
-                                        class="link accounts-hash-link"
-                                        [style.marginLeft.px]="8"
-                                        (click)="openLink(item.hash)"
-                                    >
-                                        <ng-container *ngIf="item.type === 'receive' || item.type === 'send'">
-                                            {{ formatAddress(item.address) }}
-                                        </ng-container>
-                                        <ng-container *ngIf="item.type === 'change'">
-                                            {{ formatAddress(item.newRepresentative) }}
-                                        </ng-container>
-                                    </div>
-                                    <button
-                                        mat-icon-button
-                                        *ngIf="item.hover"
-                                        (click)="copyTransactionAddress(item)"
-                                        style="
-                                            cursor: pointer;
-                                            margin-left: 8px;
-                                            height: 24px;
-                                            width: 24px;
-                                            line-height: 24px;
-                                        "
-                                    >
-                                        <mat-icon style="font-size: 16px">{{
-                                            item.showCopiedIcon ? 'check_circle' : 'content_copy'
-                                        }}</mat-icon>
-                                    </button>
-                                </div>
-                                <span *ngIf="!vp.sm" [style.marginLeft.px]="32">
-                                    tx #{{ util.numberWithCommas(item.height) }}
-                                </span>
-                            </div>
-                        </blui-info-list-item>
-                        <blui-info-list-item *ngIf="!item" [style.height.px]="getTransactionRowHeight()">
-                            <mat-icon blui-icon>sync</mat-icon>
-                            <div blui-title>Loading</div>
-                            <div blui-right-content>
-                                <span *ngIf="!vp.sm" [style.marginLeft.px]="32">
-                                    tx #{{ util.numberWithCommas(accountHeight - i) }}
-                                </span>
-                            </div>
-                        </blui-info-list-item>
+                        <app-transaction
+                            [item]="item"
+                            [even]="even"
+                            [transactionRowHeight]="getTransactionRowHeight()"
+                        ></app-transaction>
                     </div>
                 </cdk-virtual-scroll-viewport>
             </mat-card>

@@ -1,29 +1,23 @@
-:host {
-    width: 100%;
+@use 'assets/themes/mixins/mobile-action-button' as button;
+@use 'assets/themes/mixins/small-icon-button' as common;
+@use 'assets/themes/mixins/fade' as fade;
+
+.results-empty-container {
+    padding: 48px 0;
 }
 
-/* Update these styles if the row height must change. */
-.app-body {
-    ::ng-deep .blui-info-list-item-content .mat-list-item-content,
-    .mat-list-base .mat-list-item.blui-info-list-item-content .mat-list-item-content {
-        height: 52px;
-    }
-    .sm {
-        ::ng-deep .blui-info-list-item-content .mat-list-item-content,
-        .mat-list-base .mat-list-item.blui-info-list-item-content .mat-list-item-content {
-            height: 72px;
-        }
-    }
-}
-
-.rep-offline-banner {
+.mat-toolbar.rep-offline-banner {
     height: unset;
     min-height: 36px;
     display: flex;
     justify-content: space-between;
     padding: 4px 36px 4px 36px !important;
+    @include common.small-icon-button(16px, 32px);
+    * {
+        color: var(--text-contrast);
+    }
     &.sm {
-        padding: 8px 12px 8px 20px !important;
+        padding: 8px 16px !important;
     }
     div {
         margin: 0;
@@ -32,11 +26,6 @@
     }
 }
 
-.sm {
-    .accounts-hash-link {
-        font-size: 1rem;
-    }
-}
 .accounts-hash-link {
     max-width: 210px;
     overflow: hidden;
@@ -48,55 +37,58 @@
     width: 100%;
 }
 
-@mixin fade {
-    -webkit-animation: fadein 300ms; /* Safari, Chrome and Opera > 12.1 */
-    -moz-animation: fadein 300ms; /* Firefox < 16 */
-    -ms-animation: fadein 300ms; /* Internet Explorer */
-    -o-animation: fadein 300ms; /* Opera < 12.1 */
-    animation: fadein 300ms;
+.sm .accounts-wrapper {
+    mat-card {
+        border-radius: 0;
+    }
 }
 
-@mixin slow-fade {
-    -webkit-animation: fadein 3000ms; /* Safari, Chrome and Opera > 12.1 */
-    -moz-animation: fadein 3000ms; /* Firefox < 16 */
-    -ms-animation: fadein 3000ms; /* Internet Explorer */
-    -o-animation: fadein 3000ms; /* Opera < 12.1 */
-    animation: fadein 3000ms;
+.desktop-account-history {
+    padding: 16px 16px 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .empty-states {
     * {
-        @include fade;
-    }
-    &.slow-fade-in * {
-        @include slow-fade;
+        @include fade.fade();
     }
 }
 
-.fade {
-    @include fade;
-}
-
-.scroll-container {
+$sendReceiveRowHeight: 74px;
+.account-history-scroll-container {
+    padding: 0.5rem 0;
     border: 0 !important;
+    border-radius: 0rem;
     box-sizing: content-box;
-    width: calc(100% + 32px);
-    margin-left: -16px;
-    margin-right: -16px;
+    width: 100%;
     $height: calc(100vh - 420px);
     max-height: $height;
+
     &.repBanner {
         max-height: calc($height - 40px);
     }
-    @include fade;
-    $sendReceiveRowHeight: 76px;
+    @include fade.fade();
+    $smToolbarHeight: 40px;
+    $accountInfoHeight: 90px;
     &.sm {
-        max-height: calc(100vh - 56px - 104px - $sendReceiveRowHeight);
-        max-height: calc(var(--app-height) - 56px - 104px - $sendReceiveRowHeight);
+        max-height: calc(100vh - $smToolbarHeight - $accountInfoHeight - $sendReceiveRowHeight - 1px);
+        max-height: calc(var(--app-height) - $smToolbarHeight - $accountInfoHeight - $sendReceiveRowHeight - 1px);
         &.repBanner {
             $mobileBannerHeight: 82px;
-            max-height: calc(100vh - 56px - 104px - $sendReceiveRowHeight - $mobileBannerHeight);
-            max-height: calc(var(--app-height) - 56px - 104px - $sendReceiveRowHeight - $mobileBannerHeight);
+            max-height: calc(
+                100vh - $smToolbarHeight - $accountInfoHeight - $sendReceiveRowHeight - $mobileBannerHeight
+            );
+            max-height: calc(
+                var(--app-height) - $smToolbarHeight - $accountInfoHeight - $sendReceiveRowHeight - $mobileBannerHeight
+            );
         }
     }
+}
+
+.account-mobile-footer {
+    height: $sendReceiveRowHeight;
+    background: var(--card);
+    @include button.mobile-button-styles();
 }

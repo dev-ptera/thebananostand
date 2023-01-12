@@ -6,11 +6,13 @@ import { IMPORT_NEW_WALLET_FROM_SECRET } from '@app/services/wallet-events.servi
     selector: 'app-enter-secret-overlay',
     styleUrls: ['enter-secret.component.scss'],
     template: `
-        <div class="enter-secret-overlay">
-            <h1 mat-dialog-title>Enter Seed or Mnemonic</h1>
-            <div mat-dialog-content style="display: flex; flex: 1 1 0px; flex-direction: column">
+        <div class="enter-secret-overlay overlay-action-container">
+            <div class="overlay-header">Enter Seed or Mnemonic</div>
+            <div class="overlay-body">
                 <ng-container *ngIf="activeStep === 0">
-                    <div style="margin-bottom: 24px">Your secret phrase never leaves this website.</div>
+                    <div class="mat-body-1" style="margin-bottom: 32px">
+                        Your secret phrase never leaves this website.
+                    </div>
                     <mat-form-field appearance="fill">
                         <mat-label>Seed or Mnemonic</mat-label>
                         <textarea
@@ -25,7 +27,7 @@ import { IMPORT_NEW_WALLET_FROM_SECRET } from '@app/services/wallet-events.servi
                 </ng-container>
 
                 <ng-container *ngIf="activeStep === 1">
-                    <div style="margin-bottom: 24px">
+                    <div style="margin-bottom: 24px" class="mat-body-1">
                         Enter a password to secure your wallet. This is optional but encouraged.
                     </div>
 
@@ -44,22 +46,21 @@ import { IMPORT_NEW_WALLET_FROM_SECRET } from '@app/services/wallet-events.servi
                         </button>
                     </mat-form-field>
                 </ng-container>
-
                 <div *ngIf="error" style="display: flex; align-items: center;">
                     <mat-icon color="warn">error</mat-icon>
                     <span style="margin-left: 8px">{{ error }}</span>
                 </div>
-                <blui-spacer></blui-spacer>
-                <mat-divider style="margin-left: -24px; margin-right: -24px"></mat-divider>
-                <blui-mobile-stepper [activeStep]="activeStep" [steps]="maxSteps">
-                    <button mat-stroked-button blui-back-button color="primary" (click)="back()">
+            </div>
+            <div class="overlay-footer">
+                <mobile-stepper [activeStep]="activeStep" [steps]="maxSteps">
+                    <button mat-stroked-button back-button color="primary" (click)="back()">
                         <ng-container *ngIf="activeStep === 0">Close</ng-container>
                         <ng-container *ngIf="activeStep > 0">Back</ng-container>
                     </button>
                     <button
                         data-cy="secret-next"
                         mat-flat-button
-                        blui-next-button
+                        next-button
                         color="primary"
                         (click)="next()"
                         class="loading-button"
@@ -68,7 +69,7 @@ import { IMPORT_NEW_WALLET_FROM_SECRET } from '@app/services/wallet-events.servi
                         <ng-container *ngIf="activeStep < lastStep">Next</ng-container>
                         <ng-container *ngIf="activeStep === lastStep">Load</ng-container>
                     </button>
-                </blui-mobile-stepper>
+                </mobile-stepper>
             </div>
         </div>
     `,
@@ -109,9 +110,11 @@ export class EnterSecretComponent implements OnInit {
         if (this.activeStep === this.lastStep) {
             void this.addSeed();
         } else {
-            this.activeStep++;
-            this._ref.detectChanges();
-            this.passwordInput.nativeElement.focus();
+            if (this.isValidSecret()) {
+                this.activeStep++;
+                this._ref.detectChanges();
+                this.passwordInput.nativeElement.focus();
+            }
         }
     }
 

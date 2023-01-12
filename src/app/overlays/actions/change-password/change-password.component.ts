@@ -9,12 +9,14 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
     selector: 'app-change-password-overlay',
     styleUrls: ['change-password.component.scss'],
     template: `
-        <div class="change-password-overlay">
-            <h1 mat-dialog-title>Change Password</h1>
-            <div mat-dialog-content style="margin-bottom: 32px;">
+        <div class="change-password-overlay overlay-action-container">
+            <div class="overlay-header">Change Password</div>
+            <div class="overlay-body">
                 <div style="display: flex; align-items: center">
                     <mat-icon class="secondary-text" style="padding-right: 16px">info</mat-icon>
-                    <span style="margin-left: 16px">You will be logged out after changing your password.</span>
+                    <span style="margin-left: 16px" class="mat-body-1"
+                        >You will be logged out after changing your password.</span
+                    >
                 </div>
                 <form style="margin-top: 32px">
                     <mat-form-field style="width: 100%" appearance="fill">
@@ -75,18 +77,16 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
                         </button>
                     </mat-form-field>
                 </form>
-                <div class="error-row mat-hint" *ngIf="isNewPasswordMismatch()">
+                <div class="error-row mat-caption" *ngIf="isNewPasswordMismatch()">
                     <mat-icon color="warn" class="indicator-icon">error</mat-icon>
                     Passwords do not match.
                 </div>
-                <div class="error-row mat-hint" *ngIf="uncaughtError">
+                <div class="error-row mat-caption" *ngIf="uncaughtError">
                     <mat-icon color="warn" class="indicator-icon">error</mat-icon>
                     {{ uncaughtError }}
                 </div>
             </div>
-            <blui-spacer></blui-spacer>
-            <mat-divider style="margin-left: -48px; margin-right: -48px"></mat-divider>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 0; padding: 16px 0">
+            <div class="overlay-footer">
                 <button mat-stroked-button color="primary" (click)="close.emit()" style="width: 100px;">Close</button>
                 <button
                     data-cy="confirm-change-password-button"

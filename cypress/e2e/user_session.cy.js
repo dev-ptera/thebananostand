@@ -27,7 +27,7 @@ describe("User Session", () => {
         cy.get('[data-cy=password-input]').type(userPassword);
         cy.get('[data-cy=secret-next]').click();
         cy.get('[data-cy=secret-next]').should('not.exist');
-        cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
+        cy.get('[data-cy=dashboard-account-list]').find('.dashboard-row-wrapper').should('have.length', 1);
     }
 
     const logInWithoutPassword = (() => {
@@ -97,7 +97,7 @@ describe("User Session", () => {
         removeWallet();
         cy.window().then(() => {
             cy.get('[data-cy=dashboard-wrapper]').should('not.exist');
-            cy.get('.mat-snack-bar-container').contains('Removed Wallet');
+            cy.get('.mat-mdc-simple-snack-bar').contains('Removed Wallet');
         });
     });
 
@@ -115,7 +115,7 @@ describe("User Session", () => {
             cy.wait(overlayRenderDelay);
             cy.get('[data-cy=current-password-input]').type(defaultPasswordForTesting);
             cy.get('[data-cy=new-password-input]').type(newPassword);
-            cy.get('[data-cy=confirm-password-input]').type(newPassword);
+            cy.get('[data-cy=confirm-password-input]').type(newPassword, { force: true }); // TODO: Cypress cannot click this, claims element overlay.
             cy.get('[data-cy=confirm-change-password-button]').click();
             cy.get('[data-cy=dashboard-wrapper]').should('not.exist');
             cy.get('.change-password-overlay').should('not.exist');
@@ -139,7 +139,7 @@ describe("User Session", () => {
             // Change Password
             cy.get('[data-cy=current-password-input]').type(defaultPasswordForTesting);
             cy.get('[data-cy=new-password-input]').type(newPassword);
-            cy.get('[data-cy=confirm-password-input]').type(newPassword);
+            cy.get('[data-cy=confirm-password-input]').type(newPassword, { force: true }); // TODO: Cypress cannot click this, claims element overlay.
             cy.get('[data-cy=confirm-change-password-button]').click();
 
             // Log In
@@ -151,7 +151,7 @@ describe("User Session", () => {
             cy.get('[data-cy=account-unlock-button]').click();
 
             // Confirm account loads
-            cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').should('have.length', 1);
+            cy.get('[data-cy=dashboard-account-list]').find('.dashboard-row-wrapper').should('have.length', 1);
         })
     });
 
@@ -166,7 +166,7 @@ describe("User Session", () => {
             cy.get('[data-cy=clear-storage-button]').trigger('mousedown', { button: 0 });
             cy.wait(2000).then(() => {
                 void expect(window.localStorage.getItem('bananostand_encryptedWallets')).to.not.be.ok;
-                cy.get('.mat-snack-bar-container').contains('All Wallets Removed');
+                cy.get('.mat-mdc-simple-snack-bar').contains('All Wallets Removed');
                 cy.get('[data-cy=dashboard-wrapper]').should('not.exist');
                 cy.get('[data-cy=home-wrapper]');
             });

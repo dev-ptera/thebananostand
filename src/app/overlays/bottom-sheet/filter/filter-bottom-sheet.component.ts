@@ -5,8 +5,6 @@ import { FilterOverlayData } from '@app/overlays/actions/filter/filter.component
 @Component({
     selector: 'app-filter-bottom-sheet',
     template: ` <app-filter-overlay [originalData]="filterData" (close)="closeSheet($event)"></app-filter-overlay> `,
-    styleUrls: ['filter-bottom-sheet.component.scss'],
-    host: { class: 'app-filter-bottom-sheet' },
 })
 export class FilterBottomSheetComponent {
     constructor(

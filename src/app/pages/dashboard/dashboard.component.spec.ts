@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { AppModule } from '../../app.module';
 import { DashboardComponent } from '@app/pages/dashboard/dashboard.component';
 
-describe('AccountsComponent', () => {
+describe('DashboardComponent', () => {
     beforeEach(() => {
         void TestBed.configureTestingModule({
             imports: [AppModule],

@@ -1,0 +1,44 @@
+.empty-state-content {
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+
+    .title {
+        font-weight: 600;
+        margin-bottom: 0px;
+    }
+
+    .description {
+        margin: 0rem 0 1.5rem 0;
+    }
+
+    .title,
+    .description {
+        text-align: center;
+    }
+
+    .icon-wrapper {
+        margin-bottom: 1rem;
+        line-height: 1;
+        * {
+            $size: 96px;
+            display: block;
+            font-size: $size;
+            height: $size;
+            width: $size;
+            text-align: center;
+            color: var(--icon-secondary);
+        }
+    }
+
+    .actions-wrapper {
+        button {
+            min-width: 100px;
+        }
+    }
+}

@@ -1,11 +1,14 @@
-.mat-card {
-    width: 100%;
-}
-
 $card-horizontal-padding: 16px;
 .app-settings-page {
+    mat-card {
+        width: 100%;
+        padding: 24px $card-horizontal-padding;
+    }
+    .mat-headline-6 {
+        margin-bottom: 16px;
+    }
     ::ng-deep {
-        .mat-radio-button {
+        .mat-mdc-radio-button {
             display: block;
             margin: 16px 0;
         }
@@ -21,7 +24,7 @@ $card-horizontal-padding: 16px;
             font-size: 12px;
         }
     }
-    .mat-card > .mat-divider-horizontal {
+    .mat-mdc-card > .mat-divider-horizontal {
         position: unset;
         margin-left: -$card-horizontal-padding;
         margin-right: -$card-horizontal-padding;
@@ -32,6 +35,7 @@ $card-horizontal-padding: 16px;
         mat-card {
             padding-left: 24px;
             padding-right: 24px;
+            border-radius: 0;
         }
     }
     .account-security-option {

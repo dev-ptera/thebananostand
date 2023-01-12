@@ -7,11 +7,11 @@ import { AppStateService } from '@app/services/app-state.service';
     selector: 'app-rename-wallet-overlay',
     styleUrls: ['rename-wallet.component.scss'],
     template: `
-        <div class="rename-wallet-overlay">
-            <h1 mat-dialog-title>Rename Wallet</h1>
-            <div mat-dialog-content style="margin-bottom: 32px;">
+        <div class="rename-wallet-overlay overlay-action-container">
+            <div class="overlay-header">Rename Wallet</div>
+            <div class="overlay-body mat-body-1">
                 <div>Rename "{{ currentWalletName }}" to something else?</div>
-                <form style="margin-top: 32px">
+                <form style="margin: 32px 0 16px 0">
                     <mat-form-field style="width: 100%" appearance="fill">
                         <mat-label>New Wallet Name</mat-label>
                         <input
@@ -24,15 +24,12 @@ import { AppStateService } from '@app/services/app-state.service';
                     </mat-form-field>
                 </form>
             </div>
-            <blui-spacer></blui-spacer>
-            <mat-divider style="margin-left: -48px; margin-right: -48px"></mat-divider>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 0; padding: 16px 0">
-                <button mat-stroked-button color="primary" (click)="close.emit()" style="width: 100px;">Close</button>
+            <div class="overlay-footer">
+                <button mat-stroked-button color="primary" (click)="close.emit()">Close</button>
                 <button
                     data-cy="rename-wallet-overlay-button"
                     mat-flat-button
                     color="primary"
-                    style="width: 100px;"
                     [disabled]="isDisabled()"
                     (click)="renameWallet()"
                 >

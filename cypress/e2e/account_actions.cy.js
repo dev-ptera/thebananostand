@@ -22,9 +22,9 @@ describe('Account Actions', () => {
         cy.intercept({method: 'POST', url: '**', times: 3}).as(loadInitialAccount);
         cy.get('[data-cy=secret-next]').click();
         cy.intercept({ method: 'POST', url: '**/account/confirmed-transactions' }).as('confirmedTx');
-        cy.get('[data-cy=dashboard-account-list]').find('.blui-info-list-item').click();
+        cy.get('[data-cy=dashboard-account-list]').find('.dashboard-row-wrapper').click();
         cy.wait('@confirmedTx').then(() => {
-            cy.get('[data-cy=account-scroll-container]').find('.blui-info-list-item').its('length').should('be.gte', 2);
+            cy.get('[data-cy=account-scroll-container]').find('.transaction-row-wrapper').its('length').should('be.gte', 2);
         })
     })
 
