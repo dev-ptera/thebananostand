@@ -10,72 +10,73 @@ import { AppStateService } from '@app/services/app-state.service';
 @Component({
     selector: 'app-transaction',
     template: `
-        <div
-            class="transaction-row"
-            [class.divider-border]="vp.sm"
-            [style.height.px]="transactionRowHeight"
-            [style.backgroundColor]="getRowBgColor(even)"
-        >
-            <div *ngIf="!item">
-                <!--Left Content -->
-                <div>
-                    <div class="tx-state-icon">
-                        <mat-icon icon>sync</mat-icon>
-                    </div>
-                    <div class="mat-body-1">Loading</div>
-                </div>
-
-                <!--Right Content -->
-                <div>
-                    <span *ngIf="!vp.sm" [style.marginLeft.px]="32" class="mat-body-1"> tx # </span>
-                </div>
-            </div>
-
-            <div *ngIf="item">
-                <!--Left Content -->
-                <div>
-                    <div class="tx-state-icon">
-                        <mat-icon *ngIf="item.type === 'receive'" class="receive">add_circle_outline</mat-icon>
-                        <mat-icon *ngIf="item.type === 'send'" class="send">remove_circle_outline</mat-icon>
-                        <mat-icon *ngIf="item.type === 'change'" class="change">change_history</mat-icon>
-                    </div>
-                    <div style="flex-direction: column; align-items: flex-start">
-                        <div class="mat-body-1 type">{{ item.type }}</div>
-                        <div class="mat-body-2">{{ item.amount }}</div>
-                    </div>
-                </div>
-
-                <!--Right Content -->
-                <div>
-                    <div
-                        (mouseenter)="item.hover = true"
-                        (mouseleave)="item.hover = false"
-                        [class.mat-body-1]="!vp.sm"
-                        [class.mat-body-2]="vp.sm"
-                    >
-                        <ng-container *ngIf="!vp.sm">
-                            <span *ngIf="item.type === 'receive'">from </span>
-                            <span *ngIf="item.type === 'send' || item.type === 'change'">to </span>
-                        </ng-container>
-                        <div class="link accounts-hash-link" [style.marginLeft.px]="8" (click)="openLink(item.hash)">
-                            <ng-container *ngIf="item.type === 'receive' || item.type === 'send'">
-                                {{ formatAddress(item.address) }}
-                            </ng-container>
-                            <ng-container *ngIf="item.type === 'change'">
-                                {{ formatAddress(item.newRepresentative) }}
-                            </ng-container>
+        <div class="transaction-row-wrapper" [style.height.px]="transactionRowHeight">
+            <div class="transaction-row" [class.divider-border]="vp.sm" [style.backgroundColor]="getRowBgColor(even)">
+                <div *ngIf="!item">
+                    <!--Left Content -->
+                    <div>
+                        <div class="tx-state-icon">
+                            <mat-icon icon>sync</mat-icon>
                         </div>
-                        <div class="copy-address-button">
-                            <button mat-icon-button *ngIf="item.hover" (click)="copyTransactionAddress(item)">
-                                <mat-icon style="font-size: 16px">{{
-                                    item.showCopiedIcon ? 'check_circle' : 'content_copy'
-                                }}</mat-icon>
-                            </button>
+                        <div class="mat-body-1">Loading</div>
+                    </div>
+
+                    <!--Right Content -->
+                    <div>
+                        <span *ngIf="!vp.sm" [style.marginLeft.px]="32" class="mat-body-1"> tx # </span>
+                    </div>
+                </div>
+
+                <div *ngIf="item">
+                    <!--Left Content -->
+                    <div>
+                        <div class="tx-state-icon">
+                            <mat-icon *ngIf="item.type === 'receive'" class="receive">add_circle_outline</mat-icon>
+                            <mat-icon *ngIf="item.type === 'send'" class="send">remove_circle_outline</mat-icon>
+                            <mat-icon *ngIf="item.type === 'change'" class="change">change_history</mat-icon>
+                        </div>
+                        <div style="flex-direction: column; align-items: flex-start">
+                            <div class="mat-body-1 type">{{ item.type }}</div>
+                            <div class="mat-body-2">{{ item.amount }}</div>
                         </div>
                     </div>
-                    <span *ngIf="!vp.sm" [style.marginLeft.px]="32" class="mat-body-1">
-                        tx #{{ util.numberWithCommas(item.height) }}
-                    </span>
+
+                    <!--Right Content -->
+                    <div>
+                        <div
+                            (mouseenter)="item.hover = true"
+                            (mouseleave)="item.hover = false"
+                            [class.mat-body-1]="!vp.sm"
+                            [class.mat-body-2]="vp.sm"
+                        >
+                            <ng-container *ngIf="!vp.sm">
+                                <span *ngIf="item.type === 'receive'">from </span>
+                                <span *ngIf="item.type === 'send' || item.type === 'change'">to </span>
+                            </ng-container>
+                            <div
+                                class="link accounts-hash-link"
+                                [style.marginLeft.px]="8"
+                                (click)="openLink(item.hash)"
+                            >
+                                <ng-container *ngIf="item.type === 'receive' || item.type === 'send'">
+                                    {{ formatAddress(item.address) }}
+                                </ng-container>
+                                <ng-container *ngIf="item.type === 'change'">
+                                    {{ formatAddress(item.newRepresentative) }}
+                                </ng-container>
+                            </div>
+                            <div class="copy-address-button">
+                                <button mat-icon-button *ngIf="item.hover" (click)="copyTransactionAddress(item)">
+                                    <mat-icon style="font-size: 16px">{{
+                                        item.showCopiedIcon ? 'check_circle' : 'content_copy'
+                                    }}</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <span *ngIf="!vp.sm" [style.marginLeft.px]="32" class="mat-body-1">
+                            tx #{{ util.numberWithCommas(item.height) }}
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>

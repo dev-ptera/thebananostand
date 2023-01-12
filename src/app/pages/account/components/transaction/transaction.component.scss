@@ -7,6 +7,7 @@
 }
 
 .transaction-row {
+    height: 100%;
     padding: 8px 16px;
     .type {
         font-weight: 600;
@@ -18,9 +19,14 @@
     }
 }
 
-.sm .transaction-row {
-    margin: 1rem;
-    border-radius: 1rem;
+.sm .transaction-row-wrapper {
+    padding: 0.5rem 1rem;
+    .transaction-row {
+        border-radius: 1rem;
+    }
+    .accounts-hash-link {
+        font-size: 12px;
+    }
 }
 
 .tx-state-icon .mat-icon {
@@ -28,7 +34,7 @@
     color: var(--icon-secondary);
 }
 .sm .tx-state-icon .mat-icon {
-    margin-right: 24px;
+    margin-right: 16px;
 }
 
 .transaction-row > div {
