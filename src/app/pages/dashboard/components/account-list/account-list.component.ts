@@ -31,11 +31,7 @@ import { AppStateService } from '@app/services/app-state.service';
                     Copy Address
                 </button>
                 <button mat-menu-item (click)="hideAccount(account)">Hide Account</button>
-                <!--
-                <button mat-menu-item (click)="openRenameWalletOverlay()">
-                    Rename Account
-                </button>
-                -->
+                <button mat-menu-item (click)="openRenameWalletOverlay()">Rename Account</button>
             </ng-template>
             <responsive-menu
                 menuTitle="Account"
@@ -89,7 +85,7 @@ import { AppStateService } from '@app/services/app-state.service';
         <div *ngIf="accounts.length > 0" class="dashboard-account-list" data-cy="dashboard-account-list" responsive>
             <div
                 *ngFor="
-                    let account of accounts | sort: sortDirection:accounts.length;
+                    let account of accounts | sort : sortDirection : accounts.length;
                     let i = index;
                     let even = even;
                     let last = last;
