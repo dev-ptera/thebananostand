@@ -1,3 +1,4 @@
+@use 'assets/themes/mixins/mobile-action-button';
 mat-form-field {
     width: 100%;
     margin-bottom: 32px;
@@ -106,6 +107,10 @@ mat-card-actions {
     .submit-button {
         width: 100px;
     }
+}
+
+.sm mat-card-actions {
+    @include mobile-action-button.mobile-button-styles();
 }
 
 .mat-mdc-card {
