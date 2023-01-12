@@ -6,7 +6,7 @@
 @use 'sass:map';
 
 $my-primary: mat.define-palette(blui.$blui-yellow, 500);
-$my-accent: mat.define-palette(blui.$blui-orange, 500);
+$my-accent: mat.define-palette(blui.$blui-yellow, 900);
 $my-warn: mat.define-palette(blui.$blui-red, 500);
 $my-typography: mat.define-typography-config();
 
@@ -36,6 +36,9 @@ $banano-yellow-theme: mat.define-dark-theme((
     --icon-secondary:   #{map-get(blui.$blui-black, 300)};
     --divider:          rgba(183, 183, 183, 0.12);
     --divider-border:   rgba(183, 183, 183, 0.08);
+    --input-focus-bg:   #{map-get(blui.$blui-vantaBlack, 500)};
+
+    --mdc-theme-surface: var(--card);
 
     .mat-toolbar.mat-primary {
         background: map-get(blui.$blui-vantaBlack, 400);
@@ -66,6 +69,12 @@ $banano-yellow-theme: mat.define-dark-theme((
         .mdc-dialog__surface {
             --mdc-dialog-container-color: var(--card);
         }
+    }
+
+    .mat-expansion-panel,
+    .add-index-overlay .add-accounts-example,
+    .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+        background: map-get(blui.$blui-vantaBlack, 200);
     }
 }
 

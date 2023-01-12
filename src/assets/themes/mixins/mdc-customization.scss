@@ -54,4 +54,8 @@
         font-size: .875rem;
         letter-spacing: .5px;
     }
+
+    .mat-mdc-form-field-focus-overlay {
+        background: var(--input-focus-bg);
+    }
 }

@@ -86,7 +86,7 @@ import { AppStateService } from '@app/services/app-state.service';
             </div>
         </ng-template>
 
-        <div class="dashboard-account-list" responsive>
+        <div *ngIf="accounts.length > 0" class="dashboard-account-list" data-cy="dashboard-account-list" responsive>
             <div
                 *ngFor="
                     let account of accounts | sort: sortDirection:accounts.length;
@@ -95,7 +95,7 @@ import { AppStateService } from '@app/services/app-state.service';
                     let last = last;
                     trackBy: markUniqueAccount
                 "
-                class="row-wrapper"
+                class="dashboard-row-wrapper"
                 (mouseenter)="hoverRowNumber = i"
                 (mouseleave)="hoverRowNumber = undefined"
                 [style.backgroundColor]="getItemBackgroundColor(even)"

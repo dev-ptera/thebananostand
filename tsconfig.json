@@ -22,5 +22,9 @@
             "stream": ["node_modules/stream-browserify"]
         },
         "lib": ["es2021", "dom"]
-    }
+    },
+    "exclude": [
+        "cypress",
+        "./cypress.config.ts"
+    ]
 }

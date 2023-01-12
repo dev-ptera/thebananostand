@@ -35,10 +35,11 @@ $nano-blue-theme: mat.define-light-theme((
     --icon-secondary:   #{map-get(blui.$blui-black, 300)};
     --divider:          rgba(66, 78, 84, 0.12);
     --divider-border:   rgba(66, 78, 84, 0.12);
+    --input-focus-bg:   #{map-get(blui.$blui-gray, 50)};
 
     .sm {
         .dashboard-account-list, .account-history-scroll-container {
-              background-color: rgba(map-get($my-primary, 500), .05);
+        //      background-color: rgba(map-get($my-primary, 500), .05);
          //   background-color: var(--primary);
          //   background-image: url("data:image/svg+xml,%3Csvg width='16' height='20' viewBox='0 0 16 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M8 0v20L0 10M16 0v10L8 0M16 10v10H8'/%3E%3C/g%3E%3C/svg%3E");
          //   background-image: url("data:image/svg+xml,%3Csvg width='32' height='64' viewBox='0 0 32 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 28h20V16h-4v8H4V4h28v28h-4V8H8v12h4v-8h12v20H0v-4zm12 8h20v4H16v24H0v-4h12V36zm16 12h-4v12h8v4H20V44h12v12h-4v-8zM0 36h8v20H0v-4h4V40H0v-4z' fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
