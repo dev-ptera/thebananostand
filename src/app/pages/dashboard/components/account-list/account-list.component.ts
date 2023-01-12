@@ -144,7 +144,6 @@ import { AppStateService } from '@app/services/app-state.service';
                         *ngTemplateOutlet="accountMoreOptions; context: { account: this.account }"
                     ></ng-template>
                 </div>
-                <mat-divider *ngIf="!last && !vp.sm"></mat-divider>
             </div>
         </div>
     `,
