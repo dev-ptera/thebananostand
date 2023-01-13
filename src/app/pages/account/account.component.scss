@@ -58,7 +58,6 @@
 
 $sendReceiveRowHeight: 74px;
 .account-history-scroll-container {
-    padding: 0.5rem 0;
     border: 0 !important;
     border-radius: 0rem;
     box-sizing: content-box;
@@ -73,6 +72,10 @@ $sendReceiveRowHeight: 74px;
     $smToolbarHeight: 40px;
     $accountInfoHeight: 90px;
     &.sm {
+        .cdk-virtual-scroll-content-wrapper {
+            padding: 0.5rem 0;
+        }
+
         max-height: calc(100vh - $smToolbarHeight - $accountInfoHeight - $sendReceiveRowHeight - 1px);
         max-height: calc(var(--app-height) - $smToolbarHeight - $accountInfoHeight - $sendReceiveRowHeight - 1px);
         &.repBanner {

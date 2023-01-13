@@ -75,6 +75,8 @@ import { SendDialogComponent } from '@app/overlays/dialogs/send/send-dialog.comp
 import { SpacerModule } from '@app/components/spacer/spacer.module';
 import { TransactionComponent } from '@app/pages/account/components/transaction/transaction.component';
 import { RenameAddressComponent } from '@app/overlays/actions/rename-address/rename-address.component';
+import { RenameAddressDialogComponent } from '@app/overlays/dialogs/rename-address/rename-address-dialog.component';
+import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/rename-address/rename-address-bottom-sheet.component';
 
 @NgModule({
     declarations: [
@@ -114,6 +116,8 @@ import { RenameAddressComponent } from '@app/overlays/actions/rename-address/ren
         ReceiveComponent,
         ReceiveDialogComponent,
         RenameAddressComponent,
+        RenameAddressBottomSheetComponent,
+        RenameAddressDialogComponent,
         RenameWalletBottomSheetComponent,
         RenameWalletComponent,
         RenameWalletDialogComponent,

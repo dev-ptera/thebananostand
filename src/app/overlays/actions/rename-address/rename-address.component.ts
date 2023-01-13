@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { RENAME_ACTIVE_WALLET } from '@app/services/wallet-events.service';
 import { AppStateService } from '@app/services/app-state.service';
-import { FilterOverlayData } from '@app/overlays/actions/filter/filter.component';
+import { RENAME_ADDRESS } from '@app/services/wallet-events.service';
 
 @Component({
     selector: 'app-rename-address-overlay',
@@ -11,10 +10,10 @@ import { FilterOverlayData } from '@app/overlays/actions/filter/filter.component
         <div class="rename-address-overlay overlay-action-container">
             <div class="overlay-header">Rename Address</div>
             <div class="overlay-body mat-body-1">
-                <div>Rename "{{ address }}" to something else?</div>
+                <div style="word-break: break-all">Rename "{{ currentNickName }}" to something else?</div>
                 <form style="margin: 32px 0 16px 0">
                     <mat-form-field style="width: 100%" appearance="fill">
-                        <mat-label>New Address Name</mat-label>
+                        <mat-label>New Address Alias</mat-label>
                         <input
                             type="text"
                             matInput
@@ -31,7 +30,6 @@ import { FilterOverlayData } from '@app/overlays/actions/filter/filter.component
                     data-cy="rename-address-overlay-button"
                     mat-flat-button
                     color="primary"
-                    [disabled]="isDisabled()"
                     (click)="renameAddress()"
                 >
                     Rename
@@ -44,23 +42,22 @@ export class RenameAddressComponent implements OnInit {
     @Input() address: string;
     @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
-    currentWalletName: string;
+    currentNickName: string;
+
     addressNameFormControl = new FormControl('');
 
     constructor(private readonly _appStateService: AppStateService) {}
 
-    ngOnInit(): void {}
-
-    isDisabled(): boolean {
-        return !this.addressNameFormControl.value;
+    ngOnInit(): void {
+        this.currentNickName = this._appStateService.store.getValue().addressBook.get(this.address);
+        if (!this.currentNickName) {
+            this.currentNickName = this.address;
+        }
     }
 
     renameAddress(): void {
-        if (this.isDisabled()) {
-            return;
-        }
-        const newName = this.addressNameFormControl.value;
-        //  RENAME_ACTIVE_WALLET.next(newName);
+        const newName = this.addressNameFormControl.value || this.address;
+        RENAME_ADDRESS.next({ name: newName, account: this.address });
         this.close.emit();
     }
 }

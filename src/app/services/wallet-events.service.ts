@@ -8,6 +8,7 @@ import { SecretService } from '@app/services/secret.service';
 import { AccountService } from '@app/services/account.service';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { SignerService } from '@app/services/signer.service';
+import { AddressBookEntry } from '@app/types/AddressBookEntry';
 
 const SNACKBAR_DURATION = 200000;
 const SNACKBAR_CLOSE_ACTION_TEXT = 'Dismiss';
@@ -67,6 +68,9 @@ export const REFRESH_DASHBOARD_ACCOUNTS = new Subject<void>();
 /** The active wallet has been given an alias. */
 export const RENAME_ACTIVE_WALLET = new Subject<string>();
 
+/** The user wants to manually add an address to their address book. */
+export const RENAME_ADDRESS = new Subject<AddressBookEntry>();
+
 /** The active wallet has been removed. */
 export const REMOVE_ACTIVE_WALLET = new Subject<void>();
 
@@ -106,6 +110,7 @@ export class WalletEventsService {
         // _dispatch initial app state
         this._dispatch({
             activeWallet: undefined,
+            addressBook: this._walletStorageService.readAddressBookFromLocalStorage(),
             hasSecret: this._walletStorageService.hasSecretWalletSaved(),
             localStorageWallets: this._walletStorageService.readWalletsFromLocalStorage(),
         });
@@ -265,6 +270,16 @@ export class WalletEventsService {
             this._dispatch({ activeWallet, localStorageWallets });
         });
 
+        RENAME_ADDRESS.subscribe((data) => {
+            const addressBook = this.store.addressBook;
+            if (data.account === data.name) {
+                addressBook.delete(data.account);
+            } else {
+                addressBook.set(data.account, data.name);
+            }
+            this._dispatch({ addressBook });
+        });
+
         REMOVE_ACTIVE_WALLET.subscribe(() => {
             const { activeWallet, localStorageWallets } = this._walletStorageService.removeActiveWallet();
             this._snackbar.open('Removed Wallet', SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION });
@@ -330,8 +345,9 @@ export class WalletEventsService {
         this._appStateService.store.next(Object.assign(this._appStateService.store.getValue(), newData));
 
         /* appLocalStorage events are only emitted when we need to write to localstorage; see `wallet-storage.service`. */
-        if (newData.activeWallet !== undefined || newData.localStorageWallets !== undefined) {
+        if (newData.activeWallet || newData.localStorageWallets || newData.addressBook) {
             this._appStateService.appLocalStorage.next({
+                addressBook: newData.addressBook,
                 activeWallet: newData.activeWallet,
                 localStorageWallets: newData.localStorageWallets,
             });

@@ -110,7 +110,11 @@ export class TransactionComponent {
 
     /** Shows alias (if exists) or shortened address. */
     formatAddress(address: string): string {
-        return this._appStateService.knownAccounts.get(address) || this.util.shortenAddress(address);
+        return (
+            this._appStateService.store.getValue().addressBook.get(address) ||
+            this._appStateService.knownAccounts.get(address) ||
+            this.util.shortenAddress(address)
+        );
     }
 
     /** Open link in an explorer, defaults to YellowSpyglass. */

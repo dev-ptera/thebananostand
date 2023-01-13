@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { UtilService } from '@app/services/util.service';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { AccountOverview } from '@app/types/AccountOverview';
+import { AddressBookEntry } from '@app/types/AddressBookEntry';
 
 export type LocalStorageWallet = {
     encryptedSeed: string;
@@ -14,6 +15,7 @@ export type WalletState = { activeWallet: LocalStorageWallet; localStorageWallet
 
 const ACTIVE_WALLET_ID = 'activeWalletID';
 const ENCRYPTED_WALLETS = 'bananostand_encryptedWallets';
+const ADDRESS_BOOK = 'bananostand_addressBook';
 const LEDGER_STORED_INDEXES = 'bananostand_ledgerIndexes';
 
 @Injectable({
@@ -42,6 +44,10 @@ export class WalletStorageService {
                 window.localStorage.setItem(ENCRYPTED_WALLETS, JSON.stringify(walletData.localStorageWallets));
             }
 
+            if (walletData.addressBook) {
+                this._writeAddressBookLocalStore(walletData.addressBook);
+            }
+
             if (walletData.activeWallet) {
                 if (this.store.hasUnlockedLedger) {
                     window.localStorage.setItem(
@@ -53,6 +59,17 @@ export class WalletStorageService {
                 }
             }
         });
+    }
+
+    /** Reads browser's localstorage for a list of address and their respective aliases. */
+    readAddressBookFromLocalStorage(): Map<string, string> {
+        const json = window.localStorage.getItem(ADDRESS_BOOK);
+        const addressBookEntries = json ? JSON.parse(json) : [];
+        const map = new Map<string, string>();
+        addressBookEntries.forEach((entry: AddressBookEntry) => {
+            map.set(entry.account, entry.name);
+        });
+        return map;
     }
 
     /** Given an encrypted seed, makes a wallet that is later stored in the browser. */
@@ -163,5 +180,14 @@ export class WalletStorageService {
             name: 'Ledger Wallet',
             loadedIndexes: JSON.parse(window.localStorage.getItem(LEDGER_STORED_INDEXES)) || [],
         };
+    }
+
+    /** Writes a user's address book entries to the browser. */
+    private _writeAddressBookLocalStore(addressBook: Map<string, string>): void {
+        const accounts: AddressBookEntry[] = [];
+        for (const address of addressBook.keys()) {
+            accounts.push({ name: addressBook.get(address), account: address });
+        }
+        window.localStorage.setItem(ADDRESS_BOOK, JSON.stringify(accounts));
     }
 }

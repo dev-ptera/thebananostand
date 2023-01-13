@@ -231,7 +231,7 @@
                         </button>
                     </div>
                 </div>
-                <mat-divider></mat-divider>
+                <mat-divider *ngIf="!vp.sm"></mat-divider>
                 <ng-template [ngTemplateOutlet]="noAccountsEmptyState"></ng-template>
                 <app-account-list [accounts]="store.accounts" [sortDirection]="sortDirection"></app-account-list>
             </mat-card>
