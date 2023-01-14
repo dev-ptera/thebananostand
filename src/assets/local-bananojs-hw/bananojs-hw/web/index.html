@@ -1,0 +1,160 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta charset="utf-8" />
+    <title>Bananojs-Hw</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+
+  <body onLoad="onLoad()">
+    <h1>Bananojs-Hw</h1>
+    <a href="../dist/BananoHwApp.js" target="_blank">latest BananoHwApp</a>
+    <a href="../dist/TransportWebUSB.js" target="_blank">latest TransportWebUSB</a>
+    <a href="work" target="_blank">Webgl/Wasm/Js work race</a>
+    <table class="w100pct">
+      <tr>
+        <td class="w100pct border_black align_top">
+          <div id="unsupportedLedger" class="border_black display_none">Ledger not supported, check that site is https.</div>
+          <div id="unsupportedCrypto" class="border_black display_none">window.crypto.subtle not supported, check that site is https.</div>
+          <div id="checkLedger" class="border_black display_none">
+            <h2>Ledger</h2>
+            <button onclick="checkLedger();return false;">Check Ledger Account and Pending</button><br />
+          </div>
+          <div id="checkOldSeed" class="border_black display_none">
+            <h2>Reuse Stored Seed</h2>
+            Password for Stored Seed (required)<br />
+            <form>
+              <input id="oldSeedPassword" class="monospace small bg_white" type="password" size="66" max_length="64" value="" defaultValue="password" autocomplete="current-password" /><br />
+              <button onclick="checkOldSeed();return false;">Check Old Seed Account and Pending</button>
+            </form>
+          </div>
+          <div id="clearOldSeed" class="border_black display_none">
+            <form>
+              <button onclick="clearOldSeed();return false;">Clear Old Seed (confirmation required)</button>
+            </form>
+          </div>
+          <div id="checkNewSeed" class="border_black display_none">
+            <h2>Store New Seed</h2>
+            Seed (required)<br />
+            <form>
+              <input id="fakeUsername" type="text" class="border_black display_none" autocomplete="username" />
+              <input id="newSeed" class="monospace small bg_white" type="text" size="66" max_length="64" value="" defaultValue="seed" autocomplete="off" />
+              <button onclick="newRandomSeed();return false;">Random Seed</button>
+              <br />
+              Password for Storing Seed (optional)<br />
+              <input id="newSeedPassword" class="monospace small bg_white" type="password" size="66" max_length="64" value="" defaultValue="password" autocomplete="new-password" /><br />
+              <button onclick="checkNewSeed();return false;">Check New Seed Account and Pending</button>
+            </form>
+          </div>
+          <div id="checkOldMnemonic" class="border_black display_none">
+            <h2>Reuse Stored Mnemonic</h2>
+            Password for Stored Mnemonic (required)<br />
+            <form>
+              <input id="oldMnemonicPassword" class="monospace small bg_white" type="password" size="66" max_length="64" value="" defaultValue="password" autocomplete="current-password" /><br />
+              <button onclick="checkOldMnemonic();return false;">Check Old Mnemonic Account and Pending</button>
+            </form>
+          </div>
+          <div id="clearOldMnemonic" class="border_black display_none">
+            <form>
+              <button onclick="clearOldMnemonic();return false;">Clear Old Mnemonic (confirmation required)</button>
+            </form>
+          </div>
+          <div id="checkNewMnemonic" class="border_black display_none">
+            <h2>Store New Mnemonic</h2>
+            Mnemonic (required)<br />
+            <form>
+              <input id="fakeUsername" type="text" class="border_black display_none" autocomplete="username" />
+              <textarea id="newMnemonic" class="monospace small bg_white" type="text" cols="66" rows="8" value="" defaultValue="mnemonic" autocomplete="off"></textarea>
+              <button onclick="newRandomMnemonic();return false;">Random Mnemonic</button>
+              <br />
+              Password for Storing Mnemonic (optional)<br />
+              <input id="newMnemonicPassword" class="monospace small bg_white" type="password" size="66" max_length="64" value="" defaultValue="password" autocomplete="new-password" /><br />
+              <button onclick="checkNewMnemonic();return false;">Check New Mnemonic Account and Pending</button>
+            </form>
+          </div>
+
+          <div id="checkOldSeedArray" class="border_black display_none">
+            <h2>Reuse Stored Seed Array</h2>
+            Password for Stored Seed Array (required)<br />
+            <form>
+              <input id="oldSeedArrayPassword" class="monospace small bg_white" type="password" size="66" max_length="64" value="" defaultValue="password" autocomplete="current-password" /><br />
+              <button onclick="checkOldSeedArray();return false;">Check Old Seed Array Account and Pending</button>
+            </form>
+          </div>
+          <div id="clearOldSeedArray" class="border_black display_none">
+            <form>
+              <button onclick="clearOldSeedArray();return false;">Clear Old Seed Array (confirmation required)</button>
+            </form>
+          </div>
+          <div id="checkNewSeedArray" class="border_black display_none">
+            <h2>Store New Seed Array</h2>
+            Seed Array (required)<br />
+            <form>
+              <input id="fakeUsername" type="text" class="border_black display_none" autocomplete="username" />
+              <textarea id="newSeedArray" class="monospace small bg_white" type="text" cols="68" rows="8" value="" defaultValue="seed array" autocomplete="off"></textarea>
+              <button onclick="newRandomSeedArray();return false;">Random Seed Array</button>
+              <br />
+              Password for Storing Seed Array (optional)<br />
+              <input id="newSeedArrayPassword" class="monospace small bg_white" type="password" size="66" max_length="64" value="" defaultValue="password" autocomplete="new-password" /><br />
+              <button onclick="checkNewSeedArray();return false;">Check New Seed Array Account and Pending</button>
+            </form>
+          </div>
+
+          <div id="checkOldPrivateKey" class="border_black display_none">
+            <h2>Reuse Stored Private Key</h2>
+            Password for Stored Private Key (required)<br />
+            <form>
+              <input id="oldPrivateKeyPassword" class="monospace small bg_white" type="password" size="66" max_length="64" value="" defaultValue="password" autocomplete="current-password" /><br />
+              <button onclick="checkOldPrivateKey();return false;">Check Old Private Key Account and Pending</button>
+            </form>
+          </div>
+          <div id="clearOldPrivateKey" class="border_black display_none">
+            <form>
+              <button onclick="clearOldPrivateKey();return false;">Clear Old Private Key (confirmation required)</button>
+            </form>
+          </div>
+          <div id="checkNewPrivateKey" class="border_black display_none">
+            <h2>Store New Private Key</h2>
+            Private Key (required)<br />
+            <form>
+              <input id="fakeUsername" type="text" class="border_black display_none" autocomplete="username" />
+              <textarea id="newPrivateKey" class="monospace small bg_white" type="text" cols="68" rows="8" value="" defaultValue="seed array" autocomplete="off"></textarea>
+              <button onclick="newRandomPrivateKey();return false;">Random Private Key</button>
+              <br />
+              Password for Storing Private Key (optional)<br />
+              <input id="newPrivateKeyPassword" class="monospace small bg_white" type="password" size="66" max_length="64" value="" defaultValue="password" autocomplete="new-password" /><br />
+              <button onclick="checkNewPrivateKey();return false;">Check New Private Key Account and Pending</button>
+            </form>
+          </div>
+
+          <div id="accountData" class="border_black display_none">
+            <h2>Account</h2>
+            <div id="accountInfo" class="break_all"></div>
+            <h2>Withdraw</h2>
+            <label for="accountDataArray">Choose which account to withdraw from</label><br />
+            <select name="accountDataArray" id="accountDataArray"></select>
+            <h3>Withdraw To Account</h3>
+            <input id="withdrawAccount" class="monospace small bg_white" type="text" size="66" max_length="64" value="" defaultValue="To Account" />
+            <h3>Withdraw Amount (Bananos)</h3>
+            <input id="withdrawAmount" class="monospace small bg_white" type="number" size="66" max_length="64" min="0" step="any" value="0.0" />
+            <br />
+            <button type="button" title="Withdraw" class="px120x24 bg_lightgreen" onclick="withdraw(); return false;">Withdraw</button>
+            <br />
+            <div id="withdrawResponse" class="monospace small bordered bg_lightgreen selectable"></div>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <script src="https://bananocoin.github.io/bananojs/dist/bananocoin-bananojs.js"></script>
+    <script src="https://bananocoin.github.io/bananojs-hw/dist/bip39.js"></script>
+    <script src="https://bananocoin.github.io/bananojs-hw/dist/BananoHwApp.js"></script>
+    <script src="https://bananocoin.github.io/bananojs-hw/dist/TransportWebUSB.js"></script>
+    <!-- <script src="https://bananocoin.github.io/bananojs-hw/web/bananojs-hw.js"></script> -->
+    <script src="bananojs-hw.js"></script>
+    <script src="password-utils.js"></script>
+    <script src="https://bananocoin.github.io/bananojs-hw/index.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,47 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta charset="utf-8" />
+    <title>Work Generation Race</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+
+  <body onLoad="onLoad()">
+    <h1>Work Generation Race</h1>
+    <table class="w100pct">
+      <tr>
+        <td class="w100pct border_black align_top">
+          <div id="workGenerationRace" class="border_black">
+            <form>
+              <input id="fakeUsername" type="text" class="border_black display_none" autocomplete="username" />
+              <h2>Previous Hash</h2>
+              <button onclick="newRandomPrevious();return false;">Random Previous</button>
+              <input id="previous" class="monospace small bg_white" type="text" size="66" max_length="64" value="E2D8BD730E1512568378EC61A2367431F8AC35E66C46508CD0F9F3BCD94DE29B" autocomplete="off" />
+              <h2>Start and Stop Race</h2>
+              <button onclick="startNewRace();return false;">Start Race</button>
+              <button onclick="stopRaceNoRestart();return false;">Stop Race</button>
+
+              <h2>stats</h2>
+              <div id="stats" class="border_black"></div>
+
+              <h2>WebGL Work</h2>
+              <input id="webglWork" class="monospace small bg_white" type="text" size="66" max_length="64" value="" autocomplete="off" />
+
+              <h2>Wasm Work</h2>
+              <input id="wasmWork" class="monospace small bg_white" type="text" size="66" max_length="64" value="" autocomplete="off" />
+
+              <h2>javascript Work</h2>
+              <input id="jsWork" class="monospace small bg_white" type="text" size="66" max_length="64" value="" autocomplete="off" />
+            </form>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <script src="https://bananocoin.github.io/bananojs/dist/bananocoin-bananojs.js"></script>
+    <script src="webgl/nano-webgl-pow.js"></script>
+    <script src="wasm/startThreads.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>
