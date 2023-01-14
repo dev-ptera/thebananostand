@@ -4,24 +4,26 @@ import { LocalStorageWallet } from '@app/services/wallet-storage.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 
 export type AppStore = {
+    /** Loaded ledger accounts, their rep, & respective balances.  */
+    accounts: AccountOverview[];
+    /** The wallet that is displayed on the dashboard page. */
+    activeWallet: LocalStorageWallet;
+    /** Manually entered accounts that are then stored in the browser for future use. */
+    addressBook: Map<string, string>;
     /** User has a wallet (encrypted seed) stored in localstorage. */
     hasSecret: boolean;
     /** User has unlocked the wallet using a Nano Ledger device. */
     hasUnlockedLedger: boolean;
     /** User has unlocked the wallet using a secret / password combo. */
     hasUnlockedSecret: boolean;
-    /** The password used to unlock the encrypted wallet. */
-    walletPassword: string;
-    /** The list of wallets stored in localstorage. These use a secret. */
-    localStorageWallets: LocalStorageWallet[];
-    /** The wallet that is displayed on the dashboard page. */
-    activeWallet: LocalStorageWallet;
-    /** Aggregate balance of all loaded accounts. */
-    totalBalance: number;
-    /** Loaded ledger accounts, their rep, & respective balances.  */
-    accounts: AccountOverview[];
     /** Accounts on the dashboard are being loaded. */
     isLoadingAccounts: boolean;
+    /** The list of wallets stored in localstorage. These use a secret. */
+    localStorageWallets: LocalStorageWallet[];
+    /** Aggregate balance of all loaded accounts. */
+    totalBalance: number;
+    /** The password used to unlock the encrypted wallet. */
+    walletPassword: string;
 };
 
 @Injectable({
@@ -36,6 +38,7 @@ export class AppStateService {
 
     store: BehaviorSubject<AppStore> = new BehaviorSubject<AppStore>({
         accounts: [],
+        addressBook: new Map<string, string>(),
         hasSecret: undefined, // Set on init.
         hasUnlockedSecret: false,
         hasUnlockedLedger: false,
@@ -46,5 +49,9 @@ export class AppStateService {
         isLoadingAccounts: true,
     });
 
-    appLocalStorage = new Subject<{ activeWallet: LocalStorageWallet; localStorageWallets: LocalStorageWallet[] }>();
+    appLocalStorage = new Subject<{
+        addressBook: Map<string, string>;
+        activeWallet: LocalStorageWallet;
+        localStorageWallets: LocalStorageWallet[];
+    }>();
 }

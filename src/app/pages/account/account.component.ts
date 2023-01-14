@@ -321,7 +321,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     /** If these numbers need adjusted, see the `account.component.scss` file since there are styles there that need to match. */
     getTransactionRowHeight(): number {
-        return this.vp.sm ? 88 : 52;
+        return this.vp.sm ? 72 : 52;
     }
 
     /** Screen height & transaction container height is normally fixed height since we know the height of all elements... except Rep is Offline banner.
@@ -345,5 +345,9 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     showNoFilteredResultsEmptyState(): boolean {
         return this.isFilterApplied() && this.ds && this.ds.firstPageLoaded && this.ds._cachedData.length === 0;
+    }
+
+    getScrollContainerHeight(): number {
+        return this.countTotalDisplayableTxCount() * this.getTransactionRowHeight() + (this.vp.sm ? 16 : 0); // Account for vert padding on mobile devices.
     }
 }

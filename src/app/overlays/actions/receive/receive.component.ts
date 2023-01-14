@@ -38,7 +38,7 @@ export type ReceiveOverlayData = {
 
             <ng-container *ngIf="!hasSuccess && !hasErrorReceiving">
                 <div class="overlay-header">Receive Transaction</div>
-                <div class="overlay-body">
+                <div class="overlay-body" style="position: relative">
                     <div style="margin-bottom: 8px" class="mat-body-1">
                         You are attempting to receive an incoming transaction(s).
                         <ng-container *ngIf="!isLedger"> Use the button below to receive each block.</ng-container>
@@ -54,7 +54,7 @@ export type ReceiveOverlayData = {
                         *ngIf="maxSteps !== 1"
                         mode="determinate"
                         [value]="bufferValue"
-                        style="margin-left: -24px; margin-right: -24px; width: unset;"
+                        style="position: absolute; bottom: 0px; left: 0px;"
                     ></mat-progress-bar>
                 </div>
 

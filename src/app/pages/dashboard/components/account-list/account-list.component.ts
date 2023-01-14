@@ -8,6 +8,10 @@ import { UtilService } from '@app/services/util.service';
 import { ThemeService } from '@app/services/theme.service';
 import { AccountService } from '@app/services/account.service';
 import { AppStateService } from '@app/services/app-state.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { RenameAddressDialogComponent } from '@app/overlays/dialogs/rename-address/rename-address-dialog.component';
+import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/rename-address/rename-address-bottom-sheet.component';
 
 @Component({
     selector: 'app-account-list',
@@ -31,11 +35,7 @@ import { AppStateService } from '@app/services/app-state.service';
                     Copy Address
                 </button>
                 <button mat-menu-item (click)="hideAccount(account)">Hide Account</button>
-                <!--
-                <button mat-menu-item (click)="openRenameWalletOverlay()">
-                    Rename Account
-                </button>
-                -->
+                <button mat-menu-item (click)="openRenameWalletOverlay(account)">Rename Account</button>
             </ng-template>
             <responsive-menu
                 menuTitle="Account"
@@ -89,7 +89,7 @@ import { AppStateService } from '@app/services/app-state.service';
         <div *ngIf="accounts.length > 0" class="dashboard-account-list" data-cy="dashboard-account-list" responsive>
             <div
                 *ngFor="
-                    let account of accounts | sort: sortDirection:accounts.length;
+                    let account of accounts | sort : sortDirection : accounts.length;
                     let i = index;
                     let even = even;
                     let last = last;
@@ -116,7 +116,7 @@ import { AppStateService } from '@app/services/app-state.service';
                             [class.mat-body-1]="!vp.sm"
                             [class.mat-body-2]="vp.sm"
                         >
-                            {{ account.shortAddress }}
+                            {{ getAccountName(account) }}
                         </div>
                         <ng-container *ngIf="vp.sm">
                             <div class="mat-body-2" *ngIf="account.representative; else unopenedAccountTag">
@@ -151,6 +151,7 @@ import { AppStateService } from '@app/services/app-state.service';
 export class AccountListComponent {
     colors = Colors;
     hoverRowNumber: number;
+    bottomSheetOpenDelayMs = 250;
 
     @Input() accounts: AccountOverview[] = [];
     @Input() sortDirection: 'none' | 'asc' | 'desc';
@@ -159,6 +160,8 @@ export class AccountListComponent {
         public vp: ViewportService,
         private readonly _router: Router,
         private readonly _util: UtilService,
+        private readonly _dialog: MatDialog,
+        private readonly _sheet: MatBottomSheet,
         private readonly _themeService: ThemeService,
         private readonly _accountService: AccountService,
         private readonly _appStateService: AppStateService
@@ -197,6 +200,32 @@ export class AccountListComponent {
 
     openAccount(address: string): void {
         void this._router.navigate([`/account/${address}`]);
+    }
+
+    openRenameWalletOverlay(account: AccountOverview): void {
+        const data = {
+            data: {
+                address: account.fullAddress,
+            },
+        };
+
+        if (this.vp.sm) {
+            setTimeout(() => {
+                const ref = this._sheet.open(RenameAddressBottomSheetComponent, data);
+                ref.afterDismissed().subscribe(() => {
+                    account.moreOptionsOpen = false;
+                });
+            }, this.bottomSheetOpenDelayMs);
+        } else {
+            const ref = this._dialog.open(RenameAddressDialogComponent, data);
+            ref.afterClosed().subscribe(() => {
+                account.moreOptionsOpen = false;
+            });
+        }
+    }
+
+    getAccountName(account: AccountOverview): string {
+        return this._appStateService.store.getValue().addressBook.get(account.fullAddress) || account.shortAddress;
     }
 
     getMonkeyUrl(address: string): string {

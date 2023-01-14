@@ -33,8 +33,8 @@ export type ChangeRepOverlayData = {
                     <div title>Representative Changed</div>
                     <div description>
                         Your representative has been successfully updated and can be viewed
-                        <span class="link" [style.color]="colors.blue[500]" (click)="openLink()">here.</span>
-                        You can now close this window.
+                        <span class="link" [style.color]="colors.blue[500]" (click)="openLink()">here</span>. You can
+                        now close this window.
                     </div>
                     <button
                         mat-flat-button

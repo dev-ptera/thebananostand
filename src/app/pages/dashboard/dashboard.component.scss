@@ -25,6 +25,8 @@
 $mobileDashboardHeaderHeight: 96px;
 .sm .dashboard-header {
     height: $mobileDashboardHeaderHeight;
+    // border-radius: 1rem!important;
+    border-bottom-width: 2px;
 }
 
 .dashboard-account-list {

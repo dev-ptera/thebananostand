@@ -23,8 +23,8 @@ export type SendOverlayData = {
                     <div title>Transaction Sent</div>
                     <div description>
                         Your transaction has been successfully sent and can be viewed
-                        <span class="link" [style.color]="colors.blue[500]" (click)="openLink()">here.</span>
-                        You can now close this window.
+                        <span class="link" [style.color]="colors.blue[500]" (click)="openLink()">here</span>. You can
+                        now close this window.
                     </div>
                     <button mat-flat-button color="primary" (click)="closeDialog()">Close</button>
                 </app-empty-state>
