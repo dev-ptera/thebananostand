@@ -346,4 +346,8 @@ export class AccountComponent implements OnInit, OnDestroy {
     showNoFilteredResultsEmptyState(): boolean {
         return this.isFilterApplied() && this.ds && this.ds.firstPageLoaded && this.ds._cachedData.length === 0;
     }
+
+    getScrollContainerHeight(): number {
+        return this.countTotalDisplayableTxCount() * this.getTransactionRowHeight() + (this.vp.sm ? 16 : 0); // Account for vert padding on mobile devices.
+    }
 }

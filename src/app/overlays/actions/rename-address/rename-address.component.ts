@@ -33,6 +33,7 @@ import { RENAME_ADDRESS } from '@app/services/wallet-events.service';
                     (click)="renameAddress()"
                 >
                     Rename
+                    <!--   {{ addressNameFormControl.value ? 'Rename' : 'Clear' }} -->
                 </button>
             </div>
         </div>

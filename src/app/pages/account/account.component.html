@@ -235,7 +235,7 @@
                     *ngIf="ds && ds.firstPageLoaded"
                     [itemSize]="getTransactionRowHeight()"
                     data-cy="account-scroll-container"
-                    [style.height.px]="countTotalDisplayableTxCount() * getTransactionRowHeight()"
+                    [style.height.px]="getScrollContainerHeight()"
                     class="account-history-scroll-container"
                     [class.repBanner]="isRepOffline() && !warnBannerDismissed"
                     responsive
