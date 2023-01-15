@@ -1,5 +1,5 @@
 @mixin mobile-button-styles {
-    .mat-mdc-button-base {
+    .mat-mdc-outlined-button, .mat-mdc-unelevated-button {
         height: 42px!important;
         border-radius: 1rem;
         min-width: 100px;
