@@ -10,7 +10,7 @@ import { AccountOverview } from '@app/types/AccountOverview';
 import { SignerService } from '@app/services/signer.service';
 import { AddressBookEntry } from '@app/types/AddressBookEntry';
 
-const SNACKBAR_DURATION = 200000;
+const SNACKBAR_DURATION = 3000;
 const SNACKBAR_CLOSE_ACTION_TEXT = 'Dismiss';
 const sortAccounts = (accounts): AccountOverview[] => accounts.sort((a, b) => (a.index < b.index ? -1 : 1));
 
