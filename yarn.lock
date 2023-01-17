@@ -1388,10 +1388,10 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@bananocoin/bananojs-hw@^1.5.2":
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/@bananocoin/bananojs-hw/-/bananojs-hw-1.5.2.tgz#68ac097bc44c8947b4b1d9ad6279910d7803df78"
-  integrity sha512-6mJf03zMzPuFEFaEwtsNkE2BazpRVARTX6hRn33OxY/o1B0UAFp1rfGWd3Xqs1oM7nAoS7cTGyzNFODO0nVeFQ==
+"@bananocoin/bananojs-hw@^1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@bananocoin/bananojs-hw/-/bananojs-hw-1.5.4.tgz#97ba0ca9eb2618a16000b2a5519961266b31fbb5"
+  integrity sha512-mUVOKBqZGO28i16Y04hljHxbc5oKc2vuCuQJt9p5hfRa/7tgkC2ZOJX7Cf+8J32lLTRxS6gTjiFJdfTW587axQ==
   dependencies:
     "@bananocoin/bananojs" "^2.7.13"
     "@ledgerhq/hw-transport-node-hid" "^6.27.10"
