@@ -71,6 +71,9 @@ export const RENAME_ACTIVE_WALLET = new Subject<string>();
 /** The user wants to manually add an address to their address book. */
 export const RENAME_ADDRESS = new Subject<AddressBookEntry>();
 
+/** The user wants to manually add an address to their address book. */
+export const REMOVE_ADDRESS_BOOK_ENTRY = new Subject<AddressBookEntry>();
+
 /** The active wallet has been removed. */
 export const REMOVE_ACTIVE_WALLET = new Subject<void>();
 
@@ -270,12 +273,18 @@ export class WalletEventsService {
             this._dispatch({ activeWallet, localStorageWallets });
         });
 
-        RENAME_ADDRESS.subscribe((data) => {
+        REMOVE_ADDRESS_BOOK_ENTRY.subscribe((entry: AddressBookEntry) => {
             const addressBook = this.store.addressBook;
-            if (data.account === data.name) {
-                addressBook.delete(data.account);
+            addressBook.delete(entry.account);
+            this._dispatch({ addressBook });
+        });
+
+        RENAME_ADDRESS.subscribe((entry: AddressBookEntry) => {
+            const addressBook = this.store.addressBook;
+            if (entry.account === entry.name) {
+                addressBook.delete(entry.account);
             } else {
-                addressBook.set(data.account, data.name);
+                addressBook.set(entry.account, entry.name);
             }
             this._dispatch({ addressBook });
         });

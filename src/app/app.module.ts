@@ -77,6 +77,7 @@ import { TransactionComponent } from '@app/pages/account/components/transaction/
 import { RenameAddressComponent } from '@app/overlays/actions/rename-address/rename-address.component';
 import { RenameAddressDialogComponent } from '@app/overlays/dialogs/rename-address/rename-address-dialog.component';
 import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/rename-address/rename-address-bottom-sheet.component';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
     declarations: [
@@ -162,6 +163,7 @@ import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/re
         ResponsiveMenuModule,
         ScrollingModule,
         SpacerModule,
+        MatListModule,
     ],
     providers: [],
     bootstrap: [AppComponent],
