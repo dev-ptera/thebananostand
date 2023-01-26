@@ -5,8 +5,13 @@ import { WalletStorageService } from '@app/services/wallet-storage.service';
 import { AddressBookEntry } from '@app/types/AddressBookEntry';
 
 import { saveAs } from 'file-saver';
-import { REMOVE_ADDRESS_BOOK_ENTRY } from '@app/services/wallet-events.service';
+import { REMOVE_ADDRESS_BOOK_ENTRY, UPDATE_ADDRESS_BOOK } from '@app/services/wallet-events.service';
 import { AppStateService } from '@app/services/app-state.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/rename-address/rename-address-bottom-sheet.component';
+import { RenameAddressDialogComponent } from '@app/overlays/dialogs/rename-address/rename-address-dialog.component';
+import { UtilService } from '@app/services/util.service';
 
 @Component({
     selector: 'app-address-book',
@@ -22,34 +27,47 @@ import { AppStateService } from '@app/services/app-state.service';
 
         <div class="app-body" responsive>
             <div class="app-body-content">
+                <input
+                    style="display: none"
+                    type="file"
+                    #addressImport
+                    id="address-import"
+                    name="Address Import"
+                    (change)="onFileSelected($event)"
+                    accept="application/JSON"
+                />
                 <mat-card appearance="outlined" style="margin: 32px 0; padding: 0; width: 100%">
                     <div style="padding: 24px 24px; display: flex; justify-content: space-between; align-items: center">
                         <div class="mat-headline-6">Entries</div>
                         <div *ngIf="!vp.sm">
-                            <button mat-stroked-button color="primary" style="margin-right: 16px;">
+                            <button
+                                mat-flat-button
+                                color="primary"
+                                style="margin-right: 16px;"
+                                (click)="openRenameWalletOverlay(undefined)"
+                            >
                                 <mat-icon>add_circle_outline</mat-icon>
                                 <span>Add</span>
                             </button>
-                            <button mat-stroked-button color="primary" style="margin-right: 16px;">
-                                <mat-icon>bookmarks</mat-icon>
+                            <button mat-flat-button style="margin-right: 16px;" (click)="addressImport.click()">
+                                <mat-icon>library_books</mat-icon>
                                 <span>Import</span>
                             </button>
                             <button
-                                mat-stroked-button
-                                color="primary"
+                                mat-flat-button
                                 (click)="downloadAddressesAsJSON()"
                                 [disabled]="addressBook.length === 0"
                             >
-                                <mat-icon>download</mat-icon>
-                                <span>Export</span>
+                                <mat-icon>install_desktop</mat-icon>
+                                <span>Save</span>
                             </button>
                         </div>
                         <div *ngIf="vp.sm">
-                            <button mat-icon-button color="primary">
+                            <button mat-icon-button color="primary" (click)="openRenameWalletOverlay(undefined)">
                                 <mat-icon>add_circle_outline</mat-icon>
                             </button>
                             <button mat-icon-button color="primary">
-                                <mat-icon>bookmarks</mat-icon>
+                                <mat-icon>library_books</mat-icon>
                             </button>
                             <button
                                 mat-icon-button
@@ -57,7 +75,7 @@ import { AppStateService } from '@app/services/app-state.service';
                                 (click)="downloadAddressesAsJSON()"
                                 [disabled]="addressBook.length === 0"
                             >
-                                <mat-icon>download</mat-icon>
+                                <mat-icon>install_mobile</mat-icon>
                             </button>
                         </div>
                     </div>
@@ -80,13 +98,18 @@ import { AppStateService } from '@app/services/app-state.service';
                         <div *ngFor="let entry of addressBook; let i = index">
                             <div style="display: flex; align-items: center; justify-content: space-between">
                                 <div style="display: flex; align-items: center">
-                                    <div class="mat-body-1 hint" style="padding-right: 24px">#{{ i + 1 }}</div>
+                                    <div *ngIf="!vp.sm" class="mat-body-1 hint" style="width: 56px">#{{ i + 1 }}</div>
                                     <div style="display: flex; flex-direction: column; padding: 16px 0">
                                         <div class="mat-body-1" style="font-weight: 600">{{ entry.name }}</div>
-                                        <div class="mono mat-body-2">{{ entry.account }}</div>
+                                        <div class="mono mat-body-2 hint">
+                                            {{ vp.sm ? util.shortenAddress(entry.account) : entry.account }}
+                                        </div>
                                     </div>
                                 </div>
-                                <div>
+                                <div style="display: flex">
+                                    <button mat-icon-button (click)="openRenameWalletOverlay(entry)">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
                                     <button mat-icon-button (click)="remove(entry)">
                                         <mat-icon color="warn">close</mat-icon>
                                     </button>
@@ -104,7 +127,10 @@ export class AddressBookComponent {
 
     constructor(
         public vp: ViewportService,
+        public util: UtilService,
+        private readonly _dialog: MatDialog,
         private readonly _location: Location,
+        private readonly _sheet: MatBottomSheet,
         private readonly _appStoreService: AppStateService,
         private readonly _walletStoreService: WalletStorageService
     ) {}
@@ -131,5 +157,40 @@ export class AddressBookComponent {
 
     remove(entry: AddressBookEntry): void {
         REMOVE_ADDRESS_BOOK_ENTRY.next(entry);
+    }
+
+    async onFileSelected(fileEvent: any): Promise<void> {
+        function parseJsonFile(file: Blob): Promise<AddressBookEntry[]> {
+            return new Promise((resolve, reject) => {
+                const fileReader = new FileReader();
+                fileReader.onload = (event): any => resolve(JSON.parse(event.target.result as string));
+                fileReader.onerror = (error): any => reject(error);
+                fileReader.readAsText(file);
+            });
+        }
+
+        const file: File = fileEvent.target.files[0];
+        if (file) {
+            const entries = await parseJsonFile(file);
+            for (const entry of entries) {
+                UPDATE_ADDRESS_BOOK.next({ account: entry.account, name: entry.name });
+            }
+        }
+    }
+
+    openRenameWalletOverlay(entry: AddressBookEntry): void {
+        const data = {
+            data: {
+                address: entry?.account,
+            },
+        };
+
+        if (this.vp.sm) {
+            setTimeout(() => {
+                this._sheet.open(RenameAddressBottomSheetComponent, data);
+            }, 250);
+        } else {
+            this._dialog.open(RenameAddressDialogComponent, data);
+        }
     }
 }

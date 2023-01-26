@@ -58,6 +58,7 @@ export type FilterOverlayData = {
                 <mat-form-field style="width: 100%" appearance="fill">
                     <mat-label>Filter Addresses</mat-label>
                     <textarea
+                        style="min-height: 80px"
                         matInput
                         type="text"
                         [(ngModel)]="adjustedFilters.filterAddresses"

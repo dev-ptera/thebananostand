@@ -69,7 +69,7 @@ export const REFRESH_DASHBOARD_ACCOUNTS = new Subject<void>();
 export const RENAME_ACTIVE_WALLET = new Subject<string>();
 
 /** The user wants to manually add an address to their address book. */
-export const RENAME_ADDRESS = new Subject<AddressBookEntry>();
+export const UPDATE_ADDRESS_BOOK = new Subject<AddressBookEntry>();
 
 /** The user wants to manually add an address to their address book. */
 export const REMOVE_ADDRESS_BOOK_ENTRY = new Subject<AddressBookEntry>();
@@ -279,7 +279,7 @@ export class WalletEventsService {
             this._dispatch({ addressBook });
         });
 
-        RENAME_ADDRESS.subscribe((entry: AddressBookEntry) => {
+        UPDATE_ADDRESS_BOOK.subscribe((entry: AddressBookEntry) => {
             const addressBook = this.store.addressBook;
             if (entry.account === entry.name) {
                 addressBook.delete(entry.account);
