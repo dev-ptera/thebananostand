@@ -50,7 +50,7 @@ import { UtilService } from '@app/services/util.service';
                                 <span>Add</span>
                             </button>
                             <button mat-flat-button style="margin-right: 16px;" (click)="addressImport.click()">
-                                <mat-icon>library_books</mat-icon>
+                                <mat-icon>import_contacts</mat-icon>
                                 <span>Import</span>
                             </button>
                             <button
@@ -67,7 +67,7 @@ import { UtilService } from '@app/services/util.service';
                                 <mat-icon>add_circle_outline</mat-icon>
                             </button>
                             <button mat-icon-button color="primary">
-                                <mat-icon>library_books</mat-icon>
+                                <mat-icon>import_contacts</mat-icon>
                             </button>
                             <button
                                 mat-icon-button
