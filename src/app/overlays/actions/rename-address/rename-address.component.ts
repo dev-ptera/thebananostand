@@ -14,10 +14,12 @@ import { UPDATE_ADDRESS_BOOK } from '@app/services/wallet-events.service';
                     Rename "<span style="word-break: break-all">{{ addressOrNickname }}</span
                     >" to something else?
                 </div>
-                <form style="margin: 16px 0">
+                <div *ngIf="!addressOrNickname">Add a new entry to your local address book.</div>
+                <form style="margin: 32px 0">
                     <mat-form-field *ngIf="!addressOrNickname" style="width: 100%" appearance="fill">
                         <mat-label>Address</mat-label>
                         <textarea
+                            placeholder="ban_123"
                             style="height:80px"
                             type="text"
                             matInput
@@ -26,7 +28,7 @@ import { UPDATE_ADDRESS_BOOK } from '@app/services/wallet-events.service';
                         ></textarea>
                     </mat-form-field>
                     <mat-form-field style="width: 100%" appearance="fill">
-                        <mat-label>New Address Alias</mat-label>
+                        <mat-label>Alias</mat-label>
                         <input
                             #rename
                             type="text"

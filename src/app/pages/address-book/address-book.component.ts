@@ -36,20 +36,34 @@ import { UtilService } from '@app/services/util.service';
                     (change)="onFileSelected($event)"
                     accept="application/JSON"
                 />
-                <mat-card appearance="outlined" style="margin: 32px 0; padding: 0; width: 100%">
+                <mat-card
+                    appearance="outlined"
+                    style="margin: 32px 0; padding: 0; width: 100%"
+                    [style.borderRadius.px]="vp.sm ? 0 : 16"
+                    [style.marginTop.px]="vp.sm ? 0 : 32"
+                >
                     <div style="padding: 24px 24px; display: flex; justify-content: space-between; align-items: center">
-                        <div class="mat-headline-6">Entries</div>
-                        <div *ngIf="!vp.sm">
+                        <div *ngIf="!vp.sm" class="mat-headline-6">Entries</div>
+                        <div
+                            style="display: flex; justify-content: space-between"
+                            [style.width.%]="vp.sm ? 100 : undefined"
+                        >
                             <button
                                 mat-flat-button
                                 color="primary"
                                 style="margin-right: 16px;"
                                 (click)="openRenameWalletOverlay(undefined)"
+                                matTooltip="Add a new address alias"
                             >
                                 <mat-icon>add_circle_outline</mat-icon>
                                 <span>Add</span>
                             </button>
-                            <button mat-flat-button style="margin-right: 16px;" (click)="addressImport.click()">
+                            <button
+                                mat-flat-button
+                                style="margin-right: 16px;"
+                                (click)="addressImport.click()"
+                                matTooltip="Import from Banano Vault"
+                            >
                                 <mat-icon>import_contacts</mat-icon>
                                 <span>Import</span>
                             </button>
@@ -57,25 +71,10 @@ import { UtilService } from '@app/services/util.service';
                                 mat-flat-button
                                 (click)="downloadAddressesAsJSON()"
                                 [disabled]="addressBook.length === 0"
+                                matTooltip="Download a local copy"
                             >
                                 <mat-icon>install_desktop</mat-icon>
                                 <span>Save</span>
-                            </button>
-                        </div>
-                        <div *ngIf="vp.sm">
-                            <button mat-icon-button color="primary" (click)="openRenameWalletOverlay(undefined)">
-                                <mat-icon>add_circle_outline</mat-icon>
-                            </button>
-                            <button mat-icon-button color="primary">
-                                <mat-icon>import_contacts</mat-icon>
-                            </button>
-                            <button
-                                mat-icon-button
-                                color="primary"
-                                (click)="downloadAddressesAsJSON()"
-                                [disabled]="addressBook.length === 0"
-                            >
-                                <mat-icon>install_mobile</mat-icon>
                             </button>
                         </div>
                     </div>
@@ -95,8 +94,12 @@ import { UtilService } from '@app/services/util.service';
                     </div>
 
                     <div *ngIf="addressBook.length > 0" style="padding: 24px">
-                        <div *ngFor="let entry of addressBook; let i = index">
-                            <div style="display: flex; align-items: center; justify-content: space-between">
+                        <div *ngFor="let entry of addressBook; let i = index; let last = last">
+                            <div
+                                style="display: flex; align-items: center; justify-content: space-between"
+                                [style.paddingTop.px]="vp.sm ? 16 : 8"
+                                [style.paddingBottom.px]="vp.sm ? 16 : 8"
+                            >
                                 <div style="display: flex; align-items: center">
                                     <div *ngIf="!vp.sm" class="mat-body-1 hint" style="width: 56px">#{{ i + 1 }}</div>
                                     <div style="display: flex; flex-direction: column; padding: 16px 0">
@@ -108,13 +111,14 @@ import { UtilService } from '@app/services/util.service';
                                 </div>
                                 <div style="display: flex">
                                     <button mat-icon-button (click)="openRenameWalletOverlay(entry)">
-                                        <mat-icon>edit</mat-icon>
+                                        <mat-icon class="icon-secondary">edit</mat-icon>
                                     </button>
                                     <button mat-icon-button (click)="remove(entry)">
                                         <mat-icon color="warn">close</mat-icon>
                                     </button>
                                 </div>
                             </div>
+                            <mat-divider *ngIf="!last"></mat-divider>
                         </div>
                     </div>
                 </mat-card>

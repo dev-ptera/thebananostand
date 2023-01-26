@@ -312,6 +312,7 @@ export class WalletEventsService {
                 hasSecret: false,
                 localStorageWallets: [],
                 activeWallet: undefined,
+                addressBook: new Map(),
             });
             LOCK_WALLET.next();
         });

@@ -35,6 +35,10 @@ export class WalletStorageService {
         // Listen for the updated store and write to localstorage accordingly.
         // `store` & `localStorage` will always match.
         this._appStateService.appLocalStorage.subscribe((walletData) => {
+            if (walletData.addressBook && walletData.addressBook.keys.length === 0) {
+                window.localStorage.removeItem(ADDRESS_BOOK);
+            }
+
             if (walletData.localStorageWallets && walletData.localStorageWallets.length === 0) {
                 window.localStorage.removeItem(ACTIVE_WALLET_ID);
                 window.localStorage.removeItem(ENCRYPTED_WALLETS);
