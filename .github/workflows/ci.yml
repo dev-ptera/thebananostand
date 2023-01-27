@@ -37,3 +37,5 @@ jobs:
               uses: cypress-io/github-action@v5
               with:
                   start: yarn start
+                  # quote the url to be safe against YML parsing surprises
+                  wait-on: 'http://localhost:4200'
