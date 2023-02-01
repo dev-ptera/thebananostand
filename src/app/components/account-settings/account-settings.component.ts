@@ -27,11 +27,10 @@ import { AppStateService } from '@app/services/app-state.service';
 
             <ng-container *ngIf="isUserLoggedIn()">
                 <div class="mat-overline category-separator" style="margin-top: 24px">Advanced</div>
-                <!--
                 <button mat-menu-item (click)="navigateToAddressBook()">
                     <mat-icon>import_contacts</mat-icon>
                     <span>Address Book</span>
-                </button> -->
+                </button>
                 <mat-divider></mat-divider>
                 <button mat-menu-item (click)="navigateToSettingsPage()" data-cy="more-settings">
                     <mat-icon>open_in_new</mat-icon>

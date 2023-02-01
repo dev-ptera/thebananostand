@@ -37,6 +37,7 @@
         "@dev-ptera/nano-node-rpc": "^2.1.0",
         "@ngneat/until-destroy": "^9.2.3",
         "copy-to-clipboard": "^3.3.3",
+        "file-saver": "^2.0.5",
         "qrcode": "^1.5.1",
         "rxjs": "~6.6.7",
         "tslib": "^2.4.1",

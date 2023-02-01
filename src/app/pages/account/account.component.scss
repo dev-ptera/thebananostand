@@ -26,11 +26,17 @@
     }
 }
 
-.accounts-hash-link {
+.transaction-row .accounts-hash-link {
     max-width: 210px;
     overflow: hidden;
     text-overflow: ellipsis;
     font-family: monospace;
+    white-space: nowrap;
+    display: block;
+}
+
+.sm .transaction-row .accounts-hash-link {
+    max-width: 150px;
 }
 
 .app-body-content > * {
