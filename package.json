@@ -1,6 +1,6 @@
 {
     "name": "thebananostand",
-    "version": "3.1.0",
+    "version": "3.1.1",
     "scripts": {
         "ng": "ng",
         "start": "ng serve --open --host 0.0.0.0",
@@ -18,7 +18,8 @@
         "preflight": "yarn upgrade && yarn npm-check-updates && yarn ng update && yarn && yarn audit fix && yarn lint:fix && yarn prettier && yarn outdated",
         "prettier": "prettier \"src/app/**/**.{ts,js,json,css,scss,html}\" --write",
         "prettier:check": "prettier \"src/app/**/**.{ts,js,json,css,scss,html}\" --check",
-        "minify-assets": "minify-all-js dist/thebananostand/assets/"
+        "minify-assets": "minify-all-js dist/thebananostand/assets/",
+        "tag:package": "npx -p @brightlayer-ui/tag blui-tag"
     },
     "private": true,
     "dependencies": {
