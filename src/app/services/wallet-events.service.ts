@@ -257,6 +257,7 @@ export class WalletEventsService {
                 indexes.push(0);
             }
             ADD_SPECIFIC_ACCOUNTS_BY_INDEX.next(indexes);
+            SELECT_LOCALIZATION_CURRENCY.next(this.store.localCurrencyCode);
         });
 
         REFRESH_SPECIFIC_ACCOUNT_BY_INDEX.subscribe(async (index) => {
@@ -359,8 +360,6 @@ export class WalletEventsService {
             void this._accountService.fetchKnownAccounts().then((knownAccounts) => {
                 this._appStateService.knownAccounts = knownAccounts;
             });
-
-            SELECT_LOCALIZATION_CURRENCY.next(this.store.localCurrencyCode);
             REFRESH_DASHBOARD_ACCOUNTS.next();
         });
     }
