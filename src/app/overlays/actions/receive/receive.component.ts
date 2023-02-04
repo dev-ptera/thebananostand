@@ -3,12 +3,11 @@ import * as Colors from '@brightlayer-ui/colors';
 import { TransactionService } from '@app/services/transaction.service';
 import { AppStateService } from '@app/services/app-state.service';
 import { ReceivableHash } from '@app/types/ReceivableHash';
-import { TRANSACTION_COMPLETED_SUCCESS } from '@app/services/wallet-events.service';
+import { REFRESH_DASHBOARD_ACCOUNTS, TRANSACTION_COMPLETED_SUCCESS } from '@app/services/wallet-events.service';
 
 export type ReceiveOverlayData = {
-    address: string;
-    index: number;
-    blocks: ReceivableHash[];
+    blocks: Array<ReceivableHash & { index: number }>;
+    refreshDashboard?: boolean;
 };
 
 @Component({
@@ -18,7 +17,7 @@ export type ReceiveOverlayData = {
         <div class="receive-overlay overlay-action-container">
             <div *ngIf="hasSuccess" class="overlay-body">
                 <app-empty-state data-cy="receive-success-state">
-                    <mat-icon empty-icon> check_circle</mat-icon>
+                    <mat-icon empty-icon>check_circle</mat-icon>
                     <div title>Received Successfully</div>
                     <div description>
                         All transactions have been successfully received. You can now close this window.
@@ -29,7 +28,7 @@ export type ReceiveOverlayData = {
 
             <div *ngIf="hasErrorReceiving" class="overlay-body">
                 <app-empty-state>
-                    <mat-icon empty-icon> error</mat-icon>
+                    <mat-icon empty-icon>error</mat-icon>
                     <div title>Transaction Failed</div>
                     <div description>Your transaction could not be completed.</div>
                     <button mat-flat-button color="primary" class="close-button" (click)="closeDialog()">Close</button>
@@ -38,7 +37,7 @@ export type ReceiveOverlayData = {
 
             <ng-container *ngIf="!hasSuccess && !hasErrorReceiving">
                 <div class="overlay-header">Receive Transaction</div>
-                <div class="overlay-body" style="position: relative">
+                <div class="overlay-body" style="position: relative; overflow: hidden">
                     <div style="margin-bottom: 8px" class="mat-body-1">
                         You are attempting to receive an incoming transaction(s).
                         <ng-container *ngIf="!isLedger"> Use the button below to receive each block.</ng-container>
@@ -54,7 +53,7 @@ export type ReceiveOverlayData = {
                         *ngIf="maxSteps !== 1"
                         mode="determinate"
                         [value]="bufferValue"
-                        style="position: absolute; bottom: 0px; left: 0px;"
+                        style="position: absolute; bottom: -1px; left: 0px;"
                     ></mat-progress-bar>
                 </div>
 
@@ -132,7 +131,7 @@ export class ReceiveComponent implements OnInit {
         for (const receivableBlock of this.data.blocks) {
             try {
                 // eslint-disable-next-line no-await-in-loop
-                const receivedHash = await this._transactionService.receive(this.data.index, receivableBlock);
+                const receivedHash = await this._transactionService.receive(receivableBlock.index, receivableBlock);
                 this.txHash = receivedHash;
                 this.activeStep++;
                 this.bufferValue = (100 / this.maxSteps) * this.activeStep;
@@ -145,5 +144,8 @@ export class ReceiveComponent implements OnInit {
             }
         }
         TRANSACTION_COMPLETED_SUCCESS.next(undefined);
+        if (this.data.refreshDashboard) {
+            REFRESH_DASHBOARD_ACCOUNTS.next();
+        }
     }
 }

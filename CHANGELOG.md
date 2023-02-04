@@ -1,5 +1,11 @@
 # Change Log
 
+## v3.3.0 (Feb 4, 2023)
+
+### Added
+
+-   Added option to Receive All incoming transactions from the Dashboard page.
+
 ## v3.2.0 (Feb 4, 2023)
 
 ### Added

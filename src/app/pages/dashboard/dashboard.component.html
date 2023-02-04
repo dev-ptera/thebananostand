@@ -65,6 +65,10 @@
             <mat-icon>drive_file_rename_outline</mat-icon>
             Rename
         </button>
+        <button mat-menu-item (click)="openReceiveAllOverlay()" [disabled]="!hasReceivable()">
+            <mat-icon>download</mat-icon>
+            Receive All
+        </button>
         <button mat-menu-item longPress (mouseLongPress)="removeWallet()" data-cy="remove-wallet-button">
             <div style="display: flex; align-items: center">
                 <mat-icon color="warn">clear</mat-icon>
