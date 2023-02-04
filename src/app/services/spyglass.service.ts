@@ -5,6 +5,7 @@ import { KnownAccount } from '@app/types/KnownAccount';
 import { RepScore } from '@app/overlays/actions/change-rep/change-rep.component';
 import { FilterOverlayData } from '@app/overlays/actions/filter/filter.component';
 import { DatasourceService } from '@app/services/datasource.service';
+import { PriceData } from '@app/types/PriceData';
 
 @Injectable({
     providedIn: 'root',
@@ -49,5 +50,11 @@ export class SpyglassService {
         const source = await this._datasource.getSpyglassApiSource();
         const url = `${source.url}/v1/representatives/scores`;
         return this._http.get<RepScore[]>(url).toPromise();
+    }
+
+    async getBananoPriceRelativeToBitcoin(): Promise<PriceData> {
+        const source = await this._datasource.getSpyglassApiSource();
+        const url = `${source.url}/v1/price`;
+        return this._http.get<PriceData>(url).toPromise();
     }
 }

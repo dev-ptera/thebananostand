@@ -9,6 +9,8 @@ import { AccountService } from '@app/services/account.service';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { SignerService } from '@app/services/signer.service';
 import { AddressBookEntry } from '@app/types/AddressBookEntry';
+import { SpyglassService } from '@app/services/spyglass.service';
+import { CurrencyConversionService } from '@app/services/currency-conversion.service';
 
 const SNACKBAR_DURATION = 3000;
 const SNACKBAR_CLOSE_ACTION_TEXT = 'Dismiss';
@@ -95,6 +97,9 @@ export const UNLOCK_WALLET = new Subject<{ isLedger: boolean; password: string }
 /** User has provided an incorrect password to unlock the wallet. */
 export const UNLOCK_WALLET_WITH_PASSWORD_ERROR = new Subject<void>();
 
+/** User has changed which currency they want to use when converting Banano to currency amounts. */
+export const SELECT_LOCALIZATION_CURRENCY = new Subject<string>();
+
 @Injectable({
     providedIn: 'root',
 })
@@ -104,15 +109,18 @@ export class WalletEventsService {
     constructor(
         private readonly _util: UtilService,
         private readonly _snackbar: MatSnackBar,
+        private readonly _signerService: SignerService,
         private readonly _secretService: SecretService,
         private readonly _accountService: AccountService,
+        private readonly _spyglassService: SpyglassService,
         private readonly _appStateService: AppStateService,
-        private readonly _signerService: SignerService,
-        private readonly _walletStorageService: WalletStorageService
+        private readonly _walletStorageService: WalletStorageService,
+        private readonly _currencyConversionService: CurrencyConversionService
     ) {
         // _dispatch initial app state
         this._dispatch({
             activeWallet: undefined,
+            localCurrencyCode: this._walletStorageService.readLocalizationCurrencyFromLocalStorage(),
             addressBook: this._walletStorageService.readAddressBookFromLocalStorage(),
             hasSecret: this._walletStorageService.hasSecretWalletSaved(),
             localStorageWallets: this._walletStorageService.readWalletsFromLocalStorage(),
@@ -249,6 +257,7 @@ export class WalletEventsService {
                 indexes.push(0);
             }
             ADD_SPECIFIC_ACCOUNTS_BY_INDEX.next(indexes);
+            SELECT_LOCALIZATION_CURRENCY.next(this.store.localCurrencyCode);
         });
 
         REFRESH_SPECIFIC_ACCOUNT_BY_INDEX.subscribe(async (index) => {
@@ -327,8 +336,14 @@ export class WalletEventsService {
             }
         });
 
-        SET_DASHBOARD_ACCOUNT_LOADING.subscribe((isLoading) => {
-            this._dispatch({ isLoadingAccounts: isLoading });
+        SET_DASHBOARD_ACCOUNT_LOADING.subscribe((isLoadingAccounts) => {
+            this._dispatch({ isLoadingAccounts });
+        });
+
+        SELECT_LOCALIZATION_CURRENCY.subscribe(async (localCurrencyCode: string) => {
+            const priceDataUSD = await this._spyglassService.getBananoPriceRelativeToBitcoin();
+            const localCurrencyConversionRate = await this._currencyConversionService.convertToUSD(localCurrencyCode);
+            this._dispatch({ localCurrencyCode, localCurrencyConversionRate, priceDataUSD });
         });
 
         UNLOCK_WALLET.subscribe((data) => {
@@ -345,7 +360,6 @@ export class WalletEventsService {
             void this._accountService.fetchKnownAccounts().then((knownAccounts) => {
                 this._appStateService.knownAccounts = knownAccounts;
             });
-
             REFRESH_DASHBOARD_ACCOUNTS.next();
         });
     }
@@ -355,8 +369,9 @@ export class WalletEventsService {
         this._appStateService.store.next(Object.assign(this._appStateService.store.getValue(), newData));
 
         /* appLocalStorage events are only emitted when we need to write to localstorage; see `wallet-storage.service`. */
-        if (newData.activeWallet || newData.localStorageWallets || newData.addressBook) {
+        if (newData.activeWallet || newData.localStorageWallets || newData.addressBook || newData.localCurrencyCode) {
             this._appStateService.appLocalStorage.next({
+                localizationCurrencyCode: newData.localCurrencyCode,
                 addressBook: newData.addressBook,
                 activeWallet: newData.activeWallet,
                 localStorageWallets: newData.localStorageWallets,

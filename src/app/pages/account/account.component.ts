@@ -26,6 +26,7 @@ import {
 } from '@app/services/wallet-events.service';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { SendOverlayData } from '@app/overlays/actions/send/send.component';
 
 @UntilDestroy()
 @Component({
@@ -142,12 +143,15 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     /** Opens dialog to send funds. */
     send(): void {
-        const overlayData = {
+        const overlayData: { data: SendOverlayData } = {
             data: {
                 address: this.account.fullAddress,
                 maxSendAmount: this.account.balance,
                 index: this.account.index,
                 maxSendAmountRaw: this.account.balanceRaw,
+                bananoPriceUSD: this.store.priceDataUSD.bananoPriceUsd,
+                localCurrencyConversionRate: this.store.localCurrencyConversionRate,
+                localCurrencySymbol: this.store.localCurrencyCode,
             },
         };
         if (this.vp.sm) {

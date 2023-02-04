@@ -70,7 +70,7 @@ import { ResponsiveDirective } from './directives/responsive.directive';
 import { ResponsiveMenuModule } from '@app/components/responsive-menu/responsive-menu.module';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SendBottomSheetComponent } from '@app/overlays/bottom-sheet/send/send-bottom-sheet.component';
-import { SendComponent } from '@app/overlays/actions/send/send.component';
+import { ConversionFromBANPipe, ConversionToBANPipe, SendComponent } from '@app/overlays/actions/send/send.component';
 import { SendDialogComponent } from '@app/overlays/dialogs/send/send-dialog.component';
 import { SpacerModule } from '@app/components/spacer/spacer.module';
 import { TransactionComponent } from '@app/pages/account/components/transaction/transaction.component';
@@ -95,6 +95,8 @@ import { MatListModule } from '@angular/material/list';
         ChangeRepBottomSheetComponent,
         ChangeRepComponent,
         ChangeRepDialogComponent,
+        ConversionFromBANPipe,
+        ConversionToBANPipe,
         CreateWalletBottomSheetComponent,
         CreateWalletDialogComponent,
         CreateWalletOverlayComponent,

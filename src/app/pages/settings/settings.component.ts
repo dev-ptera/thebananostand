@@ -7,8 +7,12 @@ import { ViewportService } from '@app/services/viewport.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { Router } from '@angular/router';
-import { REMOVE_ALL_WALLET_DATA } from '@app/services/wallet-events.service';
+import { REMOVE_ALL_WALLET_DATA, SELECT_LOCALIZATION_CURRENCY } from '@app/services/wallet-events.service';
 import { MatRadioChange } from '@angular/material/radio';
+import { CurrencyConversionService } from '@app/services/currency-conversion.service';
+import { AppStateService } from '@app/services/app-state.service';
+import { MatSelectChange } from '@angular/material/select';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
 @Pipe({ name: 'available' })
 export class DatasourceAvailablePipe implements PipeTransform {
@@ -17,6 +21,7 @@ export class DatasourceAvailablePipe implements PipeTransform {
     }
 }
 
+@UntilDestroy()
 @Component({
     selector: 'app-settings-page',
     template: `
@@ -140,6 +145,33 @@ export class DatasourceAvailablePipe implements PipeTransform {
                             </mat-radio-button>
                         </mat-radio-group>
                     </mat-card>
+
+                    <mat-card appearance="outlined" style="margin-bottom: 32px">
+                        <div class="mat-headline-6">Localization</div>
+                        <mat-divider></mat-divider>
+                        <div class="mat-overline" style="margin-top: 16px">Local Currency</div>
+                        <div class="mat-body-2">The currency used to display account balances and send amounts.</div>
+                        <mat-form-field
+                            appearance="fill"
+                            style="margin-top: 24px;"
+                            [style.maxWidth.px]="vp.sm ? 'unset' : 400"
+                        >
+                            <mat-label>Currency</mat-label>
+                            <mat-select [value]="selectedCurrencyCode" (selectionChange)="changeCurrencySelect($event)">
+                                <mat-option
+                                    *ngFor="let currency of currencyConversionService.currencies"
+                                    [value]="currency.code"
+                                >
+                                    <div style="display: flex; justify-content: space-between; align-items: center">
+                                        <div>
+                                            {{ currency.description }}
+                                        </div>
+                                        <div>{{ currency.code }}</div>
+                                    </div>
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-card>
                 </div>
             </div>
         </div>
@@ -149,15 +181,22 @@ export class DatasourceAvailablePipe implements PipeTransform {
 export class SettingsPageComponent implements OnInit {
     selectedRpcSource: any;
     selectedSpyglassApi: any;
+    selectedCurrencyCode: string;
 
     constructor(
         public vp: ViewportService,
-        private readonly _dialog: MatDialog,
-        private readonly _sheet: MatBottomSheet,
-        private readonly _location: Location,
         private readonly _router: Router,
-        public datasourceService: DatasourceService
-    ) {}
+        private readonly _dialog: MatDialog,
+        private readonly _location: Location,
+        private readonly _sheet: MatBottomSheet,
+        private readonly _appStateService: AppStateService,
+        public datasourceService: DatasourceService,
+        public currencyConversionService: CurrencyConversionService
+    ) {
+        this._appStateService.store.subscribe((data) => {
+            this.selectedCurrencyCode = data.localCurrencyCode;
+        });
+    }
 
     async ngOnInit(): Promise<void> {
         this.selectedSpyglassApi = await this.datasourceService.getSpyglassApiSource();
@@ -187,5 +226,9 @@ export class SettingsPageComponent implements OnInit {
 
     selectSpyglassApi(e: MatRadioChange): void {
         this.datasourceService.setSpyglassApiSource(e.value);
+    }
+
+    changeCurrencySelect(event: MatSelectChange): void {
+        SELECT_LOCALIZATION_CURRENCY.next(event.value);
     }
 }

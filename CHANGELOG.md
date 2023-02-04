@@ -1,10 +1,11 @@
 # Change Log
 
-## v3.1.1 (Feb 2, 2023)
+## v3.2.0 (Feb 4, 2023)
 
-### Changed
+### Added
 
--   Nothing! This is just a test for the auto-tagging.
+-   Add currency localization options on settings page.
+-   Add localization price conversions on Send overlays.
 
 ## v3.1.0 (Jan 31, 2023)
 
