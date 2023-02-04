@@ -14,6 +14,7 @@ export type LocalStorageWallet = {
 export type WalletState = { activeWallet: LocalStorageWallet; localStorageWallets: LocalStorageWallet[] };
 
 const ACTIVE_WALLET_ID = 'activeWalletID';
+const LOCALIZATION_CURRENCY_CODE = 'bananostand_localizationCurrencyCode';
 const ENCRYPTED_WALLETS = 'bananostand_encryptedWallets';
 const ADDRESS_BOOK = 'bananostand_addressBook';
 const LEDGER_STORED_INDEXES = 'bananostand_ledgerIndexes';
@@ -35,6 +36,10 @@ export class WalletStorageService {
         // Listen for the updated store and write to localstorage accordingly.
         // `store` & `localStorage` will always match.
         this._appStateService.appLocalStorage.subscribe((walletData) => {
+            if (walletData.localizationCurrencyCode) {
+                window.localStorage.setItem(LOCALIZATION_CURRENCY_CODE, walletData.localizationCurrencyCode);
+            }
+
             if (walletData.addressBook && walletData.addressBook.keys.length === 0) {
                 window.localStorage.removeItem(ADDRESS_BOOK);
             }
@@ -44,6 +49,7 @@ export class WalletStorageService {
                 window.localStorage.removeItem(ENCRYPTED_WALLETS);
                 return;
             }
+
             if (walletData.localStorageWallets) {
                 window.localStorage.setItem(ENCRYPTED_WALLETS, JSON.stringify(walletData.localStorageWallets));
             }
@@ -146,6 +152,7 @@ export class WalletStorageService {
     clearLocalStorage(): void {
         window.localStorage.removeItem(ENCRYPTED_WALLETS);
         window.localStorage.removeItem(ACTIVE_WALLET_ID);
+        window.localStorage.removeItem(LOCALIZATION_CURRENCY_CODE);
     }
 
     readActiveWalletFromLocalStorage(): LocalStorageWallet {
@@ -162,6 +169,11 @@ export class WalletStorageService {
 
         // Default
         return wallets[0];
+    }
+
+    /** Reads from local storage, defaults to USD. */
+    readLocalizationCurrencyFromLocalStorage(): string {
+        return window.localStorage.getItem(LOCALIZATION_CURRENCY_CODE) || 'USD';
     }
 
     /** Only applicable to secret-based wallets.  Returns the current-selected wallet's localstorage ID. */

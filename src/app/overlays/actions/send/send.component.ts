@@ -1,16 +1,46 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, Pipe, PipeTransform } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
 import { UtilService } from '@app/services/util.service';
 import { AccountService } from '@app/services/account.service';
 import { TransactionService } from '@app/services/transaction.service';
 import { TRANSACTION_COMPLETED_SUCCESS } from '@app/services/wallet-events.service';
+import { CurrencyConversionService } from '@app/services/currency-conversion.service';
 
 export type SendOverlayData = {
     address: string;
     index: number;
     maxSendAmount: number;
     maxSendAmountRaw: string;
+    bananoPriceUSD: number;
+    localCurrencyConversionRate: number;
+    localCurrencySymbol: string;
 };
+
+@Pipe({ name: 'conversionFromBAN', pure: true })
+export class ConversionFromBANPipe implements PipeTransform {
+    constructor(private readonly _currencyConversionService: CurrencyConversionService) {}
+
+    transform(sendAmount: number, bananoPriceUSD: number, localCurrencyConversionRate: number): string {
+        return this._currencyConversionService.convertBanAmountToLocalCurrency(
+            sendAmount,
+            bananoPriceUSD,
+            localCurrencyConversionRate
+        );
+    }
+}
+
+@Pipe({ name: 'conversionToBAN', pure: true })
+export class ConversionToBANPipe implements PipeTransform {
+    constructor(private readonly _currencyConversionService: CurrencyConversionService) {}
+
+    transform(sendAmount: number, bananoPriceUSD: number, localCurrencyConversionRate: number): string {
+        return this._currencyConversionService.convertLocalCurrencyToBAN(
+            sendAmount,
+            bananoPriceUSD,
+            localCurrencyConversionRate
+        );
+    }
+}
 
 @Component({
     selector: 'app-send-overlay',
@@ -54,38 +84,64 @@ export type SendOverlayData = {
                     </ng-container>
 
                     <ng-container *ngIf="activeStep === 1">
-                        <div class="mat-body-1" style="margin-bottom: 24px">Please enter the amount to transfer.</div>
+                        <div class="mat-body-1" style="margin-bottom: 16px">Please enter the amount to transfer.</div>
                         <mat-form-field style="width: 100%;" appearance="fill">
-                            <mat-label>Amount</mat-label>
+                            <mat-label
+                                >{{ swapToLocalCurrencyInput ? data.localCurrencySymbol : 'BAN' }} Amount
+                            </mat-label>
                             <input
                                 matInput
                                 type="number"
                                 data-cy="send-amount-input"
-                                [max]="data.maxSendAmount"
+                                [max]="swapToLocalCurrencyInput ? maxSendLocalCurrency : data.maxSendAmount"
                                 [(ngModel)]="sendAmount"
-                                (ngModelChange)="sendAll = sendAmount === data.maxSendAmount"
+                                (ngModelChange)="checkIfSendingAll($event)"
                             />
-                            <button
-                                matSuffix
-                                mat-icon-button
-                                aria-label="Send All"
-                                (click)="sendAll = !sendAll; toggleSendAll()"
-                            >
-                                <mat-icon>account_balance_wallet</mat-icon>
+                            <button matSuffix mat-icon-button aria-label="Send All" (click)="swapInputs()">
+                                <mat-icon>currency_exchange</mat-icon>
                             </button>
                         </mat-form-field>
+                        <!--
+                            *ngIf="sendAmountBAN > data.maxSendAmount"-->
                         <div
                             class="mat-caption"
-                            *ngIf="sendAmount > data.maxSendAmount"
-                            style="margin-top: -8px; margin-bottom: 8px; display: flex"
+                            style="margin-top: -16px; margin-bottom: 24px; display: flex"
+                            [class.warn]="sendAmount && !_hasUserEnteredValidSendAmount()"
                         >
-                            Max transferable amount is {{ data.maxSendAmount }}.
+                            Max transferable amount is
+                            {{ (swapToLocalCurrencyInput ? maxSendLocalCurrency : data.maxSendAmount) | number }}
+                            {{ swapToLocalCurrencyInput ? data.localCurrencySymbol : 'BAN' }}.
                         </div>
-                        <mat-checkbox [(ngModel)]="sendAll" (change)="toggleSendAll()">Send All</mat-checkbox>
+                        <div class="mat-hint mat-body-1" style="margin-bottom: 16px">
+                            <ng-container *ngIf="isSendingAll">
+                                ~{{ (swapToLocalCurrencyInput ? data.maxSendAmount : maxSendLocalCurrency) | number }}
+                                {{ swapToLocalCurrencyInput ? 'BAN' : data.localCurrencySymbol }}
+                            </ng-container>
+
+                            <ng-container *ngIf="!isSendingAll">
+                                <ng-container *ngIf="swapToLocalCurrencyInput">
+                                    ~{{
+                                        sendAmount
+                                            | conversionToBAN : data.bananoPriceUSD : data.localCurrencyConversionRate
+                                            | number
+                                    }}
+                                    BAN
+                                </ng-container>
+                                <ng-container *ngIf="!swapToLocalCurrencyInput">
+                                    ~{{
+                                        sendAmount
+                                            | conversionFromBAN : data.bananoPriceUSD : data.localCurrencyConversionRate
+                                            | number
+                                    }}
+                                    {{ data.localCurrencySymbol }}
+                                </ng-container>
+                            </ng-container>
+                        </div>
+                        <mat-checkbox [(ngModel)]="isSendingAll" (change)="toggleSendAll()">Send All</mat-checkbox>
                     </ng-container>
 
                     <ng-container *ngIf="activeStep === 2">
-                        <div class="mat-body-1" style="margin-bottom: 24px">Please enter the recipient address.</div>
+                        <div class="mat-body-1" style="margin-bottom: 16px">Please enter the recipient address.</div>
                         <mat-form-field appearance="fill" class="address-input">
                             <mat-label>Recipient Address</mat-label>
                             <textarea
@@ -100,7 +156,7 @@ export type SendOverlayData = {
                     <div *ngIf="activeStep === 3" class="mat-body-1">
                         <div style="margin-bottom: 24px">Please confirm the transaction details below:</div>
                         <div style="font-weight: 600">Send</div>
-                        <div style="margin-bottom: 16px;">{{ confirmedSendAmount }}</div>
+                        <div style="margin-bottom: 16px;">{{ confirmedSendAmount | number }} BAN</div>
                         <div style="font-weight: 600">To</div>
                         <div
                             style="word-break: break-all; font-family: monospace"
@@ -156,7 +212,7 @@ export class SendComponent {
     lastStep = this.maxSteps - 1;
     sendAmount: number;
 
-    sendAll: boolean;
+    isSendingAll: boolean;
 
     txHash: string;
     recipient: string;
@@ -167,11 +223,25 @@ export class SendComponent {
 
     colors = Colors;
 
+    swapToLocalCurrencyInput: boolean;
+    maxSendLocalCurrency: number;
+
     constructor(
         public util: UtilService,
+        private readonly _accountService: AccountService,
         private readonly _transactionService: TransactionService,
-        private readonly _accountService: AccountService
+        private readonly _currencyConversionService: CurrencyConversionService
     ) {}
+
+    ngOnInit(): void {
+        this.maxSendLocalCurrency = Number(
+            this._currencyConversionService.convertBanAmountToLocalCurrency(
+                this.data.maxSendAmount,
+                this.data.bananoPriceUSD,
+                this.data.localCurrencyConversionRate
+            )
+        );
+    }
 
     back(): void {
         if (this.activeStep === 0) {
@@ -185,16 +255,27 @@ export class SendComponent {
             return this.withdraw();
         }
         if (this.activeStep === 1) {
-            this.confirmedSendAmount = this.sendAll
-                ? this.util.removeExponents(this.util.convertRawToBan(this.data.maxSendAmountRaw))
-                : this.util.removeExponents(this.sendAmount);
+            if (this.swapToLocalCurrencyInput) {
+                const convertedBanAmount = this._currencyConversionService.convertLocalCurrencyToBAN(
+                    this.sendAmount,
+                    this.data.bananoPriceUSD,
+                    this.data.localCurrencyConversionRate
+                );
+                this.confirmedSendAmount = this.isSendingAll
+                    ? this.util.removeExponents(this.util.convertRawToBan(this.data.maxSendAmountRaw))
+                    : this.util.removeExponents(convertedBanAmount);
+            } else {
+                this.confirmedSendAmount = this.isSendingAll
+                    ? this.util.removeExponents(this.util.convertRawToBan(this.data.maxSendAmountRaw))
+                    : this.util.removeExponents(this.sendAmount);
+            }
         }
         this.activeStep++;
     }
 
     canContinue(): boolean {
         if (this.activeStep === 1) {
-            return Boolean(this.sendAmount && this.sendAmount > 0 && this.sendAmount <= this.data.maxSendAmount);
+            return this._hasUserEnteredValidSendAmount();
         }
         if (this.activeStep === 2) {
             return this.util.isValidAddress(this.recipient);
@@ -207,8 +288,12 @@ export class SendComponent {
     }
 
     toggleSendAll(): void {
-        if (this.sendAll) {
-            this.sendAmount = this.data.maxSendAmount;
+        if (this.isSendingAll) {
+            if (this.swapToLocalCurrencyInput) {
+                this.sendAmount = this.maxSendLocalCurrency;
+            } else {
+                this.sendAmount = this.data.maxSendAmount;
+            }
         } else {
             this.sendAmount = undefined;
         }
@@ -236,5 +321,28 @@ export class SendComponent {
                 this.hasSuccess = false;
                 this.isProcessingTx = false;
             });
+    }
+
+    swapInputs(): void {
+        this.swapToLocalCurrencyInput = !this.swapToLocalCurrencyInput;
+        this.checkIfSendingAll(this.sendAmount);
+    }
+
+    checkIfSendingAll(amount: number): void {
+        if (this.swapToLocalCurrencyInput) {
+            this.isSendingAll = amount === this.maxSendLocalCurrency;
+        } else {
+            this.isSendingAll = amount === this.data.maxSendAmount;
+        }
+    }
+
+    private _hasUserEnteredValidSendAmount(): boolean {
+        if (!this.sendAmount) {
+            return false;
+        }
+        if (this.swapToLocalCurrencyInput) {
+            return this.sendAmount <= this.maxSendLocalCurrency;
+        }
+        return this.sendAmount <= this.data.maxSendAmount;
     }
 }

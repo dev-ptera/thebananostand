@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { LocalStorageWallet } from '@app/services/wallet-storage.service';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { PriceData } from '@app/types/PriceData';
 
 export type AppStore = {
     /** Loaded ledger accounts, their rep, & respective balances.  */
@@ -18,8 +19,14 @@ export type AppStore = {
     hasUnlockedSecret: boolean;
     /** Accounts on the dashboard are being loaded. */
     isLoadingAccounts: boolean;
+    /** What users would like their balances to be converted into. */
+    localCurrencyCode: string;
+    /** The user-specified currency must be multiplied by this number to be converted to USD. */
+    localCurrencyConversionRate: number;
     /** The list of wallets stored in localstorage. These use a secret. */
     localStorageWallets: LocalStorageWallet[];
+    /** Banano Price, Bitcoin Price in USD */
+    priceDataUSD: PriceData;
     /** Aggregate balance of all loaded accounts. */
     totalBalance: number;
     /** The password used to unlock the encrypted wallet. */
@@ -43,6 +50,12 @@ export class AppStateService {
         hasUnlockedSecret: false,
         hasUnlockedLedger: false,
         walletPassword: undefined,
+        localCurrencyCode: undefined,
+        localCurrencyConversionRate: 0,
+        priceDataUSD: {
+            bitcoinPriceUsd: undefined,
+            bananoPriceUsd: undefined,
+        },
         localStorageWallets: [],
         activeWallet: undefined,
         totalBalance: 0,
@@ -50,6 +63,7 @@ export class AppStateService {
     });
 
     appLocalStorage = new Subject<{
+        localizationCurrencyCode: string;
         addressBook: Map<string, string>;
         activeWallet: LocalStorageWallet;
         localStorageWallets: LocalStorageWallet[];
