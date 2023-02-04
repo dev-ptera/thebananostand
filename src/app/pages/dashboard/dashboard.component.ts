@@ -22,6 +22,9 @@ import { RenameWalletDialogComponent } from '@app/overlays/dialogs/rename-wallet
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ReceiveBottomSheetComponent } from '@app/overlays/bottom-sheet/receive/receive-bottom-sheet.component';
+import { ReceiveDialogComponent } from '@app/overlays/dialogs/receive/receive-dialog.component';
+import { ReceiveOverlayData } from '@app/overlays/actions/receive/receive.component';
 
 @UntilDestroy()
 @Component({
@@ -139,6 +142,27 @@ export class DashboardComponent {
         return this._appStateService.store.getValue().hasUnlockedLedger;
     }
 
+    openReceiveAllOverlay(): void {
+        const blocks = [];
+        for (const account of this.store.accounts) {
+            for (const block of account.pending) {
+                blocks.push({
+                    index: account.index,
+                    hash: block.hash,
+                    receivableRaw: block.receivableRaw,
+                });
+            }
+        }
+        const data: ReceiveOverlayData = { blocks: blocks, refreshDashboard: true };
+        if (this.vp.sm) {
+            setTimeout(() => {
+                this._sheet.open(ReceiveBottomSheetComponent, { data });
+            }, this.bottomSheetOpenDelayMs);
+        } else {
+            this._dialog.open(ReceiveDialogComponent, { data });
+        }
+    }
+
     sortAccountsByBalance(): void {
         const SNACKBAR_DURATION = 2000;
         if (this.sortDirection === 'asc') {
@@ -155,5 +179,13 @@ export class DashboardComponent {
 
     isShowMultiWalletSelect(): boolean {
         return this.store.localStorageWallets.length > 1 && this.store.hasUnlockedSecret;
+    }
+
+    hasReceivable(): boolean {
+        for (const account of this.store.accounts) {
+            if (account.pending.length > 0) {
+                return true;
+            }
+        }
     }
 }

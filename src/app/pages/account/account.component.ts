@@ -27,6 +27,7 @@ import {
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SendOverlayData } from '@app/overlays/actions/send/send.component';
+import { ReceiveOverlayData } from '@app/overlays/actions/receive/receive.component';
 
 @UntilDestroy()
 @Component({
@@ -125,19 +126,21 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     /** Iterates through each pending transaction block and receives them. */
     receive(): void {
-        const overlayData = {
-            data: {
-                address: this.account.fullAddress,
-                blocks: this.account.pending,
+        const blocks = [];
+        for (const block of this.account.pending) {
+            blocks.push({
+                hash: block.hash,
+                receivableRaw: block.receivableRaw,
                 index: this.account.index,
-            },
-        };
+            });
+        }
+        const data: ReceiveOverlayData = { blocks: blocks };
         if (this.vp.sm) {
             setTimeout(() => {
-                this._sheet.open(ReceiveBottomSheetComponent, overlayData);
+                this._sheet.open(ReceiveBottomSheetComponent, { data });
             }, this.bottomSheetDismissDelayMs);
         } else {
-            this._dialog.open(ReceiveDialogComponent, overlayData);
+            this._dialog.open(ReceiveDialogComponent, { data });
         }
     }
 
