@@ -27,10 +27,13 @@ $banano-yellow-theme: mat.define-dark-theme((
     @include mdc-customization.mdc-overrides();
 
     --primary:          #{map-get($my-primary, 500)};
+    --primary-light-2:  #{rgba(map-get($my-primary, 500), .2)};
+    --dashboard-accounts-container-bg: #{map-get(blui.$blui-black, 900)};
     --warn:             #{map-get($my-warn, 300)};
     --card:             #{map-get(blui.$blui-black, 900)};
     --text-contrast:    #{map-get(blui.$blui-black, 900)};
     --text:             #{map-get(blui.$blui-black, 100)};
+    --text-secondary:   #{map-get(blui.$blui-black, 200)};
     --hint:             #{map-get(blui.$blui-black, 300)};
     --link:             var(--primary);
     --icon-primary:     #{map-get(blui.$blui-black, 100)};
@@ -50,7 +53,7 @@ $banano-yellow-theme: mat.define-dark-theme((
         --mdc-elevated-card-container-color: var(--card);
     }
 
-    &.mat-app-background {
+    &.mat-app-background, .account-card {
         background: map-get(blui.$blui-vantaBlack, 300);
     }
 

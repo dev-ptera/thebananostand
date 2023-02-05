@@ -21,14 +21,14 @@ describe('Dashboard Management', () => {
         cy.get('[data-cy=secret-next]').click();
         cy.intercept({ method: 'POST', url: '**', times: 3 }).as(loadInitialAccount);
         cy.get('[data-cy=secret-next]').click();
-        cy.get('[data-cy=dashboard-account-list]').find('.dashboard-row-wrapper').should('have.length', 1);
+        cy.get('[data-cy=dashboard-account-cards-container]').find('[data-cy=dashboard-account-card-footer]').should('have.length', 1);
     })
 
 
     it('should load transaction details for the first account', () => {
         cy.wait(`@${loadInitialAccount}`).then(() => {
             cy.intercept({ method: 'POST', url: '**/account/confirmed-transactions' }).as('confirmedTx');
-            cy.get('[data-cy=dashboard-account-list]').find('.dashboard-row-wrapper').click();
+            cy.get('[data-cy=dashboard-account-cards-container]').find('[data-cy=dashboard-account-card-footer]').click();
             cy.wait('@confirmedTx').then(() => {
                 cy.get('[data-cy=account-scroll-container]').find('.transaction-row-wrapper').its('length').should('be.gte', 2);
             })
@@ -40,7 +40,7 @@ describe('Dashboard Management', () => {
         const loadNextAccount = 'loadNextAccount';
         const verifyNextAccountAdded = () => {
             cy.wait(`@${loadNextAccount}`).then(() => {
-                cy.get('[data-cy=dashboard-account-list]').find('.dashboard-row-wrapper').should('have.length', 2);
+                cy.get('[data-cy=dashboard-account-cards-container]').find('[data-cy=dashboard-account-card-footer]').should('have.length', 2);
             })
         }
 
@@ -48,7 +48,7 @@ describe('Dashboard Management', () => {
             cy.wait(`@${loadInitialAccount}`).then(() => {
                 cy.get('[data-cy=dashboard-wrapper]');
                 cy.intercept({ method: 'POST', url: '**' }).as(loadNextAccount);
-                cy.get('[data-cy=dashboard-account-list]').find('.dashboard-row-wrapper').should('have.length', 1);
+                cy.get('[data-cy=dashboard-account-cards-container]').find('[data-cy=dashboard-account-card-footer]').should('have.length', 1);
                 cy.get('[data-cy=add-next-account-button]').click();
                 verifyNextAccountAdded();
             })
@@ -59,7 +59,7 @@ describe('Dashboard Management', () => {
             cy.wait(`@${loadInitialAccount}`).then(() => {
                 cy.get('[data-cy=dashboard-wrapper]');
                 cy.intercept({ method: 'POST', url: '**' }).as(loadNextAccount);
-                cy.get('[data-cy=dashboard-account-list]').find('.dashboard-row-wrapper').should('have.length', 1);
+                cy.get('[data-cy=dashboard-account-cards-container]').find('[data-cy=dashboard-account-card-footer]').should('have.length', 1);
                 cy.get('[data-cy=account-actions-mobile-menu]').click();
                 cy.get('[data-cy=add-next-account-button]').click();
                 verifyNextAccountAdded();
@@ -102,9 +102,9 @@ describe('Dashboard Management', () => {
 
         const refreshPage = 'refreshPage';
         const verifyPageRefreshed = () => {
-            cy.get('[data-cy=dashboard-account-list]').should('not.exist');
+            cy.get('[data-cy=dashboard-account-cards-container]').should('not.exist');
             cy.wait(`@${refreshPage}`).then(() => {
-                cy.get('[data-cy=dashboard-account-list]').find('.dashboard-row-wrapper').should('have.length', 1);
+                cy.get('[data-cy=dashboard-account-cards-container]').find('[data-cy=dashboard-account-card-footer]').should('have.length', 1);
             })
         }
 
@@ -139,14 +139,14 @@ describe('Dashboard Management', () => {
 
         const addAccount99 = () => {
             cy.intercept({ method: 'POST', url: '**', times: 2 }).as('addAccount');
-            cy.get('[data-cy=dashboard-account-list]').find('.dashboard-row-wrapper').should('have.length', 1);
+            cy.get('[data-cy=dashboard-account-cards-container]').find('[data-cy=dashboard-account-card-footer]').should('have.length', 1);
             cy.get('[data-cy=add-specific-account-input]').type('99');
             cy.get('[data-cy=add-account-overlay-button]').click();
             cy.wait('@addAccount').then(() => {
                 cy.get('#app-add-index-dialog-button').should('not.exist');
-                cy.get('[data-cy=dashboard-account-list]').find('.dashboard-row-wrapper').should('have.length', 2);
-                cy.get('[data-cy=dashboard-account-list]').find('.account-number').contains('#0');
-                cy.get('[data-cy=dashboard-account-list]').find('.account-number').contains('#99');
+                cy.get('[data-cy=dashboard-account-cards-container]').find('[data-cy=dashboard-account-card-footer]').should('have.length', 2);
+                cy.get('[data-cy=dashboard-account-cards-container]').find('[data-cy=account-number]').contains('#0');
+                cy.get('[data-cy=dashboard-account-cards-container]').find('[data-cy=account-number]').contains('#99');
             })
         }
 
@@ -174,11 +174,11 @@ describe('Dashboard Management', () => {
 
         it('should remove account via select single (desktop)', () => {
             cy.wait(`@${loadInitialAccount}`).then(() => {
-                cy.get('[data-cy=dashboard-account-list]').find('.dashboard-row-wrapper').should('have.length', 1);
+                cy.get('[data-cy=dashboard-account-cards-container]').find('[data-cy=dashboard-account-card-footer]').should('have.length', 1);
                 cy.get('[data-cy=select-accounts-button]').click();
                 cy.get('.mat-checkbox').last().click();
                 cy.get('[data-cy=remove-account-dashboard-button]').click().then(() => {
-                    cy.get('[data-cy=dashboard-account-list]').should('not.exist');
+                    cy.get('[data-cy=dashboard-account-cards-container]').should('not.exist');
                 })
             })
         });
@@ -186,15 +186,15 @@ describe('Dashboard Management', () => {
         it('should add & then remove a single account (desktop)', () => {
             cy.wait(`@${loadInitialAccount}`).then(() => {
                 const loadNextAccount = 'loadNextAccount';
-                cy.get('[data-cy=dashboard-account-list]').find('.dashboard-row-wrapper').should('have.length', 1);
+                cy.get('[data-cy=dashboard-account-cards-container]').find('[data-cy=dashboard-account-card-footer]').should('have.length', 1);
                 cy.intercept({ method: 'POST', url: '**', times: 2 }).as(loadNextAccount);
                 cy.get('[data-cy=add-next-account-button]').click();
                 cy.wait(`@${loadNextAccount}`).then(() => {
-                    cy.get('[data-cy=dashboard-account-list]').find('.dashboard-row-wrapper').should('have.length', 2);
+                    cy.get('[data-cy=dashboard-account-cards-container]').find('[data-cy=dashboard-account-card-footer]').should('have.length', 2);
                     cy.get('[data-cy=select-accounts-button]').click();
                     cy.get('.mat-checkbox').last().click();
                     cy.get('[data-cy=remove-account-dashboard-button]').click().then(() => {
-                        cy.get('[data-cy=dashboard-account-list]').find('.dashboard-row-wrapper').should('have.length', 1);
+                        cy.get('[data-cy=dashboard-account-cards-container]').find('[data-cy=dashboard-account-card-footer]').should('have.length', 1);
                     })
                 })
             })
@@ -207,11 +207,11 @@ describe('Dashboard Management', () => {
                 cy.get('[data-cy=account-actions-mobile-menu]').click();
                 cy.get('[data-cy=select-accounts-button]').click();
                 cy.wait(dismissBottomSheetTime);
-                cy.get('[data-cy=dashboard-account-list]').find('.dashboard-row-wrapper').should('have.length', 1);
+                cy.get('[data-cy=dashboard-account-cards-container]').find('[data-cy=dashboard-account-card-footer]').should('have.length', 1);
                 cy.get('.mat-checkbox').last().click();
                 cy.wait(dismissBottomSheetTime);
                 cy.get('[data-cy=remove-account-dashboard-button]').click().then(() => {
-                    cy.get('[data-cy=dashboard-account-list]').should('not.exist');
+                    cy.get('[data-cy=dashboard-account-cards-container]').should('not.exist');
                 })
             })
         });

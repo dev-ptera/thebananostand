@@ -70,7 +70,7 @@ import { ResponsiveDirective } from './directives/responsive.directive';
 import { ResponsiveMenuModule } from '@app/components/responsive-menu/responsive-menu.module';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SendBottomSheetComponent } from '@app/overlays/bottom-sheet/send/send-bottom-sheet.component';
-import { ConversionFromBANPipe, ConversionToBANPipe, SendComponent } from '@app/overlays/actions/send/send.component';
+import { SendComponent } from '@app/overlays/actions/send/send.component';
 import { SendDialogComponent } from '@app/overlays/dialogs/send/send-dialog.component';
 import { SpacerModule } from '@app/components/spacer/spacer.module';
 import { TransactionComponent } from '@app/pages/account/components/transaction/transaction.component';
@@ -78,11 +78,15 @@ import { RenameAddressComponent } from '@app/overlays/actions/rename-address/ren
 import { RenameAddressDialogComponent } from '@app/overlays/dialogs/rename-address/rename-address-dialog.component';
 import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/rename-address/rename-address-bottom-sheet.component';
 import { MatListModule } from '@angular/material/list';
+import { AccountCardComponent } from '@app/pages/dashboard/components/account-card/account-card.component';
+import { ConversionToBANPipe } from './pipes/conversion-to-ban.pipe';
+import { ConversionFromBANPipe } from './pipes/conversion-from-ban.pipe';
 
 @NgModule({
     declarations: [
         AccountComponent,
         AccountListComponent,
+        AccountCardComponent,
         AddIndexBottomSheetComponent,
         AddIndexDialogComponent,
         AddIndexOverlayComponent,

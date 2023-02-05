@@ -7,13 +7,15 @@
                     <div
                         style="font-weight: 600"
                         responsive-trigger
-                        class="primary"
+                        class="text-contrast"
                         [class.mat-headline-5]="!vp.sm"
                         [class.mat-headline-6]="vp.sm"
                     >
                         {{ store.activeWallet.name }}
                     </div>
-                    <mat-icon *ngIf="isShowMultiWalletSelect()" style="margin-left: 4px">arrow_drop_down</mat-icon>
+                    <mat-icon *ngIf="isShowMultiWalletSelect()" style="margin-left: 4px" class="text-contrast"
+                        >arrow_drop_down</mat-icon
+                    >
                 </div>
             </ng-template>
             <ng-template #switchWalletsMenu>
@@ -42,13 +44,10 @@
 
 <!-- Is shown whenever a seed is loaded, but no individual addresses are shown yet. -->
 <ng-template #noAccountsEmptyState>
-    <app-empty-state
-        *ngIf="store.accounts.length === 0 && !store.isLoadingAccounts"
-        style="margin: 64px 0 48px 0"
-        title="No Accounts Displayed"
-        description="Use the buttons above to add an account."
-    >
+    <app-empty-state *ngIf="store.accounts.length === 0 && !store.isLoadingAccounts" style="margin: 64px 0 48px 0">
         <mat-icon blui-empty-icon>search</mat-icon>
+        <div title>No Accounts Displayed</div>
+        <div description>Use the buttons above to add an account.</div>
     </app-empty-state>
 </ng-template>
 
@@ -90,13 +89,25 @@
         </button>
     </ng-template>
     <ng-template #walletActionsDesktopTrigger>
-        <button mat-stroked-button data-cy="wallet-actions-desktop-menu">
+        <button
+            mat-icon-button
+            data-cy="wallet-actions-desktop-menu"
+            style="position: absolute; top: 16px; right: 16px; border: solid 1px var(--primary)"
+        >
+            <mat-icon class="text-contrast">more_vert</mat-icon>
+        </button>
+        <!--
+        <button mat-flat-button data-cy="wallet-actions-desktop-menu">
             <div class="mat-subtitle-2" style="white-space: nowrap">Manage Wallet</div>
             <mat-icon>arrow_drop_down</mat-icon>
         </button>
+            -->
     </ng-template>
     <ng-template #walletActionsMobileTrigger>
-        <mat-icon data-cy="wallet-actions-mobile-menu"> account_balance_wallet </mat-icon>
+        <div data-cy="wallet-actions-mobile-menu" style="display: flex; align-items: center">
+            <div class="mat-body-2 text-contrast">Manage Wallet</div>
+            <mat-icon class="text-contrast">arrow_drop_down</mat-icon>
+        </div>
     </ng-template>
     <responsive-menu
         menuTitle="Wallet Actions"
@@ -128,11 +139,13 @@
         </button>
     </ng-template>
     <ng-template #accountActionsMobileTrigger>
-        <mat-icon data-cy="account-actions-mobile-menu">account_circle</mat-icon>
+        <div data-cy="account-actions-mobile-menu" style="display: flex; align-items: center">
+            <div class="mat-body-2 text-contrast">Manage Accounts</div>
+            <mat-icon class="text-contrast">arrow_drop_down</mat-icon>
+        </div>
     </ng-template>
     <responsive-menu
         menuTitle="Account Actions"
-        style="margin-left: 8px; margin-right: -16px"
         [(open)]="accountActionsOverlayOpen"
         [menu]="accountActionsMenu"
         [desktopTrigger]="accountActionsDesktopTrigger"
@@ -148,20 +161,25 @@
                 <!-- Wallet Name & Selector -->
                 <ng-template [ngTemplateOutlet]="walletNameDropdown"></ng-template>
                 <!-- Account Balance -->
-                <div style="display: flex; align-items: center" [style.marginTop.px]="vp.sm ? -4 : 0">
-                    <div *ngIf="!vp.sm" class="mat-body-1" style="margin-right: 8px; font-weight: 600">
-                        Accounts Balance:
-                    </div>
-                    <div class="mat-body-1">
-                        <ng-container *ngIf="!vp.sm">{{ totalBalance }}</ng-container>
-                        <strong *ngIf="vp.sm">{{ totalBalance }}</strong>
-                        BAN
-                    </div>
+                <div style="display: flex; align-items: center" [style.marginTop.px]="vp.sm ? 8 : 16">
+                    <div class="mat-headline-4 text-contrast">{{ totalBalance }} BAN</div>
+                </div>
+                <div class="mat-body-1 text-contrast">
+                    ~ {{ store.totalBalance | conversionFromBAN | number }} {{ store.localCurrencyCode }}
                 </div>
             </div>
         </div>
-        <ng-template [ngTemplateOutlet]="walletActions" *ngIf="!isLedgerDevice()"></ng-template>
-        <ng-template [ngTemplateOutlet]="accountActions" *ngIf="vp.sm"></ng-template>
+
+        <ng-container *ngIf="!vp.sm">
+            <ng-template [ngTemplateOutlet]="walletActions" *ngIf="!isLedgerDevice()"></ng-template>
+        </ng-container>
+        <ng-container *ngIf="vp.sm">
+            <mat-divider></mat-divider>
+            <div style="display: flex; justify-content: space-between; width: 100%; margin-top: 8px">
+                <ng-template [ngTemplateOutlet]="walletActions" *ngIf="!isLedgerDevice()"></ng-template>
+                <ng-template [ngTemplateOutlet]="accountActions" *ngIf="vp.sm"></ng-template>
+            </div>
+        </ng-container>
     </mat-card>
 </ng-template>
 
@@ -237,7 +255,11 @@
                 </div>
                 <mat-divider *ngIf="!vp.sm"></mat-divider>
                 <ng-template [ngTemplateOutlet]="noAccountsEmptyState"></ng-template>
-                <app-account-list [accounts]="store.accounts" [sortDirection]="sortDirection"></app-account-list>
+                <app-account-card
+                    *ngIf="store.accounts.length > 0"
+                    [accounts]="store.accounts"
+                    [sortDirection]="sortDirection"
+                ></app-account-card>
             </mat-card>
         </div>
     </div>

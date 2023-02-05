@@ -1,5 +1,11 @@
 # Change Log
 
+## v3.4.0 (Feb 5, 2023)
+
+### Changed
+
+-   Changed Dashboard desktop and mobile layouts.
+
 ## v3.3.0 (Feb 4, 2023)
 
 ### Added

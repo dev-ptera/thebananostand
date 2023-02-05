@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DatasourceService } from '@app/services/datasource.service';
+import { AppStateService } from '@app/services/app-state.service';
 
 type SymbolsResponse = {
     symbols: {
@@ -23,7 +24,11 @@ type Currency = {
 export class CurrencyConversionService {
     currencies: Currency[] = [];
 
-    constructor(private readonly _http: HttpClient, private readonly _datasource: DatasourceService) {
+    constructor(
+        private readonly _http: HttpClient,
+        private readonly _datasource: DatasourceService,
+        private readonly _appStoreService: AppStateService
+    ) {
         this.getSymbols();
     }
 
@@ -55,14 +60,18 @@ export class CurrencyConversionService {
         return converted.toFixed(4);
     }
 
-    convertBanAmountToLocalCurrency(bananoAmount: number, bananoPriceUSD: number, conversionRate: number): string {
+    convertBanAmountToLocalCurrency(bananoAmount: number): string {
+        const conversionRate = this._appStoreService.store.getValue().localCurrencyConversionRate;
+        const bananoPriceUSD = this._appStoreService.store.getValue().priceDataUSD.bananoPriceUsd;
         if (!bananoAmount || !bananoPriceUSD || !conversionRate) {
             return '0';
         }
         return this._adjust((bananoPriceUSD / conversionRate) * bananoAmount);
     }
 
-    convertLocalCurrencyToBAN(localCurrencyAmount: number, bananoPriceUSD: number, conversionRate: number): string {
+    convertLocalCurrencyToBAN(localCurrencyAmount: number): string {
+        const conversionRate = this._appStoreService.store.getValue().localCurrencyConversionRate;
+        const bananoPriceUSD = this._appStoreService.store.getValue().priceDataUSD.bananoPriceUsd;
         if (!localCurrencyAmount || !bananoPriceUSD || !conversionRate) {
             return '0';
         }
