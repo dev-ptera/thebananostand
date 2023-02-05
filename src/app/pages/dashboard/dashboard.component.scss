@@ -19,10 +19,13 @@
     background-position: right center;
     opacity: 1 !important;
     &.sm {
+        background-image: linear-gradient(90deg, var(--primary) 15%, var(--primary-light-2) 100%),
+            url('~assets/images/bg-faucet.svg');
         padding-top: 16px;
         padding-bottom: 16px;
         margin-bottom: 0px;
         flex-direction: column;
+        background-size: cover;
     }
 }
 
@@ -39,6 +42,7 @@ $mobileDashboardHeaderHeight: 180px;
     border-bottom-width: 2px;
 }
 
+/*
 .dashboard-account-list {
     $smToolbarHeight: 40px;
     max-height: calc(100vh - 344px);
@@ -52,6 +56,7 @@ $mobileDashboardHeaderHeight: 180px;
         height: calc(var(--app-height) - ($smToolbarHeight + $mobileDashboardHeaderHeight + 1px));
     }
 }
+*/
 
 .dashboard-accounts-container {
     overflow: hidden; // Progress Bar hide corners

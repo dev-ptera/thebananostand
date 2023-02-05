@@ -6,7 +6,6 @@ export class ConversionFromBANPipe implements PipeTransform {
     constructor(private readonly _currencyConversionService: CurrencyConversionService) {}
 
     transform(sendAmount: number | string): string {
-        console.log(sendAmount);
         const converted = Number(sendAmount);
         if (isNaN(converted)) {
             return '0';

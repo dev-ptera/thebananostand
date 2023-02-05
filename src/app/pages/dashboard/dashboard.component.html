@@ -95,7 +95,10 @@
         </button>
     </ng-template>
     <ng-template #walletActionsMobileTrigger>
-        <div class="mat-body-2" data-cy="wallet-actions-mobile-menu">Manage Wallet</div>
+        <div data-cy="wallet-actions-mobile-menu" style="display: flex; align-items: center">
+            <div class="mat-body-2 text-contrast">Manage Wallet</div>
+            <mat-icon class="text-contrast">arrow_drop_down</mat-icon>
+        </div>
     </ng-template>
     <responsive-menu
         menuTitle="Wallet Actions"
@@ -127,7 +130,10 @@
         </button>
     </ng-template>
     <ng-template #accountActionsMobileTrigger>
-        <div data-cy="account-actions-mobile-menu" class="mat-body-2">Manage Accounts</div>
+        <div data-cy="account-actions-mobile-menu" style="display: flex; align-items: center">
+            <div class="mat-body-2 text-contrast">Manage Accounts</div>
+            <mat-icon class="text-contrast">arrow_drop_down</mat-icon>
+        </div>
     </ng-template>
     <responsive-menu
         menuTitle="Account Actions"
@@ -160,7 +166,7 @@
         </ng-container>
         <ng-container *ngIf="vp.sm">
             <mat-divider></mat-divider>
-            <div style="display: flex; justify-content: space-between; width: 100%; margin-top: 16px">
+            <div style="display: flex; justify-content: space-between; width: 100%; margin-top: 8px">
                 <ng-template [ngTemplateOutlet]="walletActions" *ngIf="!isLedgerDevice()"></ng-template>
                 <ng-template [ngTemplateOutlet]="accountActions" *ngIf="vp.sm"></ng-template>
             </div>
