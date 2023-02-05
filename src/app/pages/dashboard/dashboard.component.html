@@ -89,10 +89,19 @@
         </button>
     </ng-template>
     <ng-template #walletActionsDesktopTrigger>
+        <button
+            mat-icon-button
+            data-cy="wallet-actions-desktop-menu"
+            style="position: absolute; top: 16px; right: 16px; border: solid 1px var(--primary)"
+        >
+            <mat-icon class="text-contrast">more_vert</mat-icon>
+        </button>
+        <!--
         <button mat-flat-button data-cy="wallet-actions-desktop-menu">
             <div class="mat-subtitle-2" style="white-space: nowrap">Manage Wallet</div>
             <mat-icon>arrow_drop_down</mat-icon>
         </button>
+            -->
     </ng-template>
     <ng-template #walletActionsMobileTrigger>
         <div data-cy="wallet-actions-mobile-menu" style="display: flex; align-items: center">

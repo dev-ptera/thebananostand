@@ -67,7 +67,7 @@ import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/re
             >
                 <list-item-tag
                     *ngIf="account.pending.length > 0"
-                    [label]="vp.sm ? 'Receivable' : 'Has Receivable'"
+                    label="Has Receivable"
                     class="receivable-tag"
                     style="margin-right: 16px"
                     [backgroundColor]="colors.orange[500]"
@@ -85,12 +85,15 @@ import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/re
             </div>
         </ng-template>
 
-        <div class="account-card-container" responsive>
+        <div class="account-card-container" responsive data-cy="dashboard-account-cards-container">
             <mat-card
+                data-cy="dashboard-account-card"
                 *ngFor="let account of accounts | sort : sortDirection : accounts.length; trackBy: markUniqueAccount"
                 class="account-card divider-border"
             >
-                <div class="card-account-number mat-caption">#{{ _util.numberWithCommas(account.index) }}</div>
+                <div data-cy="account-number" class="card-account-number mat-caption">
+                    #{{ _util.numberWithCommas(account.index) }}
+                </div>
                 <div style="display: flex; align-items: center; height: 100%">
                     <div style="display: flex; justify-content: center; flex: 1; flex-direction: column; height: 100%">
                         <div style="display: flex; align-items: center">
@@ -153,7 +156,11 @@ import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/re
                             </div>
                         </div>
                         <mat-divider> </mat-divider>
-                        <div class="card-footer" (click)="openAccount(account.fullAddress)">
+                        <div
+                            data-cy="dashboard-account-card-footer"
+                            class="card-footer"
+                            (click)="openAccount(account.fullAddress)"
+                        >
                             <div class="mat-body-1">View Account</div>
                             <mat-icon>chevron_right</mat-icon>
                         </div>
