@@ -39,8 +39,8 @@ $greenPalette: (
     )
 );
 
-$my-primary: mat.define-palette($greenPalette, 500);
-$my-accent: mat.define-palette($greenPalette, 700);
+$my-primary: mat.define-palette($greenPalette, 700);
+$my-accent: mat.define-palette($greenPalette, 900);
 $my-warn: mat.define-palette(blui.$blui-red, 500);
 $my-typography: mat.define-typography-config();
 
@@ -59,11 +59,12 @@ $jungle-green-theme: mat.define-light-theme((
     @include palette-classes.utility-classes();
     @include mdc-customization.mdc-overrides();
 
-    --primary:          #{map-get($my-primary, 500)};
+    --primary:          #{map-get($my-primary, 700)};
     --warn:             #{map-get($my-warn, 500)};
     --card:             #{map-get(blui.$blui-white, 100)};
     --text-contrast:    #{map-get(blui.$blui-white, 50)};
     --text:             #{map-get(blui.$blui-black, 500)};
+    --text-secondary:   #{map-get(blui.$blui-black, 300)};
     --link:             #{map-get(blui.$blui-blue, 500)};
     --hint:             #{map-get(blui.$blui-black, 200)};
     --icon-primary:     #{map-get(blui.$blui-black, 500)};

@@ -42,13 +42,10 @@
 
 <!-- Is shown whenever a seed is loaded, but no individual addresses are shown yet. -->
 <ng-template #noAccountsEmptyState>
-    <app-empty-state
-        *ngIf="store.accounts.length === 0 && !store.isLoadingAccounts"
-        style="margin: 64px 0 48px 0"
-        title="No Accounts Displayed"
-        description="Use the buttons above to add an account."
-    >
+    <app-empty-state *ngIf="store.accounts.length === 0 && !store.isLoadingAccounts" style="margin: 64px 0 48px 0">
         <mat-icon blui-empty-icon>search</mat-icon>
+        <div title>No Accounts Displayed</div>
+        <div description>Use the buttons above to add an account.</div>
     </app-empty-state>
 </ng-template>
 
@@ -237,7 +234,11 @@
                 </div>
                 <mat-divider *ngIf="!vp.sm"></mat-divider>
                 <ng-template [ngTemplateOutlet]="noAccountsEmptyState"></ng-template>
-                <app-account-list [accounts]="store.accounts" [sortDirection]="sortDirection"></app-account-list>
+                <app-account-card
+                    *ngIf="store.accounts.length > 0"
+                    [accounts]="store.accounts"
+                    [sortDirection]="sortDirection"
+                ></app-account-card>
             </mat-card>
         </div>
     </div>

@@ -30,6 +30,7 @@ $nano-blue-theme: mat.define-light-theme((
     --card:             #{map-get(blui.$blui-white, 100)};
     --text-contrast:    #{map-get(blui.$blui-white, 50)};
     --text:             #{map-get(blui.$blui-black, 500)};
+    --text-secondary:   #{map-get(blui.$blui-black, 300)};
     --hint:             #{map-get(blui.$blui-black, 200)};
     --link:             #{map-get(blui.$blui-blue, 500)};
     --icon-primary:     #{map-get(blui.$blui-black, 500)};

@@ -8,6 +8,8 @@ export type AccountOverview = {
     balanceRaw: string;
     formattedBalance: string;
     representative: string;
+    lastUpdatedTimestamp: string;
+    blockCount: number;
     pending: ReceivableHash[];
     frontier: string;
     moreOptionsOpen?: boolean;

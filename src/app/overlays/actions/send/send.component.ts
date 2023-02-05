@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, Pipe, PipeTransform } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
 import { UtilService } from '@app/services/util.service';
 import { AccountService } from '@app/services/account.service';
@@ -15,32 +15,6 @@ export type SendOverlayData = {
     localCurrencyConversionRate: number;
     localCurrencySymbol: string;
 };
-
-@Pipe({ name: 'conversionFromBAN', pure: true })
-export class ConversionFromBANPipe implements PipeTransform {
-    constructor(private readonly _currencyConversionService: CurrencyConversionService) {}
-
-    transform(sendAmount: number, bananoPriceUSD: number, localCurrencyConversionRate: number): string {
-        return this._currencyConversionService.convertBanAmountToLocalCurrency(
-            sendAmount,
-            bananoPriceUSD,
-            localCurrencyConversionRate
-        );
-    }
-}
-
-@Pipe({ name: 'conversionToBAN', pure: true })
-export class ConversionToBANPipe implements PipeTransform {
-    constructor(private readonly _currencyConversionService: CurrencyConversionService) {}
-
-    transform(sendAmount: number, bananoPriceUSD: number, localCurrencyConversionRate: number): string {
-        return this._currencyConversionService.convertLocalCurrencyToBAN(
-            sendAmount,
-            bananoPriceUSD,
-            localCurrencyConversionRate
-        );
-    }
-}
 
 @Component({
     selector: 'app-send-overlay',
