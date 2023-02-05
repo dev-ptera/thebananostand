@@ -1,11 +1,14 @@
 @use 'assets/themes/mixins/fade' as fade;
 
-app-account-card {
+.account-card-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    background-color: var(--card);
-    padding: 0rem 1rem 1rem 1rem;
+    background-color: var(--dashboard-accounts-container-bg);
+    padding: 0rem 2rem 2rem 2rem;
+    &.sm {
+        padding: 0rem 2rem 2rem 2rem;
+    }
     @include fade.fade();
     * {
         @include fade.fade();
@@ -17,7 +20,6 @@ app-account-card {
     padding-bottom: 0;
     position: relative;
     width: 48%;
-    box-shadow: none;
     margin-top: 2rem;
     @media (max-width: 1100px) {
         width: 100%;

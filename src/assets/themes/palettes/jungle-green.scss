@@ -60,6 +60,8 @@ $jungle-green-theme: mat.define-light-theme((
     @include mdc-customization.mdc-overrides();
 
     --primary:          #{map-get($my-primary, 700)};
+    --primary-light-2:    #{rgba(map-get($my-primary, 700), .2)};
+    --dashboard-accounts-container-bg: #{map-get(blui.$blui-white, 100)};
     --warn:             #{map-get($my-warn, 500)};
     --card:             #{map-get(blui.$blui-white, 100)};
     --text-contrast:    #{map-get(blui.$blui-white, 50)};

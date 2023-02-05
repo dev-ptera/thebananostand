@@ -25,19 +25,21 @@ $nano-blue-theme: mat.define-light-theme((
     @include palette-classes.utility-classes();
     @include mdc-customization.mdc-overrides();
 
-    --primary:          #{map-get($my-primary, 500)};
-    --warn:             #{map-get($my-warn, 500)};
-    --card:             #{map-get(blui.$blui-white, 100)};
-    --text-contrast:    #{map-get(blui.$blui-white, 50)};
-    --text:             #{map-get(blui.$blui-black, 500)};
-    --text-secondary:   #{map-get(blui.$blui-black, 300)};
-    --hint:             #{map-get(blui.$blui-black, 200)};
-    --link:             #{map-get(blui.$blui-blue, 500)};
-    --icon-primary:     #{map-get(blui.$blui-black, 500)};
-    --icon-secondary:   #{map-get(blui.$blui-black, 300)};
-    --divider:          rgba(66, 78, 84, 0.12);
-    --divider-border:   rgba(66, 78, 84, 0.12);
-    --input-focus-bg:   #{map-get(blui.$blui-gray, 50)};
+    --primary:                          #{map-get($my-primary, 500)};
+    --primary-light-2:                  #{rgba(map-get($my-primary, 500), .2)};
+    --dashboard-accounts-container-bg:  #{rgba(map-get($my-primary, 700), .05)};
+    --warn:                             #{map-get($my-warn, 500)};
+    --card:                             #{map-get(blui.$blui-white, 100)};
+    --text-contrast:                    #{map-get(blui.$blui-white, 50)};
+    --text:                             #{map-get(blui.$blui-black, 500)};
+    --text-secondary:                   #{map-get(blui.$blui-black, 300)};
+    --hint:                             #{map-get(blui.$blui-black, 200)};
+    --link:                             #{map-get(blui.$blui-blue, 500)};
+    --icon-primary:                     #{map-get(blui.$blui-black, 500)};
+    --icon-secondary:                   #{map-get(blui.$blui-black, 300)};
+    --divider:                          rgba(66, 78, 84, 0.12);
+    --divider-border:                   rgba(66, 78, 84, 0.12);
+    --input-focus-bg:                   #{map-get(blui.$blui-gray, 50)};
 
     .sm {
         .dashboard-account-list, .account-history-scroll-container {
