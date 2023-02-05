@@ -11,8 +11,6 @@ export type SendOverlayData = {
     index: number;
     maxSendAmount: number;
     maxSendAmountRaw: string;
-    bananoPriceUSD: number;
-    localCurrencyConversionRate: number;
     localCurrencySymbol: string;
 };
 
@@ -94,19 +92,11 @@ export type SendOverlayData = {
 
                             <ng-container *ngIf="!isSendingAll">
                                 <ng-container *ngIf="swapToLocalCurrencyInput">
-                                    ~{{
-                                        sendAmount
-                                            | conversionToBAN : data.bananoPriceUSD : data.localCurrencyConversionRate
-                                            | number
-                                    }}
+                                    ~{{ sendAmount | conversionToBAN | number }}
                                     BAN
                                 </ng-container>
                                 <ng-container *ngIf="!swapToLocalCurrencyInput">
-                                    ~{{
-                                        sendAmount
-                                            | conversionFromBAN : data.bananoPriceUSD : data.localCurrencyConversionRate
-                                            | number
-                                    }}
+                                    ~{{ sendAmount | conversionFromBAN | number }}
                                     {{ data.localCurrencySymbol }}
                                 </ng-container>
                             </ng-container>
@@ -209,11 +199,7 @@ export class SendComponent {
 
     ngOnInit(): void {
         this.maxSendLocalCurrency = Number(
-            this._currencyConversionService.convertBanAmountToLocalCurrency(
-                this.data.maxSendAmount,
-                this.data.bananoPriceUSD,
-                this.data.localCurrencyConversionRate
-            )
+            this._currencyConversionService.convertBanAmountToLocalCurrency(this.data.maxSendAmount)
         );
     }
 
@@ -230,11 +216,7 @@ export class SendComponent {
         }
         if (this.activeStep === 1) {
             if (this.swapToLocalCurrencyInput) {
-                const convertedBanAmount = this._currencyConversionService.convertLocalCurrencyToBAN(
-                    this.sendAmount,
-                    this.data.bananoPriceUSD,
-                    this.data.localCurrencyConversionRate
-                );
+                const convertedBanAmount = this._currencyConversionService.convertLocalCurrencyToBAN(this.sendAmount);
                 this.confirmedSendAmount = this.isSendingAll
                     ? this.util.removeExponents(this.util.convertRawToBan(this.data.maxSendAmountRaw))
                     : this.util.removeExponents(convertedBanAmount);
@@ -299,6 +281,7 @@ export class SendComponent {
 
     swapInputs(): void {
         this.swapToLocalCurrencyInput = !this.swapToLocalCurrencyInput;
+        this.sendAmount = 0;
         this.checkIfSendingAll(this.sendAmount);
     }
 

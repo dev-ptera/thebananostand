@@ -5,11 +5,7 @@ import { CurrencyConversionService } from '@app/services/currency-conversion.ser
 export class ConversionToBANPipe implements PipeTransform {
     constructor(private readonly _currencyConversionService: CurrencyConversionService) {}
 
-    transform(sendAmount: number, bananoPriceUSD: number, localCurrencyConversionRate: number): string {
-        return this._currencyConversionService.convertLocalCurrencyToBAN(
-            sendAmount,
-            bananoPriceUSD,
-            localCurrencyConversionRate
-        );
+    transform(sendAmount: number): string {
+        return this._currencyConversionService.convertLocalCurrencyToBAN(sendAmount);
     }
 }

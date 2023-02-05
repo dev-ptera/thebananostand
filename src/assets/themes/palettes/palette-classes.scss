@@ -7,10 +7,6 @@
         color: var(--warn);
     }
 
-    .hint {
-        color: var(--hint);
-    }
-
     .divider {
         color: var(--divider);
     }
@@ -33,5 +29,9 @@
 
     .link {
         color: var(--link);
+    }
+
+    .hint {
+        color: var(--hint);
     }
 }

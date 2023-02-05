@@ -8,7 +8,7 @@
                         style="font-weight: 600"
                         responsive-trigger
                         class="primary"
-                        [class.mat-headline-5]="!vp.sm"
+                        [class.mat-headline-4]="!vp.sm"
                         [class.mat-headline-6]="vp.sm"
                     >
                         {{ store.activeWallet.name }}
@@ -93,7 +93,7 @@
         </button>
     </ng-template>
     <ng-template #walletActionsMobileTrigger>
-        <mat-icon data-cy="wallet-actions-mobile-menu"> account_balance_wallet </mat-icon>
+        <div class="mono" data-cy="wallet-actions-mobile-menu">Manage Wallet</div>
     </ng-template>
     <responsive-menu
         menuTitle="Wallet Actions"
@@ -125,7 +125,7 @@
         </button>
     </ng-template>
     <ng-template #accountActionsMobileTrigger>
-        <mat-icon data-cy="account-actions-mobile-menu">account_circle</mat-icon>
+        <div data-cy="account-actions-mobile-menu" class="mono">Manage Accounts</div>
     </ng-template>
     <responsive-menu
         menuTitle="Account Actions"
@@ -145,16 +145,14 @@
                 <!-- Wallet Name & Selector -->
                 <ng-template [ngTemplateOutlet]="walletNameDropdown"></ng-template>
                 <!-- Account Balance -->
-                <div style="display: flex; align-items: center" [style.marginTop.px]="vp.sm ? -4 : 0">
-                    <div *ngIf="!vp.sm" class="mat-body-1" style="margin-right: 8px; font-weight: 600">
-                        Accounts Balance:
-                    </div>
-                    <div class="mat-body-1">
+                <div style="display: flex; align-items: center" [style.marginTop.px]="vp.sm ? -4 : 16">
+                    <div class="mat-headline-4">
                         <ng-container *ngIf="!vp.sm">{{ totalBalance }}</ng-container>
                         <strong *ngIf="vp.sm">{{ totalBalance }}</strong>
                         BAN
                     </div>
                 </div>
+                <div class="mat-body-1 hint">~ {{ store.totalBalance | conversionFromBAN | number }} {{ store.localCurrencyCode }}</div>
             </div>
         </div>
         <ng-template [ngTemplateOutlet]="walletActions" *ngIf="!isLedgerDevice()"></ng-template>

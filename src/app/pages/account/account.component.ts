@@ -152,8 +152,6 @@ export class AccountComponent implements OnInit, OnDestroy {
                 maxSendAmount: this.account.balance,
                 index: this.account.index,
                 maxSendAmountRaw: this.account.balanceRaw,
-                bananoPriceUSD: this.store.priceDataUSD.bananoPriceUsd,
-                localCurrencyConversionRate: this.store.localCurrencyConversionRate,
                 localCurrencySymbol: this.store.localCurrencyCode,
             },
         };

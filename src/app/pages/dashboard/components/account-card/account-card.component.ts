@@ -27,7 +27,7 @@ import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/re
                     [style.marginRight.px]="vp.sm ? 0 : -8"
                     (click)="account.moreOptionsOpen = !account.moreOptionsOpen; $event.stopPropagation()"
                 >
-                    <mat-icon>more_vert</mat-icon>
+                    <mat-icon class="icon-secondary">more_vert</mat-icon>
                 </button>
             </ng-template>
             <ng-template #accountMoreOptionsMenu>
@@ -88,7 +88,8 @@ import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/re
         </ng-template>
 
         <mat-card
-            *ngFor="let account of accounts | sort : sortDirection : accounts.length"
+            *ngFor="let account of accounts | sort : sortDirection : accounts.length;
+                    trackBy: markUniqueAccount"
             class="account-card divider-border"
         >
             <div class="card-account-number mat-caption">#{{ _util.numberWithCommas(account.index) }}</div>
@@ -113,8 +114,6 @@ import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/re
                                 ~{{
                                     account.balance
                                         | conversionFromBAN
-                                            : store.priceDataUSD.bananoPriceUsd
-                                            : store.localCurrencyConversionRate
                                         | number
                                 }}
                                 {{ store.localCurrencyCode }}
@@ -145,7 +144,7 @@ import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/re
                             <div class="detail-row">
                                 <mat-icon>schedule</mat-icon>
                                 <div>
-                                    Last used on: <strong>{{ convertUnixToDate(account.lastUpdatedTimestamp) }}</strong>
+                                    Last used on <strong>{{ convertUnixToDate(account.lastUpdatedTimestamp) }}</strong>
                                 </div>
                             </div>
 
@@ -153,14 +152,8 @@ import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/re
                                 *ngTemplateOutlet="statusBadges; context: { account: this.account }"
                             ></ng-template>
                         </div>
-                        <div *ngIf="!account.representative" class="mat-headline-5 hint" style="padding: 16px 0">
-                            <app-empty-state>
-                                <mat-icon empty-icon style="font-size: 64px; height: 64px; width: 64px"
-                                    >no_accounts</mat-icon
-                                >
-                                <div title>Unopened Account</div>
-                                <div description>To open this account, it must receive an incoming transaction.</div>
-                            </app-empty-state>
+                        <div *ngIf="!account.representative" style="padding: 16px 8px">
+                            <div class="mat-headline-6 hint">Unopened Account</div>
                         </div>
                     </div>
                     <mat-divider> </mat-divider>
@@ -170,7 +163,7 @@ import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/re
                     </div>
                 </div>
 
-                <div style="position: absolute; top: 50%; right: 8px">
+                <div style="position: absolute; top: 8px; right: 8px">
                     <ng-template
                         *ngTemplateOutlet="accountMoreOptions; context: { account: this.account }"
                     ></ng-template>
