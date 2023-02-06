@@ -13,9 +13,9 @@
                     >
                         {{ store.activeWallet.name }}
                     </div>
-                    <mat-icon *ngIf="isShowMultiWalletSelect()" style="margin-left: 4px" class="text-contrast"
-                        >arrow_drop_down</mat-icon
-                    >
+                    <mat-icon *ngIf="isShowMultiWalletSelect()" style="margin-left: 4px" class="text-contrast">
+                        arrow_drop_down
+                    </mat-icon>
                 </div>
             </ng-template>
             <ng-template #switchWalletsMenu>
@@ -163,6 +163,12 @@
                 <!-- Account Balance -->
                 <div style="display: flex; align-items: center" [style.marginTop.px]="vp.sm ? 8 : 16">
                     <div class="mat-headline-4 text-contrast">{{ totalBalance }} BAN</div>
+                    <mat-spinner
+                        *ngIf="store.isLoadingAccounts"
+                        class="stroke-contrast"
+                        diameter="24"
+                        style="margin-left: 16px"
+                    ></mat-spinner>
                 </div>
                 <div class="mat-body-1 text-contrast">
                     ~ {{ store.totalBalance | conversionFromBAN | number }} {{ store.localCurrencyCode }}

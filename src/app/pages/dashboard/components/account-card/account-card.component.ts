@@ -152,7 +152,7 @@ import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/re
                                 ></ng-template>
                             </div>
                             <div *ngIf="!account.representative" style="padding: 16px 8px">
-                                <div class="mat-headline-5 hint">Unopened Account</div>
+                                <div class="mat-body-1 hint">Unopened Account</div>
                             </div>
                         </div>
                         <mat-divider> </mat-divider>
