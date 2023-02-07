@@ -9,8 +9,13 @@ import { SettingsPageComponent } from '@app/pages/settings/settings.component';
 const routes: Routes = [
     { path: 'account/:account', component: AccountComponent, data: { animation: 'Account' }, canActivate: [AuthGuard] },
     { path: '', component: HomeComponent, data: { animation: 'Home' } },
-    { path: 'settings', component: SettingsPageComponent, data: { animation: 'Settings' } },
-    { path: 'address-book', component: AddressBookComponent, data: { animation: 'AddressBook' } },
+    { path: 'settings', component: SettingsPageComponent, data: { animation: 'Settings' }, canActivate: [AuthGuard] },
+    {
+        path: 'address-book',
+        component: AddressBookComponent,
+        data: { animation: 'AddressBook' },
+        canActivate: [AuthGuard],
+    },
 ];
 
 @NgModule({

@@ -101,11 +101,11 @@ import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/re
                                 <img [src]="getMonkeyUrl(account.fullAddress)" loading="lazy" style="height: 100%" />
                             </div>
                             <div [style.paddingLeft.px]="vp.sm ? 8 : 24" style="padding-top: 8px; padding-bottom: 8px">
-                                <div class="mono mat-body-1">
+                                <div class="mono" [class.mat-body-2]="vp.sm" [class.mat-body-1]="!vp.sm">
                                     {{ account.shortAddress }}
                                 </div>
                                 <div
-                                    [style.marginTop.px]="vp.sm ? 8 : 16"
+                                    [style.marginTop.px]="vp.sm ? 4 : 16"
                                     [class.mat-headline-5]="!vp.sm"
                                     [class.mat-headline-6]="vp.sm"
                                 >
@@ -152,7 +152,7 @@ import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/re
                                 ></ng-template>
                             </div>
                             <div *ngIf="!account.representative" style="padding: 16px 8px">
-                                <div class="mat-headline-5 hint">Unopened Account</div>
+                                <div class="mat-body-1 hint">Unopened Account</div>
                             </div>
                         </div>
                         <mat-divider> </mat-divider>

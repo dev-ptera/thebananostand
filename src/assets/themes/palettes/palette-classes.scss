@@ -26,6 +26,10 @@
     .text-contrast {
         color: var(--text-contrast);
     }
+    .stroke-contrast {
+        stroke:  var(--text-contrast);
+        --mdc-circular-progress-active-indicator-color: var(--text-contrast);
+    }
 
     .link {
         color: var(--link);

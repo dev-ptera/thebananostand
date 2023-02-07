@@ -48,7 +48,7 @@
 }
 
 @mixin fade {
-    $time: 200ms;
+    $time: 300ms;
     -webkit-animation: fadein $time; /* Safari, Chrome and Opera > 12.1 */
     -moz-animation: fadein $time; /* Firefox < 16 */
     -ms-animation: fadein $time; /* Internet Explorer */

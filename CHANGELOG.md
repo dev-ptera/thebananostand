@@ -1,5 +1,19 @@
 # Change Log
 
+## v3.4.1 (Feb 6, 2023)
+
+### Added
+
+-   Added a spinner next to total wallet balance when loading accounts.
+
+### Changed
+
+-   Changed "Unopened Account" text size on Dashboard.
+
+### Fixed
+
+-   Fixed bug where unauthenticated users can access the Settings and Address Book pages.
+
 ## v3.4.0 (Feb 5, 2023)
 
 ### Changed
