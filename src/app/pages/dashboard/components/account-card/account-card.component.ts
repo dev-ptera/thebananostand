@@ -111,7 +111,7 @@ import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/re
                                 >
                                     {{ account.formattedBalance }} <span style="font-weight: 400">BAN</span>
                                 </div>
-                                <div class="hint mat-caption">
+                                <div class="hint mat-caption" [style.marginTop.px]="vp.sm ? -4 : 0">
                                     ~{{ account.balance | conversionFromBAN | number }}
                                     {{ store.localCurrencyCode }}
                                 </div>
