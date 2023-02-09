@@ -1,5 +1,15 @@
 # Change Log
 
+## v3.4.2 (Feb 9, 2023)
+
+### Changed
+
+-   Refresh known accounts, online reps, and price data on Dashboard refresh.
+
+### Fixed
+
+-   Fixed conversion pipe not updating on price changes.
+
 ## v3.4.1 (Feb 6, 2023)
 
 ### Added
