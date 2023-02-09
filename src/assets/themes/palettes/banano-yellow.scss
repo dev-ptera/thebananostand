@@ -51,6 +51,7 @@ $banano-yellow-theme: mat.define-dark-theme((
 
     .mat-mdc-card {
         --mdc-elevated-card-container-color: var(--card);
+        box-shadow: none!important;
     }
 
     &.mat-app-background, .account-card {
