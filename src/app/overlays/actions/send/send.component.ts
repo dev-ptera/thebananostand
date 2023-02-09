@@ -5,6 +5,7 @@ import { AccountService } from '@app/services/account.service';
 import { TransactionService } from '@app/services/transaction.service';
 import { TRANSACTION_COMPLETED_SUCCESS } from '@app/services/wallet-events.service';
 import { CurrencyConversionService } from '@app/services/currency-conversion.service';
+import { AppStateService, AppStore } from '@app/services/app-state.service';
 
 export type SendOverlayData = {
     address: string;
@@ -92,11 +93,23 @@ export type SendOverlayData = {
 
                             <ng-container *ngIf="!isSendingAll">
                                 <ng-container *ngIf="swapToLocalCurrencyInput">
-                                    ~{{ sendAmount | conversionToBAN | number }}
+                                    ~{{
+                                        sendAmount
+                                            | conversionToBAN
+                                                : store.localCurrencyConversionRate
+                                                : store.priceDataUSD.bananoPriceUsd
+                                            | number
+                                    }}
                                     BAN
                                 </ng-container>
                                 <ng-container *ngIf="!swapToLocalCurrencyInput">
-                                    ~{{ sendAmount | conversionFromBAN | number }}
+                                    ~{{
+                                        sendAmount
+                                            | conversionFromBAN
+                                                : store.localCurrencyConversionRate
+                                                : store.priceDataUSD.bananoPriceUsd
+                                            | number
+                                    }}
                                     {{ data.localCurrencySymbol }}
                                 </ng-container>
                             </ng-container>
@@ -190,16 +203,24 @@ export class SendComponent {
     swapToLocalCurrencyInput: boolean;
     maxSendLocalCurrency: number;
 
+    store: AppStore;
     constructor(
         public util: UtilService,
         private readonly _accountService: AccountService,
         private readonly _transactionService: TransactionService,
-        private readonly _currencyConversionService: CurrencyConversionService
-    ) {}
+        private readonly _currencyConversionService: CurrencyConversionService,
+        private readonly _appStoreService: AppStateService
+    ) {
+        this.store = this._appStoreService.store.getValue();
+    }
 
     ngOnInit(): void {
         this.maxSendLocalCurrency = Number(
-            this._currencyConversionService.convertBanAmountToLocalCurrency(this.data.maxSendAmount)
+            this._currencyConversionService.convertBanAmountToLocalCurrency(
+                this.data.maxSendAmount,
+                this.store.localCurrencyConversionRate,
+                this.store.priceDataUSD.bananoPriceUsd
+            )
         );
     }
 
@@ -216,7 +237,11 @@ export class SendComponent {
         }
         if (this.activeStep === 1) {
             if (this.swapToLocalCurrencyInput) {
-                const convertedBanAmount = this._currencyConversionService.convertLocalCurrencyToBAN(this.sendAmount);
+                const convertedBanAmount = this._currencyConversionService.convertLocalCurrencyToBAN(
+                    this.sendAmount,
+                    this.store.localCurrencyConversionRate,
+                    this.store.priceDataUSD.bananoPriceUsd
+                );
                 this.confirmedSendAmount = this.isSendingAll
                     ? this.util.removeExponents(this.util.convertRawToBan(this.data.maxSendAmountRaw))
                     : this.util.removeExponents(convertedBanAmount);
