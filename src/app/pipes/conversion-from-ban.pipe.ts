@@ -5,11 +5,15 @@ import { CurrencyConversionService } from '@app/services/currency-conversion.ser
 export class ConversionFromBANPipe implements PipeTransform {
     constructor(private readonly _currencyConversionService: CurrencyConversionService) {}
 
-    transform(sendAmount: number | string): string {
-        const converted = Number(sendAmount);
+    transform(amount: number | string, conversionRate: number, bananoPriceUSD: number): string {
+        const converted = Number(amount);
         if (isNaN(converted)) {
             return '0';
         }
-        return this._currencyConversionService.convertBanAmountToLocalCurrency(converted);
+        return this._currencyConversionService.convertBanAmountToLocalCurrency(
+            converted,
+            conversionRate,
+            bananoPriceUSD
+        );
     }
 }

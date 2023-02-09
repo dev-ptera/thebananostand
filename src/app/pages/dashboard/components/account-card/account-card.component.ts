@@ -112,7 +112,13 @@ import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/re
                                     {{ account.formattedBalance }} <span style="font-weight: 400">BAN</span>
                                 </div>
                                 <div class="hint mat-caption" [style.marginTop.px]="vp.sm ? -4 : 0">
-                                    ~{{ account.balance | conversionFromBAN | number }}
+                                    ~{{
+                                        account.balance
+                                            | conversionFromBAN
+                                                : store.localCurrencyConversionRate
+                                                : store.priceDataUSD.bananoPriceUsd
+                                            | number
+                                    }}
                                     {{ store.localCurrencyCode }}
                                 </div>
                             </div>
@@ -269,7 +275,7 @@ export class AccountCardComponent {
     }
 
     getAccountNickname(account: AccountOverview): string {
-        return this._appStateService.store.getValue().addressBook.get(account.fullAddress);
+        return this.store.addressBook.get(account.fullAddress);
     }
 
     getMonkeyUrl(address: string): string {

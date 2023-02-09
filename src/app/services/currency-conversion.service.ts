@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DatasourceService } from '@app/services/datasource.service';
-import { AppStateService } from '@app/services/app-state.service';
 
 type SymbolsResponse = {
     symbols: {
@@ -24,11 +23,7 @@ type Currency = {
 export class CurrencyConversionService {
     currencies: Currency[] = [];
 
-    constructor(
-        private readonly _http: HttpClient,
-        private readonly _datasource: DatasourceService,
-        private readonly _appStoreService: AppStateService
-    ) {
+    constructor(private readonly _http: HttpClient, private readonly _datasource: DatasourceService) {
         this.getSymbols();
     }
 
@@ -53,28 +48,24 @@ export class CurrencyConversionService {
         });
     }
 
-    private _adjust(converted: number): string {
-        if (converted > 1) {
-            return converted.toFixed(2);
-        }
-        return converted.toFixed(4);
-    }
-
-    convertBanAmountToLocalCurrency(bananoAmount: number): string {
-        const conversionRate = this._appStoreService.store.getValue().localCurrencyConversionRate;
-        const bananoPriceUSD = this._appStoreService.store.getValue().priceDataUSD.bananoPriceUsd;
+    convertBanAmountToLocalCurrency(bananoAmount: number, conversionRate: number, bananoPriceUSD: number): string {
         if (!bananoAmount || !bananoPriceUSD || !conversionRate) {
             return '0';
         }
         return this._adjust((bananoPriceUSD / conversionRate) * bananoAmount);
     }
 
-    convertLocalCurrencyToBAN(localCurrencyAmount: number): string {
-        const conversionRate = this._appStoreService.store.getValue().localCurrencyConversionRate;
-        const bananoPriceUSD = this._appStoreService.store.getValue().priceDataUSD.bananoPriceUsd;
+    convertLocalCurrencyToBAN(localCurrencyAmount: number, conversionRate: number, bananoPriceUSD: number): string {
         if (!localCurrencyAmount || !bananoPriceUSD || !conversionRate) {
             return '0';
         }
         return this._adjust(localCurrencyAmount * (conversionRate / bananoPriceUSD));
+    }
+
+    private _adjust(converted: number): string {
+        if (converted > 1) {
+            return converted.toFixed(2);
+        }
+        return converted.toFixed(4);
     }
 }

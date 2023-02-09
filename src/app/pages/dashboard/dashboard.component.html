@@ -171,7 +171,13 @@
                     ></mat-spinner>
                 </div>
                 <div class="mat-body-1 text-contrast">
-                    ~ {{ store.totalBalance | conversionFromBAN | number }} {{ store.localCurrencyCode }}
+                    ~
+                    {{
+                        store.totalBalance
+                            | conversionFromBAN : store.localCurrencyConversionRate : store.priceDataUSD.bananoPriceUsd
+                            | number
+                    }}
+                    {{ store.localCurrencyCode }}
                 </div>
             </div>
         </div>

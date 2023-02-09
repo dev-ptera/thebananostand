@@ -106,6 +106,15 @@ export const SELECT_LOCALIZATION_CURRENCY = new Subject<string>();
 export class WalletEventsService {
     store: AppStore;
 
+    private _loadOnlineRepsAndKnownAccounts(): void {
+        void this._accountService.fetchOnlineRepresentatives().then((onlineRepresentatives) => {
+            this._appStateService.onlineRepresentatives = onlineRepresentatives;
+        });
+        void this._accountService.fetchKnownAccounts().then((knownAccounts) => {
+            this._appStateService.knownAccounts = knownAccounts;
+        });
+    }
+
     constructor(
         private readonly _util: UtilService,
         private readonly _snackbar: MatSnackBar,
@@ -229,6 +238,7 @@ export class WalletEventsService {
                 );
                 const { activeWallet, localStorageWallets } =
                     this._walletStorageService.createNewLocalStorageWallet(encryptedSecret);
+
                 this._dispatch({
                     hasSecret: true,
                     hasUnlockedSecret: true,
@@ -256,6 +266,7 @@ export class WalletEventsService {
             if (indexes.length === 0) {
                 indexes.push(0);
             }
+            this._loadOnlineRepsAndKnownAccounts();
             ADD_SPECIFIC_ACCOUNTS_BY_INDEX.next(indexes);
             SELECT_LOCALIZATION_CURRENCY.next(this.store.localCurrencyCode);
         });
@@ -352,13 +363,6 @@ export class WalletEventsService {
                 hasUnlockedSecret: !data.isLedger,
                 hasUnlockedLedger: data.isLedger,
                 walletPassword: data.password,
-            });
-
-            void this._accountService.fetchOnlineRepresentatives().then((onlineRepresentatives) => {
-                this._appStateService.onlineRepresentatives = onlineRepresentatives;
-            });
-            void this._accountService.fetchKnownAccounts().then((knownAccounts) => {
-                this._appStateService.knownAccounts = knownAccounts;
             });
             REFRESH_DASHBOARD_ACCOUNTS.next();
         });
