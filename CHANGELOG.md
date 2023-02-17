@@ -1,5 +1,11 @@
 # Change Log
 
+## v3.5.0 (Feb 17, 2023)
+
+### Added
+
+-   Added an alternative table view option on Dashboard.
+
 ## v3.4.2 (Feb 9, 2023)
 
 ### Changed

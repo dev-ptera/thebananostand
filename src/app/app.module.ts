@@ -81,6 +81,10 @@ import { MatListModule } from '@angular/material/list';
 import { AccountCardComponent } from '@app/pages/dashboard/components/account-card/account-card.component';
 import { ConversionToBANPipe } from './pipes/conversion-to-ban.pipe';
 import { ConversionFromBANPipe } from './pipes/conversion-from-ban.pipe';
+import { AccountTableComponent } from '@app/pages/dashboard/components/account-table/account-table.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { AccountActionsComponent } from '@app/pages/dashboard/components/account-actions/account-actions.component';
 
 @NgModule({
     declarations: [
@@ -134,6 +138,8 @@ import { ConversionFromBANPipe } from './pipes/conversion-from-ban.pipe';
         SendDialogComponent,
         SettingsPageComponent,
         TransactionComponent,
+        AccountTableComponent,
+        AccountActionsComponent,
     ],
     imports: [
         AppRoutingModule,
@@ -170,6 +176,8 @@ import { ConversionFromBANPipe } from './pipes/conversion-from-ban.pipe';
         ScrollingModule,
         SpacerModule,
         MatListModule,
+        MatTableModule,
+        MatSortModule,
     ],
     providers: [],
     bootstrap: [AppComponent],

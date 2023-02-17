@@ -46,6 +46,8 @@ export class DashboardComponent {
 
     totalBalance = '--';
 
+    showTableView = false;
+
     constructor(
         public vp: ViewportService,
         private readonly _router: Router,

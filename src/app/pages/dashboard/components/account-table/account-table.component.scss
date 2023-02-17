@@ -1,0 +1,7 @@
+@use 'assets/themes/mixins/fade' as fade;
+
+.account-table-container .mdc-data-table__content {
+    * {
+        @include fade.fade();
+    }
+}
