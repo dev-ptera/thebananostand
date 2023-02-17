@@ -4,11 +4,8 @@ import * as Colors from '@brightlayer-ui/colors';
 import { ViewportService } from '@app/services/viewport.service';
 import { Router } from '@angular/router';
 import { UtilService } from '@app/services/util.service';
-import { ThemeService } from '@app/services/theme.service';
 import { AccountService } from '@app/services/account.service';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
-import { MatDialog } from '@angular/material/dialog';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
 
 @Component({
     selector: 'app-account-card',
