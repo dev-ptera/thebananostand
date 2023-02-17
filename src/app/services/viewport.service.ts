@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 export type Breakpoint = 'sm' | 'md' | undefined;
 
 const SMALL = 750;
-const MID = 900;
+const MID = 1100;
 
 @Injectable({
     providedIn: 'root',

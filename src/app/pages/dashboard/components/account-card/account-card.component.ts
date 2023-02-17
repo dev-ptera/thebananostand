@@ -1,7 +1,6 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { AccountOverview } from '@app/types/AccountOverview';
 import * as Colors from '@brightlayer-ui/colors';
-import { COPY_ADDRESS_TO_CLIPBOARD, REMOVE_ACCOUNTS_BY_INDEX } from '@app/services/wallet-events.service';
 import { ViewportService } from '@app/services/viewport.service';
 import { Router } from '@angular/router';
 import { UtilService } from '@app/services/util.service';
@@ -10,41 +9,12 @@ import { AccountService } from '@app/services/account.service';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { RenameAddressDialogComponent } from '@app/overlays/dialogs/rename-address/rename-address-dialog.component';
-import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/rename-address/rename-address-bottom-sheet.component';
 
 @Component({
     selector: 'app-account-card',
     styleUrls: ['account-card.component.scss'],
     encapsulation: ViewEncapsulation.None,
     template: `
-        <!-- Account-specific actions. -->
-        <ng-template #accountMoreOptions let-account="account">
-            <ng-template #accountMoreOptionsTrigger>
-                <button
-                    mat-icon-button
-                    (click)="account.moreOptionsOpen = !account.moreOptionsOpen; $event.stopPropagation()"
-                >
-                    <mat-icon class="icon-secondary">more_vert</mat-icon>
-                </button>
-            </ng-template>
-            <ng-template #accountMoreOptionsMenu>
-                <button mat-menu-item (click)="copyAccountAddressMobile(account); account.moreOptionsOpen = false">
-                    Copy Address
-                </button>
-                <button mat-menu-item (click)="hideAccount(account)">Hide Account</button>
-                <button mat-menu-item (click)="openRenameWalletOverlay(account)">Rename Account</button>
-            </ng-template>
-            <responsive-menu
-                menuTitle="Account"
-                [(open)]="account.moreOptionsOpen"
-                [menu]="accountMoreOptionsMenu"
-                [desktopTrigger]="accountMoreOptionsTrigger"
-                [mobileTrigger]="accountMoreOptionsTrigger"
-            >
-            </responsive-menu>
-        </ng-template>
-
         <!-- Indicates an account has not yet received any transactions -->
         <ng-template #unopenedAccountTag>
             <list-item-tag
@@ -173,9 +143,7 @@ import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/re
                     </div>
 
                     <div style="position: absolute; top: 8px; right: 8px">
-                        <ng-template
-                            *ngTemplateOutlet="accountMoreOptions; context: { account: this.account }"
-                        ></ng-template>
+                        <app-account-actions [account]="account"></app-account-actions>
                     </div>
                 </div>
             </mat-card>
@@ -183,11 +151,9 @@ import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/re
     `,
 })
 export class AccountCardComponent {
-    colors = Colors;
-    hoverRowNumber: number;
-    bottomSheetOpenDelayMs = 250;
-
     store: AppStore;
+    colors = Colors;
+
     @Input() accounts: AccountOverview[] = [];
     @Input() sortDirection: 'none' | 'asc' | 'desc';
 
@@ -195,9 +161,6 @@ export class AccountCardComponent {
         public vp: ViewportService,
         private readonly _router: Router,
         private readonly _util: UtilService,
-        private readonly _dialog: MatDialog,
-        private readonly _sheet: MatBottomSheet,
-        private readonly _themeService: ThemeService,
         private readonly _accountService: AccountService,
         private readonly _appStateService: AppStateService
     ) {}
@@ -213,54 +176,12 @@ export class AccountCardComponent {
     showRepresentativeOffline(address: string): boolean {
         return !this._accountService.isRepOnline(address);
     }
-
-    hideAccount(account: AccountOverview): void {
-        // Dismiss sheet and then hide account.
-        account.moreOptionsOpen = false;
-        setTimeout(() => {
-            REMOVE_ACCOUNTS_BY_INDEX.next([account.index]);
-        }, 100);
-    }
-
-    copyAccountAddressMobile(account: AccountOverview): void {
-        COPY_ADDRESS_TO_CLIPBOARD.next({ address: account.fullAddress });
-    }
-
     formatRepresentative(rep: string): string {
         return this._appStateService.knownAccounts.get(rep) || this._util.shortenAddress(rep);
     }
 
-    getItemBackgroundColor(even: boolean): string {
-        if (even || this.vp.sm) {
-            return this._themeService.isDark() ? this.colors.darkBlack[300] : this.colors.white[100];
-        }
-        return this._themeService.isDark() ? this.colors.darkBlack[200] : this.colors.white[50];
-    }
-
     openAccount(address: string): void {
         void this._router.navigate([`/account/${address}`]);
-    }
-
-    openRenameWalletOverlay(account: AccountOverview): void {
-        const data = {
-            data: {
-                address: account.fullAddress,
-            },
-        };
-
-        if (this.vp.sm) {
-            setTimeout(() => {
-                const ref = this._sheet.open(RenameAddressBottomSheetComponent, data);
-                ref.afterDismissed().subscribe(() => {
-                    account.moreOptionsOpen = false;
-                });
-            }, this.bottomSheetOpenDelayMs);
-        } else {
-            const ref = this._dialog.open(RenameAddressDialogComponent, data);
-            ref.afterClosed().subscribe(() => {
-                account.moreOptionsOpen = false;
-            });
-        }
     }
 
     convertUnixToDate(timestamp: string): string {

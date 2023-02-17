@@ -254,7 +254,9 @@
                             <mat-icon>search</mat-icon>
                         </button>
                         <button
+                            *ngIf="!showTableView"
                             mat-stroked-button
+                            style="margin-right: 16px"
                             class="stroked-icon-action-button"
                             matTooltip="Sort by balance"
                             (click)="sortAccountsByBalance()"
@@ -263,15 +265,29 @@
                             <mat-icon *ngIf="sortDirection === 'asc'">arrow_upward</mat-icon>
                             <mat-icon *ngIf="sortDirection === 'desc'">arrow_downward</mat-icon>
                         </button>
+                        <button
+                            mat-stroked-button
+                            class="stroked-icon-action-button"
+                            [matTooltip]="showTableView ? 'Show Dashboard View' : 'Show Table View'"
+                            (click)="showTableView = !showTableView"
+                        >
+                            <mat-icon>{{ showTableView ? 'dashboard' : 'toc' }}</mat-icon>
+                        </button>
                     </div>
                 </div>
                 <mat-divider *ngIf="!vp.sm"></mat-divider>
                 <ng-template [ngTemplateOutlet]="noAccountsEmptyState"></ng-template>
+
                 <app-account-card
-                    *ngIf="store.accounts.length > 0"
+                    *ngIf="!showTableView && store.accounts.length > 0"
                     [accounts]="store.accounts"
                     [sortDirection]="sortDirection"
                 ></app-account-card>
+                <app-account-table
+                    *ngIf="showTableView && store.accounts.length > 0"
+                    [accounts]="store.accounts"
+                    [tableSize]="store.accounts.length"
+                ></app-account-table>
             </mat-card>
         </div>
     </div>
