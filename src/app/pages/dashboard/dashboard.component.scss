@@ -34,6 +34,9 @@
         border-radius: 0;
     }
 }
+.dashboard-wrapper {
+    max-width: 1450px !important;
+}
 
 $mobileDashboardHeaderHeight: 180px;
 .sm .dashboard-header {
