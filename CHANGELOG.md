@@ -2,7 +2,7 @@
 
 ## v3.5.1 (Feb 17, 2023)
 
-### Changed
+### Changed 
 
 - Made dashboard 1450px wide.
 - 
