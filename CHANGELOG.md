@@ -8,7 +8,7 @@
 
 ### Changed
 
-- Made dashboard
+- Made dashboard 1450px wide.
 
 ## v3.5.0 (Feb 17, 2023)
 
