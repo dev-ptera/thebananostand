@@ -43,6 +43,10 @@
     width: 100%;
 }
 
+.accounts-wrapper {
+    max-width: 1050px !important;
+}
+
 .sm .accounts-wrapper {
     mat-card {
         border-radius: 0;

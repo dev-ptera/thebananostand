@@ -3,7 +3,7 @@
 .account-card-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: flex-start;
     background-color: var(--dashboard-accounts-container-bg);
     padding: 0rem 2rem 2rem 2rem;
     &.sm {
@@ -19,8 +19,12 @@
     padding: 1rem;
     padding-bottom: 0;
     position: relative;
-    width: 49%;
-    margin-top: 2rem;
+    width: 31.3333%;
+    box-sizing: border-box;
+    margin: 2rem 1% 0 1%;
+    @media (max-width: 1500px) {
+        width: 48%;
+    }
     @media (max-width: 1100px) {
         width: 100%;
     }

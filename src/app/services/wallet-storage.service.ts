@@ -18,6 +18,7 @@ const LOCALIZATION_CURRENCY_CODE = 'bananostand_localizationCurrencyCode';
 const ENCRYPTED_WALLETS = 'bananostand_encryptedWallets';
 const ADDRESS_BOOK = 'bananostand_addressBook';
 const LEDGER_STORED_INDEXES = 'bananostand_ledgerIndexes';
+const PREFERRED_DASHBOARD_VIEW = 'bananostand_dashboardView';
 
 @Injectable({
     providedIn: 'root',
@@ -36,6 +37,10 @@ export class WalletStorageService {
         // Listen for the updated store and write to localstorage accordingly.
         // `store` & `localStorage` will always match.
         this._appStateService.appLocalStorage.subscribe((walletData) => {
+            if (walletData.preferredDashboardView) {
+                window.localStorage.setItem(PREFERRED_DASHBOARD_VIEW, walletData.preferredDashboardView);
+            }
+
             if (walletData.localizationCurrencyCode) {
                 window.localStorage.setItem(LOCALIZATION_CURRENCY_CODE, walletData.localizationCurrencyCode);
             }
@@ -80,6 +85,14 @@ export class WalletStorageService {
             map.set(entry.account, entry.name);
         });
         return map;
+    }
+
+    readPreferredDashboardViewFromLocalStorage(): 'table' | 'card' {
+        const preference = window.localStorage.getItem(PREFERRED_DASHBOARD_VIEW);
+        if ((preference && preference === 'table') || preference === 'card') {
+            return preference;
+        }
+        return 'card';
     }
 
     /** Given an encrypted seed, makes a wallet that is later stored in the browser. */

@@ -31,6 +31,8 @@ export type AppStore = {
     totalBalance: number;
     /** The password used to unlock the encrypted wallet. */
     walletPassword: string;
+    /** Determines how the Dashboard page looks. Can either be table or card. */
+    preferredDashboardView: 'card' | 'table';
 };
 
 @Injectable({
@@ -60,6 +62,7 @@ export class AppStateService {
         activeWallet: undefined,
         totalBalance: 0,
         isLoadingAccounts: true,
+        preferredDashboardView: undefined,
     });
 
     appLocalStorage = new Subject<{
@@ -67,5 +70,6 @@ export class AppStateService {
         addressBook: Map<string, string>;
         activeWallet: LocalStorageWallet;
         localStorageWallets: LocalStorageWallet[];
+        preferredDashboardView: string;
     }>();
 }

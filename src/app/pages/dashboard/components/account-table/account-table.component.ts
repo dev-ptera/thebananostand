@@ -41,7 +41,7 @@ import * as Colors from '@brightlayer-ui/colors';
         <ng-container matColumnDef="address">
             <th mat-header-cell *matHeaderCellDef>Address</th>
             <td mat-cell *matCellDef="let element">
-                {{ getAccountNickname(element) || element.shortAddress }}
+                <span class="mono">{{ getAccountNickname(element) || element.shortAddress }}</span>
             </td>
         </ng-container>
 
@@ -70,13 +70,6 @@ import * as Colors from '@brightlayer-ui/colors';
             </td>
         </ng-container>
 
-        <ng-container matColumnDef="options">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let element">
-                <app-account-actions [account]="element"></app-account-actions>
-            </td>
-        </ng-container>
-
         <ng-container matColumnDef="incoming">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>In. Tx</th>
             <td mat-cell *matCellDef="let element">
@@ -88,6 +81,13 @@ import * as Colors from '@brightlayer-ui/colors';
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Active</th>
             <td mat-cell *matCellDef="let element">
                 {{ convertUnixToDate(element.lastUpdatedTimestamp) }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="options">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element" style="padding-left: 0; padding-right: 8px">
+                <app-account-actions [account]="element"></app-account-actions>
             </td>
         </ng-container>
 
@@ -107,6 +107,7 @@ export class AccountTableComponent implements OnInit {
     dataSource;
 
     displayedColumns: string[];
+    noData = '--';
     @ViewChild('sortMonitored') sortMonitored: MatSort;
 
     @Input() accounts: AccountOverview[];
@@ -114,7 +115,9 @@ export class AccountTableComponent implements OnInit {
     set tableSize(size: number) {
         if (size > 0) {
             this.dataSource = new MatTableDataSource(this.accounts);
-            this.dataSource.sort = this.sortMonitored;
+            setTimeout(() => {
+                this.dataSource.sort = this.sortMonitored;
+            });
         }
     }
 
@@ -144,7 +147,7 @@ export class AccountTableComponent implements OnInit {
 
     private _setDisplayedColumns(): void {
         if (this.vp.sm) {
-            this.displayedColumns = ['index', 'address', 'balance', 'options'];
+            this.displayedColumns = ['address', 'balance', 'options'];
         } else if (this.vp.md) {
             this.displayedColumns = ['monKey', 'index', 'address', 'balance', 'blockCount', 'options'];
         } else {
@@ -174,7 +177,7 @@ export class AccountTableComponent implements OnInit {
     }
 
     formatRepresentative(rep: string): string {
-        return this._appStateService.knownAccounts.get(rep) || this._util.shortenAddress(rep);
+        return this._appStateService.knownAccounts.get(rep) || this._util.shortenAddress(rep) || this.noData;
     }
 
     getAccountNickname(account: AccountOverview): string {
@@ -183,7 +186,7 @@ export class AccountTableComponent implements OnInit {
 
     convertUnixToDate(timestamp: string): string {
         if (!timestamp) {
-            return 'NA';
+            return this.noData;
         }
 
         const ts = Number(timestamp);

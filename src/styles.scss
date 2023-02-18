@@ -53,7 +53,7 @@ body,
     }
 
     .app-body-content {
-        max-width: 1050px;
+        max-width: 1450px;
         width: 100%;
         display: flex;
         flex-direction: column;
@@ -130,6 +130,7 @@ input[type='number'] {
     display: flex;
     padding: 0 24px !important;
     justify-content: space-between;
+    min-height: 64px;
     height: 64px;
     position: sticky;
     position: -webkit-sticky;
@@ -138,5 +139,6 @@ input[type='number'] {
     &.sm {
         padding: 0 8px !important;
         height: 40px;
+        min-height: 40px;
     }
 }

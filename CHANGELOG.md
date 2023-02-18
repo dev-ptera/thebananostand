@@ -1,5 +1,11 @@
 # Change Log
 
+## v3.5.1 (Feb 17, 2023)
+
+### Fixed
+
+-   Dashboard preference persisted in Localstorage.
+
 ## v3.5.0 (Feb 17, 2023)
 
 ### Added
