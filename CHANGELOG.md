@@ -4,8 +4,8 @@
 
 ### Changed 
 
-- Made dashboard 1450px wide.
-- 
+-   Made dashboard 1450px wide.
+
 ### Fixed
 
 -   Dashboard preference persisted in Localstorage.
