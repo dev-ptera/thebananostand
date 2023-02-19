@@ -1,5 +1,15 @@
 # Change Log
 
+## v3.5.1 (Feb 19, 2023)
+
+### Changed 
+
+-   Made dashboard 1350px wide.
+
+### Fixed
+
+-   Dashboard preference persisted in Localstorage.
+
 ## v3.5.0 (Feb 17, 2023)
 
 ### Added

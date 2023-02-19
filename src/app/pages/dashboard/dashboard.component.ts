@@ -13,6 +13,7 @@ import { LocalStorageWallet } from '@app/services/wallet-storage.service';
 import {
     ADD_NEXT_ACCOUNT_BY_INDEX,
     CHANGE_ACTIVE_WALLET,
+    CHANGE_PREFERRED_DASHBOARD_VIEW,
     REFRESH_DASHBOARD_ACCOUNTS,
     REMOVE_ACTIVE_WALLET,
     REQUEST_BACKUP_SECRET,
@@ -45,8 +46,6 @@ export class DashboardComponent {
     bottomSheetOpenDelayMs = 250;
 
     totalBalance = '--';
-
-    showTableView = false;
 
     constructor(
         public vp: ViewportService,
@@ -189,5 +188,14 @@ export class DashboardComponent {
                 return true;
             }
         }
+    }
+
+    get showTableView(): boolean {
+        return this.store.preferredDashboardView === 'table';
+    }
+
+    toggleDashboardDisplay(): void {
+        CHANGE_PREFERRED_DASHBOARD_VIEW.next(this.showTableView ? 'card' : 'table');
+        this.accountActionsOverlayOpen = false;
     }
 }

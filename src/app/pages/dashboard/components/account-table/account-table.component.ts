@@ -41,7 +41,7 @@ import * as Colors from '@brightlayer-ui/colors';
         <ng-container matColumnDef="address">
             <th mat-header-cell *matHeaderCellDef>Address</th>
             <td mat-cell *matCellDef="let element">
-                {{ getAccountNickname(element) || element.shortAddress }}
+                <span>{{ getAccountNickname(element) || element.shortAddress }}</span>
             </td>
         </ng-container>
 
@@ -50,7 +50,23 @@ import * as Colors from '@brightlayer-ui/colors';
                 Balance BAN
             </th>
             <td mat-cell *matCellDef="let element">
-                {{ element.formattedBalance }}
+                <div style="display: flex; align-items: center; flex-wrap: wrap">
+                    <div style="margin-right: 16px">{{ element.formattedBalance }}</div>
+                    <div
+                        class="hint mat-caption"
+                        *ngIf="!vp.sm && element.balance !== 0"
+                        style="white-space: nowrap; line-height: 1rem"
+                    >
+                        {{
+                            element.balance
+                                | conversionFromBAN
+                                    : store.localCurrencyConversionRate
+                                    : store.priceDataUSD.bananoPriceUsd
+                                | number
+                        }}
+                        {{ store.localCurrencyCode }}
+                    </div>
+                </div>
             </td>
         </ng-container>
 
@@ -70,13 +86,6 @@ import * as Colors from '@brightlayer-ui/colors';
             </td>
         </ng-container>
 
-        <ng-container matColumnDef="options">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let element">
-                <app-account-actions [account]="element"></app-account-actions>
-            </td>
-        </ng-container>
-
         <ng-container matColumnDef="incoming">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>In. Tx</th>
             <td mat-cell *matCellDef="let element">
@@ -88,6 +97,13 @@ import * as Colors from '@brightlayer-ui/colors';
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Active</th>
             <td mat-cell *matCellDef="let element">
                 {{ convertUnixToDate(element.lastUpdatedTimestamp) }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="options">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element" style="padding-left: 0" [style.paddingRight.px]="vp.sm ? 0 : 8">
+                <app-account-actions [account]="element"></app-account-actions>
             </td>
         </ng-container>
 
@@ -107,6 +123,7 @@ export class AccountTableComponent implements OnInit {
     dataSource;
 
     displayedColumns: string[];
+    noData = '--';
     @ViewChild('sortMonitored') sortMonitored: MatSort;
 
     @Input() accounts: AccountOverview[];
@@ -114,7 +131,9 @@ export class AccountTableComponent implements OnInit {
     set tableSize(size: number) {
         if (size > 0) {
             this.dataSource = new MatTableDataSource(this.accounts);
-            this.dataSource.sort = this.sortMonitored;
+            setTimeout(() => {
+                this.dataSource.sort = this.sortMonitored;
+            });
         }
     }
 
@@ -144,7 +163,7 @@ export class AccountTableComponent implements OnInit {
 
     private _setDisplayedColumns(): void {
         if (this.vp.sm) {
-            this.displayedColumns = ['index', 'address', 'balance', 'options'];
+            this.displayedColumns = ['address', 'balance', 'options'];
         } else if (this.vp.md) {
             this.displayedColumns = ['monKey', 'index', 'address', 'balance', 'blockCount', 'options'];
         } else {
@@ -163,7 +182,7 @@ export class AccountTableComponent implements OnInit {
     }
 
     getItemBackgroundColor(even: boolean): string {
-        if (even || this.vp.sm) {
+        if (even) {
             return this._themeService.isDark() ? this.colors.darkBlack[300] : this.colors.white[100];
         }
         return this._themeService.isDark() ? this.colors.darkBlack[200] : this.colors.white[50];
@@ -174,16 +193,20 @@ export class AccountTableComponent implements OnInit {
     }
 
     formatRepresentative(rep: string): string {
-        return this._appStateService.knownAccounts.get(rep) || this._util.shortenAddress(rep);
+        return this._appStateService.knownAccounts.get(rep) || this._util.shortenAddress(rep) || this.noData;
     }
 
     getAccountNickname(account: AccountOverview): string {
         return this.store.addressBook.get(account.fullAddress);
     }
 
+    showRepresentativeOffline(account: AccountOverview): boolean {
+        return !this._accountService.isRepOnline(account.fullAddress);
+    }
+
     convertUnixToDate(timestamp: string): string {
         if (!timestamp) {
-            return 'NA';
+            return this.noData;
         }
 
         const ts = Number(timestamp);

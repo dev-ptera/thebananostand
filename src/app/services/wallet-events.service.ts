@@ -40,6 +40,9 @@ export const CHANGE_PASSWORD_SUCCESS = new Subject<void>();
 /** An issue was encountered while attempting to change password. */
 export const CHANGE_PASSWORD_ERROR = new Subject<{ error: string }>();
 
+/** User wants to change how the dashboard is displayed. */
+export const CHANGE_PREFERRED_DASHBOARD_VIEW = new Subject<'table' | 'card'>();
+
 /** User has copied account address to clipboard. */
 export const COPY_ADDRESS_TO_CLIPBOARD = new Subject<{ address: string }>();
 
@@ -133,6 +136,7 @@ export class WalletEventsService {
             addressBook: this._walletStorageService.readAddressBookFromLocalStorage(),
             hasSecret: this._walletStorageService.hasSecretWalletSaved(),
             localStorageWallets: this._walletStorageService.readWalletsFromLocalStorage(),
+            preferredDashboardView: this._walletStorageService.readPreferredDashboardViewFromLocalStorage(),
         });
 
         this._appStateService.store.subscribe((store) => {
@@ -204,6 +208,10 @@ export class WalletEventsService {
                 .catch((err: Error) => {
                     CHANGE_PASSWORD_ERROR.next({ error: err.message });
                 });
+        });
+
+        CHANGE_PREFERRED_DASHBOARD_VIEW.subscribe((preferredDashboardView) => {
+            this._dispatch({ preferredDashboardView });
         });
 
         COPY_ADDRESS_TO_CLIPBOARD.subscribe((data: { address: string }) => {
@@ -373,8 +381,15 @@ export class WalletEventsService {
         this._appStateService.store.next(Object.assign(this._appStateService.store.getValue(), newData));
 
         /* appLocalStorage events are only emitted when we need to write to localstorage; see `wallet-storage.service`. */
-        if (newData.activeWallet || newData.localStorageWallets || newData.addressBook || newData.localCurrencyCode) {
+        if (
+            newData.activeWallet ||
+            newData.localStorageWallets ||
+            newData.addressBook ||
+            newData.localCurrencyCode ||
+            newData.preferredDashboardView
+        ) {
             this._appStateService.appLocalStorage.next({
+                preferredDashboardView: newData.preferredDashboardView,
                 localizationCurrencyCode: newData.localCurrencyCode,
                 addressBook: newData.addressBook,
                 activeWallet: newData.activeWallet,
