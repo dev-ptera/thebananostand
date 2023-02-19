@@ -41,7 +41,7 @@ import * as Colors from '@brightlayer-ui/colors';
         <ng-container matColumnDef="address">
             <th mat-header-cell *matHeaderCellDef>Address</th>
             <td mat-cell *matCellDef="let element">
-                <span class="mono">{{ getAccountNickname(element) || element.shortAddress }}</span>
+                <span>{{ getAccountNickname(element) || element.shortAddress }}</span>
             </td>
         </ng-container>
 
@@ -50,9 +50,13 @@ import * as Colors from '@brightlayer-ui/colors';
                 Balance BAN
             </th>
             <td mat-cell *matCellDef="let element">
-                <div style="display: flex; align-items: flex-start; flex-direction: column; justify-content: center">
-                    <div>{{ element.formattedBalance }}</div>
-                    <div class="hint mat-caption" *ngIf="element.balance !== 0" style="margin-bottom: -4px">
+                <div style="display: flex; align-items: center; flex-wrap: wrap">
+                    <div style="margin-right: 16px">{{ element.formattedBalance }}</div>
+                    <div
+                        class="hint mat-caption"
+                        *ngIf="!vp.sm && element.balance !== 0"
+                        style="white-space: nowrap; line-height: 1rem"
+                    >
                         {{
                             element.balance
                                 | conversionFromBAN
