@@ -196,5 +196,6 @@ export class DashboardComponent {
 
     toggleDashboardDisplay(): void {
         CHANGE_PREFERRED_DASHBOARD_VIEW.next(this.showTableView ? 'card' : 'table');
+        this.accountActionsOverlayOpen = false;
     }
 }

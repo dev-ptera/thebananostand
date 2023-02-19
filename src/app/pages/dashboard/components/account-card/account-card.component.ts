@@ -12,18 +12,6 @@ import { AppStateService, AppStore } from '@app/services/app-state.service';
     styleUrls: ['account-card.component.scss'],
     encapsulation: ViewEncapsulation.None,
     template: `
-        <!-- Indicates an account has not yet received any transactions -->
-        <ng-template #unopenedAccountTag>
-            <list-item-tag
-                responsive
-                label="Unopened Account"
-                class="unopened-account-tag"
-                [fontColor]="colors.black[500]"
-                [backgroundColor]="colors.gray[100]"
-            >
-            </list-item-tag>
-        </ng-template>
-
         <!-- Statuses that are shown beneath an address.  Includes "Rep Offline" & "Has Receivable" information. -->
         <ng-template #statusBadges let-account="account">
             <div
@@ -37,16 +25,16 @@ import { AppStateService, AppStore } from '@app/services/app-state.service';
                     label="Has Receivable"
                     class="receivable-tag"
                     style="margin-right: 16px"
-                    [backgroundColor]="colors.orange[500]"
-                    [fontColor]="colors.white[50]"
+                    [backgroundColor]="colors.orange[100]"
+                    [fontColor]="colors.black[500]"
                 >
                 </list-item-tag>
                 <list-item-tag
                     *ngIf="showRepresentativeOffline(account.representative)"
                     label="Representative Offline"
                     class="rep-offline-tag"
-                    [backgroundColor]="colors.red[500]"
-                    [fontColor]="colors.white[50]"
+                    [backgroundColor]="colors.red[100]"
+                    [fontColor]="colors.black[500]"
                     style="margin-right: 16px"
                 ></list-item-tag>
             </div>
@@ -64,10 +52,10 @@ import { AppStateService, AppStore } from '@app/services/app-state.service';
                 <div style="display: flex; align-items: center; height: 100%">
                     <div style="display: flex; justify-content: center; flex: 1; flex-direction: column; height: 100%">
                         <div style="display: flex; align-items: center">
-                            <div [style.width.px]="vp.sm ? 80 : 124" style="aspect-ratio: 1 / 1">
+                            <div [style.width.px]="vp.sm ? 80 : 124" style="aspect-ratio: 1 / 1;">
                                 <img [src]="getMonkeyUrl(account.fullAddress)" loading="lazy" style="height: 100%" />
                             </div>
-                            <div [style.paddingLeft.px]="vp.sm ? 8 : 24" style="padding-top: 8px; padding-bottom: 8px">
+                            <div [style.paddingLeft.px]="vp.sm ? 8 : 8" style="padding-top: 8px; padding-bottom: 8px">
                                 <div class="mono" [class.mat-body-2]="vp.sm" [class.mat-body-1]="!vp.sm">
                                     {{ account.shortAddress }}
                                 </div>
@@ -173,6 +161,7 @@ export class AccountCardComponent {
     showRepresentativeOffline(address: string): boolean {
         return !this._accountService.isRepOnline(address);
     }
+
     formatRepresentative(rep: string): string {
         return this._appStateService.knownAccounts.get(rep) || this._util.shortenAddress(rep);
     }

@@ -122,14 +122,18 @@
 <!-- Account-level actions -->
 <ng-template #accountActions>
     <ng-template #accountActionsMenu>
-        <button mat-menu-item (click)="refreshDashboard()" data-cy="refresh-dashboard-button">
-            <mat-icon>refresh</mat-icon>Refresh Dashboard
-        </button>
         <button mat-menu-item (click)="addAccount()" data-cy="add-next-account-button">
             <mat-icon>add_circle_outline</mat-icon>Add Next Account
         </button>
         <button mat-menu-item (click)="addAccountFromIndex()" data-cy="add-specific-account-button">
             <mat-icon>pin</mat-icon>Add Specific Account
+        </button>
+        <button mat-menu-item (click)="refreshDashboard()" data-cy="refresh-dashboard-button">
+            <mat-icon>refresh</mat-icon>Refresh Dashboard
+        </button>
+        <button mat-menu-item (click)="toggleDashboardDisplay()">
+            <mat-icon>{{ showTableView ? 'dashboard' : 'toc' }}</mat-icon>
+            {{ showTableView ? 'Show Dashboard View' : 'Show Table View' }}
         </button>
     </ng-template>
     <ng-template #accountActionsDesktopTrigger>
@@ -278,16 +282,18 @@
                 <mat-divider *ngIf="!vp.sm"></mat-divider>
                 <ng-template [ngTemplateOutlet]="noAccountsEmptyState"></ng-template>
 
-                <app-account-card
-                    *ngIf="vp.sm || (!showTableView && store.accounts.length > 0)"
-                    [accounts]="store.accounts"
-                    [sortDirection]="sortDirection"
-                ></app-account-card>
-                <app-account-table
-                    *ngIf="!vp.sm && showTableView && store.accounts.length > 0"
-                    [accounts]="store.accounts"
-                    [tableSize]="store.accounts.length"
-                ></app-account-table>
+                <ng-container *ngIf="store.accounts.length > 0">
+                    <app-account-card
+                        *ngIf="!showTableView"
+                        [accounts]="store.accounts"
+                        [sortDirection]="sortDirection"
+                    ></app-account-card>
+                    <app-account-table
+                        *ngIf="showTableView"
+                        [accounts]="store.accounts"
+                        [tableSize]="store.accounts.length"
+                    ></app-account-table>
+                </ng-container>
             </mat-card>
         </div>
     </div>

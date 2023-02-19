@@ -50,7 +50,19 @@ import * as Colors from '@brightlayer-ui/colors';
                 Balance BAN
             </th>
             <td mat-cell *matCellDef="let element">
-                {{ element.formattedBalance }}
+                <div style="display: flex; align-items: flex-start; flex-direction: column; justify-content: center">
+                    <div>{{ element.formattedBalance }}</div>
+                    <div class="hint mat-caption" *ngIf="element.balance !== 0" style="margin-bottom: -2px">
+                        {{
+                            element.balance
+                                | conversionFromBAN
+                                    : store.localCurrencyConversionRate
+                                    : store.priceDataUSD.bananoPriceUsd
+                                | number
+                        }}
+                        {{ store.localCurrencyCode }}
+                    </div>
+                </div>
             </td>
         </ng-container>
 
@@ -86,7 +98,7 @@ import * as Colors from '@brightlayer-ui/colors';
 
         <ng-container matColumnDef="options">
             <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let element" style="padding-left: 0; padding-right: 8px">
+            <td mat-cell *matCellDef="let element" style="padding-left: 0" [style.paddingRight.px]="vp.sm ? 0 : 8">
                 <app-account-actions [account]="element"></app-account-actions>
             </td>
         </ng-container>
@@ -166,7 +178,7 @@ export class AccountTableComponent implements OnInit {
     }
 
     getItemBackgroundColor(even: boolean): string {
-        if (even || this.vp.sm) {
+        if (even) {
             return this._themeService.isDark() ? this.colors.darkBlack[300] : this.colors.white[100];
         }
         return this._themeService.isDark() ? this.colors.darkBlack[200] : this.colors.white[50];
@@ -182,6 +194,10 @@ export class AccountTableComponent implements OnInit {
 
     getAccountNickname(account: AccountOverview): string {
         return this.store.addressBook.get(account.fullAddress);
+    }
+
+    showRepresentativeOffline(account: AccountOverview): boolean {
+        return !this._accountService.isRepOnline(account.fullAddress);
     }
 
     convertUnixToDate(timestamp: string): string {
