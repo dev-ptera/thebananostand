@@ -52,7 +52,7 @@ import * as Colors from '@brightlayer-ui/colors';
             <td mat-cell *matCellDef="let element">
                 <div style="display: flex; align-items: flex-start; flex-direction: column; justify-content: center">
                     <div>{{ element.formattedBalance }}</div>
-                    <div class="hint mat-caption" *ngIf="element.balance !== 0" style="margin-bottom: -2px">
+                    <div class="hint mat-caption" *ngIf="element.balance !== 0" style="margin-bottom: -4px">
                         {{
                             element.balance
                                 | conversionFromBAN
