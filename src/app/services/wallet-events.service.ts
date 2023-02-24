@@ -52,6 +52,9 @@ export const COPY_MNEMONIC_TO_CLIPBOARD = new Subject<{ mnemonic: string; openSn
 /** Backup active wallet seed to clipboard  */
 export const COPY_SEED_TO_CLIPBOARD = new Subject<{ seed: string; openSnackbar: boolean }>();
 
+/** User has adjusted minimum threshold. */
+export const EDIT_MINIMUM_INCOMING_THRESHOLD = new Subject<number>();
+
 /** User ran into an issue connection their ledger. */
 export const EMIT_LEDGER_CONNECTION_ERROR = new Subject<{ error: string }>();
 
@@ -132,6 +135,7 @@ export class WalletEventsService {
         // _dispatch initial app state
         this._dispatch({
             activeWallet: undefined,
+            minimumBananoThreshold: this._walletStorageService.readMinimumBananoIncomingThreshold(),
             localCurrencyCode: this._walletStorageService.readLocalizationCurrencyFromLocalStorage(),
             addressBook: this._walletStorageService.readAddressBookFromLocalStorage(),
             hasSecret: this._walletStorageService.hasSecretWalletSaved(),
@@ -235,6 +239,10 @@ export class WalletEventsService {
             if (data.openSnackbar) {
                 this._snackbar.open('Wallet Seed Copied!', SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION });
             }
+        });
+
+        EDIT_MINIMUM_INCOMING_THRESHOLD.subscribe((minimumBananoThreshold) => {
+            this._dispatch({ minimumBananoThreshold: minimumBananoThreshold || 0 });
         });
 
         IMPORT_NEW_WALLET_FROM_SECRET.subscribe(async (data): Promise<void> => {
@@ -386,9 +394,11 @@ export class WalletEventsService {
             newData.localStorageWallets ||
             newData.addressBook ||
             newData.localCurrencyCode ||
-            newData.preferredDashboardView
+            newData.preferredDashboardView ||
+            newData.minimumBananoThreshold !== undefined // Can be 0.
         ) {
             this._appStateService.appLocalStorage.next({
+                minimumBananoThreshold: newData.minimumBananoThreshold,
                 preferredDashboardView: newData.preferredDashboardView,
                 localizationCurrencyCode: newData.localCurrencyCode,
                 addressBook: newData.addressBook,

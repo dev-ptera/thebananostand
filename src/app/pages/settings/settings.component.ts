@@ -7,7 +7,11 @@ import { ViewportService } from '@app/services/viewport.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { Router } from '@angular/router';
-import { REMOVE_ALL_WALLET_DATA, SELECT_LOCALIZATION_CURRENCY } from '@app/services/wallet-events.service';
+import {
+    EDIT_MINIMUM_INCOMING_THRESHOLD,
+    REMOVE_ALL_WALLET_DATA,
+    SELECT_LOCALIZATION_CURRENCY,
+} from '@app/services/wallet-events.service';
 import { MatRadioChange } from '@angular/material/radio';
 import { CurrencyConversionService } from '@app/services/currency-conversion.service';
 import { AppStateService } from '@app/services/app-state.service';
@@ -147,9 +151,9 @@ export class DatasourceAvailablePipe implements PipeTransform {
                     </mat-card>
 
                     <mat-card appearance="outlined" style="margin-bottom: 32px">
-                        <div class="mat-headline-6">Localization</div>
+                        <div class="mat-headline-6">Wallet Settings</div>
                         <mat-divider></mat-divider>
-                        <div class="mat-overline" style="margin-top: 16px">Local Currency</div>
+                        <div class="mat-overline" style="margin-top: 16px">Local Currency Display</div>
                         <div class="mat-body-2">The currency used to display account balances and send amounts.</div>
                         <mat-form-field
                             appearance="fill"
@@ -171,6 +175,21 @@ export class DatasourceAvailablePipe implements PipeTransform {
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
+                        <mat-divider></mat-divider>
+                        <div class="mat-overline" style="margin-top: 16px">Minimum Incoming Transaction Limit</div>
+                        <div class="mat-body-2" style="margin-bottom: 24px">
+                            Incoming transactions under this value will be ignored.
+                        </div>
+                        <mat-form-field style="max-width: 320px">
+                            <mat-label>Minimum BAN threshold</mat-label>
+                            <input
+                                matInput
+                                placeholder="example: 0.1"
+                                [(ngModel)]="minimumThreshold"
+                                (ngModelChange)="updateMinimumIncoming()"
+                                type="number"
+                            />
+                        </mat-form-field>
                     </mat-card>
                 </div>
             </div>
@@ -182,6 +201,7 @@ export class SettingsPageComponent implements OnInit {
     selectedRpcSource: any;
     selectedSpyglassApi: any;
     selectedCurrencyCode: string;
+    minimumThreshold: number;
 
     constructor(
         public vp: ViewportService,
@@ -201,6 +221,7 @@ export class SettingsPageComponent implements OnInit {
     async ngOnInit(): Promise<void> {
         this.selectedSpyglassApi = await this.datasourceService.getSpyglassApiSource();
         this.selectedRpcSource = await this.datasourceService.getRpcSource();
+        this.minimumThreshold = this._appStateService.store.getValue().minimumBananoThreshold;
     }
 
     back(): void {
@@ -230,5 +251,9 @@ export class SettingsPageComponent implements OnInit {
 
     changeCurrencySelect(event: MatSelectChange): void {
         SELECT_LOCALIZATION_CURRENCY.next(event.value);
+    }
+
+    updateMinimumIncoming(): void {
+        EDIT_MINIMUM_INCOMING_THRESHOLD.next(this.minimumThreshold);
     }
 }

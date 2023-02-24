@@ -82,7 +82,15 @@ import * as Colors from '@brightlayer-ui/colors';
         <ng-container matColumnDef="representative">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Representative</th>
             <td mat-cell *matCellDef="let element">
-                {{ formatRepresentative(element.representative) }}
+                <div style="display: flex; align-items: center">
+                    <div>{{ formatRepresentative(element.representative) }}</div>
+                    <mat-icon
+                        *ngIf="showRepresentativeOffline(element)"
+                        color="warn"
+                        style="font-size: 14px; height: 14px; margin-left: 8px"
+                        >error_outline</mat-icon
+                    >
+                </div>
             </td>
         </ng-container>
 
@@ -201,7 +209,7 @@ export class AccountTableComponent implements OnInit {
     }
 
     showRepresentativeOffline(account: AccountOverview): boolean {
-        return !this._accountService.isRepOnline(account.fullAddress);
+        return !this._accountService.isRepOnline(account.representative);
     }
 
     convertUnixToDate(timestamp: string): string {
