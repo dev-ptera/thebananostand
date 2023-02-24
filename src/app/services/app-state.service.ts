@@ -25,6 +25,8 @@ export type AppStore = {
     localCurrencyConversionRate: number;
     /** The list of wallets stored in localstorage. These use a secret. */
     localStorageWallets: LocalStorageWallet[];
+    /** Minimum Banano amount to receive before it appears as a incoming transaction. */
+    minimumBananoThreshold: number;
     /** Banano Price, Bitcoin Price in USD */
     priceDataUSD: PriceData;
     /** Aggregate balance of all loaded accounts. */
@@ -58,6 +60,7 @@ export class AppStateService {
             bitcoinPriceUsd: undefined,
             bananoPriceUsd: undefined,
         },
+        minimumBananoThreshold: 0,
         localStorageWallets: [],
         activeWallet: undefined,
         totalBalance: 0,
@@ -66,6 +69,7 @@ export class AppStateService {
     });
 
     appLocalStorage = new Subject<{
+        minimumBananoThreshold: number;
         localizationCurrencyCode: string;
         addressBook: Map<string, string>;
         activeWallet: LocalStorageWallet;

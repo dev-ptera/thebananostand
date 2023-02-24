@@ -1,5 +1,12 @@
 # Change Log
 
+## v3.6.0 (Feb 24, 2023)
+
+### Added
+
+-   Added minimum receivable Banano threshold on Settings page. Users can now ignore small incoming transactions. Defaults to 0.
+-   Added representative offline indicator on dashboard table view. 
+
 ## v3.5.1 (Feb 19, 2023)
 
 ### Changed 

@@ -19,6 +19,7 @@ const ENCRYPTED_WALLETS = 'bananostand_encryptedWallets';
 const ADDRESS_BOOK = 'bananostand_addressBook';
 const LEDGER_STORED_INDEXES = 'bananostand_ledgerIndexes';
 const PREFERRED_DASHBOARD_VIEW = 'bananostand_dashboardView';
+const MINIMUM_INCOMING_THRESHOLD_BAN = 'bananostand_minimumIncomingBananoThreshold';
 
 @Injectable({
     providedIn: 'root',
@@ -37,6 +38,10 @@ export class WalletStorageService {
         // Listen for the updated store and write to localstorage accordingly.
         // `store` & `localStorage` will always match.
         this._appStateService.appLocalStorage.subscribe((walletData) => {
+            if (walletData.minimumBananoThreshold !== undefined) {
+                window.localStorage.setItem(MINIMUM_INCOMING_THRESHOLD_BAN, String(walletData.minimumBananoThreshold));
+            }
+
             if (walletData.preferredDashboardView) {
                 window.localStorage.setItem(PREFERRED_DASHBOARD_VIEW, walletData.preferredDashboardView);
             }
@@ -85,6 +90,14 @@ export class WalletStorageService {
             map.set(entry.account, entry.name);
         });
         return map;
+    }
+
+    readMinimumBananoIncomingThreshold(): number {
+        const threshold = window.localStorage.getItem(MINIMUM_INCOMING_THRESHOLD_BAN);
+        if (threshold) {
+            return Number(threshold);
+        }
+        return 0;
     }
 
     readPreferredDashboardViewFromLocalStorage(): 'table' | 'card' {
