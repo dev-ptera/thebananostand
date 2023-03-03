@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import { UtilService } from '@app/services/util.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewportService } from '@app/services/viewport.service';
@@ -26,6 +26,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ReceiveBottomSheetComponent } from '@app/overlays/bottom-sheet/receive/receive-bottom-sheet.component';
 import { ReceiveDialogComponent } from '@app/overlays/dialogs/receive/receive-dialog.component';
 import { ReceiveOverlayData } from '@app/overlays/actions/receive/receive.component';
+import {
+    ApiRequestBottomSheetComponent
+} from "@app/overlays/bottom-sheet/api-request/api-request-bottom-sheet.component";
+import {ApiRequestDialogComponent} from "@app/overlays/dialogs/api-request/api-request-dialog.component";
 
 @UntilDestroy()
 @Component({
@@ -49,6 +53,7 @@ export class DashboardComponent {
 
     constructor(
         public vp: ViewportService,
+        private readonly _route: ActivatedRoute,
         private readonly _router: Router,
         private readonly _dialog: MatDialog,
         private readonly _util: UtilService,
@@ -64,6 +69,21 @@ export class DashboardComponent {
                 this.totalBalance = this._util.numberWithCommas(store.totalBalance);
             }
         });
+        this._route.queryParams.subscribe((params) => this._checkForApiRequestViaQueryParams(params));
+    }
+
+    private _checkForApiRequestViaQueryParams(params: Params): void {
+        const hasApiRequest = params['request'];
+        if (!hasApiRequest) {
+            return;
+        }
+        if (this.vp.sm) {
+            setTimeout(() => {
+                this._sheet.open(ApiRequestBottomSheetComponent);
+            }, this.bottomSheetOpenDelayMs);
+        } else {
+            this._dialog.open(ApiRequestDialogComponent);
+        }
     }
 
     openEnterSeedOverlay(): void {
