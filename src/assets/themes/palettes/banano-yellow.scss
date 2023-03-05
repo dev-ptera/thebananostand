@@ -49,6 +49,10 @@ $banano-yellow-theme: mat.define-dark-theme((
         --text-contrast:  #{map-get(blui.$blui-white, 500)};
     }
 
+    .mat-mdc-table {
+        background: var(--card);
+    }
+
     .mat-mdc-card {
         --mdc-elevated-card-container-color: var(--card);
         box-shadow: none!important;

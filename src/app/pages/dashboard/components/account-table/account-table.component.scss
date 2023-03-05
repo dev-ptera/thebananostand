@@ -4,4 +4,12 @@
     * {
         @include fade.fade();
     }
+    tr * {
+        transition: color 100ms;
+    }
+    tr:hover {
+        * {
+            color: var(--primary);
+        }
+    }
 }
