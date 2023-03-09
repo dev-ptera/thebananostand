@@ -2,10 +2,6 @@
 
 ## v3.6.1 (Mar 5, 2023)
 
-### Added
-
--  Hover row dashboard table effect.
-
 ### Changed
 
 -  Changed default theme to Green.
