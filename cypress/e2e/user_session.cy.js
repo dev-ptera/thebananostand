@@ -12,7 +12,7 @@ describe("User Session", () => {
 
     beforeEach(() => {
         Cypress.config('defaultCommandTimeout', 20000);
-        cy.clearLocalStorage();
+        window.localStorage.setItem('bananostand_dashboardView', 'card');
         reload();
     });
 
