@@ -1,12 +1,11 @@
-/// <reference types="Cypress" />
-
-import { LoginRobot } from '../robots/login.robot';
-import { DashboardRobot } from '../robots/dashboard.robot';
-import '../support/commands';
-import { SettingsRobot } from '../robots/settings.robot';
-import { ChangePasswordRobot } from '../robots/change-password.robot';
-import { HomeRobot } from '../robots/home.robot';
-import { GlobalRobot } from '../robots/global.robot';
+import {
+    ChangePasswordRobot,
+    DashboardRobot,
+    GlobalRobot,
+    HomeRobot,
+    LoginRobot,
+    SettingsRobot,
+} from '../robots';
 
 describe('User Session', () => {
     const LOW_FUND_SEED =
