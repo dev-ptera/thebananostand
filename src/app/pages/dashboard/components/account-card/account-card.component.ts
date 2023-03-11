@@ -43,7 +43,12 @@ import { AppStateService, AppStore } from '@app/services/app-state.service';
         <div class="account-card-container" responsive data-cy="dashboard-account-cards-container">
             <mat-card
                 data-cy="dashboard-account-card"
-                *ngFor="let account of accounts | sort : sortDirection : accounts.length; trackBy: markUniqueAccount"
+                *ngFor="
+                    let i = index;
+                    let account;
+                    of: accounts | sort : sortDirection : accounts.length;
+                    trackBy: markUniqueAccount
+                "
                 class="account-card divider-border"
             >
                 <div data-cy="account-number" class="card-account-number mat-caption">
@@ -118,7 +123,7 @@ import { AppStateService, AppStore } from '@app/services/app-state.service';
                         </div>
                         <mat-divider> </mat-divider>
                         <div
-                            data-cy="dashboard-account-card-footer"
+                            [attr.data-cy]="'dashboard-account-card-footer-' + i"
                             class="card-footer"
                             (click)="openAccount(account.fullAddress)"
                         >

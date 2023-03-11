@@ -1,4 +1,3 @@
-declare const cy;
 export class ChangePasswordRobot {
     checkOverlayNotExists(): ChangePasswordRobot {
         cy.get('.change-password-overlay').should('not.exist');

@@ -1,5 +1,3 @@
-declare const cy;
-
 export class HomeRobot {
     clickEnterSecret(): HomeRobot {
         cy.get('[data-cy=enter-secret]').click();

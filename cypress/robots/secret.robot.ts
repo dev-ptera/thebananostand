@@ -1,5 +1,3 @@
-declare const cy;
-
 export class SecretRobot {
     enterSecret(secret: string): SecretRobot {
         cy.get('[data-cy=secret-input]').type(secret);

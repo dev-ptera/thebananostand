@@ -1,5 +1,3 @@
-declare const cy;
-
 export class DashboardRobot {
     checkDashboardExists(): DashboardRobot {
         cy.get('[data-cy=dashboard-wrapper]').should('exist');
@@ -20,6 +18,13 @@ export class DashboardRobot {
         cy.get('[data-cy=remove-wallet-button]').trigger('mousedown', {
             button: 0,
         });
+        return this;
+    }
+
+    clickAccountNumber(i: number): DashboardRobot {
+        cy.get('[data-cy=dashboard-account-cards-container]')
+            .find(`[data-cy=dashboard-account-card-footer-${i}]`)
+            .click();
         return this;
     }
 

@@ -1,4 +1,3 @@
-declare const cy, expect;
 export class GlobalRobot {
     encryptedKey = 'bananostand_encryptedWallets';
 
