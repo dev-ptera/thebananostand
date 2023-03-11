@@ -11,7 +11,36 @@
 //
 //
 // -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
+import { SecretRobot } from '../robots/secret.robot';
+import { HomeRobot } from '../robots/home.robot';
+import { DashboardRobot } from '../robots/dashboard.robot';
+
+declare global {
+    namespace Cypress {
+        interface Chainable {
+            importAccount: (seed, password?) => void;
+            removeWallet: () => void;
+        }
+    }
+}
+
+Cypress.Commands.add(
+    'importAccount' as any,
+    (seed: string, password: string = '') => {
+        new HomeRobot().clickEnterSecret();
+
+        new SecretRobot()
+            .enterSecret(seed)
+            .clickNext()
+            .enterPassword(password)
+            .clickNext();
+    }
+);
+
+Cypress.Commands.add('removeWallet' as any, () => {
+    new DashboardRobot().clickWalletActions().clickRemoveWallet();
+    cy.wait(2000);
+});
 //
 //
 // -- This is a child command --

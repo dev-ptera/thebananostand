@@ -1,14 +1,31 @@
-describe("User Session", () => {
+/// <reference types="Cypress" />
 
-    const LOW_FUND_SEED = '727A5E960F6189BBF196D84A6B7715D0A78DE82AC15BBDB340540076768CDB31';
-    const root = 'http://localhost:4200'
-    const defaultPasswordForTesting = 'SamplePasswordTest123';
+import { LoginRobot } from '../robots/login.robot';
+import { DashboardRobot } from '../robots/dashboard.robot';
+import '../support/commands';
+import { SettingsRobot } from '../robots/settings.robot';
+import { ChangePasswordRobot } from '../robots/change-password.robot';
+import { HomeRobot } from '../robots/home.robot';
+import { GlobalRobot } from '../robots/global.robot';
+
+describe('User Session', () => {
+    const LOW_FUND_SEED =
+        '727A5E960F6189BBF196D84A6B7715D0A78DE82AC15BBDB340540076768CDB31';
+
+    const root = 'http://localhost:4200';
+    const testPassword = 'SamplePasswordTest123';
+    const homeRobot = new HomeRobot();
+    const loginRobot = new LoginRobot();
+    const dashboardRobot = new DashboardRobot();
+    const settingsRobot = new SettingsRobot();
+    const globalRobot = new GlobalRobot();
+    const changePasswordRobot = new ChangePasswordRobot();
 
     const reload = () => {
         cy.intercept(root).as('home');
         cy.visit(root);
         cy.wait('@home'); // once the route resolves, cy.wait will resolve as well
-    }
+    };
 
     beforeEach(() => {
         Cypress.config('defaultCommandTimeout', 20000);
@@ -16,160 +33,120 @@ describe("User Session", () => {
         reload();
     });
 
-    const logInUsingSeedPasswordPair = (password) => {
-        let userPassword = password;
-        if (!password) {
-            userPassword = defaultPasswordForTesting;
-        }
-        cy.get('[data-cy=enter-secret]').click();
-        cy.get('[data-cy=secret-input]').type(LOW_FUND_SEED);
-        cy.get('[data-cy=secret-next]').click();
-        cy.get('[data-cy=password-input]').type(userPassword);
-        cy.get('[data-cy=secret-next]').click();
-        cy.get('[data-cy=secret-next]').should('not.exist');
-        cy.get('[data-cy=dashboard-account-cards-container]').find('[data-cy=dashboard-account-card-footer]').should('have.length', 1);
-    }
-
-    const logInWithoutPassword = (() => {
-        cy.get('[data-cy=enter-secret]').click();
-        cy.get('[data-cy=secret-input]').type(LOW_FUND_SEED);
-        cy.get('[data-cy=secret-next]').click();
-        cy.get('[data-cy=secret-next]').click();
-        cy.get('[data-cy=secret-next]').should('not.exist'); // Waits for the New Seed window to dismiss.
+    it('should import a wallet with just a seed (no password)', () => {
+        cy.importAccount(LOW_FUND_SEED);
+        dashboardRobot.checkDashboardExists().countLoadedAccounts(1);
     });
 
-    it("should login with just a seed (no password)", () => {
-        logInWithoutPassword();
-    });
-
-    /*
-    it("should log a user out on page refresh", () => {
-        logInWithoutPassword();
-        reload();
-        cy.get('[data-cy=login-wrapper]');
-        cy.get('[data-cy=account-unlock-button]').click();
-        cy.get('[data-cy=dashboard-wrapper]');
-    }); */
-
-    it("should login with a seed and password", () => {
+    it('should import a wallet with a seed and password', () => {
         const password = 'UniquePasswordForTestingSpec';
-        logInUsingSeedPasswordPair(password);
+        cy.importAccount(LOW_FUND_SEED, password);
+        dashboardRobot.checkDashboardExists().countLoadedAccounts(1);
+    });
+
+    it('should log a user out on page refresh', () => {
+        cy.importAccount(LOW_FUND_SEED);
         reload();
-        cy.get('[data-cy=login-wrapper]');
-        cy.get('[data-cy=active-wallet-password-input]').type(password);
-        cy.get('[data-cy=account-unlock-button]').click();
-        cy.get('[data-cy=dashboard-wrapper]');
+        loginRobot.checkLoginPageExists();
+        dashboardRobot.checkDashboardNotExists();
     });
 
-    it("should not allow an incorrect password to login", () => {
-        const incorrectPassword = 'SamplePasswordTest123!!'
-        logInUsingSeedPasswordPair();
+    it('should not allow an incorrect password to login', () => {
+        const incorrectPassword = 'SamplePasswordTest123!!';
+        cy.importAccount(LOW_FUND_SEED, testPassword);
         reload();
-        cy.get('[data-cy=login-wrapper]');
-        cy.get('[data-cy=active-wallet-password-input]').type(incorrectPassword);
-        cy.get('[data-cy=account-unlock-button]').click();
-        cy.get('[data-cy=login-wrapper]');
+        loginRobot
+            .checkLoginPageExists()
+            .enterPassword(incorrectPassword)
+            .clickUnlockButton()
+            .checkLoginPageExists();
+
+        dashboardRobot.checkDashboardNotExists();
     });
 
-    const removeWallet = () => {
-        cy.get('[data-cy=wallet-actions-desktop-menu]').click();
-        cy.get('[data-cy=remove-wallet-button]').trigger('mousedown', { button: 0 });
-        cy.wait(2000);
-    }
-
-    it("should clear a user's encrypted secret", () => {
-        logInUsingSeedPasswordPair();
-        cy.window().then((window) => {
-           void expect(window.localStorage.getItem('bananostand_encryptedWallets')).to.be.ok;
-        });
-        removeWallet();
-        cy.window().then((window) => {
-            void expect(window.localStorage.getItem('bananostand_encryptedWallets')).to.not.be.ok;
-        });
+    it("should clear a user's encrypted secret after removing a wallet", () => {
+        cy.importAccount(LOW_FUND_SEED);
+        globalRobot.checkWalletLocalStorageExists();
+        cy.removeWallet();
+        globalRobot.checkWalletLocalStorageNotExists();
     });
 
-    it("should navigate user back to home screen & display snackbar when secret is cleared", () => {
-        logInUsingSeedPasswordPair();
-
+    it('should navigate user back to home screen & display snackbar when secret is cleared', () => {
+        cy.importAccount(LOW_FUND_SEED);
+        dashboardRobot.checkDashboardExists();
+        cy.removeWallet();
         cy.window().then(() => {
-            cy.get('[data-cy=dashboard-wrapper]').should('exist');
-        });
-        removeWallet();
-        cy.window().then(() => {
-            cy.get('[data-cy=dashboard-wrapper]').should('not.exist');
+            dashboardRobot.checkDashboardNotExists();
             cy.get('.mat-mdc-simple-snack-bar').contains('Removed Wallet');
         });
     });
 
-    it("should log a user out after changing password", () => {
-        logInUsingSeedPasswordPair();
+    it('should log a user out after changing password', () => {
+        cy.importAccount(LOW_FUND_SEED, testPassword);
 
-        cy.window().then(() => {
-            cy.get('[data-cy=dashboard-wrapper]').should('exist');
-            cy.get('[data-cy=settings-button]').click();
-            cy.get('[data-cy=more-settings]').click();
-            cy.get('[data-cy=change-password-button]').click()
-            cy.get('.change-password-overlay').should('exist');
-            const newPassword = 'ABD123XYZ';
-            const overlayRenderDelay = 500;
-            cy.wait(overlayRenderDelay);
-            cy.get('[data-cy=current-password-input]').type(defaultPasswordForTesting);
-            cy.get('[data-cy=new-password-input]').type(newPassword);
-            cy.get('[data-cy=confirm-password-input]').type(newPassword, { force: true }); // TODO: Cypress cannot click this, claims element overlay.
-            cy.get('[data-cy=confirm-change-password-button]').click();
-            cy.get('[data-cy=dashboard-wrapper]').should('not.exist');
-            cy.get('.change-password-overlay').should('not.exist');
-            cy.get('[data-cy=login-wrapper]');
-        })
+        settingsRobot
+            .clickSettings()
+            .clickAdvancedSettingsMenuOption()
+            .clickChangePassword();
+
+        const newPassword = 'ABD123XYZ';
+        changePasswordRobot
+            .checkOverlayExists()
+            .enterCurrentPassword(testPassword)
+            .enterNewPassword(newPassword)
+            .confirmNewPassword(newPassword)
+            .clickChangePassword()
+            .checkOverlayNotExists();
+
+        dashboardRobot.checkDashboardNotExists();
+        loginRobot.checkLoginPageExists();
     });
 
-    it("should, after changing password, require new password to view accounts ", () => {
-        logInUsingSeedPasswordPair();
+    it('should, after changing password, require new password to view accounts ', () => {
+        cy.importAccount(LOW_FUND_SEED, testPassword);
+
         const newPassword = 'ABD123XYZ';
         const incorrectPassword = 'ABC123XYZ';
+        settingsRobot
+            .clickSettings()
+            .clickAdvancedSettingsMenuOption()
+            .clickChangePassword();
 
-        cy.window().then(() => {
-            cy.get('[data-cy=dashboard-wrapper]').should('exist');
-            cy.get('[data-cy=settings-button]').click();
-            cy.get('[data-cy=more-settings]').click();
-            cy.get('[data-cy=change-password-button]').click();
-            const overlayRenderDelay = 500;
-            cy.wait(overlayRenderDelay);
+        changePasswordRobot
+            .checkOverlayExists()
+            .enterCurrentPassword(testPassword)
+            .enterNewPassword(newPassword)
+            .confirmNewPassword(newPassword)
+            .clickChangePassword()
+            .checkOverlayNotExists();
 
-            // Change Password
-            cy.get('[data-cy=current-password-input]').type(defaultPasswordForTesting);
-            cy.get('[data-cy=new-password-input]').type(newPassword);
-            cy.get('[data-cy=confirm-password-input]').type(newPassword, { force: true }); // TODO: Cypress cannot click this, claims element overlay.
-            cy.get('[data-cy=confirm-change-password-button]').click();
+        // Log In
+        loginRobot
+            .enterPassword(incorrectPassword)
+            .clickUnlockButton()
+            .checkLoginPageExists()
+            .clearPassword()
+            .enterPassword(newPassword)
+            .clickUnlockButton();
 
-            // Log In
-            cy.get('[data-cy=active-wallet-password-input]').type(incorrectPassword);
-            cy.get('[data-cy=account-unlock-button]').click();
-            cy.get('[data-cy=login-wrapper]');
-            cy.get('[data-cy=active-wallet-password-input]').clear();
-            cy.get('[data-cy=active-wallet-password-input]').type(newPassword);
-            cy.get('[data-cy=account-unlock-button]').click();
-
-            // Confirm account loads
-            cy.get('[data-cy=dashboard-account-cards-container]').find('[data-cy=dashboard-account-card-footer]').should('have.length', 1);
-        })
+        // Confirm account loads
+        dashboardRobot.checkDashboardExists().countLoadedAccounts(1);
     });
 
+    it('should log a user out after clearing local storage', () => {
+        cy.importAccount(LOW_FUND_SEED);
 
-    it("should log a user out after clearing local storage", () => {
-        logInUsingSeedPasswordPair();
+        settingsRobot
+            .clickSettings()
+            .clickAdvancedSettingsMenuOption()
+            .clearLocalStorage();
 
-        cy.window().then(() => {
-            cy.get('[data-cy=dashboard-wrapper]').should('exist');
-            cy.get('[data-cy=settings-button]').click();
-            cy.get('[data-cy=more-settings]').click();
-            cy.get('[data-cy=clear-storage-button]').trigger('mousedown', { button: 0 });
-            cy.wait(2000).then(() => {
-                void expect(window.localStorage.getItem('bananostand_encryptedWallets')).to.not.be.ok;
-                cy.get('.mat-mdc-simple-snack-bar').contains('All Wallets Removed');
-                cy.get('[data-cy=dashboard-wrapper]').should('not.exist');
-                cy.get('[data-cy=home-wrapper]');
-            });
-        })
+        globalRobot
+            .checkWalletLocalStorageNotExists()
+            .checkSnackbarTextContains('All Wallets Removed');
+
+        dashboardRobot.checkDashboardNotExists();
+        loginRobot.checkLoginPagNotExists();
+        homeRobot.checkHomePageExists();
     });
 });

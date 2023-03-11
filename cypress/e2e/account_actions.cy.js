@@ -1,9 +1,11 @@
 describe('Account Actions', () => {
-
-    const address1 = 'ban_1z7rxmcwataoqahha6xdo3j1tfikoufkhb95dg4b7aajapa4cnp6h3s9f8oj';
-    const address2 = 'ban_1g98o6q1sidjbgo7gnqkobz1byo6tufjtt34n7prm6mbhcw914a9bgtkp584';
-    const LOW_FUND_SEED = '727A5E960F6189BBF196D84A6B7715D0A78DE82AC15BBDB340540076768CDB31';
-    const root = 'http://localhost:4200'
+    const address1 =
+        'ban_1z7rxmcwataoqahha6xdo3j1tfikoufkhb95dg4b7aajapa4cnp6h3s9f8oj';
+    const address2 =
+        'ban_1g98o6q1sidjbgo7gnqkobz1byo6tufjtt34n7prm6mbhcw914a9bgtkp584';
+    const LOW_FUND_SEED =
+        '727A5E960F6189BBF196D84A6B7715D0A78DE82AC15BBDB340540076768CDB31';
+    const root = 'http://localhost:4200';
     const loadInitialAccount = 'loadInitialAccount';
 
     beforeEach(() => {
@@ -20,14 +22,26 @@ describe('Account Actions', () => {
         cy.get('[data-cy=enter-secret]').click();
         cy.get('[data-cy=secret-input]').type(LOW_FUND_SEED);
         cy.get('[data-cy=secret-next]').click();
-        cy.intercept({method: 'POST', url: '**', times: 3}).as(loadInitialAccount);
+        cy.intercept({
+            method: 'POST',
+            url: '**',
+            times: 3,
+        }).as(loadInitialAccount);
         cy.get('[data-cy=secret-next]').click();
-        cy.intercept({ method: 'POST', url: '**/account/confirmed-transactions' }).as('confirmedTx');
-        cy.get('[data-cy=dashboard-account-cards-container]').find('[data-cy=dashboard-account-card-footer]').click();
+        cy.intercept({
+            method: 'POST',
+            url: '**/account/confirmed-transactions',
+        }).as('confirmedTx');
+        cy.get('[data-cy=dashboard-account-cards-container]')
+            .find('[data-cy=dashboard-account-card-footer]')
+            .click();
         cy.wait('@confirmedTx').then(() => {
-            cy.get('[data-cy=account-scroll-container]').find('.transaction-row-wrapper').its('length').should('be.gte', 2);
-        })
-    })
+            cy.get('[data-cy=account-scroll-container]')
+                .find('.transaction-row-wrapper')
+                .its('length')
+                .should('be.gte', 2);
+        });
+    });
 
     describe('Change Representative', () => {
         it('should close the change representative overlay (desktop)', () => {
@@ -36,10 +50,9 @@ describe('Account Actions', () => {
             cy.get('[data-cy=change-close-button]').click();
             cy.get('.change-rep-overlay').should('not.exist');
         });
-    })
+    });
 
     describe('Send', () => {
-
         it('should close the send overlay (desktop)', () => {
             cy.get('[data-cy=send-action]').click();
             cy.get('.send-overlay');
@@ -47,7 +60,7 @@ describe('Account Actions', () => {
             cy.get('.send-overlay').should('not.exist');
         });
 
-       it('should send .01 BAN to self (desktop)', () => {
+        it('should send .01 BAN to self (desktop)', () => {
             cy.get('[data-cy=send-action]').click();
             cy.get('.send-overlay');
             cy.get('[data-cy=send-next-button]').click();
@@ -59,10 +72,9 @@ describe('Account Actions', () => {
             cy.get('[data-cy=send-loading]').should('exist');
             cy.get('[data-cy=send-success-state]').should('exist');
         });
-    })
+    });
 
     describe('Receive', () => {
-
         /** The receive button will be disabled unless we have something to actually receive. */
         it('should close the receive overlay (desktop)', () => {
             cy.get('[data-cy=receive-action]').click();
