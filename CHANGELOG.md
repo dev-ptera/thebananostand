@@ -1,5 +1,13 @@
 # Change Log
 
+## v3.6.1 (Mar 5, 2023)
+
+### Changed
+
+-  Changed default theme to Green.
+-  Default dashboard view for mobile devices will be 'card' & desktop will be 'table'.
+-  Changed account scroll container max height on desktop.
+
 ## v3.6.0 (Feb 24, 2023)
 
 ### Added

@@ -19,14 +19,16 @@
     background-position: right center;
     opacity: 1 !important;
     &.sm {
-        background-image: linear-gradient(90deg, var(--primary) 15%, var(--primary-light-2) 100%),
-            url('~assets/images/bg-faucet.svg');
         padding-top: 16px;
         padding-bottom: 16px;
         margin-bottom: 0px;
         flex-direction: column;
         background-size: cover;
     }
+}
+.banano-yellow .dashboard-header {
+    background-image: linear-gradient(90deg, var(--primary) 155%, var(--primary-light-2) 100%),
+        url('~assets/images/bg-faucet-dark.svg');
 }
 
 .sm .dashboard-wrapper {

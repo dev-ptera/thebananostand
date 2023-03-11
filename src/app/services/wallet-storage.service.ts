@@ -3,6 +3,7 @@ import { UtilService } from '@app/services/util.service';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { AddressBookEntry } from '@app/types/AddressBookEntry';
+import { ViewportService } from '@app/services/viewport.service';
 
 export type LocalStorageWallet = {
     encryptedSeed: string;
@@ -30,7 +31,11 @@ const MINIMUM_INCOMING_THRESHOLD_BAN = 'bananostand_minimumIncomingBananoThresho
 export class WalletStorageService {
     store: AppStore;
 
-    constructor(private readonly _util: UtilService, private readonly _appStateService: AppStateService) {
+    constructor(
+        private readonly _util: UtilService,
+        private readonly _vp: ViewportService,
+        private readonly _appStateService: AppStateService
+    ) {
         this._appStateService.store.subscribe((store) => {
             this.store = store;
         });
@@ -105,7 +110,7 @@ export class WalletStorageService {
         if ((preference && preference === 'table') || preference === 'card') {
             return preference;
         }
-        return 'card';
+        return this._vp.sm ? 'card' : 'table';
     }
 
     /** Given an encrypted seed, makes a wallet that is later stored in the browser. */
