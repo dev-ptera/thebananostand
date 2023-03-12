@@ -20,34 +20,48 @@ describe('User Session', () => {
     const globalRobot = new GlobalRobot();
     const changePasswordRobot = new ChangePasswordRobot();
 
-    const reload = () => {
-        cy.intercept(root).as('home');
-        cy.visit(root);
-        cy.wait('@home'); // once the route resolves, cy.wait will resolve as well
-    };
-
     beforeEach(() => {
-        Cypress.config('defaultCommandTimeout', 20000);
+        Cypress.config('defaultCommandTimeout', 10000);
+        cy.reload();
         cy.setDashboardCardView();
         reload();
     });
 
-    it('should import a wallet with just a seed (no password)', () => {
-        cy.importAccount(LOW_FUND_SEED);
-        dashboardRobot.checkDashboardExists().countLoadedAccounts(1);
-    });
-
-    it('should import a wallet with a seed and password', () => {
-        const password = 'UniquePasswordForTestingSpec';
-        cy.importAccount(LOW_FUND_SEED, password);
-        dashboardRobot.checkDashboardExists().countLoadedAccounts(1);
-    });
+    const reload = () => {
+        cy.intercept(root).as('home');
+        cy.visit(root);
+        cy.wait('@home');
+    };
 
     it('should log a user out on page refresh', () => {
         cy.importAccount(LOW_FUND_SEED);
         reload();
         loginRobot.checkLoginPageExists();
         dashboardRobot.checkDashboardNotExists();
+    });
+
+    it('should import a wallet with just a seed (no password), refresh and then login', () => {
+        cy.importAccount(LOW_FUND_SEED);
+        dashboardRobot.checkDashboardExists().countLoadedAccounts(1);
+        reload();
+        loginRobot
+            .checkLoginPageExists()
+            .clickUnlockButton()
+            .checkLoginPagNotExists();
+        dashboardRobot.checkDashboardExists().countLoadedAccounts(1);
+    });
+
+    it('should import a wallet with a seed and password, refresh and then login', () => {
+        const password = 'UniquePasswordForTestingSpec';
+        cy.importAccount(LOW_FUND_SEED, password);
+        dashboardRobot.checkDashboardExists().countLoadedAccounts(1);
+        reload();
+        loginRobot
+            .checkLoginPageExists()
+            .enterPassword(password)
+            .clickUnlockButton()
+            .checkLoginPagNotExists();
+        dashboardRobot.checkDashboardExists().countLoadedAccounts(1);
     });
 
     it('should not allow an incorrect password to login', () => {
@@ -76,7 +90,7 @@ describe('User Session', () => {
         cy.removeWallet();
         cy.window().then(() => {
             dashboardRobot.checkDashboardNotExists();
-            cy.get('.mat-mdc-simple-snack-bar').contains('Removed Wallet');
+            globalRobot.checkSnackbarTextContains('Removed Wallet');
         });
     });
 
