@@ -11,7 +11,54 @@
 //
 //
 // -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
+import { SecretRobot } from '../robots/secret.robot';
+import { HomeRobot } from '../robots/home.robot';
+import { DashboardRobot } from '../robots/dashboard.robot';
+
+declare global {
+    namespace Cypress {
+        interface Chainable {
+            importAccount: (seed, password?) => void;
+            removeWallet: () => void;
+            setDashboardCardView: () => void;
+            assertValueCopiedToClipboard: (value) => void;
+        }
+    }
+}
+
+/* https://dev.to/walmyrlimaesilv/testing-copy-to-clipboard-with-cypress-1414 */
+Cypress.Commands.add('assertValueCopiedToClipboard', (value) => {
+    cy.window().then((win) => {
+        win.navigator.clipboard.readText().then((text) => {
+            console.log(text);
+            expect(text).to.eq(value);
+        });
+    });
+});
+
+Cypress.Commands.add('setDashboardCardView' as any, () => {
+    window.localStorage.setItem('bananostand_dashboardView', 'card');
+});
+
+Cypress.Commands.add(
+    'importAccount' as any,
+    (seed: string, password: string = '') => {
+        new HomeRobot().clickEnterSecret();
+
+        new SecretRobot()
+            .enterSecret(seed)
+            .clickNext()
+            .enterPassword(password)
+            .clickNext();
+
+        new DashboardRobot().checkDashboardExists();
+    }
+);
+
+Cypress.Commands.add('removeWallet' as any, () => {
+    new DashboardRobot().clickWalletActions().clickRemoveWallet();
+    cy.wait(2000);
+});
 //
 //
 // -- This is a child command --
