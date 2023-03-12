@@ -4,8 +4,40 @@ export class DashboardRobot {
         return this;
     }
 
+    clickAddNextAccountDesktop(): DashboardRobot {
+        cy.get('[data-cy=add-next-account-button]').click();
+        return this;
+    }
+
+    clickAddNextAccountMobile(): DashboardRobot {
+        cy.get('[data-cy=account-actions-mobile-menu]').click();
+        cy.get('[data-cy=add-next-account-button]').click();
+        return this;
+    }
+
+    clickCopySeed(): DashboardRobot {
+        cy.get('[data-cy=copy-seed-button]').click();
+        return this;
+    }
+
     checkDashboardNotExists(): DashboardRobot {
         cy.get('[data-cy=dashboard-wrapper]').should('not.exist');
+        return this;
+    }
+
+    clickCopyMnemonic(): DashboardRobot {
+        cy.get('[data-cy=copy-mnemonic-button]').click();
+        return this;
+    }
+
+    clickRefreshMobile(): DashboardRobot {
+        cy.get('[data-cy=account-actions-mobile-menu]').click();
+        cy.get('[data-cy=refresh-dashboard-button]').click();
+        return this;
+    }
+
+    clickRefreshDesktop(): DashboardRobot {
+        cy.get('[data-cy=refresh-dashboard-button]').click();
         return this;
     }
 
@@ -21,6 +53,17 @@ export class DashboardRobot {
         return this;
     }
 
+    clickAddSpecificAccountDesktop(): DashboardRobot {
+        cy.get('[data-cy=add-specific-account-button]').click();
+        return this;
+    }
+
+    clickAddSpecificAccountMobile(): DashboardRobot {
+        cy.get('[data-cy=account-actions-mobile-menu]').click();
+        cy.get('[data-cy=add-specific-account-button]').click();
+        return this;
+    }
+
     clickAccountNumber(i: number): DashboardRobot {
         cy.get('[data-cy=dashboard-account-cards-container]')
             .find(`[data-cy=dashboard-account-card-footer-${i}]`)
@@ -29,10 +72,17 @@ export class DashboardRobot {
     }
 
     countLoadedAccounts(expectedSize: number): DashboardRobot {
-        cy.get('[data-cy=dashboard-account-card-footer]').should(
+        cy.get('[data-cy=dashboard-account-card]').should(
             'have.length',
             expectedSize
         );
+        return this;
+    }
+
+    checkSpecificAccountNumberExists(i: number): DashboardRobot {
+        cy.get('[data-cy=dashboard-account-cards-container]')
+            .find('[data-cy=account-number]')
+            .contains(`#${i}`);
         return this;
     }
 }

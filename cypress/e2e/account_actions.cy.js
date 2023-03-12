@@ -13,7 +13,7 @@ describe('Account Actions', () => {
 
     beforeEach(() => {
         Cypress.config('defaultCommandTimeout', 90000);
-        window.localStorage.setItem('bananostand_dashboardView', 'card');
+        cy.setDashboardCardView();
         cy.reload();
         cy.intercept(root).as('home');
         cy.visit(root);

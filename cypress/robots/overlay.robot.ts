@@ -83,4 +83,24 @@ export class OverlayRobot {
         cy.get('[data-cy=receive-success-state').should('exist');
         return this;
     }
+
+    enterAddAccountNumber(i: number): OverlayRobot {
+        cy.get('[data-cy=add-specific-account-input]').type('99');
+        return this;
+    }
+
+    clickAddAccountButton(): OverlayRobot {
+        cy.get('[data-cy=add-account-overlay-button]').click();
+        return this;
+    }
+
+    checkAddAccountOverlayExists(): OverlayRobot {
+        cy.get('.add-index-overlay').should('exist');
+        return this;
+    }
+
+    checkAddAccountOverlayNotExists(): OverlayRobot {
+        cy.get('.add-index-overlay').should('not.exist');
+        return this;
+    }
 }

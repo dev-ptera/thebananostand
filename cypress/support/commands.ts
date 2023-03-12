@@ -20,9 +20,25 @@ declare global {
         interface Chainable {
             importAccount: (seed, password?) => void;
             removeWallet: () => void;
+            setDashboardCardView: () => void;
+            assertValueCopiedToClipboard: (value) => void;
         }
     }
 }
+
+/* https://dev.to/walmyrlimaesilv/testing-copy-to-clipboard-with-cypress-1414 */
+Cypress.Commands.add('assertValueCopiedToClipboard', (value) => {
+    cy.window().then((win) => {
+        win.navigator.clipboard.readText().then((text) => {
+            console.log(text);
+            expect(text).to.eq(value);
+        });
+    });
+});
+
+Cypress.Commands.add('setDashboardCardView' as any, () => {
+    window.localStorage.setItem('bananostand_dashboardView', 'card');
+});
 
 Cypress.Commands.add(
     'importAccount' as any,
