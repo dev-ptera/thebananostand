@@ -50,6 +50,8 @@ Cypress.Commands.add(
             .clickNext()
             .enterPassword(password)
             .clickNext();
+
+        new DashboardRobot().checkDashboardExists();
     }
 );
 

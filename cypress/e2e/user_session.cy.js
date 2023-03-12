@@ -42,7 +42,7 @@ describe('User Session', () => {
 
     it('should import a wallet with just a seed (no password), refresh and then login', () => {
         cy.importAccount(LOW_FUND_SEED);
-        dashboardRobot.checkDashboardExists().countLoadedAccounts(1);
+        dashboardRobot.countLoadedAccounts(1);
         reload();
         loginRobot
             .checkLoginPageExists()
@@ -54,7 +54,7 @@ describe('User Session', () => {
     it('should import a wallet with a seed and password, refresh and then login', () => {
         const password = 'UniquePasswordForTestingSpec';
         cy.importAccount(LOW_FUND_SEED, password);
-        dashboardRobot.checkDashboardExists().countLoadedAccounts(1);
+        dashboardRobot.countLoadedAccounts(1);
         reload();
         loginRobot
             .checkLoginPageExists()
@@ -86,7 +86,6 @@ describe('User Session', () => {
 
     it('should navigate user back to home screen & display snackbar when secret is cleared', () => {
         cy.importAccount(LOW_FUND_SEED);
-        dashboardRobot.checkDashboardExists();
         cy.removeWallet();
         cy.window().then(() => {
             dashboardRobot.checkDashboardNotExists();
