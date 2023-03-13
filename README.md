@@ -34,9 +34,9 @@ Do you already own a ledger device and want to use it to store your Banano?
 
 After your ledger is unlocked, you can now send or receive as you please. 
 
-## Running Project Locally
+## Running Project
 
-Did you clone the project and want to run it locally? 
+Did you clone the project and want to run it on your machine? 
 
     yarn && yarn start
 
