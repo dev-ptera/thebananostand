@@ -44,11 +44,11 @@ or
 
     npm i && npm run start
 
-## Changelog and Releases
+## Releases
 
 This project has fully automated [GitHub releases](https://github.com/dev-ptera/thebananostand/releases) which are validated and published via a [GitHub Actions pipeline](https://github.com/dev-ptera/thebananostand/actions).
 
-## Issues | Requests
+## Issues / Requests
 
 Is there either something horribly wrong or do you have a cool feature request?  Pick one:
 
