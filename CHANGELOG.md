@@ -1,5 +1,15 @@
 # Change Log
 
+## v3.6.2 (Mar 12, 2023)
+
+### Added
+
+-  Added more end-to-end tests.
+
+### Changed
+
+-  Updated the README.
+
 ## v3.6.1 (Mar 5, 2023)
 
 ### Changed

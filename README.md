@@ -25,29 +25,33 @@ This project was created to manage funds via the highly secure [Ledger hardware 
 
 Do you already own a ledger device and want to use it to store your Banano?
 
-1.  Visit https://thebananostand.com/
-1.  Download the Banano Ledger app (>=1.2.6) onto your hardware wallet.  See [Ledger Live](https://www.ledger.com/ledger-live) for details.
-2.  Connect your ledger device to your computer via USB.
-3.  Open the Banano app on your ledger.
-4.  Click the "Load Ledger" button to connect your device.
+1.  Visit https://thebananostand.com
+2.  Download the Banano Ledger app (>=1.2.6) onto your hardware wallet and open it.  See [Ledger Live](https://www.ledger.com/ledger-live) for details.
+3.  Connect your ledger device to your computer via USB.
+4.  Click the "Load Ledger" button.
 
 After your ledger is unlocked, you can now send or receive as you please. 
 
+### Running Project Locally
+
+Did you clone the project and want to run it locally? 
+
+    yarn && yarn start
+
+or
+
+    npm i && npm run start
+
+### Changelog and Releases
+
+This project has fully automated [GitHub releases](https://github.com/dev-ptera/thebananostand/releases) which are validated and published via a [GitHub Actions pipeline](https://github.com/dev-ptera/thebananostand/actions).
+
 ### Issues or Requests
 
-Is there something horribly wrong, or do you just want something cool to be added?  There's a couple options:
+Is there either something horribly wrong or do you have a cool feature request? 
 
 -  [Open an issue](https://github.com/dev-ptera/thebananostand/issues) on GitHub.
 -  Email me `dev.ptera@gmail.com`
--  Drop me (Ptera) a message in the [Banano discord](https://chat.banano.cc/). 
+-  Tag me in the [Banano discord](https://chat.banano.cc/). 
 
-
-### Getting Started
-
-Did you clone the repository and want to run it locally?
-
-    # installs dependencies
-    yarn
-
-    # runs web server 
-    yarn start;
+> Note: If you want to contribute to this project, please contact me before implementing a new feature.  We want to make sure it makes sense to add before working on it.
