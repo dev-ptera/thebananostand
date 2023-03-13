@@ -7,13 +7,15 @@
 
 [https://thebananostand.com](https://thebananostand.com/)
 
+## About
+
 TheBananoStand is a web-based [Banano](https://banano.cc/) wallet - manage your favorite digital meme currency with ease!
 
 This project was created to manage funds via the highly secure [Ledger hardware wallets](https://www.ledger.com/), but has been extended to support seeds and mnemonic phrases as well.  
 
 > Note: a ledger device is the recommended way to guarantee there will always be money in the banano stand. 
 
-### Supported Browsers
+## Supported Browsers
 
 - Chrome
 - Brave
@@ -21,7 +23,7 @@ This project was created to manage funds via the highly secure [Ledger hardware 
 
 > Note: Most Chromium-based browsers will work with this wallet.
 
-### Ledger Usage
+## Ledger Usage
 
 Do you already own a ledger device and want to use it to store your Banano?
 
@@ -32,7 +34,7 @@ Do you already own a ledger device and want to use it to store your Banano?
 
 After your ledger is unlocked, you can now send or receive as you please. 
 
-### Running Project Locally
+## Running Project Locally
 
 Did you clone the project and want to run it locally? 
 
@@ -42,16 +44,16 @@ or
 
     npm i && npm run start
 
-### Changelog and Releases
+## Changelog and Releases
 
 This project has fully automated [GitHub releases](https://github.com/dev-ptera/thebananostand/releases) which are validated and published via a [GitHub Actions pipeline](https://github.com/dev-ptera/thebananostand/actions).
 
-### Issues or Requests
+## Issues | Requests
 
-Is there either something horribly wrong or do you have a cool feature request? 
+Is there either something horribly wrong or do you have a cool feature request?  Pick one:
 
--  [Open an issue](https://github.com/dev-ptera/thebananostand/issues) on GitHub.
--  Email me `dev.ptera@gmail.com`
--  Tag me in the [Banano discord](https://chat.banano.cc/). 
+-  [Open an issue](https://github.com/dev-ptera/thebananostand/issues) on GitHub
+-  Tag me in the [Banano discord](https://chat.banano.cc/)
+-  Send me an email
 
 > Note: If you want to contribute to this project, please contact me before implementing a new feature.  We want to make sure it makes sense to add before working on it.
