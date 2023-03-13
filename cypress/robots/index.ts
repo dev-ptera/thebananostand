@@ -1,5 +1,3 @@
-/// <reference types="cypress"/>
-
 export * from './account.robot';
 export * from './change-password.robot';
 export * from './dashboard.robot';

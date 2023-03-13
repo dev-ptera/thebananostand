@@ -1,3 +1,4 @@
+/// <reference types="cypress"/>
 export class LoginRobot {
     checkLoginPagNotExists(): LoginRobot {
         cy.get('[data-cy=login-wrapper]').should('not.exist');

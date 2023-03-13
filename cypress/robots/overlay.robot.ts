@@ -1,4 +1,14 @@
+/// <reference types="cypress"/>
 export class OverlayRobot {
+    checkFilterOverlayNotExists(): OverlayRobot {
+        cy.get('.filter-overlay').should('not.exist');
+        return this;
+    }
+    checkFilterOverlayExists(): OverlayRobot {
+        cy.get('.filter-overlay').should('exist');
+        return this;
+    }
+
     checkSendOverlayExists(): OverlayRobot {
         cy.get('.send-overlay').should('exist');
         return this;
@@ -16,6 +26,26 @@ export class OverlayRobot {
 
     checkReceiveOverlayNotExists(): OverlayRobot {
         cy.get('.receive-overlay').should('not.exist');
+        return this;
+    }
+
+    clickReceivedFilterChip(): OverlayRobot {
+        cy.get('[data-cy=received-chip]').click();
+        return this;
+    }
+
+    clickSentFilterChip(): OverlayRobot {
+        cy.get('[data-cy=sent-chip]').click();
+        return this;
+    }
+
+    clickChangeFilterChip(): OverlayRobot {
+        cy.get('[data-cy=change-chip]').click();
+        return this;
+    }
+
+    clickApplyFilter(): OverlayRobot {
+        cy.get('[data-cy=apply-filter]').click();
         return this;
     }
 
@@ -51,6 +81,11 @@ export class OverlayRobot {
 
     clickSendNextButton(): OverlayRobot {
         cy.get('[data-cy=send-next-button]').click();
+        return this;
+    }
+
+    clickCloseFilterButton(): OverlayRobot {
+        cy.get('[data-cy=filter-close-button]').click();
         return this;
     }
 

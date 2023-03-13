@@ -22,6 +22,7 @@ export type FilterOverlayData = {
                 </div>
                 <mat-chip-listbox multiple style="display: flex; justify-content: space-between; margin-top: 16px;">
                     <mat-chip-option
+                        data-cy="received-chip"
                         (click)="adjustedFilters.includeReceive = !adjustedFilters.includeReceive"
                         [selected]="adjustedFilters.includeReceive"
                     >
@@ -29,6 +30,7 @@ export type FilterOverlayData = {
                         Received
                     </mat-chip-option>
                     <mat-chip-option
+                        data-cy="sent-chip"
                         (click)="adjustedFilters.includeSend = !adjustedFilters.includeSend"
                         [selected]="adjustedFilters.includeSend"
                     >
@@ -36,6 +38,7 @@ export type FilterOverlayData = {
                         Sent
                     </mat-chip-option>
                     <mat-chip-option
+                        data-cy="change-chip"
                         (click)="adjustedFilters.includeChange = !adjustedFilters.includeChange"
                         [selected]="adjustedFilters.includeChange"
                     >
@@ -67,9 +70,18 @@ export type FilterOverlayData = {
                 </mat-form-field>
             </div>
             <div class="overlay-footer">
-                <button color="primary" mat-stroked-button (click)="closeDialog()" style="width: 100px;">Close</button>
                 <button
                     color="primary"
+                    mat-stroked-button
+                    (click)="closeDialog()"
+                    style="width: 100px;"
+                    data-cy="filter-close-button"
+                >
+                    Close
+                </button>
+                <button
+                    color="primary"
+                    data-cy="apply-filter"
                     mat-flat-button
                     (click)="apply()"
                     style="width: 100px;"
