@@ -1,3 +1,5 @@
+/// <reference types="cypress"/>
+
 export class GlobalRobot {
     encryptedKey = 'bananostand_encryptedWallets';
 

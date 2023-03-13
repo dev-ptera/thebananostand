@@ -1,3 +1,4 @@
+/// <reference types="cypress"/>
 export class SettingsRobot {
     clickSettings(): SettingsRobot {
         cy.get('[data-cy=settings-button]').click();
