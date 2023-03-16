@@ -46,20 +46,21 @@ describe('Account Actions', () => {
                 .clickCloseFilterButton()
                 .checkFilterOverlayNotExists();
         });
-        it('should filter to only show change transactions', () => {
-            cy.intercept(
-                {
-                    method: 'POST',
-                    url: '**/confirmed-transactions',
-                },
-                (req) => {
-                    req.on('response', (res) => {
-                        for (const tx of res.body) {
-                            expect(tx.type).to.equal('change');
-                        }
-                    });
+        const confirmTxReq = {
+            method: 'POST',
+            url: '**/confirmed-transactions',
+        };
+        const checkType = (req, type) => {
+            req.on('response', (res) => {
+                for (const tx of res.body) {
+                    expect(tx.type).to.equal(type);
                 }
-            ).as('filter');
+            });
+        };
+        it('should filter to only show change transactions', () => {
+            cy.intercept(confirmTxReq, (req) => checkType(req, 'change')).as(
+                'filter'
+            );
             accountRobot.clickFilterButtonDesktop();
             overlayRobot
                 .clickReceivedFilterChip()
@@ -69,19 +70,9 @@ describe('Account Actions', () => {
             accountRobot.checkTransactionsLoaded();
         });
         it('should filter to only show received transactions', () => {
-            cy.intercept(
-                {
-                    method: 'POST',
-                    url: '**/confirmed-transactions',
-                },
-                (req) => {
-                    req.on('response', (res) => {
-                        for (const tx of res.body) {
-                            expect(tx.type).to.equal('receive');
-                        }
-                    });
-                }
-            ).as('filter');
+            cy.intercept(confirmTxReq, (req) => checkType(req, 'receive')).as(
+                'filter'
+            );
             accountRobot.clickFilterButtonDesktop();
             overlayRobot
                 .clickChangeFilterChip()
@@ -91,19 +82,9 @@ describe('Account Actions', () => {
             accountRobot.checkTransactionsLoaded();
         });
         it('should filter to only show sent transactions', () => {
-            cy.intercept(
-                {
-                    method: 'POST',
-                    url: '**/confirmed-transactions',
-                },
-                (req) => {
-                    req.on('response', (res) => {
-                        for (const tx of res.body) {
-                            expect(tx.type).to.equal('send');
-                        }
-                    });
-                }
-            ).as('filter');
+            cy.intercept(confirmTxReq, (req) => checkType(req, 'send')).as(
+                'filter'
+            );
             accountRobot.clickFilterButtonDesktop();
             overlayRobot
                 .clickChangeFilterChip()

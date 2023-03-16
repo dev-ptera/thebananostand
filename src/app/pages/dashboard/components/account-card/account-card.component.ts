@@ -42,6 +42,7 @@ import { AppStateService, AppStore } from '@app/services/app-state.service';
 
         <div class="account-card-container" responsive data-cy="dashboard-account-cards-container">
             <mat-card
+                class="account-card divider-border"
                 data-cy="dashboard-account-card"
                 *ngFor="
                     let i = index;
@@ -49,7 +50,6 @@ import { AppStateService, AppStore } from '@app/services/app-state.service';
                     of: accounts | sort : sortDirection : accounts.length;
                     trackBy: markUniqueAccount
                 "
-                class="account-card divider-border"
             >
                 <div data-cy="account-number" class="card-account-number mat-caption">
                     #{{ _util.numberWithCommas(account.index) }}

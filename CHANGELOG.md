@@ -1,5 +1,12 @@
 # Change Log
 
+## v3.6.4 (Mar 15, 2023)
+
+### Changed
+
+-  Refactored e2e tests
+-  Dashboard card elevation.
+
 ## v3.6.3 (Mar 15, 2023)
 
 ### Changed
