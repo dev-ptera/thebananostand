@@ -16,11 +16,12 @@
     background-position: right center;
     opacity: 1 !important;
     &.sm {
-        padding: 16px;
+        padding: 8px 24px;
         margin-bottom: 0px;
         flex-direction: column;
         background-size: cover;
         border: unset;
+        border-bottom-width: 2px;
     }
 }
 
@@ -31,12 +32,6 @@
 }
 .dashboard-wrapper {
     max-width: 1350px !important;
-}
-
-$mobileDashboardHeaderHeight: 180px;
-.sm .dashboard-header {
-    height: $mobileDashboardHeaderHeight;
-    border-bottom-width: 2px;
 }
 
 .dashboard-accounts-container {

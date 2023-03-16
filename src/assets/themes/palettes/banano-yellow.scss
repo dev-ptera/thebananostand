@@ -44,6 +44,10 @@ $banano-yellow-theme: mat.define-dark-theme((
 
     --mdc-theme-surface: var(--card);
 
+    app-dashboard.sm {
+        height: 100%;
+        background: var(--dashboard-accounts-container-bg);
+    }
     .dashboard-header {
         background-image: unset;
         .text-contrast {

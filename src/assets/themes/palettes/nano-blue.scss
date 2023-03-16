@@ -26,7 +26,7 @@ $nano-blue-theme: mat.define-light-theme((
     @include mdc-customization.mdc-overrides();
 
     --primary:                          #{map-get($my-primary, 500)};
-    --primary-light-2:                  #{rgba(map-get($my-primary, 500), .95)};
+    --primary-light-2:                  #{rgba(map-get($my-primary, 500), .9)};
     --dashboard-accounts-container-bg: #{map-get(blui.$blui-white, 100)};
     --warn:                             #{map-get($my-warn, 500)};
     --card:                             #{map-get(blui.$blui-white, 100)};
