@@ -7,6 +7,7 @@
     background-color: var(--dashboard-accounts-container-bg);
     padding: 0rem 1.5rem 2rem 1.5rem;
     &.sm {
+        height: 100%;
         padding: 0rem 1rem 2rem 1rem;
     }
     @include fade.fade();

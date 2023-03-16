@@ -92,21 +92,14 @@
         <button
             mat-icon-button
             data-cy="wallet-actions-desktop-menu"
-            style="position: absolute; top: 16px; right: 16px; border: solid 1px var(--primary)"
+            style="position: absolute; top: 16px; right: 16px"
         >
             <mat-icon class="text-contrast">more_vert</mat-icon>
         </button>
-        <!--
-        <button mat-flat-button data-cy="wallet-actions-desktop-menu">
-            <div class="mat-subtitle-2" style="white-space: nowrap">Manage Wallet</div>
-            <mat-icon>arrow_drop_down</mat-icon>
-        </button>
-            -->
     </ng-template>
     <ng-template #walletActionsMobileTrigger>
         <div data-cy="wallet-actions-mobile-menu" style="display: flex; align-items: center">
             <div class="mat-body-2 text-contrast">Manage Wallet</div>
-            <mat-icon class="text-contrast">arrow_drop_down</mat-icon>
         </div>
     </ng-template>
     <responsive-menu
@@ -145,7 +138,6 @@
     <ng-template #accountActionsMobileTrigger>
         <div data-cy="account-actions-mobile-menu" style="display: flex; align-items: center">
             <div class="mat-body-2 text-contrast">Manage Accounts</div>
-            <mat-icon class="text-contrast">arrow_drop_down</mat-icon>
         </div>
     </ng-template>
     <responsive-menu

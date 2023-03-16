@@ -27,7 +27,7 @@ $banano-yellow-theme: mat.define-dark-theme((
     @include mdc-customization.mdc-overrides();
 
     --primary:          #{map-get($my-primary, 500)};
-    --primary-light-2:  #{rgba(map-get($my-primary, 500), .2)};
+    --primary-light-2:  #{rgba(map-get($my-primary, 500), .95)};
     --dashboard-accounts-container-bg: #{map-get(blui.$blui-black, 900)};
     --warn:             #{map-get($my-warn, 300)};
     --card:             #{map-get(blui.$blui-black, 900)};
@@ -44,6 +44,12 @@ $banano-yellow-theme: mat.define-dark-theme((
 
     --mdc-theme-surface: var(--card);
 
+    .dashboard-header {
+        background-image: unset;
+        .text-contrast {
+            --text-contrast: var(--text);
+        }
+    }
     .mat-toolbar.mat-primary {
         background: map-get(blui.$blui-vantaBlack, 400);
         --text-contrast:  #{map-get(blui.$blui-white, 500)};
