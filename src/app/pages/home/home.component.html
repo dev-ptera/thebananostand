@@ -3,7 +3,13 @@
 </ng-template>
 
 <ng-template #appBar>
-    <mat-toolbar color="primary" class="mat-elevation-z2 app-toolbar" responsive>
+    <mat-toolbar
+        color="primary"
+        class="app-toolbar"
+        responsive
+        [class.mat-elevation-z2]="!vp.sm"
+        [class.divider-border]="vp.sm"
+    >
         <div style="display: flex; align-items: center; justify-content: space-between; width: 100%">
             <mat-icon [style.color]="colors.yellow[300]" style="margin-left: 8px">storefront</mat-icon>
             <app-account-settings></app-account-settings>

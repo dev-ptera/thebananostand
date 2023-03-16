@@ -5,6 +5,7 @@
 ### Changed
 
 -  Changed dashboard banner gradient.
+-  Change toolbar styles.
 
 ## v3.6.2 (Mar 12, 2023)
 
