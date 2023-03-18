@@ -13,6 +13,9 @@
 # profiling files
 chrome-profiler-events*.json
 
+# electron
+out
+
 # IDEs and editors
 /.idea
 .project
