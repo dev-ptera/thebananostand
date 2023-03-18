@@ -195,7 +195,7 @@
 </ng-template>
 
 <!-- Page Layout -->
-<div class="app-body" responsive>
+<div class="app-body" responsive @fade>
     <div class="app-body-content dashboard-wrapper">
         <div
             style="padding: 0; display: flex; flex-direction: column; width: 100%"
@@ -203,7 +203,12 @@
         >
             <ng-template [ngTemplateOutlet]="dashboardHeader"></ng-template>
 
-            <mat-card appearance="outlined" class="dashboard-accounts-container" responsive>
+            <mat-card
+                appearance="outlined"
+                class="dashboard-accounts-container"
+                responsive
+                [class.show-table]="showTableView"
+            >
                 <mat-progress-bar
                     *ngIf="store.isLoadingAccounts"
                     color="primary"
