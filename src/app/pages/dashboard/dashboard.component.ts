@@ -26,6 +26,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ReceiveBottomSheetComponent } from '@app/overlays/bottom-sheet/receive/receive-bottom-sheet.component';
 import { ReceiveDialogComponent } from '@app/overlays/dialogs/receive/receive-dialog.component';
 import { ReceiveOverlayData } from '@app/overlays/actions/receive/receive.component';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @UntilDestroy()
 @Component({
@@ -33,6 +34,9 @@ import { ReceiveOverlayData } from '@app/overlays/actions/receive/receive.compon
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    animations: [
+        trigger('fade', [transition('void => *', [style({ opacity: 0 }), animate(300, style({ opacity: 1 }))])]),
+    ],
 })
 export class DashboardComponent {
     switchWalletOverlayOpen = false;

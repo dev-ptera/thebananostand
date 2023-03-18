@@ -27,7 +27,7 @@ $banano-yellow-theme: mat.define-dark-theme((
     @include mdc-customization.mdc-overrides();
 
     --primary:          #{map-get($my-primary, 500)};
-    --primary-light-2:  #{rgba(map-get($my-primary, 500), .95)};
+    --primary-light-2:  #{rgba(map-get($my-primary, 500), .8)};
     --dashboard-accounts-container-bg: #{map-get(blui.$blui-black, 900)};
     --warn:             #{map-get($my-warn, 300)};
     --card:             #{map-get(blui.$blui-black, 900)};
@@ -39,7 +39,7 @@ $banano-yellow-theme: mat.define-dark-theme((
     --icon-primary:     #{map-get(blui.$blui-black, 100)};
     --icon-secondary:   #{map-get(blui.$blui-black, 300)};
     --divider:          rgba(183, 183, 183, 0.12);
-    --divider-border:   rgba(183, 183, 183, 0.08);
+    --divider-border:   rgba(183, 183, 183, 0.12);
     --input-focus-bg:   #{map-get(blui.$blui-vantaBlack, 500)};
 
     --mdc-theme-surface: var(--card);
@@ -48,13 +48,22 @@ $banano-yellow-theme: mat.define-dark-theme((
         height: 100%;
         background: var(--dashboard-accounts-container-bg);
     }
+
+    .sm app-account-table {
+        background: #1d252900!important;
+    }
+
     .dashboard-header {
-        background-image: unset;
+        background-image: linear-gradient(90deg,
+            #{map-get(blui.$blui-vantaBlack, 500)} 10%,
+            #{rgba(map-get(blui.$blui-vantaBlack, 500), .9)} 100%),
+        url('~assets/images/bg-faucet-dark.svg');
         .text-contrast {
             --text-contrast: var(--text);
         }
     }
-    .mat-toolbar.mat-primary {
+
+   .mat-toolbar.mat-primary {
         background: map-get(blui.$blui-vantaBlack, 400);
         --text-contrast:  #{map-get(blui.$blui-white, 500)};
     }
@@ -68,8 +77,9 @@ $banano-yellow-theme: mat.define-dark-theme((
         box-shadow: none!important;
     }
 
-    &.mat-app-background, .account-card {
-        background: map-get(blui.$blui-vantaBlack, 300);
+    --background: #{map-get(blui.$blui-vantaBlack, 300)};
+    &.mat-app-background, .account-card,  .mobile-actions .mat-mdc-card {
+        background: var(--background);
     }
 
     .tx-state-icon .mat-icon {

@@ -16,12 +16,24 @@
     background-position: right center;
     opacity: 1 !important;
     &.sm {
+        border-radius: 1rem !important;
+        margin: 16px;
         padding: 8px 32px;
-        margin-bottom: 0px;
+        padding-bottom: 16px;
         flex-direction: column;
         background-size: cover;
-        border: unset;
-        border-bottom-width: 2px;
+    }
+}
+
+.mobile-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    mat-card {
+        box-shadow: unset;
+        width: 100%;
+        border-radius: 1rem !important;
     }
 }
 
