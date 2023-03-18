@@ -1,5 +1,12 @@
 # Change Log
 
+## v3.6.5 (Mar 17, 2023)
+
+### Changed
+
+-  Dashboard card styles.
+-  Mobile style changes.
+
 ## v3.6.4 (Mar 15, 2023)
 
 ### Changed

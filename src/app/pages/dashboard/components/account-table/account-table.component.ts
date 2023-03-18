@@ -19,7 +19,6 @@ import * as Colors from '@brightlayer-ui/colors';
     template: `<table
         mat-table
         [dataSource]="dataSource"
-        class="mat-elevation-z0"
         matSort
         #sortMonitored="matSort"
         class="account-table-container"
