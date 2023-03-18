@@ -99,7 +99,7 @@
     </ng-template>
     <ng-template #walletActionsMobileTrigger>
         <div data-cy="wallet-actions-mobile-menu" style="display: flex; align-items: center">
-            <div class="mat-body-2 text-contrast">Manage Wallet</div>
+            <div class="mat-body-2">Manage Wallet</div>
         </div>
     </ng-template>
     <responsive-menu
@@ -137,7 +137,7 @@
     </ng-template>
     <ng-template #accountActionsMobileTrigger>
         <div data-cy="account-actions-mobile-menu" style="display: flex; align-items: center">
-            <div class="mat-body-2 text-contrast">Manage Accounts</div>
+            <div class="mat-body-2">Manage Accounts</div>
         </div>
     </ng-template>
     <responsive-menu
@@ -181,18 +181,21 @@
         <ng-container *ngIf="!vp.sm">
             <ng-template [ngTemplateOutlet]="walletActions" *ngIf="!isLedgerDevice()"></ng-template>
         </ng-container>
-        <ng-container *ngIf="vp.sm">
-            <mat-divider></mat-divider>
-            <div style="display: flex; justify-content: space-between; width: 100%; margin-top: 8px">
-                <ng-template [ngTemplateOutlet]="walletActions" *ngIf="!isLedgerDevice()"></ng-template>
-                <ng-template [ngTemplateOutlet]="accountActions" *ngIf="vp.sm"></ng-template>
-            </div>
-        </ng-container>
     </mat-card>
+    <ng-container *ngIf="vp.sm">
+        <div class="mobile-actions">
+            <mat-card style="margin-right: 8px" class="divider-border">
+                <ng-template [ngTemplateOutlet]="walletActions" *ngIf="!isLedgerDevice()"></ng-template>
+            </mat-card>
+            <mat-card style="margin-left: 8px" class="divider-border">
+                <ng-template [ngTemplateOutlet]="accountActions" *ngIf="vp.sm"></ng-template>
+            </mat-card>
+        </div>
+    </ng-container>
 </ng-template>
 
 <!-- Page Layout -->
-<div class="app-body" responsive>
+<div class="app-body" responsive @fade>
     <div class="app-body-content dashboard-wrapper">
         <div
             style="padding: 0; display: flex; flex-direction: column; width: 100%"
@@ -200,7 +203,12 @@
         >
             <ng-template [ngTemplateOutlet]="dashboardHeader"></ng-template>
 
-            <mat-card appearance="outlined" class="dashboard-accounts-container" responsive>
+            <mat-card
+                appearance="outlined"
+                class="dashboard-accounts-container"
+                responsive
+                [class.show-table]="showTableView"
+            >
                 <mat-progress-bar
                     *ngIf="store.isLoadingAccounts"
                     color="primary"

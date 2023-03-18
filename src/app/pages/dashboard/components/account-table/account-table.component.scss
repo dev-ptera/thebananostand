@@ -1,7 +1,22 @@
 @use 'assets/themes/mixins/fade' as fade;
 
+.dashboard-accounts-container.show-table.sm {
+    margin: 16px;
+}
+
 .account-table-container .mdc-data-table__content {
     * {
         @include fade.fade();
+    }
+}
+.sm {
+    .account-table-container {
+        border: solid 1px var(--divider-border);
+        overflow: hidden;
+        border-radius: 1rem;
+        th,
+        td {
+            padding: 0 8px !important;
+        }
     }
 }
