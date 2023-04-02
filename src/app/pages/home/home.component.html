@@ -46,15 +46,19 @@
                         <mat-icon>usb</mat-icon>
                         <div title>Nano Ledger</div>
                         <div description>
-                            Load accounts by reading data from a USB-connected
-                            <a [href]="ledgerUrl" target="_blank" class="link">Ledger</a>
-                            device.
+                            <ng-container *ngIf="store.hasUsbSupport">
+                                Load accounts by reading data from a USB-connected
+                                <a [href]="ledgerUrl" target="_blank" class="link">Ledger</a>
+                                device.
+                            </ng-container>
+                            <ng-container *ngIf="!store.hasUsbSupport">
+                                This browser cannot read from a USB device; use a desktop browser instead.
+                            </ng-container>
                         </div>
                         <button
                             mat-flat-button
                             color="primary"
                             (click)="connectLedger()"
-                            [matTooltip]="store.hasUsbSupport ? '' : 'This browser does not allow reading from USB'"
                             [disabled]="!store.hasUsbSupport"
                         >
                             Load Ledger
