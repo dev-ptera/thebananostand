@@ -1,9 +1,10 @@
 {
     "name": "thebananostand",
-    "version": "3.6.5",
+    "version": "3.7.0",
     "scripts": {
         "ng": "ng",
         "start": "ng serve --open --host 0.0.0.0",
+        "start:ssl": "ng serve --open --host 0.0.0.0 --ssl",
         "serve": "ng serve --host 0.0.0.0",
         "build": "ng build && yarn minify-assets",
         "watch": "ng build --watch --configuration development",

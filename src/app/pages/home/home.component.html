@@ -50,7 +50,15 @@
                             <a [href]="ledgerUrl" target="_blank" class="link">Ledger</a>
                             device.
                         </div>
-                        <button mat-flat-button color="primary" (click)="connectLedger()">Load Ledger</button>
+                        <button
+                            mat-flat-button
+                            color="primary"
+                            (click)="connectLedger()"
+                            [matTooltip]="store.hasUsbSupport ? '' : 'This browser does not allow reading from USB'"
+                            [disabled]="!store.hasUsbSupport"
+                        >
+                            Load Ledger
+                        </button>
                     </app-empty-state>
                 </mat-card>
             </div>

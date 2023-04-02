@@ -1,8 +1,10 @@
+/* eslint-disable */
 import { AppStateService } from '@app/services/app-state.service';
 import { SecretService } from '@app/services/secret.service';
 import { Injectable } from '@angular/core';
 import { Banano } from 'hw-app-nano';
 import TransportU2F from '@ledgerhq/hw-transport-u2f';
+import { BROWSER_SUPPORTS_USB } from '@app/services/wallet-events.service';
 
 export type BananoifiedWindow = {
     bananocoin: any;
@@ -21,22 +23,28 @@ export class SignerService {
     supportsWebUSB = false;
     u2fLoader;
 
-    constructor(private readonly _secretService: SecretService, private readonly _appStateService: AppStateService) {}
+    constructor(private readonly _secretService: SecretService, private readonly _appStateService: AppStateService) {
+        void this._checkUsbSupport();
+    }
+
+    private async _checkUsbSupport(): Promise<void> {
+        const TransportWebUSB = window.TransportWebUSB;
+        this.supportsWebUSB = await TransportWebUSB.isSupported();
+        // eslint-disable-next-line no-console
+        console.info('connectLedger', 'supportsWebUSB', this.supportsWebUSB);
+
+        if (this.supportsWebUSB) {
+            BROWSER_SUPPORTS_USB.next();
+        } else {
+            await this.createU2FLoader().then(() => {
+                BROWSER_SUPPORTS_USB.next();
+            });
+        }
+    }
 
     /** Checks if ledger is connected via USB & is unlocked, ready to use. */
     async checkLedgerOrError(): Promise<void> {
-        const TransportWebUSB = window.TransportWebUSB;
         try {
-            this.supportsWebUSB = await TransportWebUSB.isSupported();
-            // eslint-disable-next-line no-console
-            console.info('connectLedger', 'supportsWebUSB', this.supportsWebUSB);
-
-            if (!this.supportsWebUSB) {
-                await this.createU2FLoader();
-                console.log('attempting to make U2F Loader');
-                console.log(this.u2fLoader);
-            }
-
             // Check Ledger is connected & app is open:
             await this.getAccountFromIndex(0);
             return Promise.resolve();
@@ -83,6 +91,7 @@ export class SignerService {
             return await window.bananocoin.bananojsHw.getLedgerAccountSigner(index);
         }
 
+        // TODO: This code is only for browsers which don't support WebUSB (looking at you, firefox).
         if (this.u2fLoader) {
             // TODO: get this out of here, MOVE TO BANANO JS HW.
             const getU2fSign = async (accountIx) => {
@@ -175,6 +184,7 @@ export class SignerService {
     /** https://github.com/Nault/Nault/blob/cd6d388e60ce84affaa813991445734cdf64c49f/src/app/services/ledger.service.ts#L268 */
     /** Creates alternative method for reading from USB, used in Firefox. Legacy technology; desperately want to remove this but people keep asking for Firefox support. */
     async createU2FLoader(): Promise<void> {
+        console.log('attempting to make U2F Loader');
         return new Promise((resolve, reject) => {
             TransportU2F.create()
                 .then((trans) => {

@@ -1,5 +1,11 @@
 # Change Log
 
+## v3.7.0 (Apr 2, 2023)
+
+### Added
+
+-  Added ledger support for Firefox desktop browser.
+
 ## v3.6.5 (Mar 18, 2023)
 
 ### Changed
