@@ -1,5 +1,43 @@
 # Change Log
 
+## v3.7.0 (Apr 2, 2023)
+
+### Added
+
+-  Added ledger support for Firefox desktop browser.
+
+## v3.6.5 (Mar 18, 2023)
+
+### Changed
+
+-  Dashboard card styles.
+-  Mobile style changes.
+-  Theme adjustments
+
+## v3.6.4 (Mar 15, 2023)
+
+### Changed
+
+-  Refactored e2e tests
+-  Dashboard card elevation.
+
+## v3.6.3 (Mar 15, 2023)
+
+### Changed
+
+-  Changed dashboard banner gradient.
+-  Change toolbar styles.
+
+## v3.6.2 (Mar 12, 2023)
+
+### Added
+
+-  Added more end-to-end tests.
+
+### Changed
+
+-  Updated the README.
+
 ## v3.6.1 (Mar 5, 2023)
 
 ### Changed

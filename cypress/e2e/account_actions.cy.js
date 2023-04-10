@@ -1,82 +1,225 @@
-describe('Account Actions', () => {
+import {
+    AccountRobot,
+    DashboardRobot,
+    GlobalRobot,
+    OverlayRobot,
+} from '../robots';
 
-    const address1 = 'ban_1z7rxmcwataoqahha6xdo3j1tfikoufkhb95dg4b7aajapa4cnp6h3s9f8oj';
-    const address2 = 'ban_1g98o6q1sidjbgo7gnqkobz1byo6tufjtt34n7prm6mbhcw914a9bgtkp584';
-    const LOW_FUND_SEED = '727A5E960F6189BBF196D84A6B7715D0A78DE82AC15BBDB340540076768CDB31';
-    const root = 'http://localhost:4200'
-    const loadInitialAccount = 'loadInitialAccount';
+describe('Account Actions', () => {
+    const LOW_FUND_SEED =
+        '727A5E960F6189BBF196D84A6B7715D0A78DE82AC15BBDB340540076768CDB31';
+    const address1 =
+        'ban_1z7rxmcwataoqahha6xdo3j1tfikoufkhb95dg4b7aajapa4cnp6h3s9f8oj';
+
+    const root = 'http://localhost:4200';
+    const dashboardRobot = new DashboardRobot();
+    const accountRobot = new AccountRobot();
+    const overlayRobot = new OverlayRobot();
+    const globalRobot = new GlobalRobot();
 
     beforeEach(() => {
-        // Cypress starts out with a blank slate for each test
-        // so we must tell it to visit our website with the `cy.visit()` command.
-        // Since we want to visit the same URL at the start of all our tests,
-        // we include it in our beforeEach function so that it runs before each test
         Cypress.config('defaultCommandTimeout', 90000);
-        window.localStorage.setItem('bananostand_dashboardView', 'card');
+        cy.setDashboardCardView();
         cy.reload();
         cy.intercept(root).as('home');
         cy.visit(root);
         cy.wait('@home'); // once the route resolves, cy.wait will resolve as well
-        cy.get('[data-cy=enter-secret]').click();
-        cy.get('[data-cy=secret-input]').type(LOW_FUND_SEED);
-        cy.get('[data-cy=secret-next]').click();
-        cy.intercept({method: 'POST', url: '**', times: 3}).as(loadInitialAccount);
-        cy.get('[data-cy=secret-next]').click();
-        cy.intercept({ method: 'POST', url: '**/account/confirmed-transactions' }).as('confirmedTx');
-        cy.get('[data-cy=dashboard-account-cards-container]').find('[data-cy=dashboard-account-card-footer]').click();
-        cy.wait('@confirmedTx').then(() => {
-            cy.get('[data-cy=account-scroll-container]').find('.transaction-row-wrapper').its('length').should('be.gte', 2);
-        })
-    })
+        cy.importAccount(LOW_FUND_SEED);
+        dashboardRobot.checkDashboardExists().clickAccountNumber(0);
+        accountRobot.checkAccountPageExists().checkTransactionsLoaded();
+    });
+
+    describe.only('Filtering', () => {
+        it('should open filter overlay (desktop)', () => {
+            accountRobot.clickFilterButtonDesktop();
+            overlayRobot.checkFilterOverlayExists();
+        });
+        it('should open filter overlay (mobile)', () => {
+            cy.viewport('iphone-6');
+            accountRobot.clickAccountActions().clickFilterButtonMobile();
+            overlayRobot.checkFilterOverlayExists();
+        });
+        it('should close the filter overlay', () => {
+            accountRobot.clickFilterButtonDesktop();
+            overlayRobot
+                .checkFilterOverlayExists()
+                .clickCloseFilterButton()
+                .checkFilterOverlayNotExists();
+        });
+        const confirmTxReq = {
+            method: 'POST',
+            url: '**/confirmed-transactions',
+        };
+        const checkType = (req, type) => {
+            req.on('response', (res) => {
+                for (const tx of res.body) {
+                    expect(tx.type).to.equal(type);
+                }
+            });
+        };
+        it('should filter to only show change transactions', () => {
+            cy.intercept(confirmTxReq, (req) => checkType(req, 'change')).as(
+                'filter'
+            );
+            accountRobot.clickFilterButtonDesktop();
+            overlayRobot
+                .clickReceivedFilterChip()
+                .clickSentFilterChip()
+                .clickApplyFilter();
+            cy.wait('@filter');
+            accountRobot.checkTransactionsLoaded();
+        });
+        it('should filter to only show received transactions', () => {
+            cy.intercept(confirmTxReq, (req) => checkType(req, 'receive')).as(
+                'filter'
+            );
+            accountRobot.clickFilterButtonDesktop();
+            overlayRobot
+                .clickChangeFilterChip()
+                .clickSentFilterChip()
+                .clickApplyFilter();
+            cy.wait('@filter');
+            accountRobot.checkTransactionsLoaded();
+        });
+        it('should filter to only show sent transactions', () => {
+            cy.intercept(confirmTxReq, (req) => checkType(req, 'send')).as(
+                'filter'
+            );
+            accountRobot.clickFilterButtonDesktop();
+            overlayRobot
+                .clickChangeFilterChip()
+                .clickReceivedFilterChip()
+                .clickApplyFilter();
+            cy.wait('@filter');
+            accountRobot.checkTransactionsLoaded();
+        });
+    });
+
+    describe('Refresh', () => {
+        it('should refresh account history (desktop)', () => {
+            cy.intercept({
+                method: 'POST',
+                url: '**/confirmed-transactions',
+            }).as('refresh');
+            accountRobot.clickRefreshAccountDesktop();
+            accountRobot
+                .checkLoadingIndicatorExists()
+                .checkNoTransactionsLoaded();
+            cy.wait('@refresh');
+            accountRobot
+                .checkTransactionsLoaded()
+                .checkLoadingIndicatorNotExists();
+        });
+        it('should refresh account history (mobile)', () => {
+            cy.viewport('iphone-6');
+            cy.intercept({
+                method: 'POST',
+                url: '**/confirmed-transactions',
+            }).as('refresh');
+            accountRobot.clickAccountActions().clickRefreshAccountMobile();
+            accountRobot
+                .checkLoadingIndicatorExists()
+                .checkNoTransactionsLoaded();
+            cy.wait('@refresh');
+            accountRobot
+                .checkTransactionsLoaded()
+                .checkLoadingIndicatorNotExists();
+        });
+    });
+
+    describe('Copy Address', () => {
+        it('should copy account address to clipboard (desktop)', () => {
+            accountRobot.clickCopyAddressDesktop();
+            cy.assertValueCopiedToClipboard(address1);
+        });
+
+        it('should copy account address to clipboard (mobile)', () => {
+            cy.viewport('iphone-6');
+            accountRobot.clickAccountActions().clickCopyAddressMobile();
+            cy.assertValueCopiedToClipboard(address1);
+            const addressCopiedText = 'Address Copied';
+            globalRobot.checkSnackbarTextContains(addressCopiedText);
+        });
+    });
 
     describe('Change Representative', () => {
         it('should close the change representative overlay (desktop)', () => {
-            cy.get('[data-cy=change-action]').click();
-            cy.get('.change-rep-overlay');
-            cy.get('[data-cy=change-close-button]').click();
-            cy.get('.change-rep-overlay').should('not.exist');
+            accountRobot.clickChangeRep();
+            overlayRobot
+                .checkChangeRepOverlayExists()
+                .clickCloseChangeRepOverlay()
+                .checkChangeRepOverlayNotExists();
         });
-    })
+
+        it('should close the change representative overlay (mobile)', () => {
+            cy.viewport('iphone-6');
+            accountRobot.clickAccountActions().clickChangeRepMobile();
+            overlayRobot
+                .checkChangeRepOverlayExists()
+                .clickCloseChangeRepOverlay()
+                .checkChangeRepOverlayNotExists();
+        });
+    });
 
     describe('Send', () => {
-
         it('should close the send overlay (desktop)', () => {
-            cy.get('[data-cy=send-action]').click();
-            cy.get('.send-overlay');
-            cy.get('[data-cy=send-close-button]').click();
-            cy.get('.send-overlay').should('not.exist');
+            accountRobot.clickSend();
+            overlayRobot
+                .checkSendOverlayExists()
+                .clickCloseSend()
+                .checkSendOverlayNotExists();
         });
 
-       it('should send .01 BAN to self (desktop)', () => {
-            cy.get('[data-cy=send-action]').click();
-            cy.get('.send-overlay');
-            cy.get('[data-cy=send-next-button]').click();
-            cy.get('[data-cy=send-amount-input]').type('.01');
-            cy.get('[data-cy=send-next-button]').click();
-            cy.get('[data-cy=send-recipient-input]').type(address1);
-            cy.get('[data-cy=send-next-button]').click();
-            cy.get('[data-cy=send-next-button]').click();
-            cy.get('[data-cy=send-loading]').should('exist');
-            cy.get('[data-cy=send-success-state]').should('exist');
+        it('should close the send overlay (mobile)', () => {
+            cy.viewport('iphone-6');
+            accountRobot.clickSend();
+            overlayRobot
+                .checkSendOverlayExists()
+                .clickCloseSend()
+                .checkSendOverlayNotExists();
         });
-    })
+
+        it('should send .01 BAN to self (desktop)', () => {
+            accountRobot.clickSend();
+            overlayRobot
+                .checkSendOverlayExists()
+                .clickSendNextButton()
+                .enterSendAmount('.01')
+                .clickSendNextButton()
+                .enterRecipientAddress(address1)
+                .clickSendNextButton()
+                .clickSendNextButton() // Sends actual transaction
+                .checkSendLoading()
+                .checkSendSuccess();
+        });
+    });
 
     describe('Receive', () => {
-
         /** The receive button will be disabled unless we have something to actually receive. */
         it('should close the receive overlay (desktop)', () => {
-            cy.get('[data-cy=receive-action]').click();
-            cy.get('.receive-overlay');
-            cy.get('[data-cy=receive-close-button]').click();
-            cy.get('.receive-overlay').should('not.exist');
+            accountRobot.clickReceive();
+            overlayRobot
+                .checkReceiveOverlayExists()
+                .clickCloseReceive()
+                .checkReceiveOverlayNotExists();
+        });
+
+        it('should close the receive overlay (mobile)', () => {
+            cy.viewport('iphone-6');
+            accountRobot.clickReceive();
+            overlayRobot
+                .checkReceiveOverlayExists()
+                .clickCloseReceive()
+                .checkReceiveOverlayNotExists();
         });
 
         it('should receive all incoming transaction(s) (desktop)', () => {
-            cy.get('[data-cy=receive-action]').click();
-            cy.get('.receive-overlay');
-            cy.get('[data-cy=receive-button]').click();
-            cy.get('[data-cy=receive-loading]').should('exist');
-            cy.get('[data-cy=receive-success-state').should('exist');
+            accountRobot.clickReceive();
+            overlayRobot
+                .checkReceiveOverlayExists()
+                .clickReceiveNextButton()
+                .checkReceiveLoading()
+                .checkReceiveSuccess();
         });
     });
 });

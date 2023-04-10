@@ -19,7 +19,6 @@ import * as Colors from '@brightlayer-ui/colors';
     template: `<table
         mat-table
         [dataSource]="dataSource"
-        class="mat-elevation-z0"
         matSort
         #sortMonitored="matSort"
         class="account-table-container"
@@ -47,7 +46,7 @@ import * as Colors from '@brightlayer-ui/colors';
 
         <ng-container matColumnDef="balance">
             <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by balance">
-                Balance BAN
+                Balance <ng-container *ngIf="!vp.sm">BAN</ng-container>
             </th>
             <td mat-cell *matCellDef="let element">
                 <div style="display: flex; align-items: center; flex-wrap: wrap">

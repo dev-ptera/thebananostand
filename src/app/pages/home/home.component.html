@@ -3,7 +3,7 @@
 </ng-template>
 
 <ng-template #appBar>
-    <mat-toolbar color="primary" class="mat-elevation-z2 app-toolbar" responsive>
+    <mat-toolbar color="primary" class="app-toolbar" responsive [class.mat-elevation-z2]="!vp.sm">
         <div style="display: flex; align-items: center; justify-content: space-between; width: 100%">
             <mat-icon [style.color]="colors.yellow[300]" style="margin-left: 8px">storefront</mat-icon>
             <app-account-settings></app-account-settings>
@@ -12,7 +12,7 @@
 </ng-template>
 
 <ng-template #dashboard>
-    <app-dashboard data-cy="dashboard-wrapper"></app-dashboard>
+    <app-dashboard data-cy="dashboard-wrapper" responsive></app-dashboard>
 </ng-template>
 
 <ng-template #home>
@@ -46,11 +46,23 @@
                         <mat-icon>usb</mat-icon>
                         <div title>Nano Ledger</div>
                         <div description>
-                            Load accounts by reading data from a USB-connected
-                            <a [href]="ledgerUrl" target="_blank" class="link">Ledger</a>
-                            device.
+                            <ng-container *ngIf="store.hasUsbSupport">
+                                Load accounts by reading data from a USB-connected
+                                <a [href]="ledgerUrl" target="_blank" class="link">Ledger</a>
+                                device.
+                            </ng-container>
+                            <ng-container *ngIf="!store.hasUsbSupport">
+                                This browser cannot read from a USB device; use a desktop browser instead.
+                            </ng-container>
                         </div>
-                        <button mat-flat-button color="primary" (click)="connectLedger()">Load Ledger</button>
+                        <button
+                            mat-flat-button
+                            color="primary"
+                            (click)="connectLedger()"
+                            [disabled]="!store.hasUsbSupport"
+                        >
+                            Load Ledger
+                        </button>
                     </app-empty-state>
                 </mat-card>
             </div>

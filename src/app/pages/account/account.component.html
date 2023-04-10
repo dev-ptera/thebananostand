@@ -1,18 +1,23 @@
 <ng-template #accountActions>
     <ng-template #accountActionsMenu>
-        <button mat-menu-item (click)="copyAccountAddressMobile()">
+        <button mat-menu-item (click)="copyAccountAddressMobile()" data-cy="copy-address-mobile">
             <mat-icon>content_copy</mat-icon>
             <span>Copy Address</span>
         </button>
-        <button mat-menu-item (click)="openFilterDialog()" *ngIf="account.representative">
+        <button
+            mat-menu-item
+            (click)="openFilterDialog()"
+            *ngIf="account.representative"
+            data-cy="filter-button-mobile"
+        >
             <mat-icon>filter_list</mat-icon>
             <span>Filter Transactions</span>
         </button>
-        <button mat-menu-item (click)="changeRep()" *ngIf="account.representative">
+        <button mat-menu-item (click)="changeRep()" *ngIf="account.representative" data-cy="change-rep-mobile">
             <mat-icon>how_to_vote</mat-icon>
             <span>Change Representative</span>
         </button>
-        <button mat-menu-item (click)="refreshCurrentAccountInfo()">
+        <button mat-menu-item (click)="refreshCurrentAccountInfo()" data-cy="refresh-account-mobile">
             <mat-icon>refresh</mat-icon>
             <span>Refresh Account</span>
         </button>
@@ -22,6 +27,7 @@
     </ng-template>
     <responsive-menu
         style="margin-right: -8px"
+        data-cy="account-actions-trigger"
         menuTitle="Account Actions"
         [(open)]="isAccountActionsMobileMenuOpen"
         [menu]="accountActionsMenu"
@@ -75,8 +81,8 @@
     </button>
 </ng-template>
 
-<div class="app-root">
-    <mat-toolbar color="primary" class="mat-elevation-z2 app-toolbar" responsive>
+<div class="app-root" data-cy="account-page">
+    <mat-toolbar color="primary" class="app-toolbar" responsive [class.mat-elevation-z2]="!vp.sm">
         <div style="display: flex; align-items: center">
             <button mat-icon-button (click)="goHome()" style="margin-left: -4px">
                 <mat-icon class="text-contrast">arrow_back</mat-icon>
@@ -98,7 +104,13 @@
                     <span>{{ account?.fullAddress.substring(58, 64) }}</span>
                 </div>
 
-                <button mat-icon-button (click)="copyAccountAddressDesktop()" style="margin-left: 8px" *ngIf="!vp.sm">
+                <button
+                    mat-icon-button
+                    (click)="copyAccountAddressDesktop()"
+                    style="margin-left: 8px"
+                    *ngIf="!vp.sm"
+                    data-cy="copy-address-desktop"
+                >
                     <mat-icon class="text-contrast">
                         {{ hasCopiedAccountAddress ? 'check_circle' : 'content_copy' }}
                     </mat-icon>
@@ -178,6 +190,7 @@
                     *ngIf="showProgressBar()"
                     color="primary"
                     mode="indeterminate"
+                    data-cy="loading-indicator"
                     style="left: 0"
                     [style.position]="vp.sm ? 'fixed' : 'absolute'"
                     [style.top.px]="vp.sm ? 40 : 0"
@@ -189,6 +202,7 @@
                         <button
                             mat-stroked-button
                             class="stroked-icon-action-button"
+                            data-cy="refresh-account-desktop"
                             (click)="refreshCurrentAccountInfo()"
                             matTooltip="Refresh account history"
                         >
@@ -197,6 +211,7 @@
                         <button
                             *ngIf="!hideTransactionFilters"
                             mat-stroked-button
+                            data-cy="filter-button-desktop"
                             class="stroked-icon-action-button"
                             (click)="openFilterDialog()"
                             matTooltip="Transaction Filters"

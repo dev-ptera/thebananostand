@@ -30,6 +30,7 @@ import {
     ApiRequestBottomSheetComponent
 } from "@app/overlays/bottom-sheet/api-request/api-request-bottom-sheet.component";
 import {ApiRequestDialogComponent} from "@app/overlays/dialogs/api-request/api-request-dialog.component";
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @UntilDestroy()
 @Component({
@@ -37,6 +38,9 @@ import {ApiRequestDialogComponent} from "@app/overlays/dialogs/api-request/api-r
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    animations: [
+        trigger('fade', [transition('void => *', [style({ opacity: 0 }), animate(300, style({ opacity: 1 }))])]),
+    ],
 })
 export class DashboardComponent {
     switchWalletOverlayOpen = false;

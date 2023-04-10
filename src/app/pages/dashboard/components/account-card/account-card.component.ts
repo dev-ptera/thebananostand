@@ -42,9 +42,14 @@ import { AppStateService, AppStore } from '@app/services/app-state.service';
 
         <div class="account-card-container" responsive data-cy="dashboard-account-cards-container">
             <mat-card
-                data-cy="dashboard-account-card"
-                *ngFor="let account of accounts | sort : sortDirection : accounts.length; trackBy: markUniqueAccount"
                 class="account-card divider-border"
+                data-cy="dashboard-account-card"
+                *ngFor="
+                    let i = index;
+                    let account;
+                    of: accounts | sort : sortDirection : accounts.length;
+                    trackBy: markUniqueAccount
+                "
             >
                 <div data-cy="account-number" class="card-account-number mat-caption">
                     #{{ _util.numberWithCommas(account.index) }}
@@ -56,7 +61,7 @@ import { AppStateService, AppStore } from '@app/services/app-state.service';
                                 <img [src]="getMonkeyUrl(account.fullAddress)" loading="lazy" style="height: 100%" />
                             </div>
                             <div [style.paddingLeft.px]="vp.sm ? 8 : 8" style="padding-top: 8px; padding-bottom: 8px">
-                                <div class="mono" [class.mat-body-2]="vp.sm" [class.mat-body-1]="!vp.sm">
+                                <div class="mono" [style.fontSize.px]="vp.sm ? 12 : 14">
                                     {{ account.shortAddress }}
                                 </div>
                                 <div
@@ -113,16 +118,16 @@ import { AppStateService, AppStore } from '@app/services/app-state.service';
                                 ></ng-template>
                             </div>
                             <div *ngIf="!account.representative" style="padding: 16px 8px">
-                                <div class="mat-body-1 hint">Unopened Account</div>
+                                <div class="mat-body-2 hint">Unopened Account</div>
                             </div>
                         </div>
                         <mat-divider> </mat-divider>
                         <div
-                            data-cy="dashboard-account-card-footer"
+                            [attr.data-cy]="'dashboard-account-card-footer-' + i"
                             class="card-footer"
                             (click)="openAccount(account.fullAddress)"
                         >
-                            <div class="mat-body-1">View Account</div>
+                            <div class="mat-body-2">View Account</div>
                             <mat-icon>chevron_right</mat-icon>
                         </div>
                     </div>

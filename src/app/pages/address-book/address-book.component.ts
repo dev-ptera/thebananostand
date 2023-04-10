@@ -16,7 +16,7 @@ import { UtilService } from '@app/services/util.service';
 @Component({
     selector: 'app-address-book',
     template: ` <div class="app-root app-settings-page" responsive>
-        <mat-toolbar color="primary" class="mat-elevation-z2 app-toolbar" responsive>
+        <mat-toolbar color="primary" class="app-toolbar" responsive [class.mat-elevation-z2]="!vp.sm">
             <div style="display: flex; align-items: center">
                 <button mat-icon-button (click)="back()">
                     <mat-icon style="color: var(--text-contrast)">close</mat-icon>
