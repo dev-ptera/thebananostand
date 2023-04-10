@@ -4,6 +4,8 @@ import { SecretService } from '@app/services/secret.service';
 import { Injectable } from '@angular/core';
 import { Banano } from 'hw-app-nano';
 import TransportU2F from '@ledgerhq/hw-transport-u2f';
+import TransportNodeHid from '@ledgerhq/hw-transport-node-hid';
+
 import { BROWSER_SUPPORTS_USB } from '@app/services/wallet-events.service';
 
 export type BananoifiedWindow = {
@@ -22,6 +24,7 @@ declare let window: BananoifiedWindow;
 export class SignerService {
     supportsWebUSB = false;
     u2fLoader;
+    hidLoader;
 
     constructor(private readonly _secretService: SecretService, private readonly _appStateService: AppStateService) {
         void this._checkUsbSupport();
@@ -35,10 +38,13 @@ export class SignerService {
 
         if (this.supportsWebUSB) {
             BROWSER_SUPPORTS_USB.next();
-        } else {
-            await this.createU2FLoader().then(() => {
-                BROWSER_SUPPORTS_USB.next();
-            });
+            return;
+        }
+
+        const supportsHid = await this.createHidLoader();
+        const supportsU2F = await this.createU2FLoader();
+        if (supportsHid || supportsU2F) {
+            BROWSER_SUPPORTS_USB.next();
         }
     }
 
@@ -75,8 +81,13 @@ export class SignerService {
             return accountData.account;
         }
 
+        if (this.hidLoader) {
+            const accountData = await this.getLedgerAccount(accountIndex, this.hidLoader);
+            return accountData.address;
+        }
+
         if (this.u2fLoader) {
-            const accountData = await this.getLedgerAccountWebViaU2F(accountIndex);
+            const accountData = await this.getLedgerAccount(accountIndex, this.u2fLoader);
             return accountData.address;
         }
     }
@@ -91,8 +102,9 @@ export class SignerService {
             return await window.bananocoin.bananojsHw.getLedgerAccountSigner(index);
         }
 
+        const loader = this.hidLoader || this.u2fLoader;
         // TODO: This code is only for browsers which don't support WebUSB (looking at you, firefox).
-        if (this.u2fLoader) {
+        if (loader) {
             // TODO: get this out of here, MOVE TO BANANO JS HW.
             const getU2fSign = async (accountIx) => {
                 const bananoConfig = {} as any;
@@ -101,7 +113,7 @@ export class SignerService {
                 bananoConfig.walletPrefix = `44'/198'/`;
                 bananoConfig.prefix = window.bananocoinBananojs.BANANO_PREFIX;
                 bananoConfig.bananodeUrl = 'https://kaliumapi.appditto.com/api';
-                let accountData = await this.getLedgerAccountWebViaU2F(accountIx);
+                let accountData = await this.getLedgerAccount(accountIx, loader);
                 const signer = {} as any;
                 signer.getPublicKey = () => {
                     return accountData.publicKey;
@@ -166,9 +178,9 @@ export class SignerService {
     }
 
     // TODO: Remove me, duplicate of bananojs hw
-    private async getLedgerAccountWebViaU2F(accountIndex: number) {
+    private async getLedgerAccount(accountIndex: number, loader) {
         try {
-            return await this.u2fLoader.getAddress(this.getBananoLedgerPath(accountIndex));
+            return await loader.getAddress(this.getBananoLedgerPath(accountIndex));
         } catch (err) {
             throw err;
         }
@@ -183,15 +195,32 @@ export class SignerService {
     // TODO: Remove me, move this logic to bananojs hw
     /** https://github.com/Nault/Nault/blob/cd6d388e60ce84affaa813991445734cdf64c49f/src/app/services/ledger.service.ts#L268 */
     /** Creates alternative method for reading from USB, used in Firefox. Legacy technology; desperately want to remove this but people keep asking for Firefox support. */
-    async createU2FLoader(): Promise<void> {
+    async createU2FLoader(): Promise<boolean> {
         console.log('attempting to make U2F Loader');
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             TransportU2F.create()
                 .then((trans) => {
                     this.u2fLoader = new Banano(trans);
-                    resolve();
+                    resolve(true);
                 })
-                .catch(reject);
+                .catch(() => {
+                    resolve(false)
+                });
+        });
+    }
+
+    // TODO: Remove me, move this logic to bananojs hw
+    async createHidLoader(): Promise<boolean> {
+        console.log('attempting to make HID Loader');
+        return new Promise((resolve) => {
+            TransportNodeHid.create()
+                .then((trans) => {
+                    this.hidLoader = new Banano(trans);
+                    resolve(true);
+                })
+                .catch(() => {
+                    resolve(false)
+                });
         });
     }
 }
