@@ -17,6 +17,8 @@ export type AppStore = {
     hasUnlockedLedger: boolean;
     /** User has unlocked the wallet using a secret / password combo. */
     hasUnlockedSecret: boolean;
+    /** Browser can support USB. */
+    hasUsbSupport: boolean;
     /** Accounts on the dashboard are being loaded. */
     isLoadingAccounts: boolean;
     /** What users would like their balances to be converted into. */
@@ -53,6 +55,7 @@ export class AppStateService {
         hasSecret: undefined, // Set on init.
         hasUnlockedSecret: false,
         hasUnlockedLedger: false,
+        hasUsbSupport: false,
         walletPassword: undefined,
         localCurrencyCode: undefined,
         localCurrencyConversionRate: 0,

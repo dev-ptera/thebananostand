@@ -12,6 +12,7 @@
         "importHelpers": true,
         "target": "es2015",
         "module": "es2020",
+        "allowSyntheticDefaultImports": true,
         "paths": {
             "@angular/*": ["../node_modules/@angular/*"],
             "@app/components/*": ["app/components/*"],

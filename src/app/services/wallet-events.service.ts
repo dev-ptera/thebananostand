@@ -28,6 +28,9 @@ export const ATTEMPT_UNLOCK_WALLET_WITH_PASSWORD = new Subject<{ password: strin
 /** User wants to unlock the ledger device. */
 export const ATTEMPT_UNLOCK_LEDGER_WALLET = new Subject<void>();
 
+/** Browser supports USB functionality and can be read by the ledger device. */
+export const BROWSER_SUPPORTS_USB = new Subject<void>();
+
 /** The actively displayed wallet on the dashboard has changed to another. */
 export const CHANGE_ACTIVE_WALLET = new Subject<LocalStorageWallet>();
 
@@ -193,6 +196,12 @@ export class WalletEventsService {
                 console.error(err);
                 UNLOCK_WALLET_WITH_PASSWORD_ERROR.next();
             }
+        });
+
+        BROWSER_SUPPORTS_USB.subscribe(() => {
+            this._dispatch({
+                hasUsbSupport: true,
+            });
         });
 
         CHANGE_ACTIVE_WALLET.subscribe((activeWallet: LocalStorageWallet) => {
