@@ -14,7 +14,7 @@ export class TimeoutService {
         private readonly _snackbar: MatSnackBar
     ) {
         this._userIdle.onIdleStatusChanged().subscribe((isIdle) => {
-        //    console.log('User is considered idle now?', isIdle);
+            //    console.log('User is considered idle now?', isIdle);
         });
 
         // Start watch when time is up.
