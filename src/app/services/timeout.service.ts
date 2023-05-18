@@ -13,7 +13,7 @@ export class TimeoutService {
         private readonly _appState: AppStateService,
         private readonly _snackbar: MatSnackBar
     ) {
-        this._userIdle.onIdleStatusChanged().subscribe((isIdle) => {
+        this._userIdle.onIdleStatusChanged().subscribe(() => {
             //    console.log('User is considered idle now?', isIdle);
         });
 
