@@ -144,6 +144,7 @@ export class WalletEventsService {
             hasSecret: this._walletStorageService.hasSecretWalletSaved(),
             localStorageWallets: this._walletStorageService.readWalletsFromLocalStorage(),
             preferredDashboardView: this._walletStorageService.readPreferredDashboardViewFromLocalStorage(),
+            idleTimeoutMinutes: this._walletStorageService.readIdleTimeoutMinutes()
         });
 
         this._appStateService.store.subscribe((store) => {
@@ -413,6 +414,7 @@ export class WalletEventsService {
                 addressBook: newData.addressBook,
                 activeWallet: newData.activeWallet,
                 localStorageWallets: newData.localStorageWallets,
+                idleTimeoutMinutes: newData.idleTimeoutMinutes,
             });
         }
     }

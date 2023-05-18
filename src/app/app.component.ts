@@ -5,6 +5,7 @@ import { WalletEventsService } from '@app/services/wallet-events.service';
 import { PowService } from '@app/services/pow.service';
 import { AppStateService } from '@app/services/app-state.service';
 import { environment } from '../environments/environment';
+import {TimeoutService} from "@app/services/timeout.service";
 
 @Component({
     selector: 'app-root',
@@ -15,7 +16,8 @@ export class AppComponent {
     constructor(
         private readonly _powService: PowService,
         private readonly _appStoreService: AppStateService,
-        private readonly _walletEventService: WalletEventsService // Required to listen to app events; don't remove.
+        private readonly _walletEventService: WalletEventsService, // Required to listen to app events; don't remove.
+        private readonly _timeoutService: TimeoutService, // Listens for user idle
     ) {
         const appHeight = (): void => {
             const doc = document.documentElement;
