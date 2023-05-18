@@ -9,29 +9,28 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class TimeoutService {
     constructor(
-        private readonly userIdle: UserIdleService,
+        private readonly _userIdle: UserIdleService,
         private readonly _appState: AppStateService,
         private readonly _snackbar: MatSnackBar
     ) {
-        this.userIdle.onIdleStatusChanged().subscribe((isIdle) => {
-            console.log('User is considered idle now?', isIdle);
+        this._userIdle.onIdleStatusChanged().subscribe((isIdle) => {
+        //    console.log('User is considered idle now?', isIdle);
         });
 
         // Start watch when time is up.
-        this.userIdle.onTimeout().subscribe(() => {
+        this._userIdle.onTimeout().subscribe(() => {
             this._snackbar.open('Automatically logged you out...', 'Dismiss');
             LOCK_WALLET.next();
         });
 
         // Listen for app state changes, restart app timeout.
         this._appState.store.subscribe((state) => {
-            console.log(state);
             if (state.hasUnlockedSecret || state.hasUnlockedLedger) {
-                this.userIdle.stopWatching();
-                this.userIdle.setConfigValues({ idle: state.idleTimeoutMinutes * 60 });
-                this.userIdle.startWatching();
+                this._userIdle.stopWatching();
+                this._userIdle.setConfigValues({ idle: state.idleTimeoutMinutes * 60 });
+                this._userIdle.startWatching();
             } else {
-                this.userIdle.stopWatching();
+                this._userIdle.stopWatching();
             }
         });
     }
