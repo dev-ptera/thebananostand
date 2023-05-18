@@ -144,7 +144,7 @@ export class WalletEventsService {
             hasSecret: this._walletStorageService.hasSecretWalletSaved(),
             localStorageWallets: this._walletStorageService.readWalletsFromLocalStorage(),
             preferredDashboardView: this._walletStorageService.readPreferredDashboardViewFromLocalStorage(),
-            idleTimeoutMinutes: this._walletStorageService.readIdleTimeoutMinutes()
+            idleTimeoutMinutes: this._walletStorageService.readIdleTimeoutMinutes(),
         });
 
         this._appStateService.store.subscribe((store) => {
