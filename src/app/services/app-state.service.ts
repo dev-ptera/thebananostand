@@ -19,6 +19,8 @@ export type AppStore = {
     hasUnlockedSecret: boolean;
     /** Browser can support USB. */
     hasUsbSupport: boolean;
+    /** How long before wallet is automatically locked. Defaults to 15 minutes. */
+    idleTimeoutMinutes: number;
     /** Accounts on the dashboard are being loaded. */
     isLoadingAccounts: boolean;
     /** What users would like their balances to be converted into. */
@@ -67,6 +69,7 @@ export class AppStateService {
         localStorageWallets: [],
         activeWallet: undefined,
         totalBalance: 0,
+        idleTimeoutMinutes: 15,
         isLoadingAccounts: true,
         preferredDashboardView: undefined,
     });
@@ -78,5 +81,6 @@ export class AppStateService {
         activeWallet: LocalStorageWallet;
         localStorageWallets: LocalStorageWallet[];
         preferredDashboardView: string;
+        idleTimeoutMinutes: number;
     }>();
 }

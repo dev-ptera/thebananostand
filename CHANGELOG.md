@@ -1,5 +1,11 @@
 # Change Log
 
+## v3.8.0 (May 17, 2023)
+
+### Added
+
+-  Automatically log out idle users after 15 minutes of inactivity.
+ 
 ## v3.7.0 (Apr 2, 2023)
 
 ### Added

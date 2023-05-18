@@ -86,6 +86,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { AccountActionsComponent } from '@app/pages/dashboard/components/account-actions/account-actions.component';
 
+import { provideUserIdleConfig } from 'angular-user-idle';
+import { MatSliderModule } from '@angular/material/slider';
+
 @NgModule({
     declarations: [
         AccountComponent,
@@ -178,8 +181,9 @@ import { AccountActionsComponent } from '@app/pages/dashboard/components/account
         MatListModule,
         MatTableModule,
         MatSortModule,
+        MatSliderModule,
     ],
-    providers: [],
+    providers: [provideUserIdleConfig({ idle: 600, timeout: 60 })],
     bootstrap: [AppComponent],
 })
 export class AppModule {}
