@@ -45,13 +45,13 @@ describe('Dashboard Management', () => {
 
     describe('Backup Secret', () => {
         it('should copy wallet seed to clipboard', () => {
-            dashboardRobot.clickWalletActions().clickCopySeed();
+            cy.copySeed();
             cy.assertValueCopiedToClipboard(LOW_FUND_SEED);
             globalRobot.checkSnackbarTextContains('Seed Copied');
         });
 
         it('should copy wallet mnemonic to clipboard', () => {
-            dashboardRobot.clickWalletActions().clickCopyMnemonic();
+            cy.copyMnemonicPhrase();
             cy.assertValueCopiedToClipboard(LOW_FUND_MNEMONIC);
             globalRobot.checkSnackbarTextContains('Mnemonic Phrase Copied');
         });

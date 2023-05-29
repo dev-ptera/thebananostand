@@ -25,6 +25,19 @@
     }
 }
 
+.long-press {
+    display: flex;
+    flex-direction: column;
+    .long-press-text,
+    .long-text-instruction {
+        height: 20px;
+        line-height: 20px;
+    }
+    .long-press-instruction {
+        font-size: 12px;
+    }
+}
+
 .mobile-actions {
     display: flex;
     justify-content: space-between;

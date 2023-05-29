@@ -1,5 +1,11 @@
 # Change Log
 
+## v3.8.1 (May 29, 2023)
+
+### Changed
+
+-  Changed copy seed and copy mnemonic options from 'click' event to 'long-press'.
+
 ## v3.8.0 (May 17, 2023)
 
 ### Added
