@@ -71,21 +71,31 @@
         <button mat-menu-item longPress (mouseLongPress)="removeWallet()" data-cy="remove-wallet-button">
             <div style="display: flex; align-items: center">
                 <mat-icon color="warn">clear</mat-icon>
-                <div style="display: flex; flex-direction: column; padding-left: 4px">
-                    <div style="height: 20px; line-height: 20px">Remove</div>
-                    <div style="height: 20px; line-height: 20px; font-size: 12px">(Long Press)</div>
+                <div class="long-press">
+                    <div class="long-press-text">Remove</div>
+                    <div class="long-press-instruction">(Long Press)</div>
                 </div>
             </div>
         </button>
         <div class="mat-overline category-separator" style="margin-top: 24px">Backup</div>
         <mat-divider></mat-divider>
-        <button mat-menu-item (click)="copyWalletSeed()" data-cy="copy-seed-button">
-            <mat-icon>content_copy</mat-icon>
-            Copy Seed
+        <button mat-menu-item longPress (mouseLongPress)="copyWalletSeed()" data-cy="copy-seed-button">
+            <div style="display: flex; align-items: center">
+                <mat-icon>content_copy</mat-icon>
+                <div class="long-press">
+                    <div class="long-press-text">Copy Seed</div>
+                    <div class="long-press-instruction">(Long Press)</div>
+                </div>
+            </div>
         </button>
-        <button mat-menu-item (click)="copyWalletMnemonic()" data-cy="copy-mnemonic-button">
-            <mat-icon>content_copy</mat-icon>
-            Copy Mnemonic
+        <button mat-menu-item longPress (mouseLongPress)="copyWalletMnemonic()" data-cy="copy-mnemonic-button">
+            <div style="display: flex; align-items: center">
+                <mat-icon>content_copy</mat-icon>
+                <div class="long-press">
+                    <div class="long-press-text">Copy Mnemonic</div>
+                    <div class="long-press-instruction">(Long Press)</div>
+                </div>
+            </div>
         </button>
     </ng-template>
     <ng-template #walletActionsDesktopTrigger>

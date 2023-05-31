@@ -59,6 +59,14 @@ Cypress.Commands.add('removeWallet' as any, () => {
     new DashboardRobot().clickWalletActions().clickRemoveWallet();
     cy.wait(2000);
 });
+Cypress.Commands.add('copyMnemonicPhrase' as any, () => {
+    new DashboardRobot().clickWalletActions().clickCopyMnemonic();
+    cy.wait(2000);
+});
+Cypress.Commands.add('copySeed' as any, () => {
+    new DashboardRobot().clickWalletActions().clickCopySeed();
+    cy.wait(2000);
+});
 //
 //
 // -- This is a child command --
