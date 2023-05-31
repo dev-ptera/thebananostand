@@ -29,7 +29,7 @@ describe('Account Actions', () => {
         accountRobot.checkAccountPageExists().checkTransactionsLoaded();
     });
 
-    describe('Filtering', () => {
+    describe.only('Filtering', () => {
         it('should open filter overlay (desktop)', () => {
             accountRobot.clickFilterButtonDesktop();
             overlayRobot.checkFilterOverlayExists();
