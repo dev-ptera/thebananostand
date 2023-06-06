@@ -49,6 +49,12 @@ or
 
 This project has fully automated [GitHub releases](https://github.com/dev-ptera/thebananostand/releases) which are validated and published via a [GitHub Actions pipeline](https://github.com/dev-ptera/thebananostand/actions).
 
+## Testing
+
+This project uses Cypress for end-to-end testing.  In order to run the Cypress tests, run in terminal 1: `yarn start` & in terminal 2: `yarn cypress`.  
+
+All tests are ran using Electron. 
+
 ## Issues / Requests
 
 Is there either something horribly wrong or do you have a cool feature request?  Pick one:
