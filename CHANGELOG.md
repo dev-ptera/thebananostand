@@ -1,5 +1,11 @@
 # Change Log
 
+## v3.8.2 (June 5, 2023)
+
+### Changed
+
+-  Preserve original route on page refresh.
+
 ## v3.8.1 (May 29, 2023)
 
 ### Changed

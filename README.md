@@ -20,6 +20,7 @@ This project was created to manage funds via the highly secure [Ledger hardware 
 - Chrome
 - Brave
 - Edge
+- Firefox
 
 > Note: Most Chromium-based browsers will work with this wallet.
 
@@ -42,11 +43,17 @@ Did you clone the project and want to run it on your machine?
 
 or
 
-    npm i && npm run start
+    npm i --legacy-peer-deps && npm run start
 
 ## Releases
 
 This project has fully automated [GitHub releases](https://github.com/dev-ptera/thebananostand/releases) which are validated and published via a [GitHub Actions pipeline](https://github.com/dev-ptera/thebananostand/actions).
+
+## Testing
+
+This project uses Cypress for end-to-end testing.  In order to run the Cypress tests, run in terminal 1: `yarn start` & in terminal 2: `yarn cypress`.  
+
+All tests are ran using Electron. 
 
 ## Issues / Requests
 
@@ -54,6 +61,6 @@ Is there either something horribly wrong or do you have a cool feature request? 
 
 -  [Open an issue](https://github.com/dev-ptera/thebananostand/issues) on GitHub
 -  Tag me in the [Banano discord](https://chat.banano.cc/)
--  Send me an email
+-  Send me an email (dev.ptera@gmail.com)
 
 > Note: If you want to contribute to this project, please contact me before implementing a new feature.  We want to make sure it makes sense to add before working on it.

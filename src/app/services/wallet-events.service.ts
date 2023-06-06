@@ -11,6 +11,8 @@ import { SignerService } from '@app/services/signer.service';
 import { AddressBookEntry } from '@app/types/AddressBookEntry';
 import { SpyglassService } from '@app/services/spyglass.service';
 import { CurrencyConversionService } from '@app/services/currency-conversion.service';
+import { AuthGuardService } from '../guards/auth-guard';
+import { Router } from '@angular/router';
 
 const SNACKBAR_DURATION = 3000;
 const SNACKBAR_CLOSE_ACTION_TEXT = 'Dismiss';
@@ -125,8 +127,10 @@ export class WalletEventsService {
     }
 
     constructor(
+        private readonly _router: Router,
         private readonly _util: UtilService,
         private readonly _snackbar: MatSnackBar,
+        private readonly _authGuard: AuthGuardService,
         private readonly _signerService: SignerService,
         private readonly _secretService: SecretService,
         private readonly _accountService: AccountService,
@@ -384,6 +388,7 @@ export class WalletEventsService {
         });
 
         UNLOCK_WALLET.subscribe((data) => {
+            void this._router.navigateByUrl(this._authGuard.originalRoute);
             this._dispatch({
                 activeWallet: this._walletStorageService.readActiveWalletFromLocalStorage(),
                 hasUnlockedSecret: !data.isLedger,
