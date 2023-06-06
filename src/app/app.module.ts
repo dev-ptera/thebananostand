@@ -73,6 +73,7 @@ import { SendBottomSheetComponent } from '@app/overlays/bottom-sheet/send/send-b
 import { SendComponent } from '@app/overlays/actions/send/send.component';
 import { SendDialogComponent } from '@app/overlays/dialogs/send/send-dialog.component';
 import { SpacerModule } from '@app/components/spacer/spacer.module';
+import { SigningComponent } from './pages/signing/signing.component';
 import { TransactionComponent } from '@app/pages/account/components/transaction/transaction.component';
 import { RenameAddressComponent } from '@app/overlays/actions/rename-address/rename-address.component';
 import { RenameAddressDialogComponent } from '@app/overlays/dialogs/rename-address/rename-address-dialog.component';
@@ -140,6 +141,7 @@ import { MatSliderModule } from '@angular/material/slider';
         SendComponent,
         SendDialogComponent,
         SettingsPageComponent,
+        SigningComponent,
         TransactionComponent,
         AccountTableComponent,
         AccountActionsComponent,
