@@ -6,6 +6,8 @@ import { AppStateService } from '@app/services/app-state.service';
     providedIn: 'root',
 })
 export class AuthGuardService implements CanActivate {
+    private preservedRoute = '';
+
     constructor(public appStateService: AppStateService, public router: Router) {}
 
     canActivate(): boolean {
@@ -13,7 +15,12 @@ export class AuthGuardService implements CanActivate {
         if (store.hasUnlockedLedger || store.hasUnlockedSecret) {
             return true;
         }
+        this.preservedRoute = window.location.pathname;
         void this.router.navigate(['']);
         return false;
+    }
+
+    get originalRoute(): string {
+        return this.preservedRoute;
     }
 }
