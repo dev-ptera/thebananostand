@@ -20,6 +20,7 @@ const ENCRYPTED_WALLETS = 'bananostand_encryptedWallets';
 const ADDRESS_BOOK = 'bananostand_addressBook';
 const LEDGER_STORED_INDEXES = 'bananostand_ledgerIndexes';
 const PREFERRED_DASHBOARD_VIEW = 'bananostand_dashboardView';
+const IDLE_TIMEOUT_MINUTES = 'bananostand_idleTimeoutMinutes';
 const MINIMUM_INCOMING_THRESHOLD_BAN = 'bananostand_minimumIncomingBananoThreshold';
 
 @Injectable({
@@ -45,6 +46,10 @@ export class WalletStorageService {
         this._appStateService.appLocalStorage.subscribe((walletData) => {
             if (walletData.minimumBananoThreshold !== undefined) {
                 window.localStorage.setItem(MINIMUM_INCOMING_THRESHOLD_BAN, String(walletData.minimumBananoThreshold));
+            }
+
+            if (walletData.idleTimeoutMinutes) {
+                window.localStorage.setItem(IDLE_TIMEOUT_MINUTES, String(walletData.idleTimeoutMinutes));
             }
 
             if (walletData.preferredDashboardView) {
@@ -95,6 +100,14 @@ export class WalletStorageService {
             map.set(entry.account, entry.name);
         });
         return map;
+    }
+
+    readIdleTimeoutMinutes(): number {
+        const timeoutMinutes = window.localStorage.getItem(IDLE_TIMEOUT_MINUTES);
+        if (timeoutMinutes) {
+            return Number(timeoutMinutes);
+        }
+        return 15;
     }
 
     readMinimumBananoIncomingThreshold(): number {

@@ -16,7 +16,9 @@ export class DashboardRobot {
     }
 
     clickCopySeed(): DashboardRobot {
-        cy.get('[data-cy=copy-seed-button]').click();
+        cy.get('[data-cy=copy-seed-button]').trigger('mousedown', {
+            button: 0,
+        });
         return this;
     }
 
@@ -26,7 +28,9 @@ export class DashboardRobot {
     }
 
     clickCopyMnemonic(): DashboardRobot {
-        cy.get('[data-cy=copy-mnemonic-button]').click();
+        cy.get('[data-cy=copy-mnemonic-button]').trigger('mousedown', {
+            button: 0,
+        });
         return this;
     }
 

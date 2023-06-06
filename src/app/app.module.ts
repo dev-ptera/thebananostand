@@ -91,6 +91,9 @@ import {
     ApiRequestBottomSheetComponent
 } from "@app/overlays/bottom-sheet/api-request/api-request-bottom-sheet.component";
 
+import { provideUserIdleConfig } from 'angular-user-idle';
+import { MatSliderModule } from '@angular/material/slider';
+
 @NgModule({
     declarations: [
         ApiRequestComponent,
@@ -186,8 +189,9 @@ import {
         MatListModule,
         MatTableModule,
         MatSortModule,
+        MatSliderModule,
     ],
-    providers: [],
+    providers: [provideUserIdleConfig({ idle: 600, timeout: 60 })],
     bootstrap: [AppComponent],
 })
 export class AppModule {}
