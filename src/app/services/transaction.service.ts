@@ -182,7 +182,7 @@ export class TransactionService {
     }
 
     /** Attempts a change block.  On success, returns transaction hash. */
-    async changeRepresentative(newRep: string, address: string, accountIndex: number): Promise<string> {
+    async changeRepresentative(newRep: string, accountIndex: number): Promise<string> {
         log('** Begin Change Transaction **');
         await this._configApi(window.bananocoinBananojs.bananodeApi);
         const { privateKey, accountInfo } = await this._getEssentials(accountIndex);

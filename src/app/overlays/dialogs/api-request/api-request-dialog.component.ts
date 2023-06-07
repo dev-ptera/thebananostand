@@ -12,4 +12,3 @@ export class ApiRequestDialogComponent {
         this._dialogRef.close();
     }
 }
-

@@ -387,6 +387,10 @@ export class WalletEventsService {
             this._dispatch({ localCurrencyCode, localCurrencyConversionRate, priceDataUSD });
         });
 
+        TRANSACTION_COMPLETED_SUCCESS.subscribe(() => {
+            REFRESH_DASHBOARD_ACCOUNTS.next();
+        });
+
         UNLOCK_WALLET.subscribe((data) => {
             const originalRoute = this._authGuard.originalRoute;
             if (originalRoute) {

@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
-import {ActivatedRoute, Params, Router} from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { UtilService } from '@app/services/util.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewportService } from '@app/services/viewport.service';
@@ -26,10 +26,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ReceiveBottomSheetComponent } from '@app/overlays/bottom-sheet/receive/receive-bottom-sheet.component';
 import { ReceiveDialogComponent } from '@app/overlays/dialogs/receive/receive-dialog.component';
 import { ReceiveOverlayData } from '@app/overlays/actions/receive/receive.component';
-import {
-    ApiRequestBottomSheetComponent
-} from "@app/overlays/bottom-sheet/api-request/api-request-bottom-sheet.component";
-import {ApiRequestDialogComponent} from "@app/overlays/dialogs/api-request/api-request-dialog.component";
+import { ApiRequestBottomSheetComponent } from '@app/overlays/bottom-sheet/api-request/api-request-bottom-sheet.component';
+import { ApiRequestDialogComponent } from '@app/overlays/dialogs/api-request/api-request-dialog.component';
 import { animate, style, transition, trigger } from '@angular/animations';
 
 @UntilDestroy()
@@ -77,8 +75,12 @@ export class DashboardComponent {
     }
 
     private _checkForApiRequestViaQueryParams(params: Params): void {
-        const hasApiRequest = params['request'];
-        if (!hasApiRequest) {
+        if (!this._isValidParams(params)) {
+            if (params) {
+                console.warn('Invalid query parameters provided while creating a BananoStand API request.');
+                console.warn('Parameter Options: "request (send | change), address, amount (send only)');
+                console.warn('Parameters provided: ', params);
+            }
             return;
         }
         if (this.vp.sm) {
@@ -221,5 +223,16 @@ export class DashboardComponent {
     toggleDashboardDisplay(): void {
         CHANGE_PREFERRED_DASHBOARD_VIEW.next(this.showTableView ? 'card' : 'table');
         this.accountActionsOverlayOpen = false;
+    }
+
+    private _isValidParams(params: Params): boolean {
+        if (!params || !params.address || !params.request) {
+            return false;
+        }
+        const request = params.request.toLowerCase();
+        if (request === 'send') {
+            return !isNaN(Number(params.amount)) && this._util.isValidAddress(params.address);
+        }
+        return this._util.isValidAddress(params.address);
     }
 }
