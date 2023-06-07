@@ -388,7 +388,10 @@ export class WalletEventsService {
         });
 
         UNLOCK_WALLET.subscribe((data) => {
-            void this._router.navigateByUrl(this._authGuard.originalRoute);
+            const originalRoute = this._authGuard.originalRoute;
+            if (originalRoute) {
+                void this._router.navigateByUrl(originalRoute);
+            }
             this._dispatch({
                 activeWallet: this._walletStorageService.readActiveWalletFromLocalStorage(),
                 hasUnlockedSecret: !data.isLedger,
