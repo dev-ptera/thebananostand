@@ -21,8 +21,11 @@ const getAmountPartsFromRaw = (amountRawStr: string): any =>
 const signBlock = async (privateKey: string, block: TransactionBlock): Promise<string> =>
     await window.bananocoinBananojs.BananoUtil.sign(privateKey, block);
 
-const signMessage = (privateKey: string, message: string): Promise<string> =>
+const signMessage = (privateKey: string, message: string): string =>
     window.bananocoinBananojs.BananoUtil.signMessage(privateKey, message)
+
+const verifyMessage = (publicKey: string, message: string, signature: string): boolean =>
+    window.bananocoinBananojs.BananoUtil.verifyMessage(publicKey, message, signature)
 
 const getPublicKeyFromPrivateKey = (privateKey: string): Promise<string> =>
     window.bananocoinBananojs.BananoUtil.getPublicKey(privateKey);
@@ -243,8 +246,12 @@ export class TransactionService {
     /** Not transaction, but signs message */
     async messageSign(message: string, accountIndex: number): Promise<string> {
         const { privateKey } = await this._getEssentials(accountIndex);
-        //ideally this error is never fired, since message- should be enforced on the interface
-        if (!message.startsWith("message-")) Promise.reject(new Error("Message to sign must start with `message-`"));
         return signMessage(privateKey, message);
+    }
+
+    /** Verify signature is valid */
+    verifySign(address: string, message: string, sign: string): boolean {
+        const publicKey = getPublicKeyFromAccount(address);
+        return verifyMessage(publicKey, message, sign);
     }
 }

@@ -15,7 +15,8 @@ export class AuthGuardService implements CanActivate {
         if (store.hasUnlockedLedger || store.hasUnlockedSecret) {
             return true;
         }
-        this.preservedRoute = window.location.pathname;
+        //preserve path and query string
+        this.preservedRoute = window.location.pathname+window.location.search;
         void this.router.navigate(['']);
         return false;
     }
