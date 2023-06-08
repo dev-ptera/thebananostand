@@ -22,10 +22,10 @@ const signBlock = async (privateKey: string, block: TransactionBlock): Promise<s
     await window.bananocoinBananojs.BananoUtil.sign(privateKey, block);
 
 const signMessage = (privateKey: string, message: string): string =>
-    window.bananocoinBananojs.BananoUtil.signMessage(privateKey, message)
+    window.bananocoinBananojs.BananoUtil.signMessage(privateKey, message);
 
 const verifyMessage = (publicKey: string, message: string, signature: string): boolean =>
-    window.bananocoinBananojs.BananoUtil.verifyMessage(publicKey, message, signature)
+    window.bananocoinBananojs.BananoUtil.verifyMessage(publicKey, message, signature);
 
 const getPublicKeyFromPrivateKey = (privateKey: string): Promise<string> =>
     window.bananocoinBananojs.BananoUtil.getPublicKey(privateKey);

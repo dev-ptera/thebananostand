@@ -16,7 +16,7 @@ export class AuthGuardService implements CanActivate {
             return true;
         }
         //preserve path and query string
-        this.preservedRoute = window.location.pathname+window.location.search;
+        this.preservedRoute = window.location.pathname + window.location.search;
         void this.router.navigate(['']);
         return false;
     }

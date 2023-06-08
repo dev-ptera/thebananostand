@@ -19,19 +19,21 @@
                 <div style="padding: 24px 24px; display: flex; justify-content: space-between; align-items: center">
                     <div class="mat-headline-6">Message Signing</div>
                     <div
-                    style="display: flex; justify-content: space-between"
-                    [style.width.%]="vp.sm ? 100 : undefined"
+                        style="display: flex; justify-content: space-between"
+                        [style.width.%]="vp.sm ? 100 : undefined"
                     >
                         <button mat-button (click)="toggleMessageSignExpand()">
                             <mat-icon>expand</mat-icon>
-                            <span>{{ messageSignExpand ? "Shrink" : "Expand" }}</span>
+                            <span>{{ messageSignExpand ? 'Shrink' : 'Expand' }}</span>
                         </button>
                     </div>
                 </div>
-                <div style="padding: 0px 24px 24px 24px;" *ngIf="messageSignExpand">
+                <div style="padding: 0px 24px 24px 24px" *ngIf="messageSignExpand">
                     <div *ngIf="store.hasSecret">
-                        <div class="mat-subtitle-2" style="padding-bottom: 16px;">
-                            Messages can be signed with your private key, verifying your identity without revealing your private key and putting your funds in danger. For security reasons, signed message must start with "message-", and can not be exactly 32 characters.
+                        <div class="mat-subtitle-2" style="padding-bottom: 16px">
+                            Messages can be signed with your private key, verifying your identity without revealing your
+                            private key and putting your funds in danger. For security reasons, signed message must
+                            start with "message-", and can not be exactly 32 characters.
                         </div>
                         <form>
                             <!--Choose address dropdown-->
@@ -56,13 +58,18 @@
                                 />
                             </mat-form-field>
                         </form>
-                        <button mat-flat-button color="primary" matTooltip="Sign the message with the account's private key" (click)="goSignMessage()">
+                        <button
+                            mat-flat-button
+                            color="primary"
+                            matTooltip="Sign the message with the account's private key"
+                            (click)="goSignMessage()"
+                        >
                             Sign
                         </button>
-                        <div *ngIf="messageSignature !== ''" style="padding-top: 16px;">
+                        <div *ngIf="messageSignature !== ''" style="padding-top: 16px">
                             <mat-form-field style="width: 80%" appearance="fill">
                                 <mat-label>Signature</mat-label>
-                                <input matInput [value]="messageSignature" disabled>
+                                <input matInput [value]="messageSignature" disabled />
                             </mat-form-field>
                             <button
                                 mat-icon-button
@@ -80,7 +87,8 @@
                     <!-- iirc message signing on ledger not possible because the bananojs-hw does not support it -->
                     <div *ngIf="!store.hasSecret">
                         <div class="mat-body-2">
-                            Message signing not available with ledger, sorry. For message signing, please use a browser wallet.
+                            Message signing not available with ledger, sorry. For message signing, please use a browser
+                            wallet.
                         </div>
                     </div>
                 </div>
@@ -94,17 +102,17 @@
                 <div style="padding: 24px 24px; display: flex; justify-content: space-between; align-items: center">
                     <div class="mat-headline-6">Message Verification</div>
                     <div
-                      style="display: flex; justify-content: space-between"
-                      [style.width.%]="vp.sm ? 100 : undefined"
+                        style="display: flex; justify-content: space-between"
+                        [style.width.%]="vp.sm ? 100 : undefined"
                     >
                         <button mat-button (click)="toggleMessageVerifyExpand()">
                             <mat-icon>expand</mat-icon>
-                            <span>{{ messageVerifyExpand ? "Shrink" : "Expand" }}</span>
+                            <span>{{ messageVerifyExpand ? 'Shrink' : 'Expand' }}</span>
                         </button>
                     </div>
                 </div>
-                <div style="padding: 0px 24px 24px 24px;" *ngIf="messageVerifyExpand">
-                    <div class="mat-subtitle-2" style="padding-bottom: 16px;">
+                <div style="padding: 0px 24px 24px 24px" *ngIf="messageVerifyExpand">
+                    <div class="mat-subtitle-2" style="padding-bottom: 16px">
                         Verify that the signature for a message was made by the private key owner of the address.
                     </div>
                     <form>
@@ -144,8 +152,13 @@
                                 required
                             />
                         </mat-form-field>
-                        <button mat-flat-button [color]="verify_button_color" matTooltip="Verify that the signature is valid" (click)="verifySign()">
-                            {{ verify_button_text }}
+                        <button
+                            mat-flat-button
+                            [color]="verifyButtonColor"
+                            matTooltip="Verify that the signature is valid"
+                            (click)="verifySign()"
+                        >
+                            {{ verifyButtonText }}
                         </button>
                     </form>
                 </div>
@@ -159,18 +172,20 @@
                 <div style="padding: 24px 24px; display: flex; justify-content: space-between; align-items: center">
                     <div class="mat-headline-6">Block Signing</div>
                     <div
-                      style="display: flex; justify-content: space-between"
-                      [style.width.%]="vp.sm ? 100 : undefined"
+                        style="display: flex; justify-content: space-between"
+                        [style.width.%]="vp.sm ? 100 : undefined"
                     >
                         <button mat-button (click)="toggleBlockSignExpand()">
                             <mat-icon>expand</mat-icon>
-                            <span>{{ blockSignExpand ? "Shrink" : "Expand" }}</span>
+                            <span>{{ blockSignExpand ? 'Shrink' : 'Expand' }}</span>
                         </button>
                     </div>
                 </div>
-                <div style="padding: 0px 24px 24px 24px;" *ngIf="blockSignExpand">
-                    <div class="mat-subtitle-2" style="padding-bottom: 16px;">
-                        This is a DANGEROUS ACTION. Signing blocks that you do not understand may result in LOSS OF FUNDS. Only sign blocks you understand, and trust! Giving others the signature for a block will let them broadcast the block on your behalf.
+                <div style="padding: 0px 24px 24px 24px" *ngIf="blockSignExpand">
+                    <div class="mat-subtitle-2" style="padding-bottom: 16px">
+                        This is a DANGEROUS ACTION. Signing blocks that you do not understand may result in LOSS OF
+                        FUNDS. Only sign blocks you understand, and trust! Giving others the signature for a block will
+                        let them broadcast the block on your behalf.
                     </div>
                     <form>
                         <mat-form-field style="width: 100%" appearance="fill">
@@ -229,13 +244,18 @@
                             />
                         </mat-form-field>
                     </form>
-                    <button mat-flat-button color="warn" matTooltip="Sign the block. Warning: only sign blocks you understand!" (click)="goSignBlock()">
+                    <button
+                        mat-flat-button
+                        color="warn"
+                        matTooltip="Sign the block. Warning: only sign blocks you understand!"
+                        (click)="goSignBlock()"
+                    >
                         Sign (Caution)
                     </button>
-                    <div *ngIf="blockSignature !== ''" style="padding-top: 16px;">
+                    <div *ngIf="blockSignature !== ''" style="padding-top: 16px">
                         <mat-form-field style="width: 80%" appearance="fill">
                             <mat-label>Signature</mat-label>
-                            <input matInput [value]="blockSignature" disabled>
+                            <input matInput [value]="blockSignature" disabled />
                         </mat-form-field>
                         <button
                             mat-icon-button
