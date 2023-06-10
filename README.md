@@ -35,6 +35,24 @@ Do you already own a ledger device and want to use it to store your Banano?
 
 After your ledger is unlocked, you can now send or receive as you please. 
 
+## API Usage
+
+You can send others requests for payment or requests to change representative by adding the following query parameters to your URLs.
+
+Supported query parameters:
+
+| Name    | Description                                                                    |
+|---------|--------------------------------------------------------------------------------|
+| request | The type of transaction to initiate on load - can either be 'send' or 'change' |
+| address | The address to send Banano / change representive to                            |
+| amount  | (send only) the amount of Banano to send                                       |
+
+##### Send example
+https://thebananostand.com?request=send&address=ban_1z7rxmcwataoqahha6xdo3j1tfikoufkhb95dg4b7aajapa4cnp6h3s9f8oj&amount=.006
+
+##### Change example
+https://thebananostand?request=change&address=ban_3batmanuenphd7osrez9c45b3uqw9d9u81ne8xa6m43e1py56y9p48ap69zg
+
 ## Running Project
 
 Did you clone the project and want to run it on your machine? 
