@@ -5,6 +5,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SettingsPageComponent } from '@app/pages/settings/settings.component';
+import { SigningComponent } from './pages/signing/signing.component';
 
 const routes: Routes = [
     { path: 'account/:account', component: AccountComponent, data: { animation: 'Account' }, canActivate: [AuthGuard] },
@@ -14,6 +15,12 @@ const routes: Routes = [
         path: 'address-book',
         component: AddressBookComponent,
         data: { animation: 'AddressBook' },
+        canActivate: [AuthGuard],
+    },
+    {
+        path: 'signing',
+        component: SigningComponent,
+        data: { animation: 'Signing' },
         canActivate: [AuthGuard],
     },
 ];

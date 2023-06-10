@@ -76,6 +76,28 @@ export class UtilService {
         return address && address.length === 64 && address.startsWith('ban_');
     }
 
+    isValidHex(hex: string): boolean {
+        const validHexChars: string[] = [
+            '0',
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+            '7',
+            '8',
+            '9',
+            'A',
+            'B',
+            'C',
+            'D',
+            'E',
+            'F',
+        ];
+        return hex.split('').every((value) => validHexChars.includes(value.toUpperCase()));
+    }
+
     matches(a: number, b: number): boolean {
         return Number(a) === Number(b);
     }
