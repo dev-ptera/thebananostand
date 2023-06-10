@@ -86,12 +86,18 @@ import { AccountTableComponent } from '@app/pages/dashboard/components/account-t
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { AccountActionsComponent } from '@app/pages/dashboard/components/account-actions/account-actions.component';
+import { ApiRequestComponent } from '@app/overlays/actions/api-request/api-request.component';
+import { ApiRequestDialogComponent } from '@app/overlays/dialogs/api-request/api-request-dialog.component';
+import { ApiRequestBottomSheetComponent } from '@app/overlays/bottom-sheet/api-request/api-request-bottom-sheet.component';
 
 import { provideUserIdleConfig } from 'angular-user-idle';
 import { MatSliderModule } from '@angular/material/slider';
 
 @NgModule({
     declarations: [
+        ApiRequestComponent,
+        ApiRequestDialogComponent,
+        ApiRequestBottomSheetComponent,
         AccountComponent,
         AccountListComponent,
         AccountCardComponent,

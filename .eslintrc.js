@@ -9,6 +9,7 @@ module.exports = {
         browser: true,
     },
     rules: {
+        'no-console': 'off',
         'no-unused-expressions': 'off',
         '@typescript-eslint/no-misused-promises': 'off'
     },

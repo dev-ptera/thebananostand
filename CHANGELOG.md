@@ -1,5 +1,10 @@
 # Change Log
 
+## v3.9.0 (June 9, 2023)
+
+-  Added `signing` page for signing or verifying messages using your private key & also for signing blocks without broadcasting them.
+-  Added query parameter API for `send` or `change` actions.
+
 ## v3.8.2 (June 5, 2023)
 
 ### Changed

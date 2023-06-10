@@ -293,7 +293,7 @@ export class ChangeRepComponent implements OnInit {
 
         this.isChangingRepresentative = true;
         this._transactionService
-            .changeRepresentative(this.getUseSelectedRepresentative(), this.data.address, this.data.index)
+            .changeRepresentative(this.getUseSelectedRepresentative(), this.data.index)
             .then((hash) => {
                 this.txHash = hash;
                 this.hasSuccess = true;
