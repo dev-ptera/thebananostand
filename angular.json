@@ -129,5 +129,8 @@
             }
         }
     },
-    "defaultProject": "thebananostand"
+    "defaultProject": "thebananostand",
+    "cli": {
+      "analytics": false
+    }
 }

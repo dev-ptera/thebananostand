@@ -32,6 +32,11 @@ import { AppStateService } from '@app/services/app-state.service';
                     <span>Address Book</span>
                 </button>
                 <mat-divider></mat-divider>
+                <button mat-menu-item (click)="navigateToSigning()">
+                    <mat-icon>edit_note</mat-icon>
+                    <span>Signing</span>
+                </button>
+                <mat-divider></mat-divider>
                 <button mat-menu-item (click)="navigateToSettingsPage()" data-cy="more-settings">
                     <mat-icon>open_in_new</mat-icon>
                     <span>More</span>
@@ -97,6 +102,13 @@ export class AppAccountSettingsComponent {
         this.userMenuOpen = false;
         setTimeout(() => {
             void this._router.navigate(['/address-book']);
+        }, 100);
+    }
+
+    navigateToSigning(): void {
+        this.userMenuOpen = false;
+        setTimeout(() => {
+            void this._router.navigate(['/signing']);
         }, 100);
     }
 

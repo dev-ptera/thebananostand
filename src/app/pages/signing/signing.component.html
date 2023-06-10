@@ -1,0 +1,276 @@
+<div class="app-root app-signing-page" responsive>
+    <mat-toolbar color="primary" class="app-toolbar" responsive [class.mat-elevation-z2]="!vp.sm">
+        <div style="display: flex; align-items: center">
+            <button mat-icon-button (click)="back()">
+                <mat-icon style="color: var(--text-contrast)">close</mat-icon>
+            </button>
+            <span style="margin-left: 12px; color: var(--text-contrast)">Signing</span>
+        </div>
+    </mat-toolbar>
+
+    <div class="app-body" responsive>
+        <div class="app-body-content">
+            <!--Message signing-->
+            <mat-card
+                appearance="outlined"
+                style="margin: 16px 0; padding: 0; width: 100%"
+                [style.borderRadius.px]="vp.sm ? 0 : 16"
+            >
+                <div style="padding: 24px 24px; display: flex; justify-content: space-between; align-items: center">
+                    <div class="mat-headline-6">Message Signing</div>
+                    <div
+                        style="display: flex; justify-content: space-between"
+                        [style.width.%]="vp.sm ? 100 : undefined"
+                    >
+                        <button mat-button (click)="toggleMessageSignExpand()">
+                            <mat-icon>expand</mat-icon>
+                            <span>{{ messageSignExpand ? 'Shrink' : 'Expand' }}</span>
+                        </button>
+                    </div>
+                </div>
+                <div style="padding: 0px 24px 24px 24px" *ngIf="messageSignExpand">
+                    <div *ngIf="store.hasSecret">
+                        <div class="mat-subtitle-2" style="padding-bottom: 16px">
+                            Messages can be signed with your private key, verifying your identity without revealing your
+                            private key and putting your funds in danger. For security reasons, signed message must
+                            start with "message-", and can not be exactly 32 characters.
+                        </div>
+                        <form>
+                            <!--Choose address dropdown-->
+                            <mat-form-field style="width: 100%" appearance="fill">
+                                <mat-select placeholder="Signing address" [formControl]="addressFormControl" required>
+                                    <mat-option *ngFor="let account of store.accounts" [value]="account.index">
+                                        {{ account.shortAddress }} (Index: {{ account.index }})
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <!--Put in message (that has "message-" prepended)-->
+                            <mat-form-field style="width: 100%" appearance="fill">
+                                <mat-label>Message</mat-label>
+                                <input
+                                    matInput
+                                    name="message"
+                                    autocomplete="off"
+                                    [type]="text"
+                                    value="message-"
+                                    [formControl]="messageFormControl"
+                                    required
+                                />
+                            </mat-form-field>
+                        </form>
+                        <button
+                            mat-flat-button
+                            color="primary"
+                            matTooltip="Sign the message with the account's private key"
+                            (click)="goSignMessage()"
+                        >
+                            Sign
+                        </button>
+                        <div *ngIf="messageSignature !== ''" style="padding-top: 16px">
+                            <mat-form-field style="width: 80%" appearance="fill">
+                                <mat-label>Signature</mat-label>
+                                <input matInput [value]="messageSignature" disabled />
+                            </mat-form-field>
+                            <button
+                                mat-icon-button
+                                (click)="copyMessageSignature()"
+                                style="margin-left: 8px"
+                                *ngIf="!vp.sm"
+                                data-cy="copy-address-desktop"
+                            >
+                                <mat-icon>
+                                    {{ hasCopiedMessageSignature ? 'check_circle' : 'content_copy' }}
+                                </mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- iirc message signing on ledger not possible because the bananojs-hw does not support it -->
+                    <div *ngIf="!store.hasSecret">
+                        <div class="mat-body-2">
+                            Message signing not available with ledger, sorry. For message signing, please use a browser
+                            wallet.
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+            <!--Signature verification-->
+            <mat-card
+                appearance="outlined"
+                style="margin: 16px 0; padding: 0; width: 100%"
+                [style.borderRadius.px]="vp.sm ? 0 : 16"
+            >
+                <div style="padding: 24px 24px; display: flex; justify-content: space-between; align-items: center">
+                    <div class="mat-headline-6">Message Verification</div>
+                    <div
+                        style="display: flex; justify-content: space-between"
+                        [style.width.%]="vp.sm ? 100 : undefined"
+                    >
+                        <button mat-button (click)="toggleMessageVerifyExpand()">
+                            <mat-icon>expand</mat-icon>
+                            <span>{{ messageVerifyExpand ? 'Shrink' : 'Expand' }}</span>
+                        </button>
+                    </div>
+                </div>
+                <div style="padding: 0px 24px 24px 24px" *ngIf="messageVerifyExpand">
+                    <div class="mat-subtitle-2" style="padding-bottom: 16px">
+                        Verify that the signature for a message was made by the private key owner of the address.
+                    </div>
+                    <form>
+                        <!--Address input-->
+                        <mat-form-field style="width: 100%" appearance="fill">
+                            <mat-label>Signer Address</mat-label>
+                            <input
+                                matInput
+                                name="signer-address"
+                                autocomplete="off"
+                                [type]="text"
+                                [formControl]="signerFormControl"
+                                required
+                            />
+                        </mat-form-field>
+                        <!--Message input-->
+                        <mat-form-field style="width: 100%" appearance="fill">
+                            <mat-label>Message</mat-label>
+                            <input
+                                matInput
+                                name="verify-message"
+                                autocomplete="off"
+                                [type]="text"
+                                [formControl]="verifyMessageFormControl"
+                                required
+                            />
+                        </mat-form-field>
+                        <!--Signature input-->
+                        <mat-form-field style="width: 100%" appearance="fill">
+                            <mat-label>Signature</mat-label>
+                            <input
+                                matInput
+                                name="verify-sign"
+                                autocomplete="off"
+                                [type]="text"
+                                [formControl]="verifySignFormControl"
+                                required
+                            />
+                        </mat-form-field>
+                        <button
+                            mat-flat-button
+                            [color]="verifyButtonColor"
+                            matTooltip="Verify that the signature is valid"
+                            (click)="verifySign()"
+                        >
+                            {{ verifyButtonText }}
+                        </button>
+                    </form>
+                </div>
+            </mat-card>
+            <!--Block signing-->
+            <mat-card
+                appearance="outlined"
+                style="margin: 16px 0; padding: 0; width: 100%"
+                [style.borderRadius.px]="vp.sm ? 0 : 16"
+            >
+                <div style="padding: 24px 24px; display: flex; justify-content: space-between; align-items: center">
+                    <div class="mat-headline-6">Block Signing</div>
+                    <div
+                        style="display: flex; justify-content: space-between"
+                        [style.width.%]="vp.sm ? 100 : undefined"
+                    >
+                        <button mat-button (click)="toggleBlockSignExpand()">
+                            <mat-icon>expand</mat-icon>
+                            <span>{{ blockSignExpand ? 'Shrink' : 'Expand' }}</span>
+                        </button>
+                    </div>
+                </div>
+                <div style="padding: 0px 24px 24px 24px" *ngIf="blockSignExpand">
+                    <div class="mat-subtitle-2" style="padding-bottom: 16px">
+                        This is a DANGEROUS ACTION. Signing blocks that you do not understand may result in LOSS OF
+                        FUNDS. Only sign blocks you understand, and trust! Giving others the signature for a block will
+                        let them broadcast the block on your behalf.
+                    </div>
+                    <form>
+                        <mat-form-field style="width: 100%" appearance="fill">
+                            <mat-select placeholder="Signing address" [formControl]="addressBlockFormControl" required>
+                                <mat-option *ngFor="let account of store.accounts" [value]="account.index">
+                                    {{ account.shortAddress }} (Index: {{ account.index }})
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field style="width: 100%" appearance="fill">
+                            <mat-label>Previous</mat-label>
+                            <input
+                                matInput
+                                name="previous"
+                                autocomplete="off"
+                                placeholder="Hash of previous block"
+                                [type]="text"
+                                [formControl]="previousFormControl"
+                                required
+                            />
+                        </mat-form-field>
+                        <mat-form-field style="width: 100%" appearance="fill">
+                            <mat-label>Representative</mat-label>
+                            <input
+                                matInput
+                                name="representative"
+                                autocomplete="off"
+                                placeholder="Banano Representative"
+                                [type]="text"
+                                [formControl]="representativeFormControl"
+                                required
+                            />
+                        </mat-form-field>
+                        <mat-form-field style="width: 100%" appearance="fill">
+                            <mat-label>Balance</mat-label>
+                            <input
+                                matInput
+                                name="balance"
+                                autocomplete="off"
+                                placeholder="Balance of account in raw"
+                                [type]="number"
+                                [formControl]="balanceFormControl"
+                                required
+                            />
+                        </mat-form-field>
+                        <mat-form-field style="width: 100%" appearance="fill">
+                            <mat-label>Link</mat-label>
+                            <input
+                                matInput
+                                name="link"
+                                autocomplete="off"
+                                placeholder="Link (hexadecimal)"
+                                [type]="text"
+                                [formControl]="linkFormControl"
+                                required
+                            />
+                        </mat-form-field>
+                    </form>
+                    <button
+                        mat-flat-button
+                        color="warn"
+                        matTooltip="Sign the block. Warning: only sign blocks you understand!"
+                        (click)="goSignBlock()"
+                    >
+                        Sign (Caution)
+                    </button>
+                    <div *ngIf="blockSignature !== ''" style="padding-top: 16px">
+                        <mat-form-field style="width: 80%" appearance="fill">
+                            <mat-label>Signature</mat-label>
+                            <input matInput [value]="blockSignature" disabled />
+                        </mat-form-field>
+                        <button
+                            mat-icon-button
+                            (click)="copyBlockSignature()"
+                            style="margin-left: 8px"
+                            *ngIf="!vp.sm"
+                            data-cy="copy-address-desktop"
+                        >
+                            <mat-icon>
+                                {{ hasCopiedBlockSignature ? 'check_circle' : 'content_copy' }}
+                            </mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>

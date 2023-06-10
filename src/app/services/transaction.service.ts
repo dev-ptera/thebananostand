@@ -21,6 +21,12 @@ const getAmountPartsFromRaw = (amountRawStr: string): any =>
 const signBlock = async (privateKey: string, block: TransactionBlock): Promise<string> =>
     await window.bananocoinBananojs.BananoUtil.sign(privateKey, block);
 
+const signMessage = (privateKey: string, message: string): string =>
+    window.bananocoinBananojs.BananoUtil.signMessage(privateKey, message);
+
+const verifyMessage = (publicKey: string, message: string, signature: string): boolean =>
+    window.bananocoinBananojs.BananoUtil.verifyMessage(publicKey, message, signature);
+
 const getPublicKeyFromPrivateKey = (privateKey: string): Promise<string> =>
     window.bananocoinBananojs.BananoUtil.getPublicKey(privateKey);
 
@@ -218,5 +224,34 @@ export class TransactionService {
             console.error(err);
             return Promise.reject(err);
         }
+    }
+
+    /** Not transaction, but signs block */
+    async blockSign(block: TransactionBlock, accountIndex: number): Promise<string> {
+        const { privateKey, accountInfo } = await this._getEssentials(accountIndex);
+        //we are getting the signature, but signature is required, so block.signature === ""
+        //fill in defaults
+        if (!block.account) {
+            block.account = accountInfo.fullAddress;
+        }
+        if (!block.previous) {
+            block.previous = accountInfo.frontier;
+        }
+        if (!block.representative) {
+            block.representative = accountInfo.representative;
+        }
+        return await signBlock(privateKey, block);
+    }
+
+    /** Not transaction, but signs message */
+    async messageSign(message: string, accountIndex: number): Promise<string> {
+        const { privateKey } = await this._getEssentials(accountIndex);
+        return signMessage(privateKey, message);
+    }
+
+    /** Verify signature is valid */
+    verifySign(address: string, message: string, sign: string): boolean {
+        const publicKey = getPublicKeyFromAccount(address);
+        return verifyMessage(publicKey, message, sign);
     }
 }
