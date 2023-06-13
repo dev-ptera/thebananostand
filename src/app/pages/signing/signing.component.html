@@ -38,7 +38,7 @@
                         <span>{{ messageSignExpand ? 'Shrink' : 'Expand' }}</span>
                     </button>
                 </div>
-                <div style="margin-top: 24px" *ngIf="messageSignExpand">
+                <div style="margin-top: 24px;" *ngIf="messageSignExpand">
                     <div *ngIf="store.hasSecret">
                         <div class="mat-body-2" style="padding: 24px 0 8px 0;">
                             For security reasons, a message to be signed must start with "message-", and must not be 
@@ -83,7 +83,6 @@
                             <button
                                 mat-icon-button
                                 (click)="copyMessageSignature()"
-                                style="margin-left: 8px"
                                 *ngIf="!vp.sm"
                                 data-cy="copy-address-desktop"
                             >
@@ -117,8 +116,8 @@
                         <span>{{ messageVerifyExpand ? 'Shrink' : 'Expand' }}</span>
                     </button>
                 </div>
-                <div style="padding: 0px 24px 24px 24px" *ngIf="messageVerifyExpand">
-                    <div class="mat-body-2" style="padding-bottom: 24px">
+                <div style="margin-top: 24px;" *ngIf="messageVerifyExpand">
+                    <div class="mat-body-2" style="padding: 24px 0 8px 0;">
                         Authenticate the signature of a message to confirm that it was created by the owner of the 
                         corresponding address.
                     </div>
@@ -185,8 +184,8 @@
                         <span>{{ blockSignExpand ? 'Shrink' : 'Expand' }}</span>
                     </button>
                 </div>
-                <div style="padding: 0px 24px 24px 24px" *ngIf="blockSignExpand">
-                    <div class="mat-subtitle-2" style="padding-bottom: 16px">
+                <div style="margin-top: 24px;" *ngIf="blockSignExpand">
+                    <div class="mat-subtitle-2" style="padding: 24px 0 8px 0;">
                         WARNING: Signing blocks is DANGEROUS. If you sign a block whose purpose and actions are 
                         unknown to you, it may result in a LOSS OF FUNDS. Only sign blocks when you know what they 
                         are doing and you trust its source. Moreover, be cautious not to share the generated block 
@@ -270,7 +269,6 @@
                         <button
                             mat-icon-button
                             (click)="copyBlockSignature()"
-                            style="margin-left: 8px"
                             *ngIf="!vp.sm"
                             data-cy="copy-address-desktop"
                         >
