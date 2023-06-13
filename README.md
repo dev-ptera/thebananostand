@@ -35,23 +35,45 @@ Do you already own a ledger device and want to use it to store your Banano?
 
 After your ledger is unlocked, you can now send or receive as you please. 
 
-## API Usage
+## API Usage (send | change)
 
 You can send others requests for payment or requests to change representative by adding the following query parameters to your URLs.
 
 Supported query parameters:
 
-| Name    | Description                                                                    |
-|---------|--------------------------------------------------------------------------------|
-| request | The type of transaction to initiate on load - can either be 'send' or 'change' |
-| address | The address to send Banano / change representive to                            |
-| amount  | (send only) the amount of Banano to send                                       |
+| Name    | Description                                                |
+|---------|------------------------------------------------------------|
+| request | The type of transaction - can either be 'send' or 'change' |
+| address | The address to send Banano, or change representative to    |
+| amount  | (send only) the amount of Banano to send                   |
 
 ##### Send example
 https://thebananostand.com?request=send&address=ban_1z7rxmcwataoqahha6xdo3j1tfikoufkhb95dg4b7aajapa4cnp6h3s9f8oj&amount=.006
 
 ##### Change example
 https://thebananostand.com?request=change&address=ban_3batmanuenphd7osrez9c45b3uqw9d9u81ne8xa6m43e1py56y9p48ap69zg
+
+
+## API Usage (message signing)
+
+Using an address you own and your private key, you can prove use message signing to prove to others you own the address.  
+
+Supported query parameters:
+
+| Name    | Description                                              |
+|---------|----------------------------------------------------------|
+| request | Can either be 'block_sign' or 'message_sign'             |
+| address | An address that you own                                  |
+| message | A secret message to encrypt (must start with 'message-') |
+
+##### Message Signing example
+
+
+https://thebananostand.com/signing?request=message_sign&address=ban_11juro8jq16455kbggfa1ge3s7jjy6154gtg3pgyn45irw5sdf3qamntjeam&message=message-cheese
+
+#### Block Signing example
+
+TODO
 
 ## Running Project
 
@@ -62,6 +84,8 @@ Did you clone the project and want to run it on your machine?
 or
 
     npm i --legacy-peer-deps && npm run start
+
+Requires NodeJS version 14.20.x, 16.13.x or 18.10.x.
 
 ## Releases
 
