@@ -11,16 +11,14 @@
     <div class="app-body" responsive>
         <div class="app-body-content">
             <mat-card appearance="outlined" style="margin-bottom: 32px">
-                <div class="mat-headline-6" style="margin-bottom: 16px;">Message and Block Signing</div>
+                <div class="mat-headline-6" style="margin-bottom: 16px">Message and Block Signing</div>
                 <mat-divider></mat-divider>
                 <div class="mat-overline" style="margin-top: 16px">About Message Signing</div>
                 <div class="mat-body-2" style="margin-bottom: 8px">
-                    A private key asocciated with an account can be used to sign a message and generate a digital 
-                    signature. The generated digital signature can be used by anyone to verify the authenticity and 
-                    integrity of the message.
-
-                    Signing messages is a very useful method for verifying your identity without compromising your 
-                    private key and putting your funds at risk.
+                    A private key asocciated with an account can be used to sign a message and generate a digital
+                    signature. The generated digital signature can be used by anyone to verify the authenticity and
+                    integrity of the message. Signing messages is a very useful method for verifying your identity
+                    without compromising your private key and putting your funds at risk.
                 </div>
             </mat-card>
             <!--Message signing-->
@@ -38,9 +36,9 @@
                         <span>{{ messageSignExpand ? 'Shrink' : 'Expand' }}</span>
                     </button>
                 </div>
-                <div style="margin-top: 24px;" *ngIf="messageSignExpand">
+                <div style="margin-top: 24px" *ngIf="messageSignExpand">
                     <div *ngIf="store.hasSecret">
-                        <div class="mat-body-2" style="padding: 24px 0 8px 0;">
+                        <div class="mat-body-2" style="padding: 24px 0 8px 0">
                             For security reasons, a message to be signed must start with "message-".
                         </div>
                         <form>
@@ -115,9 +113,9 @@
                         <span>{{ messageVerifyExpand ? 'Shrink' : 'Expand' }}</span>
                     </button>
                 </div>
-                <div style="margin-top: 24px;" *ngIf="messageVerifyExpand">
-                    <div class="mat-body-2" style="padding: 24px 0 8px 0;">
-                        Authenticate the signature of a message to confirm that it was created by the owner of the 
+                <div style="margin-top: 24px" *ngIf="messageVerifyExpand">
+                    <div class="mat-body-2" style="padding: 24px 0 8px 0">
+                        Authenticate the signature of a message to confirm that it was created by the owner of the
                         corresponding address.
                     </div>
                     <form>
@@ -183,16 +181,16 @@
                         <span>{{ blockSignExpand ? 'Shrink' : 'Expand' }}</span>
                     </button>
                 </div>
-                <div style="margin-top: 24px;" *ngIf="blockSignExpand">
-                    <div class="mat-subtitle-2" style="padding: 24px 0 8px 0;">
-                        WARNING: Signing blocks is DANGEROUS. If you sign a block whose purpose and actions are 
-                        unknown to you, it may result in a LOSS OF FUNDS. Only sign blocks when you know what they 
-                        are doing and you trust its source. Moreover, be cautious not to share the generated block 
-                        signature, as it will allow anyone who has access to it, to broadcast the signed block and 
-                        thus PERFORMING A TRANSACTION ON YOUR BEHALF.
+                <div style="margin-top: 24px" *ngIf="blockSignExpand">
+                    <div class="mat-subtitle-2" style="padding: 24px 0 8px 0">
+                        WARNING: Signing blocks is DANGEROUS. If you sign a block whose purpose and actions are unknown
+                        to you, it may result in a LOSS OF FUNDS. Only sign blocks when you know what they are doing and
+                        you trust its source. Moreover, be cautious not to share the generated block signature, as it
+                        will allow anyone who has access to it, to broadcast the signed block and thus PERFORMING A
+                        TRANSACTION ON YOUR BEHALF.
                     </div>
                     <div class="mat-body-2" style="padding-bottom: 24px">
-                        A transaction block can be signed and manually submitted (broadcasted) to the network to be 
+                        A transaction block can be signed and manually submitted (broadcasted) to the network to be
                         proccessed, propagated and confirmed.
                     </div>
                     <form>
