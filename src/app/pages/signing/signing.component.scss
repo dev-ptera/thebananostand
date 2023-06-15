@@ -1,0 +1,27 @@
+.app-signing-page {
+    &.sm {
+        mat-card {
+            border-radius: 0;
+        }
+    }
+    mat-card {
+        margin-bottom: 32px;
+        padding: 24px;
+        width: 100%;
+        .mdc-button--unelevated {
+            min-width: 80px;
+        }
+        .expandable-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .expanded-body {
+            margin-top: 16px;
+        }
+    }
+}
+
+::ng-deep .app-signing-page .signature-form .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+}
