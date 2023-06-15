@@ -38,7 +38,7 @@
                         <form>
                             <!--Choose address dropdown-->
                             <mat-form-field style="width: 100%" appearance="fill">
-                                <mat-label>Address</mat-label>
+                                <mat-label>Signer Address</mat-label>
                                 <mat-select [formControl]="addressFormControl" required>
                                     <mat-option *ngFor="let account of store.accounts" [value]="account.index">
                                         <div style="display: flex; align-items: center; justify-content: space-between">
@@ -190,6 +190,7 @@
                     </div>
                     <form>
                         <mat-form-field style="width: 100%" appearance="fill">
+                            <mat-label>Address</mat-label>
                             <mat-select placeholder="Signing address" [formControl]="addressBlockFormControl" required>
                                 <mat-option *ngFor="let account of store.accounts" [value]="account.index">
                                     <div style="display: flex; align-items: center; justify-content: space-between">
