@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-//import { animate, style, transition, trigger } from '@angular/animations';
 import { ViewportService } from '@app/services/viewport.service';
 import { Location } from '@angular/common';
 import { UtilService } from '@app/services/util.service';
@@ -15,7 +14,7 @@ import { TransactionBlock } from '@app/types/TransactionBlock';
 @Component({
     selector: 'app-signing-page',
     templateUrl: './signing.component.html',
-    //styleUrls: [],
+    styleUrls: ['./signing.component.scss'],
 })
 export class SigningComponent {
     store: AppStore;

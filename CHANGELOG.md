@@ -1,5 +1,11 @@
 # Change Log
 
+## v3.9.2 (June 13, 2023)
+
+### Added 
+
+-  Fixed styles and updated messages in the `signing` page.
+
 ## v3.9.1 (June 12, 2023)
 
 ### Added 
