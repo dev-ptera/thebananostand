@@ -18,17 +18,17 @@ declare let window: BananoifiedWindow;
 const getAmountPartsFromRaw = (amountRawStr: string): any =>
     window.bananocoinBananojs.BananoUtil.getAmountPartsFromRaw(amountRawStr, window.bananocoinBananojs.BANANO_PREFIX);
 
-const signBlock = async (privateKey: string, block: TransactionBlock): Promise<string> =>
-    await window.bananocoinBananojs.BananoUtil.sign(privateKey, block);
+const signBlock = async (privateKeyOrSigner: (string | object), block: TransactionBlock): Promise<string> =>
+    await window.bananocoinBananojs.BananoUtil.sign(privateKeyOrSigner, block);
 
-const signMessage = (privateKey: string, message: string): string =>
-    window.bananocoinBananojs.BananoUtil.signMessage(privateKey, message);
+const signMessage = (privateKeyOrSigner: (string | object), message: string): string =>
+    window.bananocoinBananojs.BananoUtil.signMessage(privateKeyOrSigner, message);
 
 const verifyMessage = (publicKey: string, message: string, signature: string): boolean =>
     window.bananocoinBananojs.BananoUtil.verifyMessage(publicKey, message, signature);
 
-const getPublicKeyFromPrivateKey = (privateKey: string): Promise<string> =>
-    window.bananocoinBananojs.BananoUtil.getPublicKey(privateKey);
+const getPublicKeyFromPrivateKeyOrSigner = (privateKeyOrSigner: (string | object)): Promise<string> =>
+    window.bananocoinBananojs.BananoUtil.getPublicKey(privateKeyOrSigner);
 
 const getPublicKeyFromAccount = (privateKey: string): string =>
     window.bananocoinBananojs.BananoUtil.getAccountPublicKey(privateKey);
@@ -74,19 +74,50 @@ export class TransactionService {
 
     private async _getEssentials(
         accountIndex
-    ): Promise<{ privateKey: string; publicKey: string; publicAddress: string; accountInfo: AccountOverview }> {
-        const privateKey = await this._signerService.getAccountSigner(accountIndex);
-        const publicKey = await getPublicKeyFromPrivateKey(privateKey);
-        const publicAddress = await getAddressFromPublicKey(publicKey);
+    ): Promise<{ privateKeyOrSigner: (string | object); publicKey: string; publicAddress: string; accountInfo: AccountOverview }> {
+        const { privateKeyOrSigner, publicKey, publicAddress } = await this._getBareEssentials(accountIndex);
         const accountInfo = await this._rpcService.getAccountInfoFromIndex(accountIndex, publicAddress);
-        return { privateKey, publicKey, publicAddress, accountInfo };
+        return { privateKeyOrSigner, publicKey, publicAddress, accountInfo };
+    }
+
+    async _getBareEssentials(
+        accountIndex
+    ): Promise<{ privateKeyOrSigner: (string | object); publicKey: string; publicAddress: string }> {
+        const privateKeyOrSigner = await this._signerService.getAccountSigner(accountIndex);
+        const publicKey = await getPublicKeyFromPrivateKeyOrSigner(privateKeyOrSigner);
+        const publicAddress = await getAddressFromPublicKey(publicKey);
+        return { privateKeyOrSigner, publicKey, publicAddress };
+    }
+
+    async dummyBlockSign(message: string, accountIndex: number): Promise<string> {
+        log('** Begin Dummy Block Sign **');
+
+        await this._configApi(window.bananocoinBananojs.bananodeApi);
+        const { privateKeyOrSigner, publicAddress } = await this._getBareEssentials(accountIndex);
+        // TODO:
+        const messageRepresentative = '';
+
+        const block: TransactionBlock = {
+            type: 'state',
+            account: publicAddress,
+            previous: '0000000000000000000000000000000000000000000000000000000000000000',
+            representative: messageRepresentative,
+            balance: '0',
+            link: '0000000000000000000000000000000000000000000000000000000000000000',
+            signature: '',
+            work: undefined,
+        };
+
+        const signature = await signBlock(privateKeyOrSigner, block);
+
+        return signature;
     }
 
     /** Attempts a withdrawal.  On success, returns transaction hash. */
     async withdraw(recipientAddress: string, amountRaw: string, accountIndex: number): Promise<string> {
         log('** Begin Send Transaction **');
         await this._configApi(window.bananocoinBananojs.bananodeApi);
-        const { privateKey, accountInfo } = await this._getEssentials(accountIndex);
+        const { privateKeyOrSigner, accountInfo } = await this._getEssentials(accountIndex);
         const balanceRaw = accountInfo.balanceRaw;
 
         if (BigInt(balanceRaw) < BigInt(amountRaw)) {
@@ -111,7 +142,7 @@ export class TransactionService {
             signature: '',
             work: undefined,
         };
-        block.signature = await signBlock(privateKey, block);
+        block.signature = await signBlock(privateKeyOrSigner, block);
 
         const sendUsingServerPow = async (): Promise<string> => {
             block.work = await this._powService.generateRemoteWork(accountInfo.frontier);
@@ -139,7 +170,7 @@ export class TransactionService {
     async receive(accountIndex: number, incoming: ReceivableHash): Promise<string> {
         log('** Begin Receive Transaction **');
         await this._configApi(window.bananocoinBananojs.bananodeApi);
-        const { privateKey, publicKey, accountInfo } = await this._getEssentials(accountIndex);
+        const { privateKeyOrSigner, publicKey, accountInfo } = await this._getEssentials(accountIndex);
         const accountBalanceRaw = accountInfo.balanceRaw;
         const valueRaw = (BigInt(incoming.receivableRaw) + BigInt(accountBalanceRaw)).toString();
         const isOpeningAccount = !accountInfo.representative;
@@ -162,7 +193,7 @@ export class TransactionService {
             signature: '',
             work: undefined,
         };
-        block.signature = await signBlock(privateKey, block);
+        block.signature = await signBlock(privateKeyOrSigner, block);
 
         const workHash = isOpeningAccount ? publicKey : accountInfo.frontier;
         const receiveUsingServerPow = async (): Promise<string> => {
@@ -191,7 +222,7 @@ export class TransactionService {
     async changeRepresentative(newRep: string, accountIndex: number): Promise<string> {
         log('** Begin Change Transaction **');
         await this._configApi(window.bananocoinBananojs.bananodeApi);
-        const { privateKey, accountInfo } = await this._getEssentials(accountIndex);
+        const { privateKeyOrSigner, accountInfo } = await this._getEssentials(accountIndex);
         const block: TransactionBlock = {
             type: 'state',
             account: accountInfo.fullAddress,
@@ -202,7 +233,7 @@ export class TransactionService {
             signature: '',
             work: undefined,
         };
-        block.signature = await signBlock(privateKey, block);
+        block.signature = await signBlock(privateKeyOrSigner, block);
 
         const changeUsingServerPow = async (): Promise<string> => {
             block.work = await this._powService.generateRemoteWork(accountInfo.frontier);
@@ -228,7 +259,7 @@ export class TransactionService {
 
     /** Not transaction, but signs block */
     async blockSign(block: TransactionBlock, accountIndex: number): Promise<string> {
-        const { privateKey, accountInfo } = await this._getEssentials(accountIndex);
+        const { privateKeyOrSigner, accountInfo } = await this._getEssentials(accountIndex);
         //we are getting the signature, but signature is required, so block.signature === ""
         //fill in defaults
         if (!block.account) {
@@ -240,13 +271,13 @@ export class TransactionService {
         if (!block.representative) {
             block.representative = accountInfo.representative;
         }
-        return await signBlock(privateKey, block);
+        return await signBlock(privateKeyOrSigner, block);
     }
 
     /** Not transaction, but signs message */
     async messageSign(message: string, accountIndex: number): Promise<string> {
-        const { privateKey } = await this._getEssentials(accountIndex);
-        return signMessage(privateKey, message);
+        const { privateKeyOrSigner } = await this._getEssentials(accountIndex);
+        return signMessage(privateKeyOrSigner, message);
     }
 
     /** Verify signature is valid */

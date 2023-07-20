@@ -47,4 +47,6 @@ export const slideInAnimation = trigger('routeAnimations', [
     transition('AddressBook => *', slideOut),
     transition('* => Signing', slideIn),
     transition('Signing => *', slideOut),
+    transition('* => SignMessage', slideIn),
+    transition('SignMessage => *', slideOut),
 ]);

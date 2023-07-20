@@ -67,12 +67,26 @@ export class SignerService {
         }
     }
 
-    async getAccountSigner(index: number): Promise<string> {
-        if (this._appStateService.store.getValue().hasUnlockedSecret) {
-            const seed = await this._secretService.getActiveWalletSeed();
-            return await window.bananocoinBananojs.getPrivateKey(seed, index);
+    async getAccountSigner(index: number): Promise<string | object | undefined> {
+        try {
+            if (this._appStateService.store.getValue().hasUnlockedSecret) {
+                const seed = await this._secretService.getActiveWalletSeed();
+                const privateKey = await window.bananocoinBananojs.getPrivateKey(seed, index) as string;
+                return privateKey;
+            }
+        } catch(error) {
+            console.error('error getting private key:');
+            console.error(error);
+            return undefined;
         }
 
-        return await window.bananocoin.bananojsHw.getLedgerAccountSigner(index);
+        try {
+            const signer = await window.bananocoin.bananojsHw.getLedgerAccountSigner(index) as object;
+            return signer;
+        } catch(error) {
+            console.log('error getting ledger account signer from bananojs-hw:');
+            console.error(error);
+            return undefined;
+        }
     }
 }
