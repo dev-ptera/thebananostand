@@ -36,10 +36,6 @@ import { AppStateService } from '@app/services/app-state.service';
                     <mat-icon>edit_note</mat-icon>
                     <span>Signing</span>
                 </button>
-                <button mat-menu-item (click)="navigateToSignMessage()">
-                    <mat-icon>edit_note</mat-icon>
-                    <span>Sign Message</span>
-                </button>
                 <mat-divider></mat-divider>
                 <button mat-menu-item (click)="navigateToSettingsPage()" data-cy="more-settings">
                     <mat-icon>open_in_new</mat-icon>
