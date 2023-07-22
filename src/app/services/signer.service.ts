@@ -23,11 +23,8 @@ export class SignerService {
     }
 
     private async _checkUsbSupport(): Promise<void> {
-        console.log('_checkUsbSupport()');
         await window.bananocoin.bananojsHw.onUsbReady(() => {
-            console.log('onUsbReady');
             BROWSER_SUPPORTS_USB.next();
-            console.log('BROWSER_SUPPORTS_USB.next();');
         });
     }
 
