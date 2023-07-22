@@ -276,7 +276,7 @@ export class TransactionService {
 
     /** Not transaction, but signs message */
     async messageSign(message: string, accountIndex: number): Promise<string> {
-        const { privateKeyOrSigner } = await this._getEssentials(accountIndex);
+        const { privateKeyOrSigner } = await this._getBareEssentials(accountIndex);
         return signMessage(privateKeyOrSigner, message);
     }
 

@@ -1,4 +1,4 @@
-<div class="app-root app-sign-message-page" responsive>
+<div class="app-root app-signmessage-page" responsive>
     <mat-toolbar color="primary" class="app-toolbar" responsive [class.mat-elevation-z2]="!vp.sm">
         <div style="display: flex; align-items: center">
             <button mat-icon-button (click)="back()">
@@ -20,7 +20,7 @@
                     <div class="mat-headline-6">Sign message</div>
                 </div>
                 <div style="padding: 0px 24px 24px 24px">
-                    <div *ngIf="store.hasSecret">
+                    <div>
                         <div class="mat-subtitle-2" style="padding-bottom: 16px">
                             Messages can be signed with your private key to verify your identity. This does not reveal your private key and does not put your funds in danger.
                         </div>
@@ -53,7 +53,7 @@
                                     matInput
                                     name="submiturl"
                                     autocomplete="off"
-                                    [type]="text"
+                                    type="text"
                                     value=""
                                     [formControl]="urlFormControl"
                                     [required]="!hasUrlFromFragment"
@@ -61,7 +61,9 @@
                                 />
                             </mat-form-field>
                         </form>
+                        
                         <button
+                            *ngIf="!submitRequested"
                             mat-flat-button
                             color="primary"
                             matTooltip="Sign the message with the account's private key"
@@ -69,33 +71,68 @@
                         >
                             Sign
                         </button>
-                        <div *ngIf="messageSignature !== ''" style="padding-top: 16px">
-                            <mat-form-field style="width: 80%" appearance="fill">
-                                <mat-label>Signature</mat-label>
-                                <input matInput [value]="messageSignature" disabled />
-                            </mat-form-field>
-                            <button
-                                mat-icon-button
-                                (click)="copyMessageSignature()"
-                                style="margin-left: 8px"
-                                *ngIf="!vp.sm"
-                                data-cy="copy-address-desktop"
-                            >
-                                <mat-icon>
-                                    {{ hasCopiedMessageSignature ? 'check_circle' : 'content_copy' }}
-                                </mat-icon>
-                            </button>
-                        </div>
-                        <div *ngIf="successfulSubmit">
-                            Submitted successfully!
-                        </div>
-                    </div>
-                    <!-- iirc message signing on ledger not possible because the bananojs-hw does not support it -->
-                    <div *ngIf="!store.hasSecret">
-                        <div class="mat-body-2">
-                            Message signing not available with ledger, sorry. For message signing, please use a browser
-                            wallet.
-                        </div>
+                        <button
+                            *ngIf="submitRequested"
+                            disabled
+                            mat-flat-button
+                            color="primary"
+                            matTooltip="Sign the message with the account's private key"
+                        >
+                            Sign
+                        </button>
+
+                        <mat-card *ngIf="successfulSubmit == false || successfulSubmit == true" appearance="outlined" style="margin-top: 24px;">
+                            <div *ngIf="successfulSubmit" class="expandable-header">
+                                <div class="mat-headline-6" style="padding: 12px 24px 24px 24px;">Success!</div>
+                                <mat-icon class="mat-accent">done</mat-icon>
+                            </div>
+
+                            <div *ngIf="successfulSubmit == false" class="expandable-header">
+                                <div class="mat-headline-6" style="padding: 12px 24px 24px 24px;">Error</div>
+                                <mat-icon class="mat-warn">error</mat-icon>
+                            </div>
+
+                            <div class="expandable-header">
+                                <div class="mat-headline-6" style="padding: 24px 24px;">Response from {{submitHostname}}</div>
+                                <button mat-button (click)="toggleResponseExpand()">
+                                    <mat-icon>expand</mat-icon>
+                                    <span>{{ responseExpand ? 'Shrink' : 'Expand' }}</span>
+                                </button>
+                            </div>
+
+                            <div *ngIf="responseExpand && submitResponse && submitResponse !== ''" class="mat-body-2 italic" style="padding: 16px 24px;">
+                                {{submitResponse}}
+                            </div>
+
+                            <div *ngIf="responseExpand && (!submitResponse || submitResponse === '')" class="mat-body-2" style="padding: 16px 24px;">
+                                No response.
+                            </div>
+
+                            <div class="expandable-header">
+                                <div class="mat-headline-6" style="padding: 24px 24px;">Signature</div>
+                                <button mat-button (click)="toggleSignatureExpand()">
+                                    <mat-icon>expand</mat-icon>
+                                    <span>{{ signatureExpand ? 'Shrink' : 'Expand' }}</span>
+                                </button>
+                            </div>
+                            <div *ngIf="signatureExpand && messageSignature !== ''" style="padding: 16px 24px">
+                                <mat-form-field style="width: 80%" appearance="fill">
+                                    <mat-label>Signature</mat-label>
+                                    <input matInput [value]="messageSignature" disabled />
+                                </mat-form-field>
+                                <button
+                                    mat-icon-button
+                                    (click)="copyMessageSignature()"
+                                    style="margin-left: 8px"
+                                    *ngIf="!vp.sm"
+                                    data-cy="copy-address-desktop"
+                                >
+                                    <mat-icon>
+                                        {{ hasCopiedMessageSignature ? 'check_circle' : 'content_copy' }}
+                                    </mat-icon>
+                                </button>
+                            </div>
+                        </mat-card>
                     </div>
                 </div>
             </mat-card>

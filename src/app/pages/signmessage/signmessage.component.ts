@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 //import { animate, style, transition, trigger } from '@angular/animations';
 import { ViewportService } from '@app/services/viewport.service';
@@ -17,7 +17,7 @@ const URL_PATTERN = /^https:\/\/.+$/;
 
 @UntilDestroy()
 @Component({
-    selector: 'app-sign-message-page',
+    selector: 'app-signmessage-page',
     templateUrl: './signmessage.component.html',
     styleUrls: ['./signmessage.component.scss'],
 })
@@ -44,7 +44,12 @@ export class SignMessageComponent {
     hasMessageFromFragment: boolean = false;
     urlFromFragment: string;
     hasUrlFromFragment: boolean = false;
-    successfulSubmit: boolean = false;
+    submitRequested: boolean = false;
+    successfulSubmit: boolean;
+    submitHostname: string;
+    submitResponse: string = '';
+    responseExpand: boolean = true;
+    signatureExpand: boolean = false;
 
     constructor(
         public vp: ViewportService,
@@ -85,38 +90,79 @@ export class SignMessageComponent {
                     this.hasMessageFromFragment = true;
                 }
                 if (this.urlFromFragment) {
-                    this.urlFormControl.setValue(this.urlFromFragment);
-                    this.urlFormControl.disable();
-                    this.hasUrlFromFragment = true;
+                    try {
+                        const url = new URL(this.urlFromFragment);
+                        this.urlFormControl.setValue(this.urlFromFragment);
+                        this.urlFormControl.disable();
+                        this.hasUrlFromFragment = true;
+                        this.submitHostname = url.hostname;
+                    } catch (error) {
+                        console.log('invalid url in fragment');
+                    }
+
                 }
             }
         });
     }
 
+    // TODO: display informative error messages in the UI in place of console.error
     async goSignMessage(): Promise<void> {
+        if (this.submitRequested) { return; } // submit only once
         const message: string = this.messageFormControl.value;
-        //if (HEX_PATTERN.test(message)) return;
         const accountIndex: number = this.addressFormControl.value;
-        this.messageSignature = await this.transactionService.messageSign(message, accountIndex);
-        let { publicAddress } = await this.transactionService._getBareEssentials(accountIndex);
-        let params = new HttpParams()
-            .set('signature', this.messageSignature)
-            .set('banano_address', publicAddress)
-            .set('message', message);
+        const submitUrl: string = this.urlFormControl.value;
+        
 
-        let submitUrl = this.urlFormControl.value;
-
-        if (URL_PATTERN.test(submitUrl)) {
-            this.http.get(submitUrl, { params }).subscribe((data) => {
-                this.successfulSubmit = true;
-                console.log(data);
-            }, (error) => {
-                // TODO: display "error submitting data" message for user
-                console.log("error submitting data");
-            });
-        } else {
-            // TODO: display an "invalid url" message
+        let banano_address;
+        try {
+            this.messageSignature = await this.transactionService.messageSign(message, accountIndex);
+            const { publicAddress } = await this.transactionService._getBareEssentials(accountIndex);
+            banano_address = publicAddress;
+        } catch (error) {
+            console.error(error);
+            this.successfulSubmit = false;
+            return;
         }
+
+        const params = {
+            'signature': this.messageSignature,
+            'banano_address': banano_address,
+            'message': message
+        };
+        
+
+        if (!URL_PATTERN.test(submitUrl)) {
+            this.successfulSubmit = false;
+            console.error(`error submitting data, invalid url: ${submitUrl}`);
+            return;
+        }
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        this.submitRequested = true;
+        this.http.put(submitUrl, params, { headers: headers })
+            .subscribe((data) => {
+                if (typeof(data) !== 'object') {
+                    this.successfulSubmit = false;
+                    console.error(`unexpected type for response data: ${typeof(data)}`);
+                    return;
+                }
+
+                this.successfulSubmit = data['success'] === true;
+                if (typeof(data['message']) === 'string') {
+                    this.submitResponse = data['message'];
+                }
+            }, (error) => {
+                this.successfulSubmit = false;
+                console.error("error submitting data");
+                console.error(error);
+            });
+    }
+
+    toggleResponseExpand(): void {
+        this.responseExpand = !this.responseExpand;
+    }
+
+    toggleSignatureExpand(): void {
+        this.signatureExpand = !this.signatureExpand;
     }
 
     copyMessageSignature(): void {
