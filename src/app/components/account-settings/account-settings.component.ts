@@ -112,13 +112,6 @@ export class AppAccountSettingsComponent {
         }, 100);
     }
 
-    navigateToSignMessage(): void {
-        this.userMenuOpen = false;
-        setTimeout(() => {
-            void this._router.navigate(['/signmessage']);
-        }, 100);
-    }
-
     isUserLoggedIn(): boolean {
         return (
             this._appStateService.store.getValue().hasUnlockedSecret ||
