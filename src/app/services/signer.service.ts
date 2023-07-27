@@ -18,14 +18,21 @@ declare let window: BananoifiedWindow;
     providedIn: 'root',
 })
 export class SignerService {
+    supportsWebUSB = false;
+
     constructor(private readonly _secretService: SecretService, private readonly _appStateService: AppStateService) {
         void this._checkUsbSupport();
     }
 
     private async _checkUsbSupport(): Promise<void> {
-        await window.bananocoin.bananojsHw.onUsbReady(() => {
+        const TransportWebUSB = window.TransportWebUSB;
+        this.supportsWebUSB = await TransportWebUSB.isSupported();
+        // eslint-disable-next-line no-console
+        console.info('connectLedger', 'supportsWebUSB', this.supportsWebUSB);
+
+        if (this.supportsWebUSB) {
             BROWSER_SUPPORTS_USB.next();
-        });
+        }
     }
 
     /** Checks if ledger is connected via USB & is unlocked, ready to use. */
@@ -56,34 +63,20 @@ export class SignerService {
             return account;
         }
 
-        try {
-            const address = await window.bananocoin.bananojsHw.getLedgerAddressFromIndex(accountIndex);
-            return address;
-        } catch(error) {
-            throw error;
+        if (this.supportsWebUSB) {
+            const accountData = await window.bananocoin.bananojsHw.getLedgerAccountData(accountIndex);
+            return accountData.account;
         }
     }
 
-    async getAccountSigner(index: number): Promise<string | object | undefined> {
-        try {
-            if (this._appStateService.store.getValue().hasUnlockedSecret) {
-                const seed = await this._secretService.getActiveWalletSeed();
-                const privateKey = await window.bananocoinBananojs.getPrivateKey(seed, index) as string;
-                return privateKey;
-            }
-        } catch(error) {
-            console.error('error getting private key:');
-            console.error(error);
-            return undefined;
+    async getAccountSigner(index: number): Promise<string> {
+        if (this._appStateService.store.getValue().hasUnlockedSecret) {
+            const seed = await this._secretService.getActiveWalletSeed();
+            return await window.bananocoinBananojs.getPrivateKey(seed, index);
         }
 
-        try {
-            const signer = await window.bananocoin.bananojsHw.getLedgerAccountSigner(index) as object;
-            return signer;
-        } catch(error) {
-            console.log('error getting ledger account signer from bananojs-hw:');
-            console.error(error);
-            return undefined;
+        if (this.supportsWebUSB) {
+            return await window.bananocoin.bananojsHw.getLedgerAccountSigner(index);
         }
     }
 }
