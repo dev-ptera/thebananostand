@@ -72,9 +72,7 @@ export class TransactionService {
         }
     }
 
-    private async _getTransactionEssentials(
-        accountIndex
-    ): Promise<{
+    private async _getTransactionEssentials(accountIndex): Promise<{
         privateKeyOrSigner: string | object;
         publicKey: string;
         publicAddress: string;
