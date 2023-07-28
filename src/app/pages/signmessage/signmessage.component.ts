@@ -63,45 +63,39 @@ export class SignMessageComponent {
         this.transactionService = _transactionService;
         _appStateService.store.pipe(untilDestroyed(this)).subscribe((store) => {
             this.store = store;
-            this._route.queryParams.subscribe((params) => {
-                if (params.type === 'message_sign') {
-                    if (params.address) {
-                        const foundAccount: AccountOverview[] = this.store.accounts.filter(
-                            (account) => account.fullAddress === params.address
+            this._route.fragment.subscribe((fragment: string) => {
+                if (fragment) {
+                    const params = new URLSearchParams(fragment);
+                    this.messageFromFragment = params.get('message');
+                    this.urlFromFragment = params.get('url');
+                    let address = params.get('address');
+    
+                    if (address) {
+                        const foundAccount: AccountOverview = this.store.accounts.find(
+                            (account) => account.fullAddress == address
                         );
-
+                        if (foundAccount) {
+                            this.addressFormControl.setValue(foundAccount.index);
+                        }
                     }
-                    this.messageFormControl.setValue(params.message);
+                    if (this.messageFromFragment) {
+                        this.messageFormControl.setValue(this.messageFromFragment);
+                        this.messageFormControl.disable();
+                        this.hasMessageFromFragment = true;
+                    }
+                    if (this.urlFromFragment) {
+                        try {
+                            const url = new URL(this.urlFromFragment);
+                            this.urlFormControl.setValue(this.urlFromFragment);
+                            this.urlFormControl.disable();
+                            this.hasUrlFromFragment = true;
+                            this.submitHostname = url.hostname;
+                        } catch (error) {
+                            console.log('invalid url in fragment');
+                        }
+                    }
                 }
             });
-        });
-    }
-
-    ngOnInit() {
-        this._route.fragment.subscribe((fragment: string) => {
-            if (fragment) {
-                const params = new URLSearchParams(fragment);
-                this.messageFromFragment = params.get('message');
-                this.urlFromFragment = params.get('url');
-
-                if (this.messageFromFragment) {
-                    this.messageFormControl.setValue(this.messageFromFragment);
-                    this.messageFormControl.disable();
-                    this.hasMessageFromFragment = true;
-                }
-                if (this.urlFromFragment) {
-                    try {
-                        const url = new URL(this.urlFromFragment);
-                        this.urlFormControl.setValue(this.urlFromFragment);
-                        this.urlFormControl.disable();
-                        this.hasUrlFromFragment = true;
-                        this.submitHostname = url.hostname;
-                    } catch (error) {
-                        console.log('invalid url in fragment');
-                    }
-
-                }
-            }
         });
     }
 
