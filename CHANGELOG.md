@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.0.1 (July 28, 2023)
+
+### Fixed
+
+-  Fixed message signing not reading value from query parameter.
+
 ## v4.0.0 (July 28, 2023)
 
 ### Added
