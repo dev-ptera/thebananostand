@@ -69,7 +69,7 @@ export class SignMessageComponent {
                     this.messageFromFragment = params.get('message');
                     this.urlFromFragment = params.get('url');
                     let address = params.get('address');
-    
+
                     if (address) {
                         const foundAccount: AccountOverview = this.store.accounts.find(
                             (account) => account.fullAddress == address
@@ -101,16 +101,17 @@ export class SignMessageComponent {
 
     // TODO: display informative error messages in the UI in place of console.error
     async goSignMessage(): Promise<void> {
-        if (this.submitRequested) { return; } // submit only once
+        if (this.submitRequested) {
+            return;
+        } // submit only once
         const message: string = this.messageFormControl.value;
         const accountIndex: number = this.addressFormControl.value;
         const submitUrl: string = this.urlFormControl.value;
-        
 
         let banano_address;
         try {
             this.messageSignature = await this.transactionService.messageSign(message, accountIndex);
-            const { publicAddress } = await this.transactionService._getBareEssentials(accountIndex);
+            const { publicAddress } = await this.transactionService._getSigningEssentials(accountIndex);
             banano_address = publicAddress;
         } catch (error) {
             console.error(error);
@@ -119,11 +120,10 @@ export class SignMessageComponent {
         }
 
         const params = {
-            'signature': this.messageSignature,
-            'banano_address': banano_address,
-            'message': message
+            signature: this.messageSignature,
+            banano_address: banano_address,
+            message: message,
         };
-        
 
         if (!URL_PATTERN.test(submitUrl)) {
             this.successfulSubmit = false;
@@ -132,23 +132,25 @@ export class SignMessageComponent {
         }
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         this.submitRequested = true;
-        this.http.put(submitUrl, params, { headers: headers })
-            .subscribe((data) => {
-                if (typeof(data) !== 'object') {
+        this.http.put(submitUrl, params, { headers: headers }).subscribe(
+            (data) => {
+                if (typeof data !== 'object') {
                     this.successfulSubmit = false;
-                    console.error(`unexpected type for response data: ${typeof(data)}`);
+                    console.error(`unexpected type for response data: ${typeof data}`);
                     return;
                 }
 
                 this.successfulSubmit = data['success'] === true;
-                if (typeof(data['message']) === 'string') {
+                if (typeof data['message'] === 'string') {
                     this.submitResponse = data['message'];
                 }
-            }, (error) => {
+            },
+            (error) => {
                 this.successfulSubmit = false;
-                console.error("error submitting data");
+                console.error('error submitting data');
                 console.error(error);
-            });
+            }
+        );
     }
 
     toggleResponseExpand(): void {
