@@ -10,7 +10,6 @@
 
 -  Updated angular dependencies
 
-
 ### Added
 
 -  Added `signmessage` page for deep-link external message-signing actions.
