@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-//import { animate, style, transition, trigger } from '@angular/animations';
 import { ViewportService } from '@app/services/viewport.service';
 import { Location } from '@angular/common';
 import { UtilService } from '@app/services/util.service';
@@ -10,7 +9,6 @@ import { FormControl, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TransactionService } from '@app/services/transaction.service';
 import { AccountOverview } from '@app/types/AccountOverview';
-import { TransactionBlock } from '@app/types/TransactionBlock';
 
 const HEX_PATTERN = /^[a-fA-F0-9]{32}$/;
 const URL_PATTERN = /^https:\/\/.+$/;
@@ -41,15 +39,15 @@ export class SignMessageComponent {
     messageSignature = '';
     hasCopiedMessageSignature = false;
     messageFromFragment: string;
-    hasMessageFromFragment: boolean = false;
+    hasMessageFromFragment = false;
     urlFromFragment: string;
-    hasUrlFromFragment: boolean = false;
-    submitRequested: boolean = false;
+    hasUrlFromFragment = false;
+    submitRequested = false;
     successfulSubmit: boolean;
     submitHostname: string;
-    submitResponse: string = '';
-    responseExpand: boolean = true;
-    signatureExpand: boolean = false;
+    submitResponse = '';
+    responseExpand = true;
+    signatureExpand = false;
 
     constructor(
         public vp: ViewportService,
@@ -58,7 +56,7 @@ export class SignMessageComponent {
         private readonly _transactionService: TransactionService,
         private readonly _appStateService: AppStateService,
         private readonly _route: ActivatedRoute,
-        private http: HttpClient
+        private readonly _http: HttpClient
     ) {
         this.transactionService = _transactionService;
         _appStateService.store.pipe(untilDestroyed(this)).subscribe((store) => {
@@ -68,11 +66,11 @@ export class SignMessageComponent {
                     const params = new URLSearchParams(fragment);
                     this.messageFromFragment = params.get('message');
                     this.urlFromFragment = params.get('url');
-                    let address = params.get('address');
+                    const address = params.get('address');
 
                     if (address) {
                         const foundAccount: AccountOverview = this.store.accounts.find(
-                            (account) => account.fullAddress == address
+                            (account) => account.fullAddress === address
                         );
                         if (foundAccount) {
                             this.addressFormControl.setValue(foundAccount.index);
@@ -111,7 +109,7 @@ export class SignMessageComponent {
         let banano_address;
         try {
             this.messageSignature = await this.transactionService.messageSign(message, accountIndex);
-            const { publicAddress } = await this.transactionService._getSigningEssentials(accountIndex);
+            const { publicAddress } = await this.transactionService.getSigningEssentials(accountIndex);
             banano_address = publicAddress;
         } catch (error) {
             console.error(error);
@@ -132,7 +130,7 @@ export class SignMessageComponent {
         }
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         this.submitRequested = true;
-        this.http.put(submitUrl, params, { headers: headers }).subscribe(
+        this._http.put(submitUrl, params, { headers: headers }).subscribe(
             (data) => {
                 if (typeof data !== 'object') {
                     this.successfulSubmit = false;

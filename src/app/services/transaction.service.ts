@@ -78,13 +78,13 @@ export class TransactionService {
         publicAddress: string;
         accountInfo: AccountOverview;
     }> {
-        const { privateKeyOrSigner, publicKey, publicAddress } = await this._getSigningEssentials(accountIndex);
+        const { privateKeyOrSigner, publicKey, publicAddress } = await this.getSigningEssentials(accountIndex);
         const accountInfo = await this._rpcService.getAccountInfoFromIndex(accountIndex, publicAddress);
         return { privateKeyOrSigner, publicKey, publicAddress, accountInfo };
     }
 
-    async _getSigningEssentials(
-        accountIndex
+    async getSigningEssentials(
+        accountIndex: number
     ): Promise<{ privateKeyOrSigner: string | object; publicKey: string; publicAddress: string }> {
         const privateKeyOrSigner = await this._signerService.getAccountSigner(accountIndex);
         const publicKey = await getPublicKeyFromPrivateKeyOrSigner(privateKeyOrSigner);
@@ -96,7 +96,7 @@ export class TransactionService {
         log('** Begin Dummy Block Sign **');
 
         await this._configApi(window.bananocoinBananojs.bananodeApi);
-        const { privateKeyOrSigner, publicAddress } = await this._getSigningEssentials(accountIndex);
+        const { privateKeyOrSigner, publicAddress } = await this.getSigningEssentials(accountIndex);
         // TODO:
         const messageRepresentative = '';
 
@@ -279,7 +279,7 @@ export class TransactionService {
 
     /** Not transaction, but signs message */
     async messageSign(message: string, accountIndex: number): Promise<string> {
-        const { privateKeyOrSigner } = await this._getSigningEssentials(accountIndex);
+        const { privateKeyOrSigner } = await this.getSigningEssentials(accountIndex);
         return signMessage(privateKeyOrSigner, message);
     }
 
