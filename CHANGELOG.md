@@ -1,5 +1,19 @@
 # Change Log
 
+## v4.0.0 (July 28, 2023)
+
+### Added
+
+-  Added `signmessage` page for deep-link external message-signing actions.
+
+### Changed
+
+-  Updated angular dependencies
+
+### Deleted
+
+-  Dropped Ledger support for Firefox due to U2F deprecation
+
 ## v3.9.2 (June 13, 2023)
 
 ### Added 

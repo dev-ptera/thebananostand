@@ -11,6 +11,7 @@ module.exports = {
     rules: {
         'no-console': 'off',
         'no-unused-expressions': 'off',
-        '@typescript-eslint/no-misused-promises': 'off'
+        '@typescript-eslint/no-misused-promises': 'off',
+        '@typescript-eslint/naming-convention': 'off'
     },
 };

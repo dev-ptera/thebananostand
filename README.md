@@ -64,12 +64,11 @@ Supported query parameters:
 |---------|----------------------------------------------------------|
 | request | Can either be 'block_sign' or 'message_sign'             |
 | address | An address that you own                                  |
-| message | A secret message to encrypt (must start with 'message-') |
+| message | A secret message to encrypt                              |
 
 ##### Message Signing example
 
-
-https://thebananostand.com/signing?request=message_sign&address=ban_11juro8jq16455kbggfa1ge3s7jjy6154gtg3pgyn45irw5sdf3qamntjeam&message=message-cheese
+https://thebananostand.com/signing?request=message_sign&address=ban_11juro8jq16455kbggfa1ge3s7jjy6154gtg3pgyn45irw5sdf3qamntjeam&message=cheese
 
 #### Block Signing example
 
