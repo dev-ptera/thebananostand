@@ -80,7 +80,7 @@ export class SigningComponent {
         _appStateService.store.pipe(untilDestroyed(this)).subscribe((store) => {
             this.store = store;
             this._route.queryParams.subscribe((params) => {
-                if (params.type === 'message_sign') {
+                if (params.request === 'message_sign') {
                     if (params.address) {
                         const foundAccount: AccountOverview[] = this.store.accounts.filter(
                             (account) => account.fullAddress === params.address
@@ -90,6 +90,7 @@ export class SigningComponent {
                         }
                     }
                     this.messageFormControl.setValue(params.message);
+                    console.log(params.message);
                     this.messageSignExpand = true;
                 } else if (params.type === 'block_sign') {
                     if (params.address) {
