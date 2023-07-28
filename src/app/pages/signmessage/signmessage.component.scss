@@ -1,0 +1,33 @@
+.app-signmessage-page {
+    &.sm {
+        mat-card {
+            border-radius: 0;
+        }
+    }
+
+    mat-card {
+        margin-bottom: 32px;
+        padding: 24px;
+        width: 100%;
+        .mdc-button--unelevated {
+            min-width: 80px;
+        }
+        .expandable-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .expanded-body {
+            margin-top: 16px;
+        }
+    }
+
+    .text-color-disabled:disabled {
+        color: rgba(0, 0, 0, 0.69);
+    }
+
+    .italic {
+        font-style: italic;
+    }
+}
+

@@ -20,12 +20,7 @@ export class SigningComponent {
     store: AppStore;
     transactionService: TransactionService;
 
-    messageFormControl = new FormControl('message-', [
-        (control: AbstractControl): ValidationErrors | null => {
-            const forbidden = !control.value.startsWith('message-') || control.value.length === 32;
-            return forbidden ? { forbiddenName: { value: control.value } } : null;
-        },
-    ]);
+    messageFormControl = new FormControl('');
     addressFormControl = new FormControl(0);
 
     signerFormControl = new FormControl('', [
@@ -94,9 +89,7 @@ export class SigningComponent {
                             this.addressFormControl.setValue(foundAccount[0].index);
                         }
                     }
-                    if (params.message.startsWith('message-')) {
-                        this.messageFormControl.setValue(params.message);
-                    }
+                    this.messageFormControl.setValue(params.message);
                     this.messageSignExpand = true;
                 } else if (params.type === 'block_sign') {
                     if (params.address) {
@@ -131,7 +124,6 @@ export class SigningComponent {
 
     async goSignMessage(): Promise<void> {
         const message: string = this.messageFormControl.value;
-        if (!message.startsWith('message-') || message.length === 32) return;
         const accountIndex: number = this.addressFormControl.value;
         this.messageSignature = await this.transactionService.messageSign(message, accountIndex);
     }

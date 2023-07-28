@@ -32,9 +32,6 @@
                 </div>
                 <div class="expanded-body" *ngIf="messageSignExpand">
                     <div *ngIf="store.hasSecret">
-                        <div class="mat-body-2" style="padding: 16px 0">
-                            For security reasons, a message to be signed must start with "message-".
-                        </div>
                         <form>
                             <!--Choose address dropdown-->
                             <mat-form-field style="width: 100%" appearance="fill">
@@ -48,7 +45,6 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            <!--Put in message (that has "message-" prepended)-->
                             <mat-form-field style="width: 100%" appearance="fill">
                                 <mat-label>Message</mat-label>
                                 <input
@@ -56,7 +52,7 @@
                                     name="message"
                                     autocomplete="off"
                                     type="text"
-                                    value="message-"
+                                    value=""
                                     [formControl]="messageFormControl"
                                     required
                                 />

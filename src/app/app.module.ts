@@ -74,6 +74,8 @@ import { SendComponent } from '@app/overlays/actions/send/send.component';
 import { SendDialogComponent } from '@app/overlays/dialogs/send/send-dialog.component';
 import { SpacerModule } from '@app/components/spacer/spacer.module';
 import { SigningComponent } from './pages/signing/signing.component';
+import { SignMessageComponent } from './pages/signmessage/signmessage.component';
+import { TextFieldModule } from '@angular/cdk/text-field';
 import { TransactionComponent } from '@app/pages/account/components/transaction/transaction.component';
 import { RenameAddressComponent } from '@app/overlays/actions/rename-address/rename-address.component';
 import { RenameAddressDialogComponent } from '@app/overlays/dialogs/rename-address/rename-address-dialog.component';
@@ -148,6 +150,7 @@ import { MatSliderModule } from '@angular/material/slider';
         SendDialogComponent,
         SettingsPageComponent,
         SigningComponent,
+        SignMessageComponent,
         TransactionComponent,
         AccountTableComponent,
         AccountActionsComponent,
@@ -186,6 +189,7 @@ import { MatSliderModule } from '@angular/material/slider';
         ResponsiveMenuModule,
         ScrollingModule,
         SpacerModule,
+        TextFieldModule,
         MatListModule,
         MatTableModule,
         MatSortModule,
