@@ -68,7 +68,6 @@ Supported query parameters:
 
 ##### Message Signing example
 
-
 https://thebananostand.com/signing?request=message_sign&address=ban_11juro8jq16455kbggfa1ge3s7jjy6154gtg3pgyn45irw5sdf3qamntjeam&message=cheese
 
 #### Block Signing example

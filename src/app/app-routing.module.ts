@@ -6,7 +6,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SettingsPageComponent } from '@app/pages/settings/settings.component';
 import { SigningComponent } from './pages/signing/signing.component';
-import { SignMessageComponent } from './pages/signmessage/signmessage.component';
+import { SignMessageComponent } from './pages/sign-message/sign-message.component';
 
 const routes: Routes = [
     { path: 'account/:account', component: AccountComponent, data: { animation: 'Account' }, canActivate: [AuthGuard] },
@@ -25,7 +25,7 @@ const routes: Routes = [
         canActivate: [AuthGuard],
     },
     {
-        path: 'signmessage',
+        path: 'sign-message',
         component: SignMessageComponent,
         data: { animation: 'SignMessage' },
         canActivate: [AuthGuard],

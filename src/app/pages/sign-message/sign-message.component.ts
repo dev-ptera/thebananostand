@@ -15,9 +15,9 @@ const URL_PATTERN = /^https:\/\/.+$/;
 
 @UntilDestroy()
 @Component({
-    selector: 'app-signmessage-page',
-    templateUrl: './signmessage.component.html',
-    styleUrls: ['./signmessage.component.scss'],
+    selector: 'app-sign-message-page',
+    templateUrl: './sign-message.component.html',
+    styleUrls: ['./sign-message.component.scss'],
 })
 export class SignMessageComponent {
     store: AppStore;
