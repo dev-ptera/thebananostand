@@ -43,7 +43,7 @@ describe('API Transaction Overlay', () => {
             );
     });
 
-    it.only('should close the api transaction overlay', () => {
+    it('should close the api transaction overlay', () => {
         cy.visit(
             `${root}?request=send&address=ban_1z7rxmcwataoqahha6xdo3j1tfikoufkhb95dg4b7aajapa4cnp6h3s9f8oj&amount=.006`
         );
