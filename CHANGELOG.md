@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.0.2 (August 12, 2023)
+
+### Changed
+
+-  Updated `@bananocoin/bananojs` dependency to `2.10.0`
+
 ## v4.0.1 (July 28, 2023)
 
 ### Fixed
