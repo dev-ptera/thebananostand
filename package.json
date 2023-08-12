@@ -1,6 +1,6 @@
 {
     "name": "thebananostand",
-    "version": "4.0.1",
+    "version": "4.0.2",
     "scripts": {
         "ng": "ng",
         "start": "ng serve --open --host 0.0.0.0",
@@ -34,6 +34,7 @@
         "@angular/platform-browser": "^15.2.9",
         "@angular/platform-browser-dynamic": "^15.2.9",
         "@angular/router": "^15.2.9",
+        "@bananocoin/bananojs": "^2.10.0",
         "@bananocoin/bananojs-hw": "^1.5.9",
         "@brightlayer-ui/colors": "^3.1.1",
         "@dev-ptera/nano-node-rpc": "^2.1.0",
