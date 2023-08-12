@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.0.3 (August 12, 2023)
+
+### Added
+
+-  E2E tests for API Transaction workflow.
+
 ## v4.0.2 (August 12, 2023)
 
 ### Changed
