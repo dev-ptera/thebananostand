@@ -53,7 +53,7 @@ import { AccountOverview } from '@app/types/AccountOverview';
                     <ng-container *ngIf="activeStep === 0">
                         <ng-container *ngIf="isSendAction()">
                             <div style="margin-bottom: 8px">You have been requested to send:</div>
-                            <div style="margin-bottom: 24px">{{ amountBan }} BAN</div>
+                            <div style="margin-bottom: 24px" data-cy="api-request-send-amount">{{ amountBan }} BAN</div>
                         </ng-container>
                         <div *ngIf="isChangeAction()" style="margin-bottom: 8px">
                             You have been requested to change your representative to:
@@ -61,6 +61,7 @@ import { AccountOverview } from '@app/types/AccountOverview';
                         <div *ngIf="isSendAction()" style="margin-bottom: 8px">To:</div>
                         <div
                             style="margin-bottom: 8px; word-break: break-all"
+                            data-cy="api-request-action-address"
                             [innerHTML]="util.formatHtmlAddress(actionAddress)"
                         ></div>
                     </ng-container>
@@ -69,7 +70,7 @@ import { AccountOverview } from '@app/types/AccountOverview';
                             Choose which account to send Banano from.
                         </div>
                         <div style="margin-bottom: 16px;" *ngIf="isChangeAction()">Choose which account to update.</div>
-                        <mat-form-field appearance="fill">
+                        <mat-form-field appearance="fill" data-cy="api-request-account-selection">
                             <mat-label>Address</mat-label>
                             <mat-select [formControl]="selectedAccount">
                                 <mat-option
@@ -104,9 +105,10 @@ import { AccountOverview } from '@app/types/AccountOverview';
                         </ng-container>
                         <ng-container *ngIf="isSendAction()">
                             <div style="font-weight: 600">Send</div>
-                            <div>{{ amountBan }} BAN</div>
+                            <div data-cy="api-request-send-amount">{{ amountBan }} BAN</div>
                             <div style="font-weight: 600; margin-top: 24px;">To</div>
                             <div
+                                data-cy="api-request-action-address"
                                 style="word-break: break-all"
                                 [innerHTML]="util.formatHtmlAddress(actionAddress)"
                             ></div>
@@ -121,7 +123,7 @@ import { AccountOverview } from '@app/types/AccountOverview';
                             back-button
                             color="primary"
                             (click)="back()"
-                            data-cy="change-close-button"
+                            data-cy="api-request-back-button"
                         >
                             <ng-container *ngIf="activeStep === 0">Close</ng-container>
                             <ng-container *ngIf="activeStep > 0">Back</ng-container>
@@ -132,6 +134,7 @@ import { AccountOverview } from '@app/types/AccountOverview';
                             next-button
                             color="primary"
                             (click)="next()"
+                            data-cy="api-request-next-button"
                             [disabled]="!canContinue()"
                         >
                             <ng-container *ngIf="activeStep < lastStep">Next</ng-container>
