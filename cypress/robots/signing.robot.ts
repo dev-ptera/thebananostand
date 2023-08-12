@@ -16,17 +16,26 @@ export class SigningRobot {
         return this;
     }
 
+    enterMessage(message: string): SigningRobot {
+        cy.wait(100);
+        cy.get('[data-cy=signing-input]').type(message);
+        return this;
+    }
+
     enterVerificationAddress(address: string): SigningRobot {
+        cy.wait(100);
         cy.get('[data-cy=verification-address-input]').type(address);
         return this;
     }
 
     enterVerificationMessage(message: string): SigningRobot {
+        cy.wait(100);
         cy.get('[data-cy=verification-message-input]').type(message);
         return this;
     }
 
     enterVerificationSignature(sig: string): SigningRobot {
+        cy.wait(100);
         cy.get('[data-cy=verification-signature-input]').type(sig);
         return this;
     }
@@ -49,12 +58,6 @@ export class SigningRobot {
         cy.get('[data-cy=message-signing-button]').click();
         return this;
     }
-
-    enterMessage(message: string): SigningRobot {
-        cy.get('[data-cy=signing-input]').type(message);
-        return this;
-    }
-
     checkMessageSignButtonDisabled(): SigningRobot {
         cy.get('[data-cy=message-signing-button]').should('be.disabled');
         return this;
