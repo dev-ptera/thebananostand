@@ -1,7 +1,4 @@
-import {
-    LoginRobot,
-    SigningRobot,
-} from '../robots';
+import { LoginRobot, SigningRobot } from '../robots';
 
 describe('Message Sign', () => {
     const LOW_FUND_SEED =
