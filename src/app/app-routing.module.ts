@@ -2,7 +2,7 @@ import { AccountComponent } from './pages/account/account.component';
 import { AddressBookComponent } from '@app/pages/address-book/address-book.component';
 import { AuthGuardService as AuthGuard } from './guards/auth-guard';
 import { HomeComponent } from './pages/home/home.component';
-import { NgModule } from '@angular/core';
+import {inject, NgModule} from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SettingsPageComponent } from '@app/pages/settings/settings.component';
 import { SigningComponent } from './pages/signing/signing.component';
@@ -16,19 +16,19 @@ const routes: Routes = [
         path: 'address-book',
         component: AddressBookComponent,
         data: { animation: 'AddressBook' },
-        canActivate: [AuthGuard],
+        canActivate: [() => inject(AuthGuard).canActivate()]
     },
     {
         path: 'signing',
         component: SigningComponent,
         data: { animation: 'Signing' },
-        canActivate: [AuthGuard],
+        canActivate: [() => inject(AuthGuard).canActivate()]
     },
     {
         path: 'sign-message',
         component: SignMessageComponent,
         data: { animation: 'SignMessage' },
-        canActivate: [AuthGuard],
+        canActivate: [() => inject(AuthGuard).canActivate()]
     },
 ];
 
