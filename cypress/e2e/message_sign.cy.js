@@ -1,11 +1,6 @@
 import {
-    ChangePasswordRobot,
-    DashboardRobot,
-    GlobalRobot,
-    HomeRobot,
     LoginRobot,
     SigningRobot,
-    SettingsRobot,
 } from '../robots';
 
 describe('Message Sign', () => {
@@ -13,13 +8,7 @@ describe('Message Sign', () => {
         '727A5E960F6189BBF196D84A6B7715D0A78DE82AC15BBDB340540076768CDB31';
 
     const root = 'http://localhost:4200';
-    const testPassword = 'SamplePasswordTest123';
-    const homeRobot = new HomeRobot();
     const loginRobot = new LoginRobot();
-    const dashboardRobot = new DashboardRobot();
-    const settingsRobot = new SettingsRobot();
-    const globalRobot = new GlobalRobot();
-    const changePasswordRobot = new ChangePasswordRobot();
     const signingRobot = new SigningRobot();
     const password = 'UniquePasswordForTestingSpec';
 
