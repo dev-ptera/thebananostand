@@ -36,6 +36,11 @@
                             },
                             {
                                 "glob": "**/*",
+                                "input": "node_modules/ngx-scanner-qrcode/wasm/",
+                                "output": "./assets/wasm/"
+                            },
+                            {
+                                "glob": "**/*",
                                 "input": "./node_modules/bip39",
                                 "output": "./assets/bip39"
                             }
