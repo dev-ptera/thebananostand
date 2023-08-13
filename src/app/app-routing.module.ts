@@ -16,19 +16,19 @@ const routes: Routes = [
         path: 'address-book',
         component: AddressBookComponent,
         data: { animation: 'AddressBook' },
-        canActivate: [() => inject(AuthGuard).canActivate()],
+        canActivate: [(): boolean => inject(AuthGuard).canActivate()],
     },
     {
         path: 'signing',
         component: SigningComponent,
         data: { animation: 'Signing' },
-        canActivate: [() => inject(AuthGuard).canActivate()],
+        canActivate: [(): boolean => inject(AuthGuard).canActivate()],
     },
     {
         path: 'sign-message',
         component: SignMessageComponent,
         data: { animation: 'SignMessage' },
-        canActivate: [() => inject(AuthGuard).canActivate()],
+        canActivate: [(): boolean => inject(AuthGuard).canActivate()],
     },
 ];
 

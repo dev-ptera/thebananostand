@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.1.0 (August 14, 2023)
+
+### Changed
+
+-  Updated dependencies to Angular 16.
+
 ## v4.0.3 (August 12, 2023)
 
 ### Added
