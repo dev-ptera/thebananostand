@@ -5,7 +5,7 @@ import { AppStateService } from '@app/services/app-state.service';
 @Injectable({
     providedIn: 'root',
 })
-export class AuthGuardService  {
+export class AuthGuardService {
     private preservedRoute = '';
 
     constructor(public appStateService: AppStateService, public router: Router) {}
