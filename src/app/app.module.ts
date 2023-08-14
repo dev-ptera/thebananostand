@@ -188,7 +188,7 @@ import { MatSliderModule } from '@angular/material/slider';
         MatToolbarModule,
         MatTooltipModule,
         MobileStepperModule,
- //       NgxScannerQrcodeModule,
+        //       NgxScannerQrcodeModule,
         ReactiveFormsModule,
         ResponsiveMenuModule,
         ScrollingModule,
