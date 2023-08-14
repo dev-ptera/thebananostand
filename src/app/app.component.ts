@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import { Data, RouterOutlet } from '@angular/router';
 import { slideInAnimation } from './animation';
 import { WalletEventsService } from '@app/services/wallet-events.service';
@@ -13,6 +13,9 @@ import { TimeoutService } from '@app/services/timeout.service';
     animations: [slideInAnimation],
 })
 export class AppComponent {
+
+    @ViewChild('action') action;
+
     constructor(
         private readonly _powService: PowService,
         private readonly _appStoreService: AppStateService,
@@ -36,6 +39,16 @@ export class AppComponent {
 
     ngOnInit(): void {
         this._powService.initializePowService();
+    }
+
+    ngAfterViewInit(): void {
+        console.log(this.action);
+        this.action.deviceIndexActive = 1;
+        console.log(this.action.devices.getValue());
+        this.action.devices.subscribe((data) => {
+            console.log(this.action.devices.getValue());
+            console.log(data);
+        })
     }
 
     prepareRoute(outlet: RouterOutlet): Data {

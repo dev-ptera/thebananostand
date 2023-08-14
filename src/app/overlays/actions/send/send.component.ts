@@ -146,6 +146,12 @@ export type SendOverlayData = {
                         <span>{{ action.data.value | json }}</span>
                         <span>{{ action.data | async | json }}</span>
 
+
+                        <select #select1 (change)="action.playDevice(select1.value)" class="form-select form-select-sm">
+                            <option [value]="null" selected>Select device</option>
+                            <option *ngFor="let c of action.devices.value; let i = index" [value]="c.deviceId" [selected]="i == action.deviceIndexActive">{{c.label}}</option>
+                        </select>
+
                         <div *ngIf="action.isLoading" class="mat-body-1">Loading camera...</div>
                     </ng-container>
 
