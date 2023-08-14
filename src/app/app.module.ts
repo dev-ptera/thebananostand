@@ -94,9 +94,9 @@ import { ApiRequestBottomSheetComponent } from '@app/overlays/bottom-sheet/api-r
 
 import { provideUserIdleConfig } from 'angular-user-idle';
 import { MatSliderModule } from '@angular/material/slider';
-import { LOAD_WASM, NgxScannerQrcodeModule } from 'ngx-scanner-qrcode';
+// import { LOAD_WASM, NgxScannerQrcodeModule } from 'ngx-scanner-qrcode';
 
-LOAD_WASM().subscribe((res: any) => console.log('LOAD_WASM', res));
+// LOAD_WASM().subscribe((res: any) => console.log('LOAD_WASM', res));
 
 @NgModule({
     declarations: [
@@ -188,7 +188,7 @@ LOAD_WASM().subscribe((res: any) => console.log('LOAD_WASM', res));
         MatToolbarModule,
         MatTooltipModule,
         MobileStepperModule,
-        NgxScannerQrcodeModule,
+ //       NgxScannerQrcodeModule,
         ReactiveFormsModule,
         ResponsiveMenuModule,
         ScrollingModule,
