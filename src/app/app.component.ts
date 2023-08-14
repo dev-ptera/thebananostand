@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import { Component } from '@angular/core';
 import { Data, RouterOutlet } from '@angular/router';
 import { slideInAnimation } from './animation';
 import { WalletEventsService } from '@app/services/wallet-events.service';
@@ -13,7 +13,6 @@ import { TimeoutService } from '@app/services/timeout.service';
     animations: [slideInAnimation],
 })
 export class AppComponent {
-
     constructor(
         private readonly _powService: PowService,
         private readonly _appStoreService: AppStateService,
