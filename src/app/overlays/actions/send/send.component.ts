@@ -128,6 +128,25 @@ export type SendOverlayData = {
                                 [(ngModel)]="recipient"
                             ></textarea>
                         </mat-form-field>
+
+                        <button
+                            (click)="action.isStart ? action.stop() : action.start()"
+                            mat-stroked-button
+                            back-button
+                            color="primary"
+                            data-cy="send-close-button"
+                        >
+                            <mat-icon>qr_code_scanner</mat-icon>
+                            <span>{{ action.isStart ? 'Disable Camera' : 'Scan QR Code'}}</span>
+                        </button>
+
+                        <ngx-scanner-qrcode #action="scanner" [isBeep]="false" [vibrate]="300"
+                        [style.display]="action.isStart ? 'flex' : 'none'"></ngx-scanner-qrcode>
+
+                        <span>{{ action.data.value | json }}</span>
+                        <span>{{ action.data | async | json }}</span>
+
+                        <div *ngIf="action.isLoading" class="mat-body-1">Loading camera...</div>
                     </ng-container>
 
                     <div *ngIf="activeStep === 3" class="mat-body-1">
