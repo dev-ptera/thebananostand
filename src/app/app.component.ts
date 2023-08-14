@@ -14,8 +14,6 @@ import { TimeoutService } from '@app/services/timeout.service';
 })
 export class AppComponent {
 
-    @ViewChild('action') action;
-
     constructor(
         private readonly _powService: PowService,
         private readonly _appStoreService: AppStateService,
@@ -39,16 +37,6 @@ export class AppComponent {
 
     ngOnInit(): void {
         this._powService.initializePowService();
-    }
-
-    ngAfterViewInit(): void {
-        console.log(this.action);
-        this.action.deviceIndexActive = 1;
-        console.log(this.action.devices.getValue());
-        this.action.devices.subscribe((data) => {
-            console.log(this.action.devices.getValue());
-            console.log(data);
-        })
     }
 
     prepareRoute(outlet: RouterOutlet): Data {

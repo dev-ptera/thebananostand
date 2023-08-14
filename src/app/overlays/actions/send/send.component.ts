@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
 import { UtilService } from '@app/services/util.service';
 import { AccountService } from '@app/services/account.service';
@@ -118,41 +118,43 @@ export type SendOverlayData = {
                     </ng-container>
 
                     <ng-container *ngIf="activeStep === 2">
-                        <div class="mat-body-1" style="margin-bottom: 16px">Please enter the recipient address.</div>
-                        <mat-form-field appearance="fill" class="address-input">
-                            <mat-label>Recipient Address</mat-label>
-                            <textarea
-                                matInput
-                                data-cy="send-recipient-input"
-                                type="value"
-                                [(ngModel)]="recipient"
-                            ></textarea>
-                        </mat-form-field>
-
+                        <ng-container *ngIf="!action.isStart">
+                            <div class="mat-body-1" style="margin-bottom: 16px">Please enter the recipient address.</div>
+                            <mat-form-field appearance="fill" class="address-input">
+                                <mat-label>Recipient Address</mat-label>
+                                <textarea
+                                    matInput
+                                    data-cy="send-recipient-input"
+                                    type="value"
+                                    [(ngModel)]="recipient"
+                                ></textarea>
+                            </mat-form-field>
+                        </ng-container>
                         <button
-                            (click)="action.isStart ? action.stop() : action.start()"
-                            mat-stroked-button
-                            back-button
-                            color="primary"
-                            data-cy="send-close-button"
+                        (click)="action.isStart ? action.stop() : action.start(); subscribeForScanData();"
+                        mat-stroked-button
+                        back-button
+                        color="primary"
+                        data-cy="send-close-button"
                         >
                             <mat-icon>qr_code_scanner</mat-icon>
                             <span>{{ action.isStart ? 'Disable Camera' : 'Scan QR Code'}}</span>
                         </button>
 
-                        <ngx-scanner-qrcode #action="scanner" [isBeep]="false" [vibrate]="300"
+                        <ngx-scanner-qrcode #action="scanner" style="margin: 16px 0"
                         [style.display]="action.isStart ? 'flex' : 'none'"></ngx-scanner-qrcode>
 
+                        <!--
                         <span>{{ action.data.value | json }}</span>
                         <span>{{ action.data | async | json }}</span>
+                        -->
 
-
-                        <select #select1 (change)="action.playDevice(select1.value)" class="form-select form-select-sm">
+                        <select #select1 (change)="action.playDevice(select1.value)" class="form-select form-select-sm" *ngIf="action.isStart">
                             <option [value]="null" selected>Select device</option>
                             <option *ngFor="let c of action.devices.value; let i = index" [value]="c.deviceId" [selected]="i == action.deviceIndexActive">{{c.label}}</option>
                         </select>
 
-                        <div *ngIf="action.isLoading" class="mat-body-1">Loading camera...</div>
+                        <div *ngIf="action.isLoading" class="mat-body-1" style="margin-top: 16px">Loading camera...</div>
                     </ng-container>
 
                     <div *ngIf="activeStep === 3" class="mat-body-1">
@@ -205,9 +207,11 @@ export type SendOverlayData = {
         </div>
     `,
 })
-export class SendComponent {
+export class SendComponent implements OnInit, OnDestroy {
     @Input() data: SendOverlayData;
     @Output() closeWithHash: EventEmitter<string> = new EventEmitter<string>();
+
+    @ViewChild('action') scanner;
 
     activeStep = 0;
     maxSteps = 4;
@@ -249,7 +253,16 @@ export class SendComponent {
         );
     }
 
+    ngOnDestroy(): void {
+        if (this.scanner?.isStart) {
+            this.scanner.stop();
+        }
+    }
+
     back(): void {
+        if (this.scanner?.isStart) {
+            this.scanner.stop();
+        }
         if (this.activeStep === 0) {
             return this.closeDialog();
         }
@@ -307,6 +320,14 @@ export class SendComponent {
 
     openLink(): void {
         this._accountService.showBlockInExplorer(this.txHash);
+    }
+
+    subscribeForScanData(): void {
+        this.scanner.isBeep = false;
+        this.scanner.data.subscribe((scannedData) => {
+            this.recipient = scannedData[0]?.value;
+            this.scanner.stop();
+        })
     }
 
     withdraw(): void {
