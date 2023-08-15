@@ -58,7 +58,7 @@ export type SendOverlayData = {
                         data-cy="send-close-button"
                     >
                         <mat-icon class="text-contrast">
-                            {{ scanner?.isStart ? 'stop_circle' : 'qr_code_scanner' }}
+                            {{ scanner?.isStart ? 'videocam_off' : 'qr_code_scanner' }}
                         </mat-icon>
                     </button>
                 </div>
