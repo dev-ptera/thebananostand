@@ -137,7 +137,7 @@ export type SendOverlayData = {
 
                     <ng-container *ngIf="activeStep === 2">
                         <ng-container *ngIf="!action.isStart">
-                            <div class="mat-body-1">
+                            <div class="mat-body-1" style="margin-bottom: 16px;">
                                 Please enter the recipient address.
                             </div>
                             <mat-form-field appearance="fill" class="address-input">
@@ -155,6 +155,7 @@ export type SendOverlayData = {
                             #select1
                             (change)="action.playDevice(select1.value)"
                             class="form-select form-select-sm"
+                            style="margin-bottom: 8px"
                             *ngIf="action.isStart"
                         >
                             <option [value]="null" selected>Select device</option>
@@ -173,7 +174,7 @@ export type SendOverlayData = {
                             [style.display]="action.isStart ? 'flex' : 'none'"
                         ></ngx-scanner-qrcode>
 
-                        <div *ngIf="action.isLoading" class="mat-body-1" style="margin-top: 16px">
+                        <div *ngIf="action.isLoading" class="mat-body-1" style="margin-top: 8px">
                             Loading camera...
                         </div>
                     </ng-container>
