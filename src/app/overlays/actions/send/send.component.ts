@@ -47,7 +47,21 @@ export type SendOverlayData = {
             </div>
 
             <ng-container *ngIf="hasSuccess === undefined">
-                <div class="overlay-header">Send Transaction</div>
+                <div class="overlay-header" style="display: flex; justify-content: space-between; align-items: center">
+                    <div>Send Transaction</div>
+                    <button
+                        *ngIf="vp.sm && activeStep === 2"
+                        (click)="scanner?.isStart ? scanner?.stop() : scanner?.start(); subscribeForScanData()"
+                        mat-mini-fab
+                        back-button
+                        color="primary"
+                        data-cy="send-close-button"
+                    >
+                        <mat-icon class="text-contrast">
+                            {{ scanner?.isStart ? 'stop_circle' : 'qr_code_scanner' }}
+                        </mat-icon>
+                    </button>
+                </div>
                 <div class="overlay-body">
                     <ng-container *ngIf="activeStep === 0">
                         <div class="mat-body-1" style="margin-bottom: 8px">
@@ -136,21 +150,10 @@ export type SendOverlayData = {
                                 ></textarea>
                             </mat-form-field>
                         </ng-container>
-                        <button
-                            *ngIf="vp.sm"
-                            (click)="action.isStart ? action.stop() : action.start(); subscribeForScanData()"
-                            mat-stroked-button
-                            back-button
-                            color="primary"
-                            data-cy="send-close-button"
-                        >
-                            <mat-icon>qr_code_scanner</mat-icon>
-                            <span>{{ action.isStart ? 'Disable Camera' : 'Scan QR Code' }}</span>
-                        </button>
 
                         <ngx-scanner-qrcode
                             #action="scanner"
-                            style="margin: 16px 0"
+                            style="margin-bottom: 16px"
                             [style.display]="action.isStart ? 'flex' : 'none'"
                         ></ngx-scanner-qrcode>
 
@@ -352,7 +355,7 @@ export class SendComponent implements OnInit, OnDestroy {
             let i = 0;
             for (const device of devices) {
                 if (device.label.toLowerCase().includes('back')) {
-                    this.scanner.deviceIndexActive = i;
+                    this.scanner.playDevice(device.value)
                     break;
                 }
                 i++;
