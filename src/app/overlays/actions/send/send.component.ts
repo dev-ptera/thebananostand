@@ -348,6 +348,16 @@ export class SendComponent implements OnInit, OnDestroy {
 
     subscribeForScanData(): void {
         this.scanner.isBeep = false;
+        this.scanner.devices.subscribe((devices) => {
+            let i = 0;
+            for (const device of devices) {
+                if (device.label.toLowerCase().includes('back')) {
+                    this.scanner.deviceIndexActive = i;
+                    break;
+                }
+                i++;
+            }
+        })
         this.scanner.data.subscribe((scannedData) => {
             this.recipient = scannedData[0]?.value;
             this.scanner.stop();
