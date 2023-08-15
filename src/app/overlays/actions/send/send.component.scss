@@ -1,5 +1,6 @@
 .send-overlay {
     max-width: 360px;
     width: 360px;
-    height: 520px;
+    min-height: 450px;
+    transition: all 300ms;
 }

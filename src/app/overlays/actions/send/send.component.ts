@@ -6,6 +6,7 @@ import { TransactionService } from '@app/services/transaction.service';
 import { TRANSACTION_COMPLETED_SUCCESS } from '@app/services/wallet-events.service';
 import { CurrencyConversionService } from '@app/services/currency-conversion.service';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
+import { ViewportService } from '@app/services/viewport.service';
 
 export type SendOverlayData = {
     address: string;
@@ -19,7 +20,10 @@ export type SendOverlayData = {
     selector: 'app-send-overlay',
     styleUrls: ['send.component.scss'],
     template: `
-        <div class="send-overlay overlay-action-container">
+        <div
+            class="send-overlay overlay-action-container"
+            [style.height.vh]="scanner?.isStart || scanner?.isLoading ? 80 : 0"
+        >
             <div *ngIf="hasSuccess === true" class="overlay-body">
                 <app-empty-state data-cy="send-success-state">
                     <mat-icon empty-icon> check_circle</mat-icon>
@@ -133,6 +137,7 @@ export type SendOverlayData = {
                             </mat-form-field>
                         </ng-container>
                         <button
+                            *ngIf="vp.sm"
                             (click)="action.isStart ? action.stop() : action.start(); subscribeForScanData()"
                             mat-stroked-button
                             back-button
@@ -256,6 +261,7 @@ export class SendComponent implements OnInit, OnDestroy {
         private readonly _accountService: AccountService,
         private readonly _transactionService: TransactionService,
         private readonly _currencyConversionService: CurrencyConversionService,
+        public vp: ViewportService,
         private readonly _appStoreService: AppStateService
     ) {
         this.store = this._appStoreService.store.getValue();
