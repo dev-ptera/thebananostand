@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
 import { UtilService } from '@app/services/util.service';
 import { AccountService } from '@app/services/account.service';
@@ -6,6 +6,7 @@ import { TransactionService } from '@app/services/transaction.service';
 import { TRANSACTION_COMPLETED_SUCCESS } from '@app/services/wallet-events.service';
 import { CurrencyConversionService } from '@app/services/currency-conversion.service';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
+import { ViewportService } from '@app/services/viewport.service';
 
 export type SendOverlayData = {
     address: string;
@@ -19,7 +20,10 @@ export type SendOverlayData = {
     selector: 'app-send-overlay',
     styleUrls: ['send.component.scss'],
     template: `
-        <div class="send-overlay overlay-action-container">
+        <div
+            class="send-overlay overlay-action-container"
+            [style.height.vh]="scanner?.isStart || scanner?.isLoading ? 80 : 0"
+        >
             <div *ngIf="hasSuccess === true" class="overlay-body">
                 <app-empty-state data-cy="send-success-state">
                     <mat-icon empty-icon> check_circle</mat-icon>
@@ -43,7 +47,22 @@ export type SendOverlayData = {
             </div>
 
             <ng-container *ngIf="hasSuccess === undefined">
-                <div class="overlay-header">Send Transaction</div>
+                <div class="overlay-header" style="display: flex; justify-content: space-between; align-items: center">
+                    <div>Send Transaction</div>
+                    <!-- TODO: Replace with ng device detector -->
+                    <button
+                        *ngIf="vp.sm && activeStep === 2"
+                        (click)="scanner?.isStart ? scanner?.stop() : scanner?.start(); subscribeForScanData()"
+                        mat-mini-fab
+                        back-button
+                        color="primary"
+                        data-cy="send-close-button"
+                    >
+                        <mat-icon class="text-contrast">
+                            {{ scanner?.isStart ? 'videocam_off' : 'qr_code_scanner' }}
+                        </mat-icon>
+                    </button>
+                </div>
                 <div class="overlay-body">
                     <ng-container *ngIf="activeStep === 0">
                         <div class="mat-body-1" style="margin-bottom: 8px">
@@ -118,16 +137,45 @@ export type SendOverlayData = {
                     </ng-container>
 
                     <ng-container *ngIf="activeStep === 2">
-                        <div class="mat-body-1" style="margin-bottom: 16px">Please enter the recipient address.</div>
-                        <mat-form-field appearance="fill" class="address-input">
-                            <mat-label>Recipient Address</mat-label>
-                            <textarea
-                                matInput
-                                data-cy="send-recipient-input"
-                                type="value"
-                                [(ngModel)]="recipient"
-                            ></textarea>
-                        </mat-form-field>
+                        <ng-container *ngIf="!action.isStart">
+                            <div class="mat-body-1" style="margin-bottom: 16px;">
+                                Please enter the recipient address.
+                            </div>
+                            <mat-form-field appearance="fill" class="address-input">
+                                <mat-label>Recipient Address</mat-label>
+                                <textarea
+                                    matInput
+                                    data-cy="send-recipient-input"
+                                    type="value"
+                                    [(ngModel)]="recipient"
+                                ></textarea>
+                            </mat-form-field>
+                        </ng-container>
+
+                        <select
+                            #select1
+                            (change)="action.playDevice(select1.value)"
+                            class="form-select form-select-sm"
+                            style="margin-bottom: 8px"
+                            *ngIf="action.isStart"
+                        >
+                            <option [value]="null" selected>Select device</option>
+                            <option
+                                *ngFor="let c of action.devices.value; let i = index"
+                                [value]="c.deviceId"
+                                [selected]="i == action.deviceIndexActive"
+                            >
+                                {{ c.label }}
+                            </option>
+                        </select>
+
+                        <ngx-scanner-qrcode
+                            #action="scanner"
+                            style="margin-bottom: 16px"
+                            [style.display]="action.isStart ? 'flex' : 'none'"
+                        ></ngx-scanner-qrcode>
+
+                        <div *ngIf="action.isLoading" class="mat-body-1" style="margin-top: 8px">Loading camera...</div>
                     </ng-container>
 
                     <div *ngIf="activeStep === 3" class="mat-body-1">
@@ -180,9 +228,11 @@ export type SendOverlayData = {
         </div>
     `,
 })
-export class SendComponent {
+export class SendComponent implements OnInit, OnDestroy {
     @Input() data: SendOverlayData;
     @Output() closeWithHash: EventEmitter<string> = new EventEmitter<string>();
+
+    @ViewChild('action') scanner;
 
     activeStep = 0;
     maxSteps = 4;
@@ -209,6 +259,7 @@ export class SendComponent {
         private readonly _accountService: AccountService,
         private readonly _transactionService: TransactionService,
         private readonly _currencyConversionService: CurrencyConversionService,
+        public vp: ViewportService,
         private readonly _appStoreService: AppStateService
     ) {
         this.store = this._appStoreService.store.getValue();
@@ -224,7 +275,16 @@ export class SendComponent {
         );
     }
 
+    ngOnDestroy(): void {
+        if (this.scanner?.isStart) {
+            this.scanner.stop();
+        }
+    }
+
     back(): void {
+        if (this.scanner?.isStart) {
+            this.scanner.stop();
+        }
         if (this.activeStep === 0) {
             return this.closeDialog();
         }
@@ -282,6 +342,22 @@ export class SendComponent {
 
     openLink(): void {
         this._accountService.showBlockInExplorer(this.txHash);
+    }
+
+    subscribeForScanData(): void {
+        this.scanner.isBeep = false;
+        this.scanner.devices.subscribe((devices) => {
+            for (const device of devices) {
+                if (device.label.toLowerCase().includes('back')) {
+                    this.scanner.playDevice(device.value);
+                    break;
+                }
+            }
+        });
+        this.scanner.data.subscribe((scannedData) => {
+            this.recipient = scannedData[0]?.value;
+            this.scanner.stop();
+        });
     }
 
     withdraw(): void {
