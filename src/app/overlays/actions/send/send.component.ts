@@ -175,9 +175,7 @@ export type SendOverlayData = {
                             [style.display]="action.isStart ? 'flex' : 'none'"
                         ></ngx-scanner-qrcode>
 
-                        <div *ngIf="action.isLoading" class="mat-body-1" style="margin-top: 8px">
-                            Loading camera...
-                        </div>
+                        <div *ngIf="action.isLoading" class="mat-body-1" style="margin-top: 8px">Loading camera...</div>
                     </ng-container>
 
                     <div *ngIf="activeStep === 3" class="mat-body-1">
@@ -349,15 +347,13 @@ export class SendComponent implements OnInit, OnDestroy {
     subscribeForScanData(): void {
         this.scanner.isBeep = false;
         this.scanner.devices.subscribe((devices) => {
-            let i = 0;
             for (const device of devices) {
                 if (device.label.toLowerCase().includes('back')) {
-                    this.scanner.playDevice(device.value)
+                    this.scanner.playDevice(device.value);
                     break;
                 }
-                i++;
             }
-        })
+        });
         this.scanner.data.subscribe((scannedData) => {
             this.recipient = scannedData[0]?.value;
             this.scanner.stop();
