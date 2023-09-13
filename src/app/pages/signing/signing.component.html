@@ -49,9 +49,12 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            <mat-form-field class="message-signing-text-area" appearance="fill">
+                            <mat-form-field style="width: 100%" appearance="fill">
                                 <mat-label>Message</mat-label>
                                 <textarea
+                                    cdkTextareaAutosize
+                                    cdkAutosizeMinRows="1"
+                                    cdkAutosizeMaxRows="10"
                                     data-cy="signing-input"
                                     matInput
                                     name="message"
@@ -146,7 +149,9 @@
                         <mat-form-field style="width: 100%" appearance="fill">
                             <mat-label>Message</mat-label>
                             <textarea
-                                class="message-signing-text-area"
+                                cdkTextareaAutosize
+                                cdkAutosizeMinRows="1"
+                                cdkAutosizeMaxRows="10"
                                 data-cy="verification-message-input"
                                 matInput
                                 name="verify-message"
