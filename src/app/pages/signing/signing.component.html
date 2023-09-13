@@ -49,9 +49,9 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            <mat-form-field style="width: 100%" appearance="fill">
+                            <mat-form-field class="message-signing-text-area" appearance="fill">
                                 <mat-label>Message</mat-label>
-                                <input
+                                <textarea
                                     data-cy="signing-input"
                                     matInput
                                     name="message"
@@ -60,7 +60,7 @@
                                     value=""
                                     [formControl]="messageFormControl"
                                     required
-                                />
+                                ></textarea>
                             </mat-form-field>
                         </form>
                         <button
@@ -145,7 +145,8 @@
                         <!--Message input-->
                         <mat-form-field style="width: 100%" appearance="fill">
                             <mat-label>Message</mat-label>
-                            <input
+                            <textarea
+                                class="message-signing-text-area"
                                 data-cy="verification-message-input"
                                 matInput
                                 name="verify-message"
@@ -153,7 +154,7 @@
                                 type="text"
                                 [formControl]="verifyMessageFormControl"
                                 required
-                            />
+                            ></textarea>
                         </mat-form-field>
                         <!--Signature input-->
                         <mat-form-field style="width: 100%" appearance="fill">
