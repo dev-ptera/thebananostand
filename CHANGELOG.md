@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.2.1 (September 12, 2023)
+
+### Fixed
+
+-  Fixed message signing API not supporting multiple-line messages.
+
 ## v4.2.0 (September 12, 2023)
 
 ### Added
