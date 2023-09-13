@@ -49,6 +49,7 @@ export type SendOverlayData = {
             <ng-container *ngIf="hasSuccess === undefined">
                 <div class="overlay-header" style="display: flex; justify-content: space-between; align-items: center">
                     <div>Send Transaction</div>
+                    <!-- TODO: Replace with ng device detector -->
                     <button
                         *ngIf="vp.sm && activeStep === 2"
                         (click)="scanner?.isStart ? scanner?.stop() : scanner?.start(); subscribeForScanData()"
