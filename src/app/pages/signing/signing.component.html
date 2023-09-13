@@ -51,7 +51,10 @@
                             </mat-form-field>
                             <mat-form-field style="width: 100%" appearance="fill">
                                 <mat-label>Message</mat-label>
-                                <input
+                                <textarea
+                                    cdkTextareaAutosize
+                                    cdkAutosizeMinRows="1"
+                                    cdkAutosizeMaxRows="10"
                                     data-cy="signing-input"
                                     matInput
                                     name="message"
@@ -60,7 +63,7 @@
                                     value=""
                                     [formControl]="messageFormControl"
                                     required
-                                />
+                                ></textarea>
                             </mat-form-field>
                         </form>
                         <button
@@ -145,7 +148,10 @@
                         <!--Message input-->
                         <mat-form-field style="width: 100%" appearance="fill">
                             <mat-label>Message</mat-label>
-                            <input
+                            <textarea
+                                cdkTextareaAutosize
+                                cdkAutosizeMinRows="1"
+                                cdkAutosizeMaxRows="10"
                                 data-cy="verification-message-input"
                                 matInput
                                 name="verify-message"
@@ -153,7 +159,7 @@
                                 type="text"
                                 [formControl]="verifyMessageFormControl"
                                 required
-                            />
+                            ></textarea>
                         </mat-form-field>
                         <!--Signature input-->
                         <mat-form-field style="width: 100%" appearance="fill">
