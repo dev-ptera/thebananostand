@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.2.0 (September 12, 2023)
+
+### Added
+
+-  Added ability to scan QR codes on a mobile device.
+
 ## v4.1.0 (August 14, 2023)
 
 ### Changed
