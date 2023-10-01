@@ -1,5 +1,4 @@
 import { AccountComponent } from './pages/account/account.component';
-import { AccountListComponent } from '@app/pages/dashboard/components/account-list/account-list.component';
 import { AddIndexBottomSheetComponent } from '@app/overlays/bottom-sheet/add-index/add-index-bottom-sheet.component';
 import { AddIndexDialogComponent } from '@app/overlays/dialogs/add-index/add-index-dialog.component';
 import { AddIndexOverlayComponent } from '@app/overlays/actions/add-index/add-index.component';
@@ -95,6 +94,7 @@ import { ApiRequestBottomSheetComponent } from '@app/overlays/bottom-sheet/api-r
 import { provideUserIdleConfig } from 'angular-user-idle';
 import { MatSliderModule } from '@angular/material/slider';
 import { LOAD_WASM, NgxScannerQrcodeModule } from 'ngx-scanner-qrcode';
+import { CommaPipe } from './pipes/comma.pipe';
 
 LOAD_WASM().subscribe((res: any) => console.log('WASM ngx-scanner-qrcode loaded', res));
 
@@ -104,7 +104,6 @@ LOAD_WASM().subscribe((res: any) => console.log('WASM ngx-scanner-qrcode loaded'
         ApiRequestDialogComponent,
         ApiRequestBottomSheetComponent,
         AccountComponent,
-        AccountListComponent,
         AccountCardComponent,
         AddIndexBottomSheetComponent,
         AddIndexDialogComponent,
@@ -118,6 +117,7 @@ LOAD_WASM().subscribe((res: any) => console.log('WASM ngx-scanner-qrcode loaded'
         ChangeRepBottomSheetComponent,
         ChangeRepComponent,
         ChangeRepDialogComponent,
+        CommaPipe,
         ConversionFromBANPipe,
         ConversionToBANPipe,
         CreateWalletBottomSheetComponent,

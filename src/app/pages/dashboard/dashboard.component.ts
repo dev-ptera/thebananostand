@@ -51,8 +51,6 @@ export class DashboardComponent {
 
     bottomSheetOpenDelayMs = 250;
 
-    totalBalance = '--';
-
     constructor(
         public vp: ViewportService,
         private readonly _route: ActivatedRoute,
@@ -65,11 +63,6 @@ export class DashboardComponent {
     ) {
         this._appStateService.store.pipe(untilDestroyed(this)).subscribe((store) => {
             this.store = store;
-            if (store.totalBalance === undefined) {
-                this.totalBalance = '--';
-            } else {
-                this.totalBalance = this._util.numberWithCommas(store.totalBalance);
-            }
         });
         this._route.queryParams.subscribe((params) => this._checkForApiRequestViaQueryParams(params));
     }

@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.3.0 (September 30, 2023)
+
+### Added
+
+-  Added a formatter to help round BAN balances to less significant digits when balance is higher. 
+
 ## v4.2.2 (September 30, 2023)
 
 ### Fixed
