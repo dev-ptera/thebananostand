@@ -6,6 +6,7 @@ import { RepScore } from '@app/overlays/actions/change-rep/change-rep.component'
 import { FilterOverlayData } from '@app/overlays/actions/filter/filter.component';
 import { DatasourceService } from '@app/services/datasource.service';
 import { PriceData } from '@app/types/PriceData';
+import { ExchangeRate } from '@app/types/ExchangeRate';
 
 @Injectable({
     providedIn: 'root',
@@ -56,5 +57,11 @@ export class SpyglassService {
         const source = await this._datasource.getSpyglassApiSource();
         const url = `${source.url}/v1/price`;
         return this._http.get<PriceData>(url).toPromise();
+    }
+
+    async getExchangeRates(): Promise<ExchangeRate[]> {
+        const source = await this._datasource.getSpyglassApiSource();
+        const url = `${source.url}/v1/price/exchange-rates`;
+        return this._http.get<ExchangeRate[]>(url).toPromise();
     }
 }

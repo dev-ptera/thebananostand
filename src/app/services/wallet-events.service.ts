@@ -383,7 +383,7 @@ export class WalletEventsService {
 
         SELECT_LOCALIZATION_CURRENCY.subscribe(async (localCurrencyCode: string) => {
             const priceDataUSD = await this._spyglassService.getBananoPriceRelativeToBitcoin();
-            const localCurrencyConversionRate = await this._currencyConversionService.convertToUSD(localCurrencyCode);
+            const localCurrencyConversionRate = this._currencyConversionService.convertToUSD(localCurrencyCode);
             this._dispatch({ localCurrencyCode, localCurrencyConversionRate, priceDataUSD });
         });
 

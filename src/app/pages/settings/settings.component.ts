@@ -163,14 +163,14 @@ export class DatasourceAvailablePipe implements PipeTransform {
                             <mat-label>Currency</mat-label>
                             <mat-select [value]="selectedCurrencyCode" (selectionChange)="changeCurrencySelect($event)">
                                 <mat-option
-                                    *ngFor="let currency of currencyConversionService.currencies"
-                                    [value]="currency.code"
+                                    *ngFor="let currency of currencyConversionService.exchangeRates"
+                                    [value]="currency.id"
                                 >
                                     <div style="display: flex; justify-content: space-between; align-items: center">
                                         <div>
-                                            {{ currency.description }}
+                                            {{ currency.desc }}
                                         </div>
-                                        <div>{{ currency.code }}</div>
+                                        <div>{{ currency.id }}</div>
                                     </div>
                                 </mat-option>
                             </mat-select>
