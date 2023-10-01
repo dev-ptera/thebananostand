@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.2.2 (September 30, 2023)
+
+### Fixed
+
+-  Fixed exchange rate data not populating.
+
 ## v4.2.1 (September 12, 2023)
 
 ### Fixed
