@@ -168,7 +168,10 @@
                 <ng-template [ngTemplateOutlet]="walletNameDropdown"></ng-template>
                 <!-- Account Balance -->
                 <div style="display: flex; align-items: center" [style.marginTop.px]="vp.sm ? 8 : 16">
-                    <div class="mat-headline-4 text-contrast">{{ totalBalance }} BAN</div>
+                    <div class="mat-headline-4 text-contrast">
+                        {{ store.totalBalance ? (store.totalBalance | appComma) : '--' }}
+                        BAN
+                    </div>
                     <mat-spinner
                         *ngIf="store.isLoadingAccounts"
                         class="stroke-contrast"

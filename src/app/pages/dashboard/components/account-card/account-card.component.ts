@@ -69,7 +69,7 @@ import { AppStateService, AppStore } from '@app/services/app-state.service';
                                     [class.mat-headline-5]="!vp.sm"
                                     [class.mat-headline-6]="vp.sm"
                                 >
-                                    {{ account.formattedBalance }} <span style="font-weight: 400">BAN</span>
+                                    {{ account.balance | appComma }} <span style="font-weight: 400">BAN</span>
                                 </div>
                                 <div class="hint mat-caption" [style.marginTop.px]="vp.sm ? -4 : 0">
                                     ~{{
