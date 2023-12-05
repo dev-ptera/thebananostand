@@ -24,6 +24,9 @@ export const ADD_NEXT_ACCOUNT_BY_INDEX = new Subject<void>();
 /** New addresses (index) has been added to the dashboard. */
 export const ADD_SPECIFIC_ACCOUNTS_BY_INDEX = new Subject<number[]>();
 
+/** New Banano Node (URL) has been added to the settings page. */
+export const ADD_RPC_NODE_BY_URL = new Subject<string>();
+
 /** User has attempted to unlock an encrypted secret wallet using a password. */
 export const ATTEMPT_UNLOCK_WALLET_WITH_PASSWORD = new Subject<{ password: string }>();
 
@@ -149,6 +152,7 @@ export class WalletEventsService {
             localStorageWallets: this._walletStorageService.readWalletsFromLocalStorage(),
             preferredDashboardView: this._walletStorageService.readPreferredDashboardViewFromLocalStorage(),
             idleTimeoutMinutes: this._walletStorageService.readIdleTimeoutMinutes(),
+            customRpcNodeURLs: this._walletStorageService.readCustomRpcNodeUrls()
         });
 
         this._appStateService.store.subscribe((store) => {
@@ -178,6 +182,10 @@ export class WalletEventsService {
                 isLoadingAccounts: false,
                 accounts: sortAccounts(accounts),
             });
+        });
+
+        ADD_RPC_NODE_BY_URL.subscribe(async (url: string) => {
+            this._dispatch({ customRpcNodeURLs: [url] });
         });
 
         ATTEMPT_UNLOCK_LEDGER_WALLET.subscribe(async () => {
@@ -417,9 +425,11 @@ export class WalletEventsService {
             newData.addressBook ||
             newData.localCurrencyCode ||
             newData.preferredDashboardView ||
+            newData.customRpcNodeURLs ||
             newData.minimumBananoThreshold !== undefined // Can be 0.
         ) {
             this._appStateService.appLocalStorage.next({
+                customRpcNodeURLs: newData.customRpcNodeURLs,
                 minimumBananoThreshold: newData.minimumBananoThreshold,
                 preferredDashboardView: newData.preferredDashboardView,
                 localizationCurrencyCode: newData.localCurrencyCode,

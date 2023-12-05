@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { UtilService } from '@app/services/util.service';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { AddressBookEntry } from '@app/types/AddressBookEntry';
@@ -22,6 +21,7 @@ const LEDGER_STORED_INDEXES = 'bananostand_ledgerIndexes';
 const PREFERRED_DASHBOARD_VIEW = 'bananostand_dashboardView';
 const IDLE_TIMEOUT_MINUTES = 'bananostand_idleTimeoutMinutes';
 const MINIMUM_INCOMING_THRESHOLD_BAN = 'bananostand_minimumIncomingBananoThreshold';
+const CUSTOM_RPC_NODE_URLS = 'bananostand_customRpcNodeURLs';
 
 @Injectable({
     providedIn: 'root',
@@ -33,7 +33,6 @@ export class WalletStorageService {
     store: AppStore;
 
     constructor(
-        private readonly _util: UtilService,
         private readonly _vp: ViewportService,
         private readonly _appStateService: AppStateService
     ) {
@@ -44,6 +43,13 @@ export class WalletStorageService {
         // Listen for the updated store and write to localstorage accordingly.
         // `store` & `localStorage` will always match.
         this._appStateService.appLocalStorage.subscribe((walletData) => {
+            if (walletData.customRpcNodeURLs !== undefined && walletData.customRpcNodeURLs[0] !== undefined) {
+                this.store.customRpcNodeURLs.push(walletData.customRpcNodeURLs[0]);
+                const urls = this.store.customRpcNodeURLs.toString();
+                debugger;
+                window.localStorage.setItem(CUSTOM_RPC_NODE_URLS, urls);
+            }
+
             if (walletData.minimumBananoThreshold !== undefined) {
                 window.localStorage.setItem(MINIMUM_INCOMING_THRESHOLD_BAN, String(walletData.minimumBananoThreshold));
             }
@@ -213,6 +219,14 @@ export class WalletStorageService {
 
         // Default
         return wallets[0];
+    }
+
+    readCustomRpcNodeUrls(): string[] {
+        const urls = localStorage.getItem(CUSTOM_RPC_NODE_URLS);
+        if (!urls) {
+            return [];
+        }
+        return urls.split(',');
     }
 
     /** Reads from local storage, defaults to USD. */

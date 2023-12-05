@@ -17,6 +17,8 @@ import { CurrencyConversionService } from '@app/services/currency-conversion.ser
 import { AppStateService } from '@app/services/app-state.service';
 import { MatSelectChange } from '@angular/material/select';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import {AddRpcBottomSheetComponent} from "@app/overlays/bottom-sheet/add-rpc/add-rpc-bottom-sheet.component";
+import {AddRpcDialogComponent} from "@app/overlays/dialogs/add-rpc/add-rpc-dialog.component";
 
 @Pipe({ name: 'available' })
 export class DatasourceAvailablePipe implements PipeTransform {
@@ -60,7 +62,6 @@ export class DatasourceAvailablePipe implements PipeTransform {
                                 mat-stroked-button
                                 blui-inline
                                 color="primary"
-                                class="preserve-non-mobile"
                                 (click)="openChangePasswordOverlay()"
                                 data-cy="change-password-button"
                             >
@@ -80,7 +81,6 @@ export class DatasourceAvailablePipe implements PipeTransform {
                                 mat-stroked-button
                                 blui-inline
                                 color="warn"
-                                class="preserve-non-mobile"
                                 longPress
                                 (mouseLongPress)="clearStorage()"
                                 data-cy="clear-storage-button"
@@ -114,8 +114,21 @@ export class DatasourceAvailablePipe implements PipeTransform {
                     <mat-card appearance="outlined" style="margin-bottom: 32px">
                         <div class="mat-headline-6">Data Sources</div>
                         <mat-divider></mat-divider>
-                        <div class="mat-overline" style="margin-top: 16px">Node RPC Datasource</div>
-                        <div class="mat-body-2">The node which broadcasts send, receive and change transactions.</div>
+                        <div class="account-security-option" responsive style="margin-bottom: 0">
+                            <div style="padding-top: 16px; flex: 1">
+                                <div class="mat-overline">Node RPC Datasource</div>
+                                <div class="mat-body-2">The node which broadcasts send, receive and change transactions.</div>
+                            </div>
+                            <button mat-stroked-button
+                                    blui-inline
+                                    color="primary"
+                                    (click)="openAddRpcOverlay()"
+                                    data-cy="add-new-rpc-node-button"
+                            >
+                                <mat-icon>control_point</mat-icon>
+                                <span>Add New</span>
+                            </button>
+                        </div>
                         <mat-radio-group
                             style="margin-bottom: 8px; display: inline-block"
                             aria-label="Select a RPC source"
@@ -233,6 +246,14 @@ export class SettingsPageComponent implements OnInit {
             this._sheet.open(ChangePasswordBottomSheetComponent);
         } else {
             this._dialog.open(ChangePasswordDialogComponent);
+        }
+    }
+
+    openAddRpcOverlay(): void {
+        if (this.vp.sm) {
+            this._sheet.open(AddRpcBottomSheetComponent);
+        } else {
+            this._dialog.open(AddRpcDialogComponent);
         }
     }
 

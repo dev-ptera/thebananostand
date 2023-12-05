@@ -95,6 +95,9 @@ import { provideUserIdleConfig } from 'angular-user-idle';
 import { MatSliderModule } from '@angular/material/slider';
 import { LOAD_WASM, NgxScannerQrcodeModule } from 'ngx-scanner-qrcode';
 import { CommaPipe } from './pipes/comma.pipe';
+import {AddRpcOverlayComponent} from "@app/overlays/actions/add-rpc/add-rpc.component";
+import {AddRpcDialogComponent} from "@app/overlays/dialogs/add-rpc/add-rpc-dialog.component";
+import {AddRpcBottomSheetComponent} from "@app/overlays/bottom-sheet/add-rpc/add-rpc-bottom-sheet.component";
 
 LOAD_WASM().subscribe((res: any) => console.log('WASM ngx-scanner-qrcode loaded', res));
 
@@ -108,6 +111,9 @@ LOAD_WASM().subscribe((res: any) => console.log('WASM ngx-scanner-qrcode loaded'
         AddIndexBottomSheetComponent,
         AddIndexDialogComponent,
         AddIndexOverlayComponent,
+        AddRpcOverlayComponent,
+        AddRpcDialogComponent,
+        AddRpcBottomSheetComponent,
         AddressBookComponent,
         AppAccountSettingsComponent,
         AppComponent,
