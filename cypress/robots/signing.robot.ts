@@ -1,6 +1,10 @@
 /// <reference types="cypress"/>
 
 export class SigningRobot {
+
+    // TODO: Remove this; should not be required.
+    reasonableInputTimeEntryDelayMs = 1000;
+
     checkSigningPageExists(): SigningRobot {
         cy.get('[data-cy=signing-page]').should('exist');
         return this;
@@ -17,26 +21,30 @@ export class SigningRobot {
     }
 
     enterMessage(message: string): SigningRobot {
-        cy.wait(100);
+        cy.wait(this.reasonableInputTimeEntryDelayMs);
         cy.get('[data-cy=signing-input]').type(message);
+        cy.wait(this.reasonableInputTimeEntryDelayMs);
         return this;
     }
 
     enterVerificationAddress(address: string): SigningRobot {
-        cy.wait(100);
+        cy.wait(this.reasonableInputTimeEntryDelayMs);
         cy.get('[data-cy=verification-address-input]').type(address);
+        cy.wait(this.reasonableInputTimeEntryDelayMs);
         return this;
     }
 
     enterVerificationMessage(message: string): SigningRobot {
-        cy.wait(100);
+        cy.wait(this.reasonableInputTimeEntryDelayMs);
         cy.get('[data-cy=verification-message-input]').type(message);
+        cy.wait(this.reasonableInputTimeEntryDelayMs);
         return this;
     }
 
     enterVerificationSignature(sig: string): SigningRobot {
-        cy.wait(100);
+        cy.wait(this.reasonableInputTimeEntryDelayMs);
         cy.get('[data-cy=verification-signature-input]').type(sig);
+        cy.wait(this.reasonableInputTimeEntryDelayMs);
         return this;
     }
 
@@ -64,6 +72,7 @@ export class SigningRobot {
     }
 
     checkSignatureEquals(message: string): SigningRobot {
+        cy.wait(this.reasonableInputTimeEntryDelayMs);
         cy.get('input[name="signature"]')
             .invoke('val')
             .then((val) => {

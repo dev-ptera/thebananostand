@@ -34,7 +34,6 @@ describe('Message Sign', () => {
         );
         signingRobot
             .checkSigningPageExists()
-            .clickMessageSigningExpand()
             .checkMessageSignButtonDisabled()
             .enterMessage('samplemessage')
             .clickMessageSignButton()
@@ -63,7 +62,6 @@ describe('Message Sign', () => {
         );
         signingRobot
             .checkSigningPageExists()
-            .clickMessageSigningExpand()
             .checkMessageSignButtonDisabled()
             .enterMessage('samplemessage')
             .clickMessageSignButton()
@@ -92,7 +90,6 @@ describe('Message Sign', () => {
         );
         signingRobot
             .checkSigningPageExists()
-            .clickMessageSigningExpand()
             .clickMessageSignButton()
             .checkSignatureEquals(
                 'C4E6ADE8957E39D4BC18CC703A848B9F0251B406D47EA1A7B5A045AAFBF185AC25438EF21E4FDF55A7E724D3C5A3011D28D27F751545B9AED93F3291156B7F03'
