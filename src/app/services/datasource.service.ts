@@ -5,6 +5,7 @@ import { NanoClient } from '@dev-ptera/nano-node-rpc';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { DataSource } from '@angular/cdk/collections';
 import { SELECTED_RPC_DATASOURCE_CHANGE } from '@app/services/wallet-events.service';
+import {Data} from "@angular/router";
 
 export type Datasource = {
     alias: 'Batman' | 'Creeper' | 'Jungle Tv' | 'Booster' | 'Kalium' | 'Rain City' | string;
@@ -43,6 +44,7 @@ export class DatasourceService {
         // { alias: 'Rain City', url: 'https://rainstorm.city/api', isAccessible: false, isSelected: false } // Nano node, but can generate work (?)
     ];
 
+    defaultRpcDataSource: Datasource;
     customRpcDataSources: Datasource[] = [];
 
     private rpcNode: NanoClient;
@@ -76,7 +78,7 @@ export class DatasourceService {
 
             /** When a custom datasource is added, we will set it as the selected RPC datasource. */
             this.setRpcSource(
-                this.customRpcDataSources[this.customRpcDataSources.length - 1] || this.availableRpcDataSources[0]
+                this.customRpcDataSources[this.customRpcDataSources.length - 1] || this.defaultRpcDataSource
             );
         });
 
@@ -91,6 +93,7 @@ export class DatasourceService {
                         // eslint-disable-next-line no-console
                         console.log(`Using ${source.alias} as RPC source.`);
                         this.setRpcSource(source);
+                        this.defaultRpcDataSource = source;
                         this.rpcSourceLoadedSubject.next(source);
                     }
                 })
