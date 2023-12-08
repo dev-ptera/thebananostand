@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { UtilService } from '@app/services/util.service';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { AddressBookEntry } from '@app/types/AddressBookEntry';
@@ -22,6 +21,7 @@ const LEDGER_STORED_INDEXES = 'bananostand_ledgerIndexes';
 const PREFERRED_DASHBOARD_VIEW = 'bananostand_dashboardView';
 const IDLE_TIMEOUT_MINUTES = 'bananostand_idleTimeoutMinutes';
 const MINIMUM_INCOMING_THRESHOLD_BAN = 'bananostand_minimumIncomingBananoThreshold';
+const CUSTOM_RPC_NODE_URLS = 'bananostand_customRpcNodeURLs';
 
 @Injectable({
     providedIn: 'root',
@@ -32,11 +32,7 @@ const MINIMUM_INCOMING_THRESHOLD_BAN = 'bananostand_minimumIncomingBananoThresho
 export class WalletStorageService {
     store: AppStore;
 
-    constructor(
-        private readonly _util: UtilService,
-        private readonly _vp: ViewportService,
-        private readonly _appStateService: AppStateService
-    ) {
+    constructor(private readonly _vp: ViewportService, private readonly _appStateService: AppStateService) {
         this._appStateService.store.subscribe((store) => {
             this.store = store;
         });
@@ -44,6 +40,10 @@ export class WalletStorageService {
         // Listen for the updated store and write to localstorage accordingly.
         // `store` & `localStorage` will always match.
         this._appStateService.appLocalStorage.subscribe((walletData) => {
+            if (walletData.customRpcNodeURLs !== undefined) {
+                window.localStorage.setItem(CUSTOM_RPC_NODE_URLS, walletData.customRpcNodeURLs.toString());
+            }
+
             if (walletData.minimumBananoThreshold !== undefined) {
                 window.localStorage.setItem(MINIMUM_INCOMING_THRESHOLD_BAN, String(walletData.minimumBananoThreshold));
             }
@@ -213,6 +213,14 @@ export class WalletStorageService {
 
         // Default
         return wallets[0];
+    }
+
+    readCustomRpcNodeUrls(): string[] {
+        const urls = localStorage.getItem(CUSTOM_RPC_NODE_URLS);
+        if (!urls) {
+            return [];
+        }
+        return urls.split(',');
     }
 
     /** Reads from local storage, defaults to USD. */

@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.4.0 (December 8, 2023)
+
+### Added
+
+-  Added option to add custom RPC node on settings page.
+
 ## v4.3.0 (September 30, 2023)
 
 ### Added

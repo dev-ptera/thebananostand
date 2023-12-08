@@ -2,12 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { NanoClient } from '@dev-ptera/nano-node-rpc';
+import { AppStateService } from '@app/services/app-state.service';
+import { SELECTED_RPC_DATASOURCE_CHANGE } from '@app/services/wallet-events.service';
 
 export type Datasource = {
-    alias: 'Batman' | 'Creeper' | 'Jungle Tv' | 'Booster' | 'Kalium' | 'Rain City';
+    alias: 'Batman' | 'Creeper' | 'Jungle Tv' | 'Booster' | 'Kalium' | 'Rain City' | string;
     url: string;
     isAccessible: boolean;
     isSelected: boolean;
+    isAddedByUser?: boolean;
 };
 
 @Injectable({
@@ -39,6 +42,9 @@ export class DatasourceService {
         // { alias: 'Rain City', url: 'https://rainstorm.city/api', isAccessible: false, isSelected: false } // Nano node, but can generate work (?)
     ];
 
+    defaultRpcDataSource: Datasource;
+    customRpcDataSources: Datasource[] = [];
+
     private rpcNode: NanoClient;
     private rpcSource: Datasource;
     private readonly rpcSourceLoadedSubject = new Subject<Datasource>();
@@ -46,11 +52,33 @@ export class DatasourceService {
     private spyglassApiSource: Datasource;
     private readonly spyglassSourceLoadedSubject = new Subject<Datasource>();
 
-    constructor(http: HttpClient) {
+    constructor(http: HttpClient, state: AppStateService) {
         const handleError = (err, url): void => {
             console.error(`${url} is inaccessible as a datasource, ignoring it.`);
             console.error(err);
         };
+
+        state.store.subscribe((data) => {
+            if (!data.customRpcNodeURLs || data.customRpcNodeURLs.length === this.customRpcDataSources.length) {
+                return;
+            }
+
+            this.customRpcDataSources = [];
+            data.customRpcNodeURLs.map((customSourceUrl, index) => {
+                const newSource = {
+                    isSelected: false,
+                    isAccessible: true,
+                    alias: `Custom node #${index}`,
+                    url: customSourceUrl,
+                };
+                this.customRpcDataSources.push(newSource);
+            });
+
+            /** When a custom datasource is added, we will set it as the selected RPC datasource. */
+            this.setRpcSource(
+                this.customRpcDataSources[this.customRpcDataSources.length - 1] || this.defaultRpcDataSource
+            );
+        });
 
         // Ping available RPC Sources
         this.availableRpcDataSources.map((source: Datasource) => {
@@ -63,6 +91,7 @@ export class DatasourceService {
                         // eslint-disable-next-line no-console
                         console.log(`Using ${source.alias} as RPC source.`);
                         this.setRpcSource(source);
+                        this.defaultRpcDataSource = source;
                         this.rpcSourceLoadedSubject.next(source);
                     }
                 })
@@ -95,6 +124,7 @@ export class DatasourceService {
         this.rpcNode = new NanoClient({
             url: source.url,
         });
+        SELECTED_RPC_DATASOURCE_CHANGE.next(this.rpcSource);
     }
 
     setSpyglassApiSource(source: Datasource): void {

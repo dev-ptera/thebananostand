@@ -39,6 +39,8 @@ export type AppStore = {
     walletPassword: string;
     /** Determines how the Dashboard page looks. Can either be table or card. */
     preferredDashboardView: 'card' | 'table';
+    /** Custom RPC nodes **/
+    customRpcNodeURLs: string[];
 };
 
 @Injectable({
@@ -72,6 +74,7 @@ export class AppStateService {
         idleTimeoutMinutes: 15,
         isLoadingAccounts: true,
         preferredDashboardView: undefined,
+        customRpcNodeURLs: [],
     });
 
     appLocalStorage = new Subject<{
@@ -82,5 +85,6 @@ export class AppStateService {
         localStorageWallets: LocalStorageWallet[];
         preferredDashboardView: string;
         idleTimeoutMinutes: number;
+        customRpcNodeURLs: string[];
     }>();
 }

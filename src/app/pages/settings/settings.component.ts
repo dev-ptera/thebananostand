@@ -10,13 +10,17 @@ import { Router } from '@angular/router';
 import {
     EDIT_MINIMUM_INCOMING_THRESHOLD,
     REMOVE_ALL_WALLET_DATA,
+    REMOVE_CUSTOM_RPC_NODE_BY_INDEX,
     SELECT_LOCALIZATION_CURRENCY,
+    SELECTED_RPC_DATASOURCE_CHANGE,
 } from '@app/services/wallet-events.service';
 import { MatRadioChange } from '@angular/material/radio';
 import { CurrencyConversionService } from '@app/services/currency-conversion.service';
 import { AppStateService } from '@app/services/app-state.service';
 import { MatSelectChange } from '@angular/material/select';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { AddRpcBottomSheetComponent } from '@app/overlays/bottom-sheet/add-rpc/add-rpc-bottom-sheet.component';
+import { AddRpcDialogComponent } from '@app/overlays/dialogs/add-rpc/add-rpc-dialog.component';
 
 @Pipe({ name: 'available' })
 export class DatasourceAvailablePipe implements PipeTransform {
@@ -60,7 +64,6 @@ export class DatasourceAvailablePipe implements PipeTransform {
                                 mat-stroked-button
                                 blui-inline
                                 color="primary"
-                                class="preserve-non-mobile"
                                 (click)="openChangePasswordOverlay()"
                                 data-cy="change-password-button"
                             >
@@ -80,7 +83,6 @@ export class DatasourceAvailablePipe implements PipeTransform {
                                 mat-stroked-button
                                 blui-inline
                                 color="warn"
-                                class="preserve-non-mobile"
                                 longPress
                                 (mouseLongPress)="clearStorage()"
                                 data-cy="clear-storage-button"
@@ -114,8 +116,24 @@ export class DatasourceAvailablePipe implements PipeTransform {
                     <mat-card appearance="outlined" style="margin-bottom: 32px">
                         <div class="mat-headline-6">Data Sources</div>
                         <mat-divider></mat-divider>
-                        <div class="mat-overline" style="margin-top: 16px">Node RPC Datasource</div>
-                        <div class="mat-body-2">The node which broadcasts send, receive and change transactions.</div>
+                        <div class="account-security-option" responsive style="margin-bottom: 0">
+                            <div style="padding-top: 16px; flex: 1">
+                                <div class="mat-overline">Node RPC Datasource</div>
+                                <div class="mat-body-2">
+                                    The node which broadcasts send, receive and change transactions.
+                                </div>
+                            </div>
+                            <button
+                                mat-stroked-button
+                                blui-inline
+                                color="primary"
+                                (click)="openAddRpcOverlay()"
+                                data-cy="add-new-rpc-node-button"
+                            >
+                                <mat-icon>control_point</mat-icon>
+                                <span>Add New</span>
+                            </button>
+                        </div>
                         <mat-radio-group
                             style="margin-bottom: 8px; display: inline-block"
                             aria-label="Select a RPC source"
@@ -129,6 +147,25 @@ export class DatasourceAvailablePipe implements PipeTransform {
                             >
                                 <ng-template *ngTemplateOutlet="radioData; context: { source }"></ng-template>
                             </mat-radio-button>
+                            <div *ngIf="datasourceService.customRpcDataSources.length > 0" class="mat-overline">
+                                Custom Entries
+                            </div>
+                            <div
+                                *ngFor="let source of datasourceService.customRpcDataSources; let i = index"
+                                style="display: flex; align-items: center; justify-content: space-between"
+                            >
+                                <mat-radio-button [value]="source" [aria-label]="'Custom Source ' + i">
+                                    <ng-template *ngTemplateOutlet="radioData; context: { source }"></ng-template>
+                                </mat-radio-button>
+                                <button
+                                    mat-icon-button
+                                    [matTooltip]="'Remove ' + source.alias"
+                                    color="warn"
+                                    (click)="removeCustomRpcNode(i)"
+                                >
+                                    <mat-icon color="warn">clear</mat-icon>
+                                </button>
+                            </div>
                         </mat-radio-group>
                         <mat-divider></mat-divider>
                         <div class="mat-overline" style="margin-top: 16px">Spyglass API Datasource</div>
@@ -198,8 +235,8 @@ export class DatasourceAvailablePipe implements PipeTransform {
     styleUrls: ['./settings.component.scss'],
 })
 export class SettingsPageComponent implements OnInit {
-    selectedRpcSource: any;
-    selectedSpyglassApi: any;
+    selectedRpcSource: Datasource;
+    selectedSpyglassApi: Datasource;
     selectedCurrencyCode: string;
     minimumThreshold: number;
 
@@ -215,6 +252,9 @@ export class SettingsPageComponent implements OnInit {
     ) {
         this._appStateService.store.subscribe((data) => {
             this.selectedCurrencyCode = data.localCurrencyCode;
+        });
+        SELECTED_RPC_DATASOURCE_CHANGE.subscribe((source) => {
+            this.selectedRpcSource = source;
         });
     }
 
@@ -234,6 +274,18 @@ export class SettingsPageComponent implements OnInit {
         } else {
             this._dialog.open(ChangePasswordDialogComponent);
         }
+    }
+
+    openAddRpcOverlay(): void {
+        if (this.vp.sm) {
+            this._sheet.open(AddRpcBottomSheetComponent);
+        } else {
+            this._dialog.open(AddRpcDialogComponent);
+        }
+    }
+
+    removeCustomRpcNode(index: number): void {
+        REMOVE_CUSTOM_RPC_NODE_BY_INDEX.next(index);
     }
 
     clearStorage(): void {

@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { UtilService } from '@app/services/util.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewportService } from '@app/services/viewport.service';
@@ -54,7 +54,6 @@ export class DashboardComponent {
     constructor(
         public vp: ViewportService,
         private readonly _route: ActivatedRoute,
-        private readonly _router: Router,
         private readonly _dialog: MatDialog,
         private readonly _util: UtilService,
         private readonly _sheet: MatBottomSheet,
