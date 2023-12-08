@@ -1,7 +1,6 @@
 /// <reference types="cypress"/>
 
 export class SigningRobot {
-
     // TODO: Remove this; should not be required.
     reasonableInputTimeEntryDelayMs = 1000;
 
