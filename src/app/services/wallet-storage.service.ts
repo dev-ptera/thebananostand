@@ -32,10 +32,7 @@ const CUSTOM_RPC_NODE_URLS = 'bananostand_customRpcNodeURLs';
 export class WalletStorageService {
     store: AppStore;
 
-    constructor(
-        private readonly _vp: ViewportService,
-        private readonly _appStateService: AppStateService
-    ) {
+    constructor(private readonly _vp: ViewportService, private readonly _appStateService: AppStateService) {
         this._appStateService.store.subscribe((store) => {
             this.store = store;
         });
@@ -43,11 +40,8 @@ export class WalletStorageService {
         // Listen for the updated store and write to localstorage accordingly.
         // `store` & `localStorage` will always match.
         this._appStateService.appLocalStorage.subscribe((walletData) => {
-            if (walletData.customRpcNodeURLs !== undefined && walletData.customRpcNodeURLs[0] !== undefined) {
-                this.store.customRpcNodeURLs.push(walletData.customRpcNodeURLs[0]);
-                const urls = this.store.customRpcNodeURLs.toString();
-                debugger;
-                window.localStorage.setItem(CUSTOM_RPC_NODE_URLS, urls);
+            if (walletData.customRpcNodeURLs !== undefined) {
+                window.localStorage.setItem(CUSTOM_RPC_NODE_URLS, walletData.customRpcNodeURLs.toString());
             }
 
             if (walletData.minimumBananoThreshold !== undefined) {

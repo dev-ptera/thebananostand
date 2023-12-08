@@ -13,6 +13,7 @@ import { SpyglassService } from '@app/services/spyglass.service';
 import { CurrencyConversionService } from '@app/services/currency-conversion.service';
 import { AuthGuardService } from '../guards/auth-guard';
 import { Router } from '@angular/router';
+import { Datasource } from '@app/services/datasource.service';
 
 const SNACKBAR_DURATION = 3000;
 const SNACKBAR_CLOSE_ACTION_TEXT = 'Dismiss';
@@ -96,11 +97,17 @@ export const REMOVE_ACTIVE_WALLET = new Subject<void>();
 /** User has opted to delete all locally stored info. */
 export const REMOVE_ALL_WALLET_DATA = new Subject<void>();
 
+/** A Banano Node (URL) has been removed from the settings page. The display order on the settings page matches the order in storage.  */
+export const REMOVE_CUSTOM_RPC_NODE_BY_INDEX = new Subject<number>();
+
 /** User has requested a backup action */
 export const REQUEST_BACKUP_SECRET = new Subject<{ useMnemonic: boolean }>();
 
 /** An account is being added to the dashboard. Can be either true or false. */
 export const SET_DASHBOARD_ACCOUNT_LOADING = new BehaviorSubject<boolean>(true);
+
+/** Datasource RPC has been updated. */
+export const SELECTED_RPC_DATASOURCE_CHANGE = new Subject<Datasource>();
 
 /** A transaction has been broadcast onto the network successfully. */
 export const TRANSACTION_COMPLETED_SUCCESS = new Subject<string | undefined>();
@@ -152,7 +159,7 @@ export class WalletEventsService {
             localStorageWallets: this._walletStorageService.readWalletsFromLocalStorage(),
             preferredDashboardView: this._walletStorageService.readPreferredDashboardViewFromLocalStorage(),
             idleTimeoutMinutes: this._walletStorageService.readIdleTimeoutMinutes(),
-            customRpcNodeURLs: this._walletStorageService.readCustomRpcNodeUrls()
+            customRpcNodeURLs: this._walletStorageService.readCustomRpcNodeUrls(),
         });
 
         this._appStateService.store.subscribe((store) => {
@@ -185,7 +192,8 @@ export class WalletEventsService {
         });
 
         ADD_RPC_NODE_BY_URL.subscribe(async (url: string) => {
-            this._dispatch({ customRpcNodeURLs: [url] });
+            this.store.customRpcNodeURLs.push(url);
+            this._dispatch({ customRpcNodeURLs: this.store.customRpcNodeURLs });
         });
 
         ATTEMPT_UNLOCK_LEDGER_WALLET.subscribe(async () => {
@@ -373,6 +381,13 @@ export class WalletEventsService {
                 addressBook: new Map(),
             });
             LOCK_WALLET.next();
+        });
+
+        REMOVE_CUSTOM_RPC_NODE_BY_INDEX.subscribe((index) => {
+            this.store.customRpcNodeURLs.splice(index, 1);
+            this._dispatch({
+                customRpcNodeURLs: this.store.customRpcNodeURLs,
+            });
         });
 
         REQUEST_BACKUP_SECRET.subscribe(async (data) => {

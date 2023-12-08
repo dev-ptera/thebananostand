@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import {ADD_RPC_NODE_BY_URL} from '@app/services/wallet-events.service';
+import { ADD_RPC_NODE_BY_URL } from '@app/services/wallet-events.service';
 
 @Component({
     selector: 'app-add-rpc-overlay',
     styleUrls: ['add-rpc.component.scss'],
     template: `
         <div class="add-rpc-overlay overlay-action-container">
-            <div class="overlay-header">Add New Banano Node</div>
+            <div class="overlay-header">Add new Banano RPC Node</div>
             <div class="overlay-body">
                 <div class="mat-body-1" style="margin-bottom: 16px">
                     If the default Banano nodes are unavailable, you can add a custom RPC node to handle all send,
@@ -20,13 +20,13 @@ import {ADD_RPC_NODE_BY_URL} from '@app/services/wallet-events.service';
                 <form style="margin: 32px 0 16px 0">
                     <mat-form-field style="width: 100%" appearance="fill">
                         <mat-label>RPC Node URL</mat-label>
-                        <input
+                        <textarea
                             type="text"
                             matInput
                             (keyup.enter)="addRpcNode()"
                             [formControl]="urlFormControl"
                             data-cy="add-new-rpc-input"
-                        />
+                        ></textarea>
                     </mat-form-field>
                 </form>
             </div>
@@ -59,6 +59,7 @@ export class AddRpcOverlayComponent {
             return;
         }
 
+        // TODO: Add checks to see if the node is accessible and online before adding it to the list.
         ADD_RPC_NODE_BY_URL.next(this.urlFormControl.value);
         this.close.emit();
     }
