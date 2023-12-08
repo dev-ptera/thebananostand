@@ -191,7 +191,7 @@ export class WalletEventsService {
             });
         });
 
-        ADD_RPC_NODE_BY_URL.subscribe(async (url: string) => {
+        ADD_RPC_NODE_BY_URL.subscribe((url: string) => {
             this.store.customRpcNodeURLs.push(url);
             this._dispatch({ customRpcNodeURLs: this.store.customRpcNodeURLs });
         });

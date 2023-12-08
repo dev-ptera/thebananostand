@@ -2,10 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { NanoClient } from '@dev-ptera/nano-node-rpc';
-import { AppStateService, AppStore } from '@app/services/app-state.service';
-import { DataSource } from '@angular/cdk/collections';
+import { AppStateService } from '@app/services/app-state.service';
 import { SELECTED_RPC_DATASOURCE_CHANGE } from '@app/services/wallet-events.service';
-import {Data} from "@angular/router";
 
 export type Datasource = {
     alias: 'Batman' | 'Creeper' | 'Jungle Tv' | 'Booster' | 'Kalium' | 'Rain City' | string;
