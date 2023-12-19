@@ -150,6 +150,21 @@ export type SendOverlayData = {
                                     [(ngModel)]="recipient"
                                 ></textarea>
                             </mat-form-field>
+                            <div *ngIf="getAccountAlias(recipient)">
+                                <div style="display: flex; align-items: center" class="mat-body-1">
+                                    Known as "{{ getAccountAlias(recipient) }}"
+                                    <a
+                                        style="margin-left: 4px"
+                                        [href]="'https://creeper.banano.cc/known-accounts#' + recipient"
+                                        target="_blank"
+                                    >
+                                        on Creeper</a
+                                    >
+                                    <mat-icon style="font-size: 14px; height: 14px; width: 14px; margin-left: 4px"
+                                        >open_in_new</mat-icon
+                                    >
+                                </div>
+                            </div>
                         </ng-container>
 
                         <select
@@ -187,6 +202,10 @@ export type SendOverlayData = {
                             style="word-break: break-all; font-family: monospace"
                             [innerHTML]="util.formatHtmlAddress(recipient)"
                         ></div>
+                        <ng-container *ngIf="getAccountAlias(recipient)">
+                            <div style="font-weight: 600; margin-top: 16px">Known as</div>
+                            <div style="margin-bottom: 16px;">{{ getAccountAlias(recipient) }}</div>
+                        </ng-container>
                     </div>
                 </div>
                 <div class="overlay-footer">
@@ -391,6 +410,12 @@ export class SendComponent implements OnInit, OnDestroy {
             this.isSendingAll = amount === this.maxSendLocalCurrency;
         } else {
             this.isSendingAll = amount === this.data.maxSendAmount;
+        }
+    }
+
+    getAccountAlias(address: string): string {
+        if (address) {
+            return this._appStoreService.knownAccounts.get(address);
         }
     }
 

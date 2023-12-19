@@ -71,7 +71,7 @@ $jungle-green-theme: mat.define-light-theme((
     --hint:             #{map-get(blui.$blui-black, 200)};
     --icon-primary:     #{map-get(blui.$blui-black, 500)};
     --icon-secondary:   #{map-get(blui.$blui-black, 300)};
-    --divider:          rgba(66, 78, 84, 0.15);
-    --divider-border:   rgba(66, 78, 84, 0.15);
+    --divider:          rgba(66, 78, 84, 0.3);
+    --divider-border:   rgba(66, 78, 84, 0.3);
     --input-focus-bg:   #{map-get(blui.$blui-gray, 50)};
 }
