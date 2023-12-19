@@ -1,5 +1,21 @@
 # Change Log
 
+## v4.5.0 (December 19, 2023)
+
+### Added
+
+-  Added receiver alias (if known) to Send transaction workflow.
+-  Added copy address button to each entry in the Address Book.
+-  Added tooltips to Address Book row actions.
+
+### Fixed 
+
+-  No loading indicator visible when loading an account whose representative is offline.
+
+### Changed
+
+-  Border / divider weight for light themes.
+
 ## v4.4.0 (December 8, 2023)
 
 ### Added
