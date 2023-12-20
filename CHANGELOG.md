@@ -1,5 +1,12 @@
 # Change Log
 
+## v4.5.1 (December 20, 2023)
+
+### Changed
+
+-  Dark mode representative offline banner theme change. 
+-  Light mode toast dismiss action text theme change.
+
 ## v4.5.0 (December 19, 2023)
 
 ### Added
@@ -8,13 +15,13 @@
 -  Added copy address button to each entry in the Address Book.
 -  Added tooltips to Address Book row actions.
 
-### Fixed 
-
--  No loading indicator visible when loading an account whose representative is offline.
-
 ### Changed
 
 -  Border / divider weight for light themes.
+- 
+### Fixed 
+
+-  No loading indicator visible when loading an account whose representative is offline.
 
 ## v4.4.0 (December 8, 2023)
 

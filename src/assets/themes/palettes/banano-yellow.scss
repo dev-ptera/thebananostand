@@ -38,8 +38,8 @@ $banano-yellow-theme: mat.define-dark-theme((
     --link:             var(--primary);
     --icon-primary:     #{map-get(blui.$blui-black, 100)};
     --icon-secondary:   #{map-get(blui.$blui-black, 300)};
-    --divider:          rgba(183, 183, 183, 0.12);
-    --divider-border:   rgba(183, 183, 183, 0.12);
+    --divider:          rgba(183, 183, 183, 0.2);
+    --divider-border:   rgba(183, 183, 183, 0.2);
     --input-focus-bg:   #{map-get(blui.$blui-vantaBlack, 500)};
 
     --mdc-theme-surface: var(--card);
@@ -104,6 +104,14 @@ $banano-yellow-theme: mat.define-dark-theme((
     .add-index-overlay .add-accounts-example,
     .mdc-text-field--filled:not(.mdc-text-field--disabled) {
         background: map-get(blui.$blui-vantaBlack, 200);
+    }
+
+    .mat-toolbar.mat-warn {
+        background: var(--warn);
+    }
+
+    .mat-mdc-snack-bar-container .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
+        color: var(--card);
     }
 }
 
