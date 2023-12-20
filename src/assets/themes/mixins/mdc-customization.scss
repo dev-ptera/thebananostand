@@ -60,4 +60,8 @@
     .mat-mdc-form-field-focus-overlay {
         background: var(--input-focus-bg);
     }
+
+    .mat-mdc-snack-bar-container .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
+        color: var(--primary);
+    }
 }
