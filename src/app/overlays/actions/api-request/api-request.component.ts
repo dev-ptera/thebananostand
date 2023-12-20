@@ -77,13 +77,13 @@ import { LocalStorageWallet } from '@app/services/wallet-storage.service';
                                 <mat-option
                                     *ngFor="let wallet of (state.store | async).localStorageWallets"
                                     [value]="wallet"
-                                    [disabled]="!isWalletAccountsLoaded(wallet)"
+                                    [disabled]="!hasWalletLoadedAccounts(wallet)"
                                 >
                                     <div style="display: flex; justify-content: space-between; align-items: center">
                                         <div>
                                             {{ wallet.name }}
                                         </div>
-                                        <div *ngIf="!isWalletAccountsLoaded(wallet)" style="font-size: 10px">
+                                        <div *ngIf="!hasWalletLoadedAccounts(wallet)" style="font-size: 10px">
                                             (no accounts loaded)
                                         </div>
                                     </div>
@@ -183,7 +183,6 @@ export class ApiRequestComponent {
     requestType: 'Send' | 'Change';
     selectedAccount = new FormControl<AccountOverview>(null);
     selectedWallet = new FormControl<LocalStorageWallet>(null);
-    activeWallet: LocalStorageWallet;
 
     amountBan: number;
     activeStep = 0;
@@ -197,7 +196,6 @@ export class ApiRequestComponent {
         private readonly _accountService: AccountService,
         private readonly _transactionService: TransactionService
     ) {
-        console.log(this.selectedWallet);
         this._route.queryParams.subscribe((params) => {
             if (!params || !params.address) {
                 return;
@@ -275,7 +273,7 @@ export class ApiRequestComponent {
         CHANGE_ACTIVE_WALLET.next(wallet);
     }
 
-    isWalletAccountsLoaded(wallet: LocalStorageWallet): boolean {
+    hasWalletLoadedAccounts(wallet: LocalStorageWallet): boolean {
         return wallet.loadedIndexes?.length !== 0;
     }
 
