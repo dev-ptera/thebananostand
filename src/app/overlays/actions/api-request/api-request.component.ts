@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { TransactionService } from '@app/services/transaction.service';
 import { AppStateService } from '@app/services/app-state.service';
 import { ActivatedRoute } from '@angular/router';
@@ -6,8 +6,9 @@ import { FormControl } from '@angular/forms';
 import { UtilService } from '@app/services/util.service';
 import * as Colors from '@brightlayer-ui/colors';
 import { AccountService } from '@app/services/account.service';
-import { TRANSACTION_COMPLETED_SUCCESS } from '@app/services/wallet-events.service';
+import { CHANGE_ACTIVE_WALLET, TRANSACTION_COMPLETED_SUCCESS } from '@app/services/wallet-events.service';
 import { AccountOverview } from '@app/types/AccountOverview';
+import { LocalStorageWallet } from '@app/services/wallet-storage.service';
 
 @Component({
     selector: 'app-api-request-overlay',
@@ -66,9 +67,30 @@ import { AccountOverview } from '@app/types/AccountOverview';
                         ></div>
                     </ng-container>
                     <ng-container *ngIf="activeStep === 1">
-                        <div style="margin-bottom: 16px;" *ngIf="isSendAction()">
-                            Choose which account to send Banano from.
-                        </div>
+                        <div style="margin-bottom: 8px;">Choose which wallet to load.</div>
+                        <mat-form-field appearance="fill" data-cy="api-request-wallet-selection">
+                            <mat-label>Wallet</mat-label>
+                            <mat-select
+                                [formControl]="selectedWallet"
+                                (selectionChange)="changeActiveWallet($event.value)"
+                            >
+                                <mat-option
+                                    *ngFor="let wallet of (state.store | async).localStorageWallets"
+                                    [value]="wallet"
+                                    [disabled]="!hasWalletLoadedAccounts(wallet)"
+                                >
+                                    <div style="display: flex; justify-content: space-between; align-items: center">
+                                        <div>
+                                            {{ wallet.name }}
+                                        </div>
+                                        <div *ngIf="!hasWalletLoadedAccounts(wallet)" style="font-size: 10px">
+                                            (no accounts loaded)
+                                        </div>
+                                    </div>
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <div style="margin: 8px 0;" *ngIf="isSendAction()">Choose which account to send BAN from.</div>
                         <div style="margin-bottom: 16px;" *ngIf="isChangeAction()">Choose which account to update.</div>
                         <mat-form-field appearance="fill" data-cy="api-request-account-selection">
                             <mat-label>Address</mat-label>
@@ -93,10 +115,6 @@ import { AccountOverview } from '@app/types/AccountOverview';
                     <ng-container *ngIf="activeStep === 2">
                         <div style="margin-bottom: 24px">Please confirm the transaction details below:</div>
                         <ng-container *ngIf="isChangeAction()">
-                            <!--
-                            <div style="font-weight: 600">Update</div>
-                            <div style="word-break: break-all; margin-bottom: 24px"
-                                 [innerHTML]="util.formatHtmlAddress(selectedAccount.value.fullAddress)"></div> -->
                             <div style="font-weight: 600">Change Representative to</div>
                             <div
                                 style="word-break: break-all"
@@ -151,7 +169,7 @@ import { AccountOverview } from '@app/types/AccountOverview';
         </div>
     `,
 })
-export class ApiRequestComponent implements OnInit {
+export class ApiRequestComponent {
     @Output() close: EventEmitter<string> = new EventEmitter<string>();
 
     txHash: string;
@@ -164,6 +182,7 @@ export class ApiRequestComponent implements OnInit {
     colors = Colors;
     requestType: 'Send' | 'Change';
     selectedAccount = new FormControl<AccountOverview>(null);
+    selectedWallet = new FormControl<LocalStorageWallet>(null);
 
     amountBan: number;
     activeStep = 0;
@@ -196,8 +215,6 @@ export class ApiRequestComponent implements OnInit {
         });
     }
 
-    ngOnInit(): void {}
-
     closeOverlay(): void {
         this.close.emit(this.txHash);
     }
@@ -211,6 +228,16 @@ export class ApiRequestComponent implements OnInit {
             return this.performQueryAction();
         }
         this.activeStep++;
+        if (this.activeStep === 1) {
+            setTimeout(() => {
+                const activeWalletId = this.state.store.value.activeWallet.walletId;
+                this.state.store.value.localStorageWallets.map((wallet) => {
+                    if (wallet.walletId === activeWalletId) {
+                        this.selectedWallet.setValue(wallet);
+                    }
+                });
+            });
+        }
     }
 
     back(): void {
@@ -230,7 +257,7 @@ export class ApiRequestComponent implements OnInit {
 
     canContinue(): boolean {
         if (this.activeStep === 1) {
-            return Boolean(this.selectedAccount.value);
+            return Boolean(this.selectedAccount.value) && Boolean(this.selectedWallet.value);
         }
         return true;
     }
@@ -240,6 +267,14 @@ export class ApiRequestComponent implements OnInit {
             return false;
         }
         return account.balance <= this.amountBan;
+    }
+
+    changeActiveWallet(wallet: LocalStorageWallet): void {
+        CHANGE_ACTIVE_WALLET.next(wallet);
+    }
+
+    hasWalletLoadedAccounts(wallet: LocalStorageWallet): boolean {
+        return wallet.loadedIndexes?.length !== 0;
     }
 
     performQueryAction(): void {
