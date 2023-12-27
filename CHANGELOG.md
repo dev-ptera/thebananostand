@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.6.0 (December 20, 2023)
+
+### Added
+
+-  Added ability to select wallet from send/change API request dialog.
+
 ## v4.5.1 (December 20, 2023)
 
 ### Changed
