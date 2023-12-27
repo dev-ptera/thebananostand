@@ -1,5 +1,15 @@
 # Change Log
 
+## v4.6.1 (December 27, 2023)
+
+### Added
+
+-  Added padding when bulk receiving transactions as to not hit external API rate limits and ease network spam.
+
+### Fixed
+
+- Fixed incorrect copy-icon theme color on Address Book page.
+
 ## v4.6.0 (December 20, 2023)
 
 ### Added
