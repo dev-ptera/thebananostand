@@ -137,6 +137,8 @@ export class ReceiveComponent implements OnInit {
             try {
                 // eslint-disable-next-line no-await-in-loop
                 const receivedHash = await this._transactionService.receive(receivableBlock.index, receivableBlock);
+
+                // eslint-disable-next-line no-await-in-loop
                 await new Promise((r) => setTimeout(r, addBulkReceivePadding ? 2500 : 500));
 
                 this.txHash = receivedHash;
