@@ -128,10 +128,19 @@ export class ReceiveComponent implements OnInit {
         }
 
         this.isReceivingTx = true;
+
+        /* Some external APIs have rate limits in place, this a dummy time padding to help avoid rate limits.
+         E.g. Kalium API has a rate limit of 100 calls per minute, each receive transaction in thebanostand potentially does 6x calls, which means this wallet should enable 16 transactions per minute.
+         */
+        const addBulkReceivePadding = Boolean(this.data.blocks.length >= 16);
         for (const receivableBlock of this.data.blocks) {
             try {
                 // eslint-disable-next-line no-await-in-loop
                 const receivedHash = await this._transactionService.receive(receivableBlock.index, receivableBlock);
+
+                // eslint-disable-next-line no-await-in-loop
+                await new Promise((r) => setTimeout(r, addBulkReceivePadding ? 2500 : 500));
+
                 this.txHash = receivedHash;
                 this.activeStep++;
                 this.bufferValue = (100 / this.maxSteps) * this.activeStep;

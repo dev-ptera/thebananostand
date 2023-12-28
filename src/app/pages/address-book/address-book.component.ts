@@ -115,7 +115,7 @@ import { UtilService } from '@app/services/util.service';
                                 </div>
                                 <div style="display: flex">
                                     <button mat-icon-button (click)="copy(entry)" matTooltip="Copy address">
-                                        <mat-icon color="icon-secondary">content_copy</mat-icon>
+                                        <mat-icon class="icon-secondary">content_copy</mat-icon>
                                     </button>
                                     <button
                                         mat-icon-button
