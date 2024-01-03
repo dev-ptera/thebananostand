@@ -370,7 +370,9 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     getScrollContainerHeightReceivable(): number {
-        return this.re_ds._cachedData.length * this.getTransactionRowHeight() + (this.vp.sm ? 16 : 0); // Account for vert padding on mobile devices.
+        const containerHeight = this.re_ds._cachedData.length * this.getTransactionRowHeight() + (this.vp.sm ? 16 : 0); // Account for vert padding on mobile devices.
+        //cap at 1/3rd of the screen height
+        return containerHeight > document.body.clientHeight / 2 ? document.body.clientHeight / 3 : containerHeight;
     }
 
     toggleReceivableExpand(): void {

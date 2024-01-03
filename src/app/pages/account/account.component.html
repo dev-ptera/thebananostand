@@ -150,7 +150,15 @@
                     </div>
                     <ng-template [ngTemplateOutlet]="accountActions"></ng-template>
                 </div>
-                <div class="mat-overline">Transactions</div>
+                <div>
+                    <div class="mat-overline" style="display: flex; align-items: center; justify-content: space-between">
+                        <span>Receivables</span>
+                        <button mat-icon-button (click)="toggleReceivableExpand()" data-cy="receivable-expand" aria-label="toggle receivable expand" style="float: right">
+                            <mat-icon>expand</mat-icon>
+                            <!--<span>{{ receivableExpand ? 'Shrink' : 'Expand' }}</span>-->
+                        </button>
+                    </div>
+                </div>
             </mat-card>
 
             <mat-card
@@ -187,7 +195,8 @@
 
             <mat-card
                 appearance="outlined"
-                style="padding: 0; position: relative; overflow: hidden; margin-bottom: 32px"
+                style="padding: 0; position: relative; overflow: hidden"
+                [style.margin-bottom.px]="vp.sm ? 0 : 32"
             >
                 <mat-progress-bar
                     *ngIf="showProgressBar()"
@@ -239,6 +248,8 @@
                     </cdk-virtual-scroll-viewport>
                 </div>
             </mat-card>
+
+            <div class="mat-overline" style="padding: 8px 16px">Transactions</div>
 
             <mat-card appearance="outlined" style="padding: 0; position: relative; overflow: hidden">
                 <mat-progress-bar
