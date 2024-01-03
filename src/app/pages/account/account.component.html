@@ -185,6 +185,61 @@
                 <app-qr *ngIf="!vp.sm" [address]="account.fullAddress"></app-qr>
             </mat-card>
 
+            <mat-card appearance="outlined" style="padding: 0; position: relative; overflow: hidden; margin-bottom: 32px">
+                <mat-progress-bar
+                    *ngIf="showProgressBar()"
+                    color="primary"
+                    mode="indeterminate"
+                    data-cy="loading-indicator"
+                    style="left: 0; z-index: 1000"
+                    [style.position]="vp.sm ? 'fixed' : 'absolute'"
+                    [style.top.px]="vp.sm ? 40 : 0"
+                >
+                </mat-progress-bar>
+                <div *ngIf="!vp.sm" class="desktop-account-history">
+                    <div class="mat-headline-5">Receivables</div>
+                    <button mat-button (click)="toggleReceivableExpand()" data-cy="receivable-expand">
+                        <mat-icon>expand</mat-icon>
+                        <span>{{ receivableExpand ? 'Shrink' : 'Expand' }}</span>
+                    </button>
+                </div>
+
+                <div *ngIf="receivableExpand">
+                    <mat-divider *ngIf="!vp.sm"></mat-divider>
+                    <div
+                        *ngIf="showProgressBar() || account.pending.length === 0"
+                        class="empty-states"
+                    >
+                        <div *ngIf="account.pending.length === 0" class="results-empty-container">
+                            <app-empty-state>
+                                <mat-icon empty-icon>block</mat-icon>
+                                <div title>No Receivables</div>
+                                <div description>All transactions have been received. Hooray!</div>
+                            </app-empty-state>
+                        </div>
+                    </div>
+    
+                    <cdk-virtual-scroll-viewport
+                        *ngIf="re_ds && re_ds.firstPageLoaded"
+                        [itemSize]="getTransactionRowHeight()"
+                        data-cy="account-scroll-container"
+                        [style.height.px]="getScrollContainerHeightReceivable()"
+                        class="account-history-scroll-container"
+                        [class.repBanner]="isRepOffline() && !warnBannerDismissed"
+                        responsive
+                    >
+                        <div *cdkVirtualFor="let item of re_ds; let i = index; let even = even">
+                            <app-receivable
+                                [item]="item"
+                                [even]="even"
+                                [transactionRowHeight]="getTransactionRowHeight()"
+                                [index]="account.index"
+                            ></app-receivable>
+                        </div>
+                    </cdk-virtual-scroll-viewport>
+                </div>
+            </mat-card>
+
             <mat-card appearance="outlined" style="padding: 0; position: relative; overflow: hidden">
                 <mat-progress-bar
                     *ngIf="showProgressBar()"

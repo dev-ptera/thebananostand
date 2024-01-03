@@ -53,7 +53,6 @@ https://thebananostand.com?request=send&address=ban_1z7rxmcwataoqahha6xdo3j1tfik
 ##### Change example
 https://thebananostand.com?request=change&address=ban_3batmanuenphd7osrez9c45b3uqw9d9u81ne8xa6m43e1py56y9p48ap69zg
 
-
 ## API Usage (message signing)
 
 Using an address you own and your private key, you can prove use message signing to prove to others you own the address.  
@@ -70,7 +69,7 @@ Supported query parameters:
 
 https://thebananostand.com/signing?request=message_sign&address=ban_11juro8jq16455kbggfa1ge3s7jjy6154gtg3pgyn45irw5sdf3qamntjeam&message=cheese
 
-#### Block Signing example
+##### Block Signing example
 
 TODO
 

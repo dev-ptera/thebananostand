@@ -7,8 +7,9 @@ import { ChangeDetectorRef } from '@angular/core';
 import { UtilService } from '@app/services/util.service';
 import { debounceTime } from 'rxjs/operators';
 import { FilterOverlayData } from '@app/overlays/actions/filter/filter.component';
+import { ReceivableTx } from '@app/types/ReceivableTx';
 
-export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
+export class ConfirmedTxDataSource extends DataSource<ConfirmedTx | undefined> {
     _blockCount: number;
     _address: string;
     _pageSize = 200; // Update this to test out pagination, incremental loading.
@@ -105,5 +106,62 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
                 this._dataStream.next(this._cachedData);
                 this._ref.detectChanges();
             });
+    }
+}
+
+export class ReceivableTxDataSource extends DataSource<ReceivableTx | undefined> {
+    _address: string;
+    _maxSize = 500; // Update this to test out pagination, incremental loading.
+    _cachedData: Array<ReceivableTx | undefined>;
+    _dataStream: BehaviorSubject<Array<ReceivableTx | undefined>>;
+    _subscription: Subscription;
+
+    reachedLastPage: boolean;
+    firstPageLoaded = false;
+    filteredTransactions: ReceivableTx[] = [];
+
+    constructor(
+        address: string,
+        private readonly _apiService: SpyglassService,
+        private readonly _ref: ChangeDetectorRef,
+        private readonly _util: UtilService,
+    ) {
+        super();
+        this._address = address;
+        //{address: "ban_3o48j8c4guyuquicsmygr1ueaihitrf8xnhygyxkkhtntpeq9y8iprty13ob", amount: 1, amountRaw: "100000000000000000000000000000", hash: "20B1AEF1B554545C7B1AA31763D90100072E4E3C565707671C72A5EE2350596E", timestamp: 1704267314}
+        this._cachedData = [];
+        this._dataStream = new BehaviorSubject<Array<ReceivableTx | undefined>>(this._cachedData);
+        this._subscription = new Subscription();
+        this._fetchPageRecursive(0);
+    }
+
+    connect(collectionViewer: CollectionViewer): Observable<Array<ReceivableTx | undefined>> {
+        this._subscription.add(
+            collectionViewer.viewChange.pipe(debounceTime(100)).subscribe(() => {
+                this._cachedData = [];
+                this._fetchPageRecursive(0);
+            })
+        );
+        return this._dataStream;
+    }
+
+    disconnect(): void {
+        this._subscription.unsubscribe();
+    }
+
+    private _fetchPageRecursive(offset: number): void {
+        void this._apiService.getReceivableTransactions(this._address, this._maxSize, offset).then((receivables: ReceivableTx[]) => {
+            this.firstPageLoaded = true;
+            //can this be condensed into one statement? sorry, I don't know angular
+            let cachedData = [...this._cachedData];
+            cachedData.push(...receivables);
+            //includes case where receivables.length === 0
+            if (receivables.length < 500)  {
+                this._dataStream.next(cachedData);
+                this._cachedData = cachedData;
+                return void this._ref.detectChanges();
+            }
+            void this._fetchPageRecursive(offset + this._maxSize);
+        });
     }
 }

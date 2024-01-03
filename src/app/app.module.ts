@@ -76,6 +76,7 @@ import { SigningComponent } from './pages/signing/signing.component';
 import { SignMessageComponent } from './pages/sign-message/sign-message.component';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { TransactionComponent } from '@app/pages/account/components/transaction/transaction.component';
+import { ReceivableComponent } from '@app/pages/account/components/receivable/receivable.component';
 import { RenameAddressComponent } from '@app/overlays/actions/rename-address/rename-address.component';
 import { RenameAddressDialogComponent } from '@app/overlays/dialogs/rename-address/rename-address-dialog.component';
 import { RenameAddressBottomSheetComponent } from '@app/overlays/bottom-sheet/rename-address/rename-address-bottom-sheet.component';
@@ -144,6 +145,7 @@ LOAD_WASM().subscribe((res: any) => console.log('WASM ngx-scanner-qrcode loaded'
         LoginComponent,
         LongPressDirective,
         QrDialogComponent,
+        ReceivableComponent,
         ReceiveBottomSheetComponent,
         ReceiveComponent,
         ReceiveDialogComponent,

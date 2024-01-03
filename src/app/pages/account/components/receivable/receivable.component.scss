@@ -1,0 +1,43 @@
+@use 'assets/themes/mixins/small-icon-button';
+
+.receivable-row,
+.receivable-row div {
+    display: flex;
+    align-items: center;
+}
+
+.receivable-row {
+    height: 100%;
+    padding: 8px 16px;
+    .type {
+        font-weight: 600;
+        margin-bottom: -4px;
+    }
+    .copy-address-button {
+        margin-left: 4px;
+        @include small-icon-button.small-icon-button(16px, 32px);
+    }
+}
+
+.sm .receivable-row-wrapper {
+    padding: 0.5rem 1rem;
+    .receivable-row {
+        border-radius: 1rem;
+    }
+    .accounts-hash-link {
+        font-size: 12px;
+    }
+}
+
+.receivable-icon .mat-icon {
+    margin-right: 36px;
+    color: var(--icon-secondary);
+}
+.sm .receivable-icon .mat-icon {
+    margin-right: 16px;
+}
+
+.receivable-row > div {
+    width: 100%;
+    justify-content: space-between;
+}

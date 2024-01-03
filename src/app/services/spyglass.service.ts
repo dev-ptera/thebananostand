@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ConfirmedTx } from '@app/types/ConfirmedTx';
+import { ReceivableTx } from '@app/types/ReceivableTx';
 import { KnownAccount } from '@app/types/KnownAccount';
 import { RepScore } from '@app/overlays/actions/change-rep/change-rep.component';
 import { FilterOverlayData } from '@app/overlays/actions/filter/filter.component';
@@ -63,5 +64,15 @@ export class SpyglassService {
         const source = await this._datasource.getSpyglassApiSource();
         const url = `${source.url}/v1/price/exchange-rates`;
         return this._http.get<ExchangeRate[]>(url).toPromise();
+    }
+
+    async getReceivableTransactions(
+        address: string,
+        size: number,
+        offset: number,
+    ): Promise<ReceivableTx[]> {
+        const source = await this._datasource.getSpyglassApiSource();
+        const url = `${source.url}/v1/account/receivable-transactions`;
+        return this._http.post<ReceivableTx[]>(url, { address, size, offset }).toPromise();
     }
 }

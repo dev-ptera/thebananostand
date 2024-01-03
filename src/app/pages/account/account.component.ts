@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { MyDataSource } from '@app/pages/account/datasource';
+import { ConfirmedTxDataSource, ReceivableTxDataSource } from '@app/pages/account/datasource';
 import { UtilService } from '@app/services/util.service';
 import { SpyglassService } from '@app/services/spyglass.service';
 import { AccountService } from '@app/services/account.service';
@@ -38,7 +38,8 @@ import { ReceiveOverlayData } from '@app/overlays/actions/receive/receive.compon
 })
 export class AccountComponent implements OnInit, OnDestroy {
     store: AppStore;
-    ds: MyDataSource;
+    ds: ConfirmedTxDataSource;
+    re_ds: ReceivableTxDataSource;
     account: AccountOverview;
 
     filterData: FilterOverlayData = {
@@ -60,6 +61,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     warnBannerDismissed = false;
     hideTransactionFilters = false;
     hasCopiedAccountAddress = false;
+    receivableExpand = false;
 
     bottomSheetDismissDelayMs = 100;
     containerHeightClass = 'disable-contained-height';
@@ -246,7 +248,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     /** Creates a new datasource, taking into account any transaction filters. */
     createNewDataSource(): void {
         this._disconnectDatasource();
-        this.ds = new MyDataSource(
+        this.ds = new ConfirmedTxDataSource(
             this.address,
             this.accountHeight,
             this._spyglassService,
@@ -255,6 +257,13 @@ export class AccountComponent implements OnInit, OnDestroy {
             this.filterData,
             this.isFilterApplied()
         );
+        this.re_ds = new ReceivableTxDataSource(
+            this.address,
+            this._spyglassService,
+            this._ref,
+            this.util
+        );
+        console.log(this.re_ds)
         this._ref.detectChanges();
     }
 
@@ -277,6 +286,14 @@ export class AccountComponent implements OnInit, OnDestroy {
             this.ds = undefined;
 
             // Do not run change detection when the component is destroyed; this ruins the angular scroll animation.
+            if (!isDestroyed) {
+                this._ref.detectChanges();
+            }
+        }
+        if (this.re_ds) {
+            this.re_ds.disconnect();
+            this.re_ds = undefined;
+
             if (!isDestroyed) {
                 this._ref.detectChanges();
             }
@@ -345,7 +362,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     showProgressBar(): boolean {
-        return this.isLoadingHeight || (this.ds && !this.ds.firstPageLoaded);
+        return this.isLoadingHeight || (this.ds && !this.ds.firstPageLoaded) || (this.re_ds && !this.re_ds.firstPageLoaded);
     }
 
     showNoFilteredResultsEmptyState(): boolean {
@@ -354,5 +371,13 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     getScrollContainerHeight(): number {
         return this.countTotalDisplayableTxCount() * this.getTransactionRowHeight() + (this.vp.sm ? 16 : 0); // Account for vert padding on mobile devices.
+    }
+
+    getScrollContainerHeightReceivable(): number {
+        return this.re_ds._cachedData.length * this.getTransactionRowHeight() + (this.vp.sm ? 16 : 0); // Account for vert padding on mobile devices.
+    }
+
+    toggleReceivableExpand(): void {
+        this.receivableExpand = !this.receivableExpand;
     }
 }
