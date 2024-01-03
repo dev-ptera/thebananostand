@@ -66,11 +66,7 @@ export class SpyglassService {
         return this._http.get<ExchangeRate[]>(url).toPromise();
     }
 
-    async getReceivableTransactions(
-        address: string,
-        size: number,
-        offset: number,
-    ): Promise<ReceivableTx[]> {
+    async getReceivableTransactions(address: string, size: number, offset: number): Promise<ReceivableTx[]> {
         const source = await this._datasource.getSpyglassApiSource();
         const url = `${source.url}/v1/account/receivable-transactions`;
         return this._http.post<ReceivableTx[]>(url, { address, size, offset }).toPromise();

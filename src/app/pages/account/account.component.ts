@@ -257,13 +257,7 @@ export class AccountComponent implements OnInit, OnDestroy {
             this.filterData,
             this.isFilterApplied()
         );
-        this.re_ds = new ReceivableTxDataSource(
-            this.address,
-            this._spyglassService,
-            this._ref,
-            this.util
-        );
-        console.log(this.re_ds)
+        this.re_ds = new ReceivableTxDataSource(this.address, this._spyglassService, this._ref, this.util);
         this._ref.detectChanges();
     }
 
@@ -362,7 +356,9 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     showProgressBar(): boolean {
-        return this.isLoadingHeight || (this.ds && !this.ds.firstPageLoaded) || (this.re_ds && !this.re_ds.firstPageLoaded);
+        return (
+            this.isLoadingHeight || (this.ds && !this.ds.firstPageLoaded) || (this.re_ds && !this.re_ds.firstPageLoaded)
+        );
     }
 
     showNoFilteredResultsEmptyState(): boolean {

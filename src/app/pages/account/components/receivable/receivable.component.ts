@@ -71,11 +71,7 @@ import { REFRESH_DASHBOARD_ACCOUNTS, TRANSACTION_COMPLETED_SUCCESS } from '@app/
                         <span *ngIf="!vp.sm" [style.marginLeft.px]="32" class="mat-body-1">
                             {{ util.timestampToRelative(item.timestamp) }}
                         </span>
-                        <button
-                            mat-icon-button
-                            [style.marginLeft.px]="32"
-                            (click)="receiveThis()"
-                        >
+                        <button mat-icon-button [style.marginLeft.px]="32" (click)="receiveThis()">
                             <mat-icon class="icon-secondary">download</mat-icon>
                         </button>
                     </div>
@@ -143,8 +139,8 @@ export class ReceivableComponent {
 
     async receiveThis(): Promise<void> {
         await this._transactionService.receive(this.index, {
-          hash: this.item.hash,
-          receivableRaw: this.item.amountRaw,
+            hash: this.item.hash,
+            receivableRaw: this.item.amountRaw,
         });
         TRANSACTION_COMPLETED_SUCCESS.next(undefined);
         REFRESH_DASHBOARD_ACCOUNTS.next();

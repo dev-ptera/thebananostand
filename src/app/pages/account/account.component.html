@@ -185,7 +185,10 @@
                 <app-qr *ngIf="!vp.sm" [address]="account.fullAddress"></app-qr>
             </mat-card>
 
-            <mat-card appearance="outlined" style="padding: 0; position: relative; overflow: hidden; margin-bottom: 32px">
+            <mat-card
+                appearance="outlined"
+                style="padding: 0; position: relative; overflow: hidden; margin-bottom: 32px"
+            >
                 <mat-progress-bar
                     *ngIf="showProgressBar()"
                     color="primary"
@@ -210,7 +213,10 @@
                         *ngIf="showProgressBar() || account.pending.length === 0"
                         class="empty-states"
                     >
-                        <div *ngIf="account.pending.length === 0" class="results-empty-container">
+                        <div
+                            *ngIf="account.pending.length === 0"
+                            class="results-empty-container"
+                        >
                             <app-empty-state>
                                 <mat-icon empty-icon>block</mat-icon>
                                 <div title>No Receivables</div>

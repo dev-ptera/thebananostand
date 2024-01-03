@@ -111,22 +111,22 @@ export class UtilService {
         let ago: number;
         let unit: string;
         if (timeDiff < 60 * 60) {
-            ago = timeDiff / (60);
-            unit = "minute";
+            ago = timeDiff / 60;
+            unit = 'minute';
         } else if (timeDiff < 24 * 60 * 60) {
             ago = timeDiff / (60 * 60);
-            unit = "hour";
+            unit = 'hour';
         } else if (timeDiff < 30 * 24 * 60 * 60) {
             ago = timeDiff / (24 * 60 * 60);
-            unit = "day";
+            unit = 'day';
         } else if (timeDiff < 12 * 30 * 24 * 60 * 60) {
             ago = timeDiff / (30 * 24 * 60 * 60);
-            unit = "month";
+            unit = 'month';
         } else {
             ago = timeDiff / (12 * 30 * 24 * 60 * 60);
-            unit = "year";
+            unit = 'year';
         }
         ago = Math.round(ago);
-        return `${ago} ${unit}${ago !== 1 ? "s" : ""} ago`;
+        return `${ago} ${unit}${ago !== 1 ? 's' : ''} ago`;
     }
 }
