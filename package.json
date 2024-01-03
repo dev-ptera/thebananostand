@@ -20,7 +20,6 @@
     "prettier": "prettier \"src/app/**/**.{ts,js,json,css,scss,html}\" --write && prettier \"cypress/**/**.{ts,js}\" --write --print-width 80",
     "prettier:check": "prettier \"src/app/**/**.{ts,js,json,css,scss,html}\" --check && prettier \"cypress/**/**.{ts,js}\" --check --print-width 80",
     "minify-assets": "minify-all-js dist/thebananostand/assets/",
-    "p": "prettier \"src/app/pages/account/datasource.ts\" --write",
     "tag:package": "npx -p @brightlayer-ui/tag blui-tag"
   },
   "private": true,
