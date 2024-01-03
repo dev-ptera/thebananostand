@@ -209,14 +209,8 @@
 
                 <div *ngIf="receivableExpand">
                     <mat-divider *ngIf="!vp.sm"></mat-divider>
-                    <div
-                        *ngIf="showProgressBar() || account.pending.length === 0"
-                        class="empty-states"
-                    >
-                        <div
-                            *ngIf="account.pending.length === 0"
-                            class="results-empty-container"
-                        >
+                    <div *ngIf="showProgressBar() || account.pending.length === 0" class="empty-states">
+                        <div *ngIf="account.pending.length === 0" class="results-empty-container">
                             <app-empty-state>
                                 <mat-icon empty-icon>block</mat-icon>
                                 <div title>No Receivables</div>
@@ -224,7 +218,7 @@
                             </app-empty-state>
                         </div>
                     </div>
-    
+
                     <cdk-virtual-scroll-viewport
                         *ngIf="re_ds && re_ds.firstPageLoaded"
                         [itemSize]="getTransactionRowHeight()"

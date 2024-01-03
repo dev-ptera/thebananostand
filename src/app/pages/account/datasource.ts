@@ -154,10 +154,10 @@ export class ReceivableTxDataSource extends DataSource<ReceivableTx | undefined>
             .then((receivables: ReceivableTx[]) => {
                 this.firstPageLoaded = true;
                 //can this be condensed into one statement? sorry, I don't know angular
-                let cachedData = [...this._cachedData];
+                const cachedData = [...this._cachedData];
                 cachedData.push(...receivables);
                 //includes case where receivables.length === 0
-                if (receivables.length < 500)  {
+                if (receivables.length < 500) {
                     this._dataStream.next(cachedData);
                     this._cachedData = cachedData;
                     return void this._ref.detectChanges();
