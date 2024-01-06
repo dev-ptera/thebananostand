@@ -1,5 +1,17 @@
 # Change Log
 
+## v4.7.0 (January 6, 2024)
+
+### Added
+
+-  Added known account info onto address book new entry overlay. 
+-  Added `APP_INITIALIZER` to app module.
+
+### Changed
+
+-  Change address book new entry page styles.
+-  Stop showing `--` Balance for accounts with 0 BAN, show a zero instead. 
+
 ## v4.6.1 (December 27, 2023)
 
 ### Added

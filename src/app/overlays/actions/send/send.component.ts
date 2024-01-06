@@ -30,8 +30,7 @@ export type SendOverlayData = {
                     <div title>Transaction Sent</div>
                     <div description>
                         Your transaction has been successfully sent and can be viewed
-                        <span class="link" [style.color]="colors.blue[500]" (click)="openLink()">here</span>. You can
-                        now close this window.
+                        <span class="link" (click)="openLink()">here</span>. You can now close this window.
                     </div>
                     <button mat-flat-button color="primary" (click)="closeDialog()">Close</button>
                 </app-empty-state>
@@ -154,6 +153,7 @@ export type SendOverlayData = {
                                 <div style="display: flex; align-items: center" class="mat-body-1">
                                     Known as "{{ getAccountAlias(recipient) }}"
                                     <a
+                                        class="link"
                                         style="margin-left: 4px"
                                         [href]="'https://creeper.banano.cc/known-accounts#' + recipient"
                                         target="_blank"
@@ -194,7 +194,7 @@ export type SendOverlayData = {
                     </ng-container>
 
                     <div *ngIf="activeStep === 3" class="mat-body-1">
-                        <div style="margin-bottom: 24px">Please confirm the transaction details below:</div>
+                        <div style="margin-bottom: 16px">Please confirm the transaction details below:</div>
                         <div style="font-weight: 600">Send</div>
                         <div style="margin-bottom: 16px;">{{ confirmedSendAmount | number }} BAN</div>
                         <div style="font-weight: 600">To</div>

@@ -108,7 +108,11 @@ import { UtilService } from '@app/services/util.service';
                                     <div *ngIf="!vp.sm" class="mat-body-1 hint" style="width: 56px">#{{ i + 1 }}</div>
                                     <div style="display: flex; flex-direction: column; padding: 16px 0">
                                         <div class="mat-body-1" style="font-weight: 600">{{ entry.name }}</div>
-                                        <div class="mono mat-body-2 hint">
+                                        <div
+                                            class="mono mat-body-2"
+                                            [class.hint]="entry.name"
+                                            [style.fontWeight]="entry.name ? 400 : 600"
+                                        >
                                             {{ vp.sm ? util.shortenAddress(entry.account) : entry.account }}
                                         </div>
                                     </div>
