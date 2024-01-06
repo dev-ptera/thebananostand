@@ -7,16 +7,16 @@ import { UPDATE_ADDRESS_BOOK } from '@app/services/wallet-events.service';
     selector: 'app-rename-address-overlay',
     styleUrls: ['rename-address.component.scss'],
     template: `
-        <div class="rename-address-overlay overlay-action-container">
-            <div class="overlay-header">{{ addressOrNickname ? 'Rename' : 'Add' }} Address</div>
+        <div class="rename-address-overlay overlay-action-container" [class.shorter]="addressOrNickname">
+            <div class="overlay-header">{{ address ? 'Rename' : 'Add' }} Address</div>
             <div class="overlay-body mat-body-1">
-                <div *ngIf="addressOrNickname">
-                    Rename "<span style="word-break: break-all">{{ addressOrNickname }}</span
+                <div *ngIf="address">
+                    Rename "<span style="word-break: break-all; font-weight: 600">{{ addressOrNickname }}</span
                     >" to something else?
                 </div>
-                <div *ngIf="!addressOrNickname">Add a new entry to your local address book.</div>
+                <div *ngIf="!address">Add a new entry to your local address book.</div>
                 <form style="margin: 32px 0">
-                    <mat-form-field *ngIf="!addressOrNickname" style="width: 100%" appearance="fill">
+                    <mat-form-field *ngIf="!address" style="width: 100%" appearance="fill">
                         <mat-label>Address</mat-label>
                         <textarea
                             placeholder="ban_123"
@@ -38,6 +38,16 @@ import { UPDATE_ADDRESS_BOOK } from '@app/services/wallet-events.service';
                             data-cy="rename-address-input"
                         />
                     </mat-form-field>
+                    <div
+                        *ngIf="getKnownAddressAlias(addressFormControl.value)"
+                        style="display: flex; align-items: center"
+                    >
+                        <mat-icon class="hint" style="min-width: 40px">info</mat-icon>
+                        <div class="mat-body-2">
+                            "{{ getKnownAddressAlias(addressFormControl.value) }}" is a publicly known address already
+                            but your new alias will be used instead.
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="overlay-footer">
@@ -59,6 +69,7 @@ export class RenameAddressComponent implements OnInit {
     @Input() address: string;
     @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
+    /** Aliases are optional, if there's no alias for an entry in the address book this value will default to the address. */
     addressOrNickname: string;
 
     addressFormControl = new FormControl('');
@@ -67,10 +78,7 @@ export class RenameAddressComponent implements OnInit {
     constructor(private readonly _appStateService: AppStateService) {}
 
     ngOnInit(): void {
-        this.addressOrNickname = this._appStateService.store.getValue().addressBook.get(this.address);
-        if (!this.addressOrNickname) {
-            this.addressOrNickname = this.address;
-        }
+        this.addressOrNickname = this._appStateService.store.getValue().addressBook.get(this.address) || this.address;
     }
 
     renameAddress(): void {
@@ -78,5 +86,9 @@ export class RenameAddressComponent implements OnInit {
         const account = this.address || this.addressFormControl.value;
         UPDATE_ADDRESS_BOOK.next({ name: newName, account });
         this.close.emit();
+    }
+
+    getKnownAddressAlias(address: string): string {
+        return this._appStateService.knownAccounts.get(address);
     }
 }

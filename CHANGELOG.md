@@ -1,5 +1,15 @@
 # Change Log
 
+## v4.7.0 (January 6, 2024)
+
+### Added
+
+-  Added known account info onto address book new entry overlay. 
+
+### Changed
+
+-  Change address book new entry page styles.
+
 ## v4.6.1 (December 27, 2023)
 
 ### Added
