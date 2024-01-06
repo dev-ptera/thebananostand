@@ -30,7 +30,7 @@ export class PowService {
 
     constructor(private readonly _datasourceService: DatasourceService, private readonly _rpcService: RpcService) {}
 
-    initializePowService(): void {
+    init(): void {
         this._testWebGLSupport();
         log('Pow Service Initialized');
     }

@@ -5,6 +5,7 @@
 ### Added
 
 -  Added known account info onto address book new entry overlay. 
+-  Added `APP_INITIALIZER` to app module.
 
 ### Changed
 

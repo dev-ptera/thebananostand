@@ -57,7 +57,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MobileStepperModule } from '@app/components/mobile-stepper/mobile-stepper.module';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { QrDialogComponent } from '@app/components/qr/qr.component';
 import { ReceiveBottomSheetComponent } from '@app/overlays/bottom-sheet/receive/receive-bottom-sheet.component';
 import { ReceiveComponent } from '@app/overlays/actions/receive/receive.component';
@@ -98,6 +98,7 @@ import { CommaPipe } from './pipes/comma.pipe';
 import { AddRpcOverlayComponent } from '@app/overlays/actions/add-rpc/add-rpc.component';
 import { AddRpcDialogComponent } from '@app/overlays/dialogs/add-rpc/add-rpc-dialog.component';
 import { AddRpcBottomSheetComponent } from '@app/overlays/bottom-sheet/add-rpc/add-rpc-bottom-sheet.component';
+import { initializeApp } from './app.initializer';
 
 LOAD_WASM().subscribe((res: any) => console.log('WASM ngx-scanner-qrcode loaded', res));
 
@@ -205,7 +206,17 @@ LOAD_WASM().subscribe((res: any) => console.log('WASM ngx-scanner-qrcode loaded'
         MatSortModule,
         MatSliderModule,
     ],
-    providers: [provideUserIdleConfig({ idle: 600, timeout: 60 })],
+    providers: [
+        provideUserIdleConfig({ idle: 600, timeout: 60 }),
+        {
+            provide: APP_INITIALIZER,
+            useFactory: (): any => {
+                initializeApp();
+                return () => Promise.resolve();
+            },
+            multi: true,
+        },
+    ],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

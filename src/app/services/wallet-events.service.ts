@@ -148,7 +148,9 @@ export class WalletEventsService {
         private readonly _appStateService: AppStateService,
         private readonly _walletStorageService: WalletStorageService,
         private readonly _currencyConversionService: CurrencyConversionService
-    ) {
+    ) {}
+
+    init(): void {
         // _dispatch initial app state
         this._dispatch({
             activeWallet: undefined,
