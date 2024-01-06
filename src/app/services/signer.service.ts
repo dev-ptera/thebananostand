@@ -26,7 +26,7 @@ export class SignerService {
 
     private async _checkUsbSupport(): Promise<void> {
         const TransportWebUSB = window.TransportWebUSB;
-        this.supportsWebUSB = await TransportWebUSB.isSupported();
+        this.supportsWebUSB = await TransportWebUSB?.isSupported();
         // eslint-disable-next-line no-console
         console.info('connectLedger', 'supportsWebUSB', this.supportsWebUSB);
 

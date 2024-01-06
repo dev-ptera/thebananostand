@@ -10,6 +10,7 @@
 ### Changed
 
 -  Change address book new entry page styles.
+-  Stop showing `--` Balance for accounts with 0 BAN, show a zero instead. 
 
 ## v4.6.1 (December 27, 2023)
 
