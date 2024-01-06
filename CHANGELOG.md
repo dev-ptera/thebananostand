@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.7.1 (January 6, 2024)
+
+### Changed
+
+-  Removed reference to Vault when creating new wallet from home page. 
+
 ## v4.7.0 (January 6, 2024)
 
 ### Added

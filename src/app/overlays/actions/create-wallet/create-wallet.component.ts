@@ -51,9 +51,8 @@ import { SecretService } from '@app/services/secret.service';
                     </mat-expansion-panel>
                 </mat-accordion>
                 <div class="mat-body-2" style="margin-top: 24px; margin-bottom: 16px">
-                    This secret text allows you to access your Banano using any wallet, such as
-                    <a href="https://kalium.banano.cc/" target="_blank" class="link">Kalium</a> or
-                    <a href="https://vault.banano.cc/" target="_blank" class="link">Banano Vault</a>.
+                    This secret text allows you to access your Banano using any wallet, like
+                    <a href="https://kalium.banano.cc/" target="_blank" class="link">Kalium</a>.
                 </div>
                 <div class="mat-body-2">
                     Losing this secret means losing access to your accounts.
