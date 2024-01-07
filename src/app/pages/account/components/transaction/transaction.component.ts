@@ -73,8 +73,21 @@ import { AppStateService } from '@app/services/app-state.service';
                                 </button>
                             </div>
                         </div>
-                        <span *ngIf="!vp.sm" [style.marginLeft.px]="32" class="mat-body-1">
-                            tx #{{ util.numberWithCommas(item.height) }}
+                        <span
+                            *ngIf="!vp.md && !vp.sm"
+                            [style.marginLeft.px]="16"
+                            class="mat-body-1"
+                            style="min-width: 140px; text-align:right"
+                        >
+                            {{ item.relativeTime }}
+                        </span>
+                        <span
+                            *ngIf="!vp.sm"
+                            [style.marginLeft.px]="16"
+                            class="mat-body-1"
+                            style="min-width: 100px; text-align:right"
+                        >
+                            tx #{{ item.height | appComma }}
                         </span>
                     </div>
                 </div>

@@ -85,6 +85,7 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
                 this.firstPageLoaded = true;
                 data.map((tx) => {
                     tx.amount = this._util.numberWithCommas(tx.amount, 6);
+                    tx.relativeTime = this._util.getRelativeTime(tx.timestamp);
                     this._lowestLoadedHeight = tx.height;
                     if (this._isFilterApplied) {
                         this.filteredTransactions.push(tx);
