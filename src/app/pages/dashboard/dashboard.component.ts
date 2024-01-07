@@ -166,9 +166,8 @@ export class DashboardComponent {
         for (const account of this.store.accounts) {
             for (const block of account.pending) {
                 blocks.push({
-                    index: account.index,
-                    hash: block.hash,
-                    receivableRaw: block.receivableRaw,
+                    accountIndex: account.index,
+                    ...block,
                 });
             }
         }

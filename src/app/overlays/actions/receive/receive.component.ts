@@ -4,9 +4,12 @@ import { TransactionService } from '@app/services/transaction.service';
 import { AppStateService } from '@app/services/app-state.service';
 import { ReceivableHash } from '@app/types/ReceivableHash';
 import { REFRESH_DASHBOARD_ACCOUNTS, TRANSACTION_COMPLETED_SUCCESS } from '@app/services/wallet-events.service';
+import { ReceivableTx } from '@app/types/ReceivableTx';
+import { UtilService } from '@app/services/util.service';
 
 export type ReceiveOverlayData = {
-    blocks: Array<ReceivableHash & { index: number }>;
+    // This type requires accountIndex per-receivable block since this wallet supports a Receive All wallet-level feature.
+    blocks: Array<ReceivableTx & { accountIndex: number }>; // do not change.
     refreshDashboard?: boolean;
 };
 
@@ -37,18 +40,42 @@ export type ReceiveOverlayData = {
 
             <ng-container *ngIf="!hasSuccess && !hasErrorReceiving">
                 <div class="overlay-header">Receive Transaction</div>
-                <div class="overlay-body" style="position: relative; overflow: hidden">
+                <div class="overlay-body" style="position: relative; overflow: hidden; flex: 1">
                     <div style="margin-bottom: 8px" class="mat-body-1">
                         You are attempting to receive an incoming transaction(s).
+
                         <ng-container *ngIf="!isLedger"> Use the button below to receive each block.</ng-container>
                         <ng-container *ngIf="isLedger">
                             Use the button below and your ledger device to manually receive each block.
                         </ng-container>
+                        <mat-expansion-panel class="mat-elevation-z0 divider-border" style="margin: 16px 0">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title> Incoming transaction details </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <div style="overflow: auto; max-height: 300px">
+                                <div *ngFor="let block of data.blocks; let last = last">
+                                    <div
+                                        style="display: flex; justify-content: space-between; align-items: center; height: 88px"
+                                    >
+                                        <mat-checkbox [checked]="true"></mat-checkbox>
+                                        <div>
+                                            <div>
+                                                <strong>{{ block.amount | appComma }}</strong> BAN
+                                            </div>
+                                            <div>from {{ util.shortenAddress(block.address) }}</div>
+                                            <div class="mat-hint">{{ util.timestampToRelative(block.timestamp) }}</div>
+                                        </div>
+                                    </div>
+                                    <mat-divider *ngIf="!last" style="width: 100%; margin: 0"></mat-divider>
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
                     </div>
+                    <spacer></spacer>
                     <div style="margin-bottom: 8px" class="mat-body-1">
                         <strong>{{ data.blocks.length - activeStep }}</strong> receivable transaction(s) remaining.
                     </div>
-                    <spacer></spacer>
                     <mat-progress-bar
                         *ngIf="maxSteps !== 1"
                         mode="determinate"
@@ -100,11 +127,13 @@ export class ReceiveComponent implements OnInit {
     hasSuccess: boolean;
     isLedger: boolean;
     isReceivingTx: boolean;
+    showReceiveDetails: boolean;
 
     colors = Colors;
     bufferValue = 0;
 
     constructor(
+        public util: UtilService,
         private readonly _appStateService: AppStateService,
         private readonly _transactionService: TransactionService
     ) {}
@@ -117,6 +146,10 @@ export class ReceiveComponent implements OnInit {
 
     closeDialog(): void {
         this.closeWithHash.emit(this.txHash);
+    }
+
+    getAlias(address: string): string {
+        return 'ha';
     }
 
     /** Iterates through each pending transaction block and receives them. */
@@ -136,7 +169,10 @@ export class ReceiveComponent implements OnInit {
         for (const receivableBlock of this.data.blocks) {
             try {
                 // eslint-disable-next-line no-await-in-loop
-                const receivedHash = await this._transactionService.receive(receivableBlock.index, receivableBlock);
+                const receivedHash = await this._transactionService.receive(
+                    receivableBlock.accountIndex,
+                    receivableBlock
+                );
 
                 // eslint-disable-next-line no-await-in-loop
                 await new Promise((r) => setTimeout(r, addBulkReceivePadding ? 2500 : 500));

@@ -129,9 +129,8 @@ export class AccountComponent implements OnInit, OnDestroy {
         const blocks = [];
         for (const block of this.account.pending) {
             blocks.push({
-                hash: block.hash,
-                receivableRaw: block.receivableRaw,
-                index: this.account.index,
+                accountIndex: this.account.index,
+                ...block,
             });
         }
         const data: ReceiveOverlayData = { blocks: blocks };

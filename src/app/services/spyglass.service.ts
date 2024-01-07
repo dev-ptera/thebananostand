@@ -7,6 +7,7 @@ import { FilterOverlayData } from '@app/overlays/actions/filter/filter.component
 import { DatasourceService } from '@app/services/datasource.service';
 import { PriceData } from '@app/types/PriceData';
 import { ExchangeRate } from '@app/types/ExchangeRate';
+import { ReceivableTx } from '@app/types/ReceivableTx';
 
 @Injectable({
     providedIn: 'root',
@@ -33,6 +34,12 @@ export class SpyglassService {
         const filterAddresses =
             filters && filters.filterAddresses ? filters.filterAddresses.split(',').map((x) => x.trim()) : [];
         return this._http.post<ConfirmedTx[]>(url, { address, size, offset, ...filters, filterAddresses }).toPromise();
+    }
+
+    async getReceivableTransactions(address: string, size: number): Promise<ReceivableTx[]> {
+        const source = await this._datasource.getSpyglassApiSource();
+        const url = `${source.url}/v1/account/receivable-transactions`;
+        return this._http.post<ReceivableTx[]>(url, { address, size }).toPromise();
     }
 
     async getAllKnownAccounts(): Promise<KnownAccount[]> {

@@ -4,9 +4,9 @@ import { AppStateService } from '@app/services/app-state.service';
 import { SignerService } from '@app/services/signer.service';
 import { RpcService } from '@app/services/rpc.service';
 import { PowService } from '@app/services/pow.service';
-import { ReceivableHash } from '@app/types/ReceivableHash';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { TransactionBlock } from '@app/types/TransactionBlock';
+import { ReceivableTx } from '@app/types/ReceivableTx';
 
 type BananoifiedWindow = {
     bananocoinBananojs: any;
@@ -170,12 +170,12 @@ export class TransactionService {
     }
 
     /** Attempts to receive funds.  Returns the hash of the received block. */
-    async receive(accountIndex: number, incoming: ReceivableHash): Promise<string> {
+    async receive(accountIndex: number, incoming: ReceivableTx): Promise<string> {
         log('** Begin Receive Transaction **');
         await this._configApi(window.bananocoinBananojs.bananodeApi);
         const { privateKeyOrSigner, publicKey, accountInfo } = await this._getTransactionEssentials(accountIndex);
         const accountBalanceRaw = accountInfo.balanceRaw;
-        const valueRaw = (BigInt(incoming.receivableRaw) + BigInt(accountBalanceRaw)).toString();
+        const valueRaw = (BigInt(incoming.amountRaw) + BigInt(accountBalanceRaw)).toString();
         const isOpeningAccount = !accountInfo.representative;
 
         // TODO - Get this from the rep list, top rep please.
