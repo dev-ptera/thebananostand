@@ -4,7 +4,7 @@
 
 ### Changed
 
--  Added relative timestamps for each transaction to the Account page
+-  Added relative timestamps for each transaction on the Account page
 
 ## v4.7.1 (January 6, 2024)
 
