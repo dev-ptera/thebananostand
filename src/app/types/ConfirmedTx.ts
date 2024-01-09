@@ -10,4 +10,5 @@ export type ConfirmedTx = {
     type: string;
     hover: boolean;
     showCopiedIcon: boolean;
+    relativeTime?: string;
 };

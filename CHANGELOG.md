@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.8.0 (January 7, 2024)
+
+### Changed
+
+-  Added relative timestamps for each transaction on the Account page
+
 ## v4.7.1 (January 6, 2024)
 
 ### Changed
