@@ -25,7 +25,7 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
     constructor(
         address: string,
         blockCount: number,
-        private readonly _apiService: SpyglassService,
+        private readonly _spyglassApiService: SpyglassService,
         private readonly _ref: ChangeDetectorRef,
         private readonly _util: UtilService,
         private readonly _filters: FilterOverlayData,
@@ -79,7 +79,7 @@ export class MyDataSource extends DataSource<ConfirmedTx | undefined> {
             : page * this._pageSize;
 
         // const offset = page * this._pageSize;
-        void this._apiService
+        void this._spyglassApiService
             .getConfirmedTransactions(this._address, this._pageSize, offset, this._filters)
             .then((data: ConfirmedTx[]) => {
                 this.firstPageLoaded = true;

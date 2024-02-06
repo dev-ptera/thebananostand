@@ -73,18 +73,15 @@ export class RpcService {
             publicAddress = await this._signerService.getAccountFromIndex(index);
         }
         const client = await this._datasourceService.getRpcClient();
-        const [pending, accountInfoRpc] = await Promise.all([
-            this.getReceivable(publicAddress),
-            client.account_info(publicAddress, { representative: true }).catch((err) => {
-                if (err.error === 'Account not found') {
-                    return Promise.resolve({
-                        unopenedAccount: true,
-                    } as UnopenedAccountResponse);
-                }
-                LOG_ERR(err);
-            }),
-        ]);
-        const accountOverview = this._formatAccountInfoResponse(index, publicAddress, pending, accountInfoRpc);
+        const accountInfoRpc = await client.account_info(publicAddress, { representative: true }).catch((err) => {
+            if (err.error === 'Account not found') {
+                return Promise.resolve({
+                    unopenedAccount: true,
+                } as UnopenedAccountResponse);
+            }
+            LOG_ERR(err);
+        });
+        const accountOverview = this._formatAccountInfoResponse(index, publicAddress, accountInfoRpc);
         return accountOverview;
     }
 
@@ -92,7 +89,6 @@ export class RpcService {
     private _formatAccountInfoResponse(
         index: number,
         address: string,
-        pending: ReceivableHash[],
         rpcData: AccountInfoResponse | UnopenedAccountResponse
     ): AccountOverview {
         // If account is not opened, return a placeholder account.
@@ -108,7 +104,7 @@ export class RpcService {
                 balanceRaw: '0',
                 frontier: undefined,
                 representative: undefined,
-                pending,
+                pending: [],
             };
         }
 
@@ -117,7 +113,7 @@ export class RpcService {
 
         return {
             index,
-            pending,
+            pending: [],
             balance: Number(balance),
             balanceRaw: accountInfo.balance,
             fullAddress: address,

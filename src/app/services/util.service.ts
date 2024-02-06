@@ -98,10 +98,6 @@ export class UtilService {
         return hex.split('').every((value) => validHexChars.includes(value.toUpperCase()));
     }
 
-    matches(a: number, b: number): boolean {
-        return Number(a) === Number(b);
-    }
-
     clipboardCopy(text: string): void {
         copy(text);
     }

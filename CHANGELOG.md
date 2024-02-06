@@ -1,14 +1,20 @@
 # Change Log
 
+## v4.9.0 (February 5, 2024)
+
+### Added
+
+-  Added ability to select which transactions to receive. 
+
 ## v4.8.0 (January 7, 2024)
 
-### Changed
+### Added
 
 -  Added relative timestamps for each transaction on the Account page
 
 ## v4.7.1 (January 6, 2024)
 
-### Changed
+### Removed
 
 -  Removed reference to Vault when creating new wallet from home page. 
 

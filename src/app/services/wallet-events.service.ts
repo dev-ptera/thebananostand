@@ -86,9 +86,6 @@ export const REFRESH_DASHBOARD_ACCOUNTS = new Subject<void>();
 export const RENAME_ACTIVE_WALLET = new Subject<string>();
 
 /** The user wants to manually add an address to their address book. */
-export const UPDATE_ADDRESS_BOOK = new Subject<AddressBookEntry>();
-
-/** The user wants to manually add an address to their address book. */
 export const REMOVE_ADDRESS_BOOK_ENTRY = new Subject<AddressBookEntry>();
 
 /** The active wallet has been removed. */
@@ -106,6 +103,9 @@ export const REQUEST_BACKUP_SECRET = new Subject<{ useMnemonic: boolean }>();
 /** An account is being added to the dashboard. Can be either true or false. */
 export const SET_DASHBOARD_ACCOUNT_LOADING = new BehaviorSubject<boolean>(true);
 
+/** User has changed which currency they want to use when converting Banano to currency amounts. */
+export const SELECT_LOCALIZATION_CURRENCY = new Subject<string>();
+
 /** Datasource RPC has been updated. */
 export const SELECTED_RPC_DATASOURCE_CHANGE = new Subject<Datasource>();
 
@@ -118,8 +118,8 @@ export const UNLOCK_WALLET = new Subject<{ isLedger: boolean; password: string }
 /** User has provided an incorrect password to unlock the wallet. */
 export const UNLOCK_WALLET_WITH_PASSWORD_ERROR = new Subject<void>();
 
-/** User has changed which currency they want to use when converting Banano to currency amounts. */
-export const SELECT_LOCALIZATION_CURRENCY = new Subject<string>();
+/** The user wants to manually add an address to their address book. */
+export const UPDATE_ADDRESS_BOOK = new Subject<AddressBookEntry>();
 
 @Injectable({
     providedIn: 'root',

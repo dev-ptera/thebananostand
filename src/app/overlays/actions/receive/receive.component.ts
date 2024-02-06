@@ -1,12 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import * as Colors from '@brightlayer-ui/colors';
 import { TransactionService } from '@app/services/transaction.service';
 import { AppStateService } from '@app/services/app-state.service';
-import { ReceivableHash } from '@app/types/ReceivableHash';
 import { REFRESH_DASHBOARD_ACCOUNTS, TRANSACTION_COMPLETED_SUCCESS } from '@app/services/wallet-events.service';
+import { ReceivableTx } from '@app/types/ReceivableTx';
+import { UtilService } from '@app/services/util.service';
+import * as Colors from '@brightlayer-ui/colors';
 
 export type ReceiveOverlayData = {
-    blocks: Array<ReceivableHash & { index: number }>;
+    // This type requires accountIndex per-receivable block since this wallet supports a Receive All wallet-level feature.
+    blocks: Array<ReceivableTx & { accountIndex: number }>; // do not change.
     refreshDashboard?: boolean;
 };
 
@@ -37,18 +39,45 @@ export type ReceiveOverlayData = {
 
             <ng-container *ngIf="!hasSuccess && !hasErrorReceiving">
                 <div class="overlay-header">Receive Transaction</div>
-                <div class="overlay-body" style="position: relative; overflow: hidden">
+                <div class="overlay-body" style="position: relative; overflow: hidden; flex: 1">
                     <div style="margin-bottom: 8px" class="mat-body-1">
                         You are attempting to receive an incoming transaction(s).
+
                         <ng-container *ngIf="!isLedger"> Use the button below to receive each block.</ng-container>
                         <ng-container *ngIf="isLedger">
                             Use the button below and your ledger device to manually receive each block.
                         </ng-container>
-                    </div>
-                    <div style="margin-bottom: 8px" class="mat-body-1">
-                        <strong>{{ data.blocks.length - activeStep }}</strong> receivable transaction(s) remaining.
+                        <div
+                            style="overflow: auto; max-height: 300px; padding: 8px 16px; margin: 24px 0; border-radius: .5rem"
+                            class="divider-border"
+                        >
+                            <div *ngFor="let block of data.blocks; let last = last; let i = index">
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; height: 88px"
+                                >
+                                    <mat-checkbox
+                                        [checked]="true"
+                                        (change)="toggleTx(i)"
+                                        [disabled]="isReceivingTx"
+                                    ></mat-checkbox>
+                                    <div style="width: 100%; margin-left: 16px">
+                                        <div>
+                                            <strong>{{ block.amount | appComma }}</strong> BAN
+                                        </div>
+                                        <div class="mat-body-2">
+                                            from {{ getAlias(block.address) || util.shortenAddress(block.address) }}
+                                        </div>
+                                        <div class="mat-body-2">{{ util.getRelativeTime(block.timestamp) }}</div>
+                                    </div>
+                                </div>
+                                <mat-divider *ngIf="!last" style="width: 100%; margin: 0"></mat-divider>
+                            </div>
+                        </div>
                     </div>
                     <spacer></spacer>
+                    <div style="margin-bottom: 16px; margin-top: 16px" class="mat-body-1">
+                        <strong>{{ maxSteps - activeStep }}</strong> receivable transaction(s) remaining.
+                    </div>
                     <mat-progress-bar
                         *ngIf="maxSteps !== 1"
                         mode="determinate"
@@ -58,7 +87,7 @@ export type ReceiveOverlayData = {
                 </div>
 
                 <div class="overlay-footer">
-                    <mobile-stepper [activeStep]="activeStep" [steps]="maxSteps" variant="text">
+                    <mobile-stepper [activeStep]="activeStep" [steps]="maxSteps" variant="none">
                         <button
                             mat-stroked-button
                             back-button
@@ -74,6 +103,7 @@ export type ReceiveOverlayData = {
                             color="primary"
                             class="loading-button"
                             data-cy="receive-button"
+                            [disabled]="maxSteps === 0"
                             (click)="receiveTransaction()"
                         >
                             <div class="spinner-container" data-cy="receive-loading" [class.isLoading]="isReceivingTx">
@@ -92,8 +122,7 @@ export class ReceiveComponent implements OnInit {
     @Output() closeWithHash: EventEmitter<string> = new EventEmitter<string>();
 
     activeStep = 0;
-    maxSteps;
-    lastStep;
+    maxSteps: number;
 
     txHash: string;
     hasErrorReceiving: boolean;
@@ -104,19 +133,33 @@ export class ReceiveComponent implements OnInit {
     colors = Colors;
     bufferValue = 0;
 
+    selectedIndexesToReceive: Set<number> = new Set();
+
     constructor(
+        public util: UtilService,
         private readonly _appStateService: AppStateService,
         private readonly _transactionService: TransactionService
     ) {}
 
     ngOnInit(): void {
         this.isLedger = this._appStateService.store.getValue().hasUnlockedLedger;
-        this.maxSteps = this.data.blocks.length;
-        this.lastStep = this.maxSteps - 1;
+        this.data.blocks.forEach((x, i) => this.selectedIndexesToReceive.add(i));
+        this.maxSteps = this.selectedIndexesToReceive.size;
     }
 
     closeDialog(): void {
         this.closeWithHash.emit(this.txHash);
+    }
+
+    getAlias(address: string): string {
+        return this._appStateService.knownAccounts.get(address);
+    }
+
+    toggleTx(index: number): void {
+        this.selectedIndexesToReceive.has(index)
+            ? this.selectedIndexesToReceive.delete(index)
+            : this.selectedIndexesToReceive.add(index);
+        this.maxSteps = this.selectedIndexesToReceive.size;
     }
 
     /** Iterates through each pending transaction block and receives them. */
@@ -133,10 +176,19 @@ export class ReceiveComponent implements OnInit {
          E.g. Kalium API has a rate limit of 100 calls per minute, each receive transaction in thebanostand potentially does 6x calls, which means this wallet should enable 16 transactions per minute.
          */
         const addBulkReceivePadding = Boolean(this.data.blocks.length >= 16);
-        for (const receivableBlock of this.data.blocks) {
+        for (let i = 0; i < this.data.blocks.length; i++) {
+            if (!this.selectedIndexesToReceive.has(i)) {
+                continue;
+            }
+
+            const receivableBlock = this.data.blocks[i];
+
             try {
                 // eslint-disable-next-line no-await-in-loop
-                const receivedHash = await this._transactionService.receive(receivableBlock.index, receivableBlock);
+                const receivedHash = await this._transactionService.receive(
+                    receivableBlock.accountIndex,
+                    receivableBlock
+                );
 
                 // eslint-disable-next-line no-await-in-loop
                 await new Promise((r) => setTimeout(r, addBulkReceivePadding ? 2500 : 500));
