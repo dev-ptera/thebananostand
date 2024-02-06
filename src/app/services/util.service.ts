@@ -98,34 +98,6 @@ export class UtilService {
         return hex.split('').every((value) => validHexChars.includes(value.toUpperCase()));
     }
 
-    matches(a: number, b: number): boolean {
-        return Number(a) === Number(b);
-    }
-
-    timestampToRelative(timestamp: number): string {
-        const timeDiff: number = Math.floor(Date.now() / 1000) - timestamp;
-        let ago: number;
-        let unit: string;
-        if (timeDiff < 60 * 60) {
-            ago = timeDiff / 60;
-            unit = 'minute';
-        } else if (timeDiff < 24 * 60 * 60) {
-            ago = timeDiff / (60 * 60);
-            unit = 'hour';
-        } else if (timeDiff < 30 * 24 * 60 * 60) {
-            ago = timeDiff / (24 * 60 * 60);
-            unit = 'day';
-        } else if (timeDiff < 12 * 30 * 24 * 60 * 60) {
-            ago = timeDiff / (30 * 24 * 60 * 60);
-            unit = 'month';
-        } else {
-            ago = timeDiff / (12 * 30 * 24 * 60 * 60);
-            unit = 'year';
-        }
-        ago = Math.round(ago);
-        return `${ago} ${unit}${ago !== 1 ? 's' : ''} ago`;
-    }
-
     clipboardCopy(text: string): void {
         copy(text);
     }

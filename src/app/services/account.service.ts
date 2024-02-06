@@ -74,7 +74,6 @@ export class AccountService {
             const account = await this._rpcService.getAccountInfoFromIndex(index);
             const pending = await this._spyglassApi.getReceivableTransactions(account.fullAddress, MAX_PENDING);
             account.pending = pending;
-            console.log(account);
             return account;
         } catch (err) {
             return undefined;
