@@ -14,7 +14,8 @@ import { CurrencyConversionService } from '@app/services/currency-conversion.ser
 import { AuthGuardService } from '../guards/auth-guard';
 import { Router } from '@angular/router';
 import { Datasource } from '@app/services/datasource.service';
-import {ReceiveService} from "@app/services/receive.service";
+import { ReceiveService } from '@app/services/receive.service';
+import { ReceiveSnackbarComponent } from '@app/overlays/snackbar/receive-snackbar.component';
 
 const SNACKBAR_DURATION = 3000;
 const SNACKBAR_CLOSE_ACTION_TEXT = 'Dismiss';
@@ -155,7 +156,7 @@ export class WalletEventsService {
         private readonly _spyglassService: SpyglassService,
         private readonly _appStateService: AppStateService,
         private readonly _walletStorageService: WalletStorageService,
-        private readonly _currencyConversionService: CurrencyConversionService,
+        private readonly _currencyConversionService: CurrencyConversionService
     ) {}
 
     init(): void {
@@ -427,16 +428,15 @@ export class WalletEventsService {
         });
 
         AUTO_RECEIVE_ALL.subscribe(() => {
-            if (!this._appStateService.store.getValue().isEnableAutoReceiveFeature) {
+            if (!this.store.isEnableAutoReceiveFeature) {
                 return;
             }
             const blocks = this._appStateService.getAllReceivableBlocks();
             if (blocks.length === 0) {
                 return;
             }
-            this._snackbar.open(`Receiving ${blocks.length} transactions...`, SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION });
-            void this._receiveService.receiveTransaction(blocks);
-        })
+            this._snackbar.openFromComponent(ReceiveSnackbarComponent);
+        });
 
         UNLOCK_WALLET.subscribe((data) => {
             const originalRoute = this._authGuard.originalRoute;
@@ -454,14 +454,12 @@ export class WalletEventsService {
 
         USER_TOGGLE_AUTO_RECEIVE.subscribe((isEnabled: boolean) => {
             this._dispatch({
-                isEnableAutoReceiveFeature: isEnabled
-            })
+                isEnableAutoReceiveFeature: isEnabled,
+            });
             if (isEnabled) {
                 AUTO_RECEIVE_ALL.next();
-            } else {
-                // TODO: STOP!
             }
-        })
+        });
     }
 
     /** Broadcasts an updated app state. */

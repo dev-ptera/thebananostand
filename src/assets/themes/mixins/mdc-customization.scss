@@ -64,4 +64,11 @@
     .mat-mdc-snack-bar-container .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
         color: var(--primary);
     }
+
+    &.sm .mat-mdc-snack-bar-container .mdc-snackbar__surface {
+        $width: calc(100% - 16px);
+        max-width: $width;
+        width: $width;
+        min-width: $width;
+    }
 }

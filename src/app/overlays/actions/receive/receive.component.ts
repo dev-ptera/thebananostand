@@ -5,7 +5,7 @@ import { REFRESH_DASHBOARD_ACCOUNTS, TRANSACTION_COMPLETED_SUCCESS } from '@app/
 import { ReceivableTx } from '@app/types/ReceivableTx';
 import { UtilService } from '@app/services/util.service';
 import * as Colors from '@brightlayer-ui/colors';
-import {ReceiveService} from "@app/services/receive.service";
+import { ReceiveService } from '@app/services/receive.service';
 
 export type ReceiveOverlayData = {
     // This type requires accountIndex per-receivable block since this wallet supports a Receive All wallet-level feature.

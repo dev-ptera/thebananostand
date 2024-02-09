@@ -22,7 +22,7 @@ const PREFERRED_DASHBOARD_VIEW = 'bananostand_dashboardView';
 const IDLE_TIMEOUT_MINUTES = 'bananostand_idleTimeoutMinutes';
 const MINIMUM_INCOMING_THRESHOLD_BAN = 'bananostand_minimumIncomingBananoThreshold';
 const CUSTOM_RPC_NODE_URLS = 'bananostand_customRpcNodeURLs';
-const USER_AUTO_RECEIVE_FUNDS = 'bananostand_userAutoReceiveTransactions'
+const USER_AUTO_RECEIVE_FUNDS = 'bananostand_userAutoReceiveTransactions';
 
 @Injectable({
     providedIn: 'root',
@@ -91,7 +91,10 @@ export class WalletStorageService {
             }
 
             if (walletData.isEnableAutoReceiveFeature !== undefined) {
-                window.localStorage.setItem(USER_AUTO_RECEIVE_FUNDS, walletData.isEnableAutoReceiveFeature ? 'true' : 'false');
+                window.localStorage.setItem(
+                    USER_AUTO_RECEIVE_FUNDS,
+                    walletData.isEnableAutoReceiveFeature ? 'true' : 'false'
+                );
             }
         });
     }

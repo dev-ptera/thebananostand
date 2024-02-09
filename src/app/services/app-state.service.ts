@@ -3,7 +3,7 @@ import { AccountOverview } from '@app/types/AccountOverview';
 import { LocalStorageWallet } from '@app/services/wallet-storage.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { PriceData } from '@app/types/PriceData';
-import {ReceivableTx} from "@app/types/ReceivableTx";
+import { ReceivableTx } from '@app/types/ReceivableTx';
 
 export type AppStore = {
     /** Loaded ledger accounts, their rep, & respective balances.  */
@@ -78,7 +78,7 @@ export class AppStateService {
         isLoadingAccounts: true,
         preferredDashboardView: undefined,
         customRpcNodeURLs: [],
-        isEnableAutoReceiveFeature: true
+        isEnableAutoReceiveFeature: true,
     });
 
     appLocalStorage = new Subject<{
@@ -93,8 +93,7 @@ export class AppStateService {
         isEnableAutoReceiveFeature: boolean;
     }>();
 
-
-    getAllReceivableBlocks(): Array<(ReceivableTx & {accountIndex: number})> {
+    getAllReceivableBlocks(): Array<ReceivableTx & { accountIndex: number }> {
         const blocks = [];
         for (const account of this.store.getValue().accounts) {
             for (const block of account.pending) {

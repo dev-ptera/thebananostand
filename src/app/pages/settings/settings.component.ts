@@ -12,7 +12,8 @@ import {
     REMOVE_ALL_WALLET_DATA,
     REMOVE_CUSTOM_RPC_NODE_BY_INDEX,
     SELECT_LOCALIZATION_CURRENCY,
-    SELECTED_RPC_DATASOURCE_CHANGE, USER_TOGGLE_AUTO_RECEIVE,
+    SELECTED_RPC_DATASOURCE_CHANGE,
+    USER_TOGGLE_AUTO_RECEIVE,
 } from '@app/services/wallet-events.service';
 import { MatRadioChange } from '@angular/material/radio';
 import { CurrencyConversionService } from '@app/services/currency-conversion.service';
@@ -235,7 +236,9 @@ export class DatasourceAvailablePipe implements PipeTransform {
                         </div>
                         <mat-slide-toggle
                             (change)="toggleAutoReceiveIncomingTransactions($event)"
-                            [checked]="isEnableAutoReceiveFeature">Enable</mat-slide-toggle>
+                            [checked]="isEnableAutoReceiveFeature"
+                            >Enable</mat-slide-toggle
+                        >
                     </mat-card>
                 </div>
             </div>
