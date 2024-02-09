@@ -13,7 +13,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
             <div class="overlay-header">Change Password</div>
             <div class="overlay-body">
                 <div style="display: flex; align-items: center">
-                    <mat-icon class="secondary-text" style="padding-right: 16px">info</mat-icon>
+                    <mat-icon class="secondary-text" style="overflow: visible">info</mat-icon>
                     <span style="margin-left: 16px" class="mat-body-1"
                         >You will be logged out after changing your password.</span
                     >

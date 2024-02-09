@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SendOverlayData } from '@app/overlays/actions/send/send.component';
 
 @Component({
-    selector: 'app-change-rep-dialog',
+    selector: 'app-send-dialog',
     template: ` <app-send-overlay [data]="data" (closeWithHash)="closeDialog($event)"></app-send-overlay> `,
 })
 export class SendDialogComponent {

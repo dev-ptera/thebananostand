@@ -162,15 +162,7 @@ export class DashboardComponent {
     }
 
     openReceiveAllOverlay(): void {
-        const blocks = [];
-        for (const account of this.store.accounts) {
-            for (const block of account.pending) {
-                blocks.push({
-                    accountIndex: account.index,
-                    ...block,
-                });
-            }
-        }
+        const blocks = this._appStateService.getAllReceivableBlocks();
         const data: ReceiveOverlayData = { blocks: blocks, refreshDashboard: true };
         if (this.vp.sm) {
             setTimeout(() => {

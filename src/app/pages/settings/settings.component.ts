@@ -12,7 +12,7 @@ import {
     REMOVE_ALL_WALLET_DATA,
     REMOVE_CUSTOM_RPC_NODE_BY_INDEX,
     SELECT_LOCALIZATION_CURRENCY,
-    SELECTED_RPC_DATASOURCE_CHANGE,
+    SELECTED_RPC_DATASOURCE_CHANGE, USER_TOGGLE_AUTO_RECEIVE,
 } from '@app/services/wallet-events.service';
 import { MatRadioChange } from '@angular/material/radio';
 import { CurrencyConversionService } from '@app/services/currency-conversion.service';
@@ -21,6 +21,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { AddRpcBottomSheetComponent } from '@app/overlays/bottom-sheet/add-rpc/add-rpc-bottom-sheet.component';
 import { AddRpcDialogComponent } from '@app/overlays/dialogs/add-rpc/add-rpc-dialog.component';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Pipe({ name: 'available' })
 export class DatasourceAvailablePipe implements PipeTransform {
@@ -227,6 +228,14 @@ export class DatasourceAvailablePipe implements PipeTransform {
                                 type="number"
                             />
                         </mat-form-field>
+                        <mat-divider></mat-divider>
+                        <div class="mat-overline" style="margin-top: 16px">Auto-Receive Incoming Transactions</div>
+                        <div class="mat-body-2" style="margin-bottom: 24px">
+                            Incoming transactions will be automatically received when the wallet is unlocked.
+                        </div>
+                        <mat-slide-toggle
+                            (change)="toggleAutoReceiveIncomingTransactions($event)"
+                            [checked]="isEnableAutoReceiveFeature">Enable</mat-slide-toggle>
                     </mat-card>
                 </div>
             </div>
@@ -239,6 +248,7 @@ export class SettingsPageComponent implements OnInit {
     selectedSpyglassApi: Datasource;
     selectedCurrencyCode: string;
     minimumThreshold: number;
+    isEnableAutoReceiveFeature: boolean;
 
     constructor(
         public vp: ViewportService,
@@ -252,6 +262,7 @@ export class SettingsPageComponent implements OnInit {
     ) {
         this._appStateService.store.subscribe((data) => {
             this.selectedCurrencyCode = data.localCurrencyCode;
+            this.isEnableAutoReceiveFeature = data.isEnableAutoReceiveFeature;
         });
         SELECTED_RPC_DATASOURCE_CHANGE.subscribe((source) => {
             this.selectedRpcSource = source;
@@ -286,6 +297,10 @@ export class SettingsPageComponent implements OnInit {
 
     removeCustomRpcNode(index: number): void {
         REMOVE_CUSTOM_RPC_NODE_BY_INDEX.next(index);
+    }
+
+    toggleAutoReceiveIncomingTransactions(e: MatSlideToggleChange): void {
+        USER_TOGGLE_AUTO_RECEIVE.next(e.checked);
     }
 
     clearStorage(): void {

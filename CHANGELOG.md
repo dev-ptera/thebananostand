@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.10.0 (February 10, 2024)
+
+### Added
+
+-  Added toggle to enable / disable automatic receiving.
+
 ## v4.9.0 (February 5, 2024)
 
 ### Added

@@ -14,6 +14,7 @@ import { CurrencyConversionService } from '@app/services/currency-conversion.ser
 import { AuthGuardService } from '../guards/auth-guard';
 import { Router } from '@angular/router';
 import { Datasource } from '@app/services/datasource.service';
+import {ReceiveService} from "@app/services/receive.service";
 
 const SNACKBAR_DURATION = 3000;
 const SNACKBAR_CLOSE_ACTION_TEXT = 'Dismiss';
@@ -82,6 +83,9 @@ export const REFRESH_SPECIFIC_ACCOUNT_BY_INDEX = new Subject<number>();
 /** User has requested that all loaded indexes be refreshed, checking for receivable transactions and updating account balances. */
 export const REFRESH_DASHBOARD_ACCOUNTS = new Subject<void>();
 
+/** All accounts have been loaded. */
+export const AUTO_RECEIVE_ALL = new Subject<void>();
+
 /** The active wallet has been given an alias. */
 export const RENAME_ACTIVE_WALLET = new Subject<string>();
 
@@ -93,6 +97,9 @@ export const REMOVE_ACTIVE_WALLET = new Subject<void>();
 
 /** User has opted to delete all locally stored info. */
 export const REMOVE_ALL_WALLET_DATA = new Subject<void>();
+
+/** User has opted to auto-receive transactions (secret-only) when wallet is unlocked. */
+export const USER_TOGGLE_AUTO_RECEIVE = new Subject<boolean>();
 
 /** A Banano Node (URL) has been removed from the settings page. The display order on the settings page matches the order in storage.  */
 export const REMOVE_CUSTOM_RPC_NODE_BY_INDEX = new Subject<number>();
@@ -143,17 +150,19 @@ export class WalletEventsService {
         private readonly _authGuard: AuthGuardService,
         private readonly _signerService: SignerService,
         private readonly _secretService: SecretService,
+        private readonly _receiveService: ReceiveService,
         private readonly _accountService: AccountService,
         private readonly _spyglassService: SpyglassService,
         private readonly _appStateService: AppStateService,
         private readonly _walletStorageService: WalletStorageService,
-        private readonly _currencyConversionService: CurrencyConversionService
+        private readonly _currencyConversionService: CurrencyConversionService,
     ) {}
 
     init(): void {
         // _dispatch initial app state
         this._dispatch({
             activeWallet: undefined,
+            isEnableAutoReceiveFeature: this._walletStorageService.readAutoReceiveFlag(),
             minimumBananoThreshold: this._walletStorageService.readMinimumBananoIncomingThreshold(),
             localCurrencyCode: this._walletStorageService.readLocalizationCurrencyFromLocalStorage(),
             addressBook: this._walletStorageService.readAddressBookFromLocalStorage(),
@@ -191,6 +200,7 @@ export class WalletEventsService {
                 isLoadingAccounts: false,
                 accounts: sortAccounts(accounts),
             });
+            AUTO_RECEIVE_ALL.next();
         });
 
         ADD_RPC_NODE_BY_URL.subscribe((url: string) => {
@@ -416,6 +426,18 @@ export class WalletEventsService {
             REFRESH_DASHBOARD_ACCOUNTS.next();
         });
 
+        AUTO_RECEIVE_ALL.subscribe(() => {
+            if (!this._appStateService.store.getValue().isEnableAutoReceiveFeature) {
+                return;
+            }
+            const blocks = this._appStateService.getAllReceivableBlocks();
+            if (blocks.length === 0) {
+                return;
+            }
+            this._snackbar.open(`Receiving ${blocks.length} transactions...`, SNACKBAR_CLOSE_ACTION_TEXT, { duration: SNACKBAR_DURATION });
+            void this._receiveService.receiveTransaction(blocks);
+        })
+
         UNLOCK_WALLET.subscribe((data) => {
             const originalRoute = this._authGuard.originalRoute;
             if (originalRoute) {
@@ -429,6 +451,17 @@ export class WalletEventsService {
             });
             REFRESH_DASHBOARD_ACCOUNTS.next();
         });
+
+        USER_TOGGLE_AUTO_RECEIVE.subscribe((isEnabled: boolean) => {
+            this._dispatch({
+                isEnableAutoReceiveFeature: isEnabled
+            })
+            if (isEnabled) {
+                AUTO_RECEIVE_ALL.next();
+            } else {
+                // TODO: STOP!
+            }
+        })
     }
 
     /** Broadcasts an updated app state. */
@@ -443,6 +476,7 @@ export class WalletEventsService {
             newData.localCurrencyCode ||
             newData.preferredDashboardView ||
             newData.customRpcNodeURLs ||
+            newData.isEnableAutoReceiveFeature !== undefined || // Boolean
             newData.minimumBananoThreshold !== undefined // Can be 0.
         ) {
             this._appStateService.appLocalStorage.next({
@@ -454,6 +488,7 @@ export class WalletEventsService {
                 activeWallet: newData.activeWallet,
                 localStorageWallets: newData.localStorageWallets,
                 idleTimeoutMinutes: newData.idleTimeoutMinutes,
+                isEnableAutoReceiveFeature: newData.isEnableAutoReceiveFeature,
             });
         }
     }
