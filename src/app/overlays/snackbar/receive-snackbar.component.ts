@@ -3,20 +3,24 @@ import { ReceiveService } from '@app/services/receive.service';
 import { scan, takeWhile, tap, timer } from 'rxjs';
 import { AppStateService } from '@app/services/app-state.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { REFRESH_DASHBOARD_ACCOUNTS } from '@app/services/wallet-events.service';
+import {
+    REFRESH_DASHBOARD_ACCOUNTS,
+    SNACKBAR_CLOSE_ACTION_TEXT,
+    SNACKBAR_DURATION,
+} from '@app/services/wallet-events.service';
 
 @Component({
     selector: 'app-receive-snackbar',
     styleUrls: [`app-receive-snackbar.component.scss`],
     template: `
         <ng-template #closeButton>
-            <button mat-icon-button (click)="close()" style="margin-right: -8px;">
-                <mat-icon color="primary">close</mat-icon>
+            <button mat-button (click)="close()" style="margin-right: -8px;" color="primary">
+                {{ timeUntilAutoReceiveStarts ? 'Cancel' : closeText }}
             </button>
         </ng-template>
 
         <div *ngIf="showError" class="container">
-            <div>An error occurred while auto-receiving.</div>
+            <div>An auto-receiving error occurred.</div>
             <ng-template [ngTemplateOutlet]="closeButton"></ng-template>
         </div>
         <ng-container *ngIf="!showError">
@@ -50,9 +54,9 @@ export class ReceiveSnackbarComponent {
     timeBetweenTicks = 1000;
     timeUntilAutoReceiveStarts = 5;
     blocks = [];
-    dismissTime = 3_000;
     showError = false;
     isCompleted = false;
+    closeText = SNACKBAR_CLOSE_ACTION_TEXT;
 
     constructor(
         private readonly _receiveService: ReceiveService,
@@ -99,7 +103,7 @@ export class ReceiveSnackbarComponent {
                         REFRESH_DASHBOARD_ACCOUNTS.next();
                         setTimeout(() => {
                             this._snackbar.dismiss();
-                        }, this.dismissTime);
+                        }, SNACKBAR_DURATION);
                     });
             }
         }),

@@ -17,8 +17,8 @@ import { Datasource } from '@app/services/datasource.service';
 import { ReceiveService } from '@app/services/receive.service';
 import { ReceiveSnackbarComponent } from '@app/overlays/snackbar/receive-snackbar.component';
 
-const SNACKBAR_DURATION = 3000;
-const SNACKBAR_CLOSE_ACTION_TEXT = 'Dismiss';
+export const SNACKBAR_DURATION = 4000;
+export const SNACKBAR_CLOSE_ACTION_TEXT = 'Dismiss';
 const sortAccounts = (accounts): AccountOverview[] => accounts.sort((a, b) => (a.index < b.index ? -1 : 1));
 
 /** User has request next sequential index be added to the dashboard. */
@@ -428,7 +428,7 @@ export class WalletEventsService {
         });
 
         AUTO_RECEIVE_ALL.subscribe(() => {
-            if (!this.store.isEnableAutoReceiveFeature) {
+            if (!this.store.isEnableAutoReceiveFeature && this.store.hasUnlockedSecret) {
                 return;
             }
             const blocks = this._appStateService.getAllReceivableBlocks();

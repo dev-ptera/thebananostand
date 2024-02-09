@@ -71,4 +71,11 @@
         width: $width;
         min-width: $width;
     }
+
+    .mat-mdc-snack-bar-container .mdc-snackbar__surface {
+        .mat-icon:not(.mat-primary) {
+            color: var(--text-contrast);
+            opacity: .6;
+        }
+    }
 }
