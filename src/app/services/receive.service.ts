@@ -18,7 +18,7 @@ export class ReceiveService {
     }
 
     /** Iterates through each pending transaction block and receives them. */
-    async receiveTransaction(blocks: (ReceivableTx & { accountIndex: number })[]): Promise<boolean> {
+    async receiveTransaction(blocks: Array<ReceivableTx & { accountIndex: number }>): Promise<boolean> {
         this.isStopReceive = false;
         this.receivedAmount = 0;
 

@@ -11,11 +11,11 @@ import {
 
 @Component({
     selector: 'app-receive-snackbar',
-    styleUrls: [`app-receive-snackbar.component.scss`],
+    styleUrls: [`receive-snackbar.component.scss`],
     template: `
         <ng-template #closeButton>
             <button mat-button (click)="close()" style="margin-right: -8px;" color="primary">
-                {{ timeUntilAutoReceiveStarts ? 'Cancel' : closeText }}
+                {{ isCompleted || showError ? closeText : 'Cancel' }}
             </button>
         </ng-template>
 
@@ -26,7 +26,9 @@ import {
         <ng-container *ngIf="!showError">
             <div *ngIf="isCompleted" class="container">
                 <div style="display: flex; align-items: center">
-                    <mat-icon class="info-icon">verified</mat-icon>
+                    <div class="info-icon-container">
+                        <mat-icon class="info-icon">verified</mat-icon>
+                    </div>
                     <div>{{ receivedAmount | appComma }} BAN received!</div>
                 </div>
                 <ng-template [ngTemplateOutlet]="closeButton"></ng-template>
@@ -34,14 +36,18 @@ import {
             <ng-container *ngIf="!isCompleted">
                 <div *ngIf="timeUntilAutoReceiveStarts !== 0" class="container">
                     <div style="display: flex; align-items: center">
-                        <mat-icon class="info-icon">download</mat-icon>
+                        <div class="info-icon-container">
+                            <mat-icon class="info-icon">download</mat-icon>
+                        </div>
                         <div>Auto-receiving in {{ timer$ | async }}...</div>
                     </div>
                     <ng-template [ngTemplateOutlet]="closeButton"></ng-template>
                 </div>
                 <div *ngIf="timeUntilAutoReceiveStarts === 0" class="container">
                     <div style="display: flex; align-items: center;">
-                        <mat-spinner diameter="20" class="info-icon"></mat-spinner>
+                        <div class="info-icon-container">
+                            <mat-spinner diameter="22"></mat-spinner>
+                        </div>
                         <div>Receiving block No. {{ currentBlockNumberReceiving }} of {{ maxBlocks }}...</div>
                     </div>
                     <ng-template [ngTemplateOutlet]="closeButton"></ng-template>
@@ -59,8 +65,8 @@ export class ReceiveSnackbarComponent {
     closeText = SNACKBAR_CLOSE_ACTION_TEXT;
 
     constructor(
-        private readonly _receiveService: ReceiveService,
         private readonly _snackbar: MatSnackBar,
+        private readonly _receiveService: ReceiveService,
         private readonly _appStateService: AppStateService
     ) {}
 
@@ -89,13 +95,14 @@ export class ReceiveSnackbarComponent {
     }
 
     timer$ = timer(0, this.timeBetweenTicks).pipe(
+        // eslint-disable-next-line no-param-reassign
         scan((acc) => --acc, this.timeUntilAutoReceiveStarts),
         tap((x) => {
             this.timeUntilAutoReceiveStarts = x;
             if (this.timeUntilAutoReceiveStarts === 0) {
                 this._receiveService
                     .receiveTransaction(this.blocks)
-                    .catch((err) => {
+                    .catch(() => {
                         this.showError = true;
                     })
                     .finally(() => {

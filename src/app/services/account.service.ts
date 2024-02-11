@@ -3,7 +3,6 @@ import { SpyglassService } from './spyglass.service';
 import { RpcService } from '@app/services/rpc.service';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { AccountOverview } from '@app/types/AccountOverview';
-import { ReceivableTx } from '@app/types/ReceivableTx';
 
 @Injectable({
     providedIn: 'root',

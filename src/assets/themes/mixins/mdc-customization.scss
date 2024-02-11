@@ -73,8 +73,9 @@
     }
 
     .mat-mdc-snack-bar-container .mdc-snackbar__surface {
-        .mat-icon:not(.mat-primary) {
+        .mat-icon:not(.mat-primary), .mdc-circular-progress__determinate-circle-graphic, .mdc-circular-progress__indeterminate-circle-graphic {
             color: var(--text-contrast);
+            stroke: var(--text-contrast);
             opacity: .6;
         }
     }
