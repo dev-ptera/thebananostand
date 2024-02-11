@@ -99,6 +99,7 @@ import { AddRpcOverlayComponent } from '@app/overlays/actions/add-rpc/add-rpc.co
 import { AddRpcDialogComponent } from '@app/overlays/dialogs/add-rpc/add-rpc-dialog.component';
 import { AddRpcBottomSheetComponent } from '@app/overlays/bottom-sheet/add-rpc/add-rpc-bottom-sheet.component';
 import { initializeApp } from './app.initializer';
+import { ReceiveSnackbarComponent } from '@app/overlays/snackbar/receive-snackbar.component';
 
 LOAD_WASM().subscribe((res: any) => console.log('WASM ngx-scanner-qrcode loaded', res));
 
@@ -164,6 +165,7 @@ LOAD_WASM().subscribe((res: any) => console.log('WASM ngx-scanner-qrcode loaded'
         TransactionComponent,
         AccountTableComponent,
         AccountActionsComponent,
+        ReceiveSnackbarComponent,
     ],
     imports: [
         AppRoutingModule,

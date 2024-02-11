@@ -1,10 +1,16 @@
 # Change Log
 
+## v4.10.0 (February 10, 2024)
+
+### Added
+
+-  Added toggle to enable / disable automatic receiving, defaulting to Enabled.
+
 ## v4.9.0 (February 5, 2024)
 
 ### Added
 
--  Added ability to select which transactions to receive. 
+-  Added ability to select which transactions to receive from within Receive transaction overlay.  
 
 ## v4.8.0 (January 7, 2024)
 

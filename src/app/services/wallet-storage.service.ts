@@ -22,6 +22,7 @@ const PREFERRED_DASHBOARD_VIEW = 'bananostand_dashboardView';
 const IDLE_TIMEOUT_MINUTES = 'bananostand_idleTimeoutMinutes';
 const MINIMUM_INCOMING_THRESHOLD_BAN = 'bananostand_minimumIncomingBananoThreshold';
 const CUSTOM_RPC_NODE_URLS = 'bananostand_customRpcNodeURLs';
+const USER_AUTO_RECEIVE_FUNDS = 'bananostand_userAutoReceiveTransactions';
 
 @Injectable({
     providedIn: 'root',
@@ -87,6 +88,13 @@ export class WalletStorageService {
                 } else {
                     window.localStorage.setItem(ACTIVE_WALLET_ID, String(walletData.activeWallet.walletId));
                 }
+            }
+
+            if (walletData.isEnableAutoReceiveFeature !== undefined) {
+                window.localStorage.setItem(
+                    USER_AUTO_RECEIVE_FUNDS,
+                    walletData.isEnableAutoReceiveFeature ? 'true' : 'false'
+                );
             }
         });
     }
@@ -226,6 +234,11 @@ export class WalletStorageService {
     /** Reads from local storage, defaults to USD. */
     readLocalizationCurrencyFromLocalStorage(): string {
         return window.localStorage.getItem(LOCALIZATION_CURRENCY_CODE) || 'USD';
+    }
+
+    /** Reads auto-receive toggle from local storage, defaults to true. */
+    readAutoReceiveFlag(): boolean {
+        return window.localStorage.getItem(USER_AUTO_RECEIVE_FUNDS) !== 'false';
     }
 
     /** Only applicable to secret-based wallets.  Returns the current-selected wallet's localstorage ID. */
