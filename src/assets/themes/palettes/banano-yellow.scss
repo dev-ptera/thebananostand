@@ -72,8 +72,8 @@ $banano-yellow-theme: mat.define-dark-theme((
         background: var(--card);
     }
 
-    .mat-mdc-card {
-        --mdc-elevated-card-container-color: var(--card);
+    .mat-mdc-card-outlined {
+        --mdc-outlined-card-container-color: var(--card);
         box-shadow: none!important;
     }
 
@@ -98,6 +98,10 @@ $banano-yellow-theme: mat.define-dark-theme((
         .mdc-dialog__surface {
             --mdc-dialog-container-color: var(--card);
         }
+    }
+
+    .mat-mdc-menu-panel {
+        --mat-menu-container-color: var(--card);
     }
 
     .mat-expansion-panel,
