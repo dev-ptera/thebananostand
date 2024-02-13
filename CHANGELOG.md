@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.11.0 (February 12, 2024)
+
+### Changed
+
+-  Updated remaining angular dependencies to v16.
+
 ## v4.10.0 (February 10, 2024)
 
 ### Added
