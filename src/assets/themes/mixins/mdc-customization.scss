@@ -1,5 +1,18 @@
 @mixin mdc-overrides() {
 
+    .mat-expansion-panel-header.mat-expanded {
+        .mat-expansion-indicator {
+            margin-top: 12px;
+        }
+    }
+    .mat-expansion-panel-header {
+        .mat-expansion-indicator {
+            transition: all 200ms;
+            margin-top: 0px;
+            margin-bottom: 4px;
+        }
+    }
+
     .mat-mdc-menu-item .mat-icon-no-color, .mat-mdc-menu-submenu-icon {
         color: var(--icon-secondary);
     }
