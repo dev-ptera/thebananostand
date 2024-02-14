@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.11.1 (February XX, 2024)
+
+### Changed
+
+-   Changed mobile dashboard table view styles.
+
 ## v4.11.0 (February 12, 2024)
 
 ### Changed
