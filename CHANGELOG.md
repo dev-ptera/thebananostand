@@ -8,7 +8,7 @@
 
 ### Fixed
 
--  Fixed excessive warn logging of missing Spyglass API query params. 
+-  Fixed excessive warn logging of missing TheBananoStand API query params. 
 -  Fixed warn color palettes not applying since `4.11.0`.
 -  Fixed copy-icon button vertical alignment.
 
