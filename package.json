@@ -1,6 +1,6 @@
 {
   "name": "thebananostand",
-  "version": "4.11.0",
+  "version": "4.11.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --open --host 0.0.0.0",

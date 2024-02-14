@@ -3,7 +3,7 @@
     .primary * {
         color: var(--primary);
     }
-    .warn, .warn * {
+    .warn, .warn *, .mat-warn {
         color: var(--warn);
     }
 
@@ -17,6 +17,10 @@
 
     .mat-icon {
         color: var(--icon-primary);
+    }
+
+    .mat-icon.mat-warn {
+        color: var(--warn);
     }
 
     .icon-secondary {

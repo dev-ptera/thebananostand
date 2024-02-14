@@ -76,6 +76,15 @@ export class UtilService {
         return address && address.length === 64 && address.startsWith('ban_');
     }
 
+    isEmpty(obj: object): boolean {
+        for (const prop in obj) {
+            if (Object.hasOwn(obj, prop)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     isValidHex(hex: string): boolean {
         const validHexChars: string[] = [
             '0',
