@@ -67,13 +67,13 @@ export class DashboardComponent {
     }
 
     private _checkForApiRequestViaQueryParams(params: Params): void {
-        if (!this._isValidParams(params)) {
-            if (params) {
-                console.warn('Invalid query parameters provided while creating a BananoStand API request.');
-                console.warn('Parameter Options: "request (send | change), address, amount (send only)');
-                console.warn('Parameters provided: ', params);
-            }
+        if (this._util.isEmpty(params)) {
             return;
+        }
+        if (!this._isValidParams(params)) {
+            console.warn('Invalid query parameters provided while creating a BananoStand API request.');
+            console.warn('Parameter Options: "request (send | change), address, amount (send only)');
+            console.warn('Parameters provided: ', params);
         }
         if (this.vp.sm) {
             setTimeout(() => {

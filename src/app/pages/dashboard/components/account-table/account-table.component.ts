@@ -48,7 +48,9 @@ import * as Colors from '@brightlayer-ui/colors';
             </th>
             <td mat-cell *matCellDef="let element">
                 <div style="display: flex; align-items: center; flex-wrap: wrap">
-                    <div [style.marginRight.px]="vp.sm || element.balance === 0 ? 0 : 16">{{ element.balance | appComma }}</div>
+                    <div [style.marginRight.px]="vp.sm || element.balance === 0 ? 0 : 16">
+                        {{ element.balance | appComma }}
+                    </div>
                     <div
                         class="hint mat-caption"
                         *ngIf="!vp.sm && element.balance !== 0"

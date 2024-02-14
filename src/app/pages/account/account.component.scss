@@ -12,7 +12,7 @@
     display: flex;
     justify-content: space-between;
     padding: 4px 36px 4px 36px !important;
-    @include common.small-icon-button(16px, 32px);
+    @include common.small-icon-button();
     * {
         color: var(--text-contrast);
     }
