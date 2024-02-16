@@ -1,10 +1,10 @@
 # Change Log
 
-## v4.11.2 (February 16, 2024)
+## v4.12.0 (February 16, 2024)
 
 ### Fixed
 
--  Expansion panel icon transition time
+-  Fixed expansion panel slow transition times.
 
 ## v4.11.1 (February 14, 2024)
 
