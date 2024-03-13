@@ -59,8 +59,7 @@ export class AddRpcOverlayComponent {
             return;
         }
 
-        // TODO: Add checks to see if the node is accessible and online before adding it to the list.
-        ADD_RPC_NODE_BY_URL.next(this.urlFormControl.value);
+        ADD_RPC_NODE_BY_URL.next(this.urlFormControl.value.trim());
         this.close.emit();
     }
 }

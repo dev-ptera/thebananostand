@@ -29,7 +29,22 @@
     }
 }
 
+.loading {
+    background-color: #5e645e;
+    color: rgba(255, 255, 255, 0.92);
+    &.outline {
+        color: #5e645e;
+        border: solid 1px #5e645e;
+        background: rgba(255, 255, 255, 0.92);
+    }
+}
+
 .offline {
     background-color: map-get(blui.$blui-red, 700);
     color: rgba(255, 255, 255, 0.92);
+    &.outline {
+        color: map-get(blui.$blui-red, 700);
+        border: solid 1px map-get(blui.$blui-red, 700);
+        background: rgba(255, 255, 255, 0.92);
+    }
 }

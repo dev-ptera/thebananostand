@@ -29,7 +29,7 @@ export class ListItemTagComponent {
     /** The label text */
     @Input() label: string;
     /** Common variants. */
-    @Input() variant: 'online' | 'offline' = undefined;
+    @Input() variant: 'online' | 'offline' | 'loading' = undefined;
     /** Style variant. */
     @Input() outline = false;
 }

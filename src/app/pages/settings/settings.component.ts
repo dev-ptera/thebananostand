@@ -11,8 +11,10 @@ import {
     EDIT_MINIMUM_INCOMING_THRESHOLD,
     REMOVE_ALL_WALLET_DATA,
     REMOVE_CUSTOM_RPC_NODE_BY_INDEX,
+    REMOVE_CUSTOM_SPYGLASS_API_BY_INDEX,
     SELECT_LOCALIZATION_CURRENCY,
     SELECTED_RPC_DATASOURCE_CHANGE,
+    SELECTED_SPYGLASS_API_DATASOURCE_CHANGE,
     USER_TOGGLE_AUTO_RECEIVE,
 } from '@app/services/wallet-events.service';
 import { MatRadioChange } from '@angular/material/radio';
@@ -24,6 +26,8 @@ import { AddRpcBottomSheetComponent } from '@app/overlays/bottom-sheet/add-rpc/a
 import { AddRpcDialogComponent } from '@app/overlays/dialogs/add-rpc/add-rpc-dialog.component';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { BLUIColors } from '@brightlayer-ui/colors';
+import { AddSpyglassBottomSheetComponent } from '@app/overlays/bottom-sheet/add-spyglass/add-spyglass-bottom-sheet.component';
+import { AddSpyglassDialogComponent } from '@app/overlays/dialogs/add-spyglass/add-spyglass-dialog.component';
 
 @UntilDestroy()
 @Component({
@@ -33,19 +37,28 @@ import { BLUIColors } from '@brightlayer-ui/colors';
             <div [class.primary]="source.isSelected" [style.fontWeight]="source.isSelected ? 600 : 400">
                 {{ source.alias }}
             </div>
-            <div class="mono datasource-url">{{ source.url }}</div>
-            <div style="margin-top: 2px" *ngIf="!source.isAddedByUser">
+            <div class="mono datasource-url" style="margin-top: 4px">{{ source.url }}</div>
+            <div style="margin-top: 4px">
                 <list-item-tag
-                    *ngIf="source.isAccessible"
+                    *ngIf="source.isAccessible === true"
                     style="display: flex"
                     label="Online"
                     variant="online"
+                    [outline]="true"
                 ></list-item-tag>
                 <list-item-tag
-                    *ngIf="!source.isAccessible"
+                    *ngIf="source.isAccessible === false"
                     style="display: flex"
                     label="Offline"
                     variant="offline"
+                    [outline]="true"
+                ></list-item-tag>
+                <list-item-tag
+                    *ngIf="source.isAccessible === undefined"
+                    style="display: flex"
+                    label="Loading"
+                    variant="loading"
+                    [outline]="true"
                 ></list-item-tag>
             </div>
         </ng-template>
@@ -144,7 +157,11 @@ import { BLUIColors } from '@brightlayer-ui/colors';
                                 *ngFor="let source of datasourceService.customRpcDataSources; let i = index"
                                 style="display: flex; align-items: center; justify-content: space-between"
                             >
-                                <mat-radio-button [value]="source" [aria-label]="'Custom Source ' + i">
+                                <mat-radio-button
+                                    [value]="source"
+                                    [aria-label]="'Custom Source ' + i"
+                                    [disabled]="!source.isAccessible"
+                                >
                                     <ng-template *ngTemplateOutlet="radioData; context: { source }"></ng-template>
                                 </mat-radio-button>
                                 <button
@@ -158,9 +175,24 @@ import { BLUIColors } from '@brightlayer-ui/colors';
                             </div>
                         </mat-radio-group>
                         <mat-divider></mat-divider>
-                        <div class="mat-overline" style="margin-top: 16px">Spyglass API Datasource</div>
-                        <div class="mat-body-2" style="margin-bottom: 8px">
-                            Provides a filtered transaction history, fetches representative scores and account aliases.
+                        <div class="account-security-option" responsive style="margin-bottom: 0">
+                            <div style="padding-top: 16px; flex: 1">
+                                <div class="mat-overline" style="margin-top: 16px">Spyglass API Datasource</div>
+                                <div class="mat-body-2" style="margin-bottom: 8px">
+                                    Provides a filtered transaction history, fetches representative scores and account
+                                    aliases.
+                                </div>
+                            </div>
+                            <button
+                                mat-stroked-button
+                                blui-inline
+                                color="primary"
+                                (click)="openAddSpyglassOverlay()"
+                                data-cy="add-new-spyglass-node-button"
+                            >
+                                <mat-icon>control_point</mat-icon>
+                                <span>Add New</span>
+                            </button>
                         </div>
                         <mat-radio-group
                             aria-label="Select a Spyglass API source"
@@ -175,6 +207,29 @@ import { BLUIColors } from '@brightlayer-ui/colors';
                             >
                                 <ng-template *ngTemplateOutlet="radioData; context: { source }"></ng-template>
                             </mat-radio-button>
+                            <div *ngIf="datasourceService.customSpyglassSources.length > 0" class="mat-overline">
+                                Custom Entries
+                            </div>
+                            <div
+                                *ngFor="let source of datasourceService.customSpyglassSources; let i = index"
+                                style="display: flex; align-items: center; justify-content: space-between"
+                            >
+                                <mat-radio-button
+                                    [value]="source"
+                                    [aria-label]="'Custom Source ' + i"
+                                    [disabled]="!source.isAccessible"
+                                >
+                                    <ng-template *ngTemplateOutlet="radioData; context: { source }"></ng-template>
+                                </mat-radio-button>
+                                <button
+                                    mat-icon-button
+                                    [matTooltip]="'Remove ' + source.alias"
+                                    color="warn"
+                                    (click)="removeSpyglassApiSource(i)"
+                                >
+                                    <mat-icon color="warn">clear</mat-icon>
+                                </button>
+                            </div>
                         </mat-radio-group>
                     </mat-card>
 
@@ -260,6 +315,9 @@ export class SettingsPageComponent implements OnInit {
         SELECTED_RPC_DATASOURCE_CHANGE.subscribe((source) => {
             this.selectedRpcSource = source;
         });
+        SELECTED_SPYGLASS_API_DATASOURCE_CHANGE.subscribe((source) => {
+            this.selectedSpyglassApi = source;
+        });
     }
 
     async ngOnInit(): Promise<void> {
@@ -288,8 +346,20 @@ export class SettingsPageComponent implements OnInit {
         }
     }
 
+    openAddSpyglassOverlay(): void {
+        if (this.vp.sm) {
+            this._sheet.open(AddSpyglassBottomSheetComponent);
+        } else {
+            this._dialog.open(AddSpyglassDialogComponent);
+        }
+    }
+
     removeCustomRpcNode(index: number): void {
         REMOVE_CUSTOM_RPC_NODE_BY_INDEX.next(index);
+    }
+
+    removeSpyglassApiSource(index: number): void {
+        REMOVE_CUSTOM_SPYGLASS_API_BY_INDEX.next(index);
     }
 
     toggleAutoReceiveIncomingTransactions(e: MatSlideToggleChange): void {

@@ -101,6 +101,8 @@ import { AddRpcBottomSheetComponent } from '@app/overlays/bottom-sheet/add-rpc/a
 import { initializeApp } from './app.initializer';
 import { ReceiveSnackbarComponent } from '@app/overlays/snackbar/receive-snackbar.component';
 import { AddSpyglassOverlayComponent } from '@app/overlays/actions/add-spyglass/add-spyglass.component';
+import { AddSpyglassBottomSheetComponent } from '@app/overlays/bottom-sheet/add-spyglass/add-spyglass-bottom-sheet.component';
+import { AddSpyglassDialogComponent } from '@app/overlays/dialogs/add-spyglass/add-spyglass-dialog.component';
 
 LOAD_WASM().subscribe((res: any) => console.log('WASM ngx-scanner-qrcode loaded', res));
 
@@ -167,6 +169,8 @@ LOAD_WASM().subscribe((res: any) => console.log('WASM ngx-scanner-qrcode loaded'
         AccountActionsComponent,
         ReceiveSnackbarComponent,
         AddSpyglassOverlayComponent,
+        AddSpyglassBottomSheetComponent,
+        AddSpyglassDialogComponent,
     ],
     imports: [
         AppRoutingModule,

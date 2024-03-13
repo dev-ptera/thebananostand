@@ -4,6 +4,7 @@ import { TimeoutService } from '@app/services/timeout.service';
 import { WalletEventsService } from '@app/services/wallet-events.service';
 import { AppStateService } from '@app/services/app-state.service';
 import { environment } from '../environments/environment';
+import { DatasourceService } from '@app/services/datasource.service';
 
 function appHeight(): void {
     const doc = document.documentElement;
@@ -15,6 +16,7 @@ export function initializeApp(): void {
     const timeoutService = inject(TimeoutService);
     const walletEventService = inject(WalletEventsService);
     const appStateService = inject(AppStateService);
+    const dataSourceService = inject(DatasourceService);
 
     powService.init();
     walletEventService.init();
@@ -25,6 +27,8 @@ export function initializeApp(): void {
             console.log(data);
         }
     });
+
+    dataSourceService.init();
 
     // Respond to window height change events.
     window.addEventListener(`resize`, appHeight);
