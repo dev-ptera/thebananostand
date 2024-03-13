@@ -14,6 +14,7 @@ import {
     REMOVE_CUSTOM_SPYGLASS_API_BY_INDEX,
     SELECT_LOCALIZATION_CURRENCY,
     SELECTED_RPC_DATASOURCE_CHANGE,
+    SELECTED_SPYGLASS_API_DATASOURCE_CHANGE,
     USER_TOGGLE_AUTO_RECEIVE,
 } from '@app/services/wallet-events.service';
 import { MatRadioChange } from '@angular/material/radio';
@@ -36,20 +37,27 @@ import { AddSpyglassDialogComponent } from '@app/overlays/dialogs/add-spyglass/a
             <div [class.primary]="source.isSelected" [style.fontWeight]="source.isSelected ? 600 : 400">
                 {{ source.alias }}
             </div>
-            <div class="mono datasource-url">{{ source.url }}</div>
-            <div style="margin-top: 2px">
+            <div class="mono datasource-url" style="margin-top: 4px">{{ source.url }}</div>
+            <div style="margin-top: 4px">
                 <list-item-tag
-                    *ngIf="source.isAccessible"
+                    *ngIf="source.isAccessible === true"
                     style="display: flex"
                     label="Online"
                     variant="online"
                     [outline]="true"
                 ></list-item-tag>
                 <list-item-tag
-                    *ngIf="!source.isAccessible"
+                    *ngIf="source.isAccessible === false"
                     style="display: flex"
                     label="Offline"
                     variant="offline"
+                    [outline]="true"
+                ></list-item-tag>
+                <list-item-tag
+                    *ngIf="source.isAccessible === undefined"
+                    style="display: flex"
+                    label="Loading"
+                    variant="loading"
                     [outline]="true"
                 ></list-item-tag>
             </div>
@@ -306,6 +314,9 @@ export class SettingsPageComponent implements OnInit {
         });
         SELECTED_RPC_DATASOURCE_CHANGE.subscribe((source) => {
             this.selectedRpcSource = source;
+        });
+        SELECTED_SPYGLASS_API_DATASOURCE_CHANGE.subscribe((source) => {
+            this.selectedSpyglassApi = source;
         });
     }
 

@@ -3,7 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { lastValueFrom, Subject, take } from 'rxjs';
 import { NanoClient } from '@dev-ptera/nano-node-rpc';
 import { AppStateService } from '@app/services/app-state.service';
-import { SELECTED_RPC_DATASOURCE_CHANGE } from '@app/services/wallet-events.service';
+import {
+    SELECTED_RPC_DATASOURCE_CHANGE,
+    SELECTED_SPYGLASS_API_DATASOURCE_CHANGE,
+} from '@app/services/wallet-events.service';
 
 export type Datasource = {
     alias: 'Batman' | 'Creeper' | 'Jungle Tv' | 'Booster' | 'Kalium' | 'Rain City' | string;
@@ -23,13 +26,13 @@ export class DatasourceService {
         {
             alias: 'Batman',
             url: 'https://api.spyglass.pw/banano',
-            isAccessible: false,
+            isAccessible: undefined,
             isSelected: false,
         },
         {
             alias: 'Creeper',
             url: 'https://api.creeper.banano.cc/banano',
-            isAccessible: false,
+            isAccessible: undefined,
             isSelected: false,
         },
     ];
@@ -55,12 +58,12 @@ export class DatasourceService {
     private spyglassApiSource: Datasource;
     private readonly spyglassSourceLoadedSubject = new Subject<Datasource>();
 
-    handleError = (err, url): void => {
+    handleError = (err: any, url: string): void => {
         console.error(`${url} is inaccessible as a datasource, ignoring it.`);
         console.error(err);
     };
 
-    constructor(private _http: HttpClient, private _state: AppStateService) {}
+    constructor(private readonly _http: HttpClient, private readonly _state: AppStateService) {}
 
     init(): void {
         // eslint-disable-next-line no-console
@@ -106,6 +109,7 @@ export class DatasourceService {
         }
         source.isSelected = true;
         this.spyglassApiSource = source;
+        SELECTED_SPYGLASS_API_DATASOURCE_CHANGE.next(this.spyglassApiSource);
     }
 
     async getRpcClient(): Promise<NanoClient> {
@@ -171,7 +175,10 @@ export class DatasourceService {
                     this.rpcSourceLoadedSubject.next(source);
                 }
             })
-            .catch((err) => this.handleError(err, source.url));
+            .catch((err) => {
+                source.isAccessible = false;
+                this.handleError(err, source.url);
+            });
     }
 
     private _checkSpyglassSourceOnline(source: Datasource): void {
@@ -193,7 +200,10 @@ export class DatasourceService {
                     this.spyglassSourceLoadedSubject.next(source);
                 }
             })
-            .catch((err) => this.handleError(err, source.url));
+            .catch((err) => {
+                source.isAccessible = false;
+                this.handleError(err, source.url);
+            });
     }
 
     addCustomDatasource(type: 'spyglass' | 'rpc', customSourceUrl: string, checkIfOnline = true): void {
@@ -202,7 +212,7 @@ export class DatasourceService {
         }`;
         const datasource = {
             isSelected: false,
-            isAccessible: false,
+            isAccessible: undefined,
             isAddedByUser: true,
             alias: alias,
             url: customSourceUrl,
@@ -223,16 +233,15 @@ export class DatasourceService {
         }
     }
 
-    removeCustomRpcSource(index: number): void {
+    removeCustomRpcSource(index: number): string[] {
         this.customRpcDataSources.splice(index, 1);
-        this.setRpcSource(this.customRpcDataSources[this.customRpcDataSources.length - 1] || this.defaultRpcDataSource);
+        this.setRpcSource(this.defaultRpcDataSource);
+        return this.customRpcDataSources.map((source) => source.url);
     }
 
-    removeCustomSpyglassSource(index: number): void {
+    removeCustomSpyglassSource(index: number): string[] {
         this.customSpyglassSources.splice(index, 1);
-        debugger;
-        this.setSpyglassApiSource(
-            this.customSpyglassSources[this.customSpyglassSources.length - 1] || this.defaultSpyglassSource
-        );
+        this.setSpyglassApiSource(this.defaultSpyglassSource);
+        return this.customSpyglassSources.map((source) => source.url);
     }
 }

@@ -120,6 +120,9 @@ export const SELECT_LOCALIZATION_CURRENCY = new Subject<string>();
 /** Datasource RPC has been updated. */
 export const SELECTED_RPC_DATASOURCE_CHANGE = new Subject<Datasource>();
 
+/** Spyglass API source has been updated. */
+export const SELECTED_SPYGLASS_API_DATASOURCE_CHANGE = new Subject<Datasource>();
+
 /** A transaction has been broadcast onto the network successfully. */
 export const TRANSACTION_COMPLETED_SUCCESS = new Subject<string | undefined>();
 
@@ -423,18 +426,14 @@ export class WalletEventsService {
         });
 
         REMOVE_CUSTOM_RPC_NODE_BY_INDEX.subscribe((index) => {
-            this.store.customRpcNodeSources.splice(index, 1);
-            this._datasourceService.removeCustomRpcSource(index);
             this._dispatch({
-                customRpcNodeSources: this.store.customRpcNodeSources,
+                customRpcNodeSources: this._datasourceService.removeCustomRpcSource(index),
             });
         });
 
         REMOVE_CUSTOM_SPYGLASS_API_BY_INDEX.subscribe((index) => {
-            this.store.customSpyglassApiSources.splice(index, 1);
-            this._datasourceService.removeCustomSpyglassSource(index);
             this._dispatch({
-                customSpyglassApiSources: this.store.customSpyglassApiSources,
+                customSpyglassApiSources: this._datasourceService.removeCustomSpyglassSource(index),
             });
         });
 
