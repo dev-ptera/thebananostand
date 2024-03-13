@@ -13,7 +13,7 @@ import { SpyglassService } from '@app/services/spyglass.service';
 import { CurrencyConversionService } from '@app/services/currency-conversion.service';
 import { AuthGuardService } from '../guards/auth-guard';
 import { Router } from '@angular/router';
-import { Datasource, DatasourceService } from '@app/services/datasource.service';
+import { Datasource } from '@app/services/datasource.service';
 import { ReceiveSnackbarComponent } from '@app/overlays/snackbar/receive-snackbar.component';
 
 export const SNACKBAR_DURATION = 4000;
