@@ -22,6 +22,7 @@ const PREFERRED_DASHBOARD_VIEW = 'bananostand_dashboardView';
 const IDLE_TIMEOUT_MINUTES = 'bananostand_idleTimeoutMinutes';
 const MINIMUM_INCOMING_THRESHOLD_BAN = 'bananostand_minimumIncomingBananoThreshold';
 const CUSTOM_RPC_NODE_URLS = 'bananostand_customRpcNodeURLs';
+const CUSTOM_SPYGLASS_API_URLS = 'bananostand_customSpyglassApiURLs';
 const USER_AUTO_RECEIVE_FUNDS = 'bananostand_userAutoReceiveTransactions';
 
 @Injectable({
@@ -41,8 +42,12 @@ export class WalletStorageService {
         // Listen for the updated store and write to localstorage accordingly.
         // `store` & `localStorage` will always match.
         this._appStateService.appLocalStorage.subscribe((walletData) => {
-            if (walletData.customRpcNodeURLs !== undefined) {
-                window.localStorage.setItem(CUSTOM_RPC_NODE_URLS, walletData.customRpcNodeURLs.toString());
+            if (walletData.customRpcNodeSources !== undefined) {
+                window.localStorage.setItem(CUSTOM_RPC_NODE_URLS, walletData.customRpcNodeSources.toString());
+            }
+
+            if (walletData.customSpyglassApiSources !== undefined) {
+                window.localStorage.setItem(CUSTOM_SPYGLASS_API_URLS, walletData.customSpyglassApiSources.toString());
             }
 
             if (walletData.minimumBananoThreshold !== undefined) {
@@ -225,6 +230,14 @@ export class WalletStorageService {
 
     readCustomRpcNodeUrls(): string[] {
         const urls = localStorage.getItem(CUSTOM_RPC_NODE_URLS);
+        if (!urls) {
+            return [];
+        }
+        return urls.split(',');
+    }
+
+    readCustomSpyglassUrls(): string[] {
+        const urls = localStorage.getItem(CUSTOM_SPYGLASS_API_URLS);
         if (!urls) {
             return [];
         }

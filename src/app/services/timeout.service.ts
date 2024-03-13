@@ -15,6 +15,8 @@ export class TimeoutService {
     ) {}
 
     init(): void {
+        // eslint-disable-next-line no-console
+        console.log('Timeout Service Initialized');
         this._userIdle.onIdleStatusChanged().subscribe(() => {
             //    console.log('User is considered idle now?', isIdle);
         });

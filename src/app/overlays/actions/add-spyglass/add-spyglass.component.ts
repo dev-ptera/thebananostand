@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ADD_RPC_NODE_BY_URL } from '@app/services/wallet-events.service';
+import { ADD_SPYGLASS_API_SOURCE_BY_URL } from '@app/services/wallet-events.service';
 
 @Component({
     selector: 'app-add-spyglass-overlay',
@@ -10,7 +10,7 @@ import { ADD_RPC_NODE_BY_URL } from '@app/services/wallet-events.service';
             <div class="overlay-header">Add new Spyglass API datasource</div>
             <div class="overlay-body">
                 <div class="mat-body-1" style="margin-bottom: 16px">
-                    If the default Spyglass API hosts are unavailable, you can add a custom API instead.
+                    If the default Spyglass API sources are unavailable, you can add a custom source instead.
                 </div>
                 <div class="mat-body-1">
                     <div>Use the input field below to enter the URL of your new API source e.g:</div>
@@ -22,7 +22,7 @@ import { ADD_RPC_NODE_BY_URL } from '@app/services/wallet-events.service';
                         <textarea
                             type="text"
                             matInput
-                            (keyup.enter)="addRpcNode()"
+                            (keyup.enter)="addSpyglassSource()"
                             [formControl]="urlFormControl"
                             data-cy="add-new-spyglass-input"
                         ></textarea>
@@ -36,7 +36,7 @@ import { ADD_RPC_NODE_BY_URL } from '@app/services/wallet-events.service';
                     mat-flat-button
                     color="primary"
                     [disabled]="isDisabled()"
-                    (click)="addRpcNode()"
+                    (click)="addSpyglassSource()"
                 >
                     Add
                 </button>
@@ -53,13 +53,12 @@ export class AddSpyglassOverlayComponent {
         return !this.urlFormControl.value;
     }
 
-    addRpcNode(): void {
+    addSpyglassSource(): void {
         if (this.isDisabled()) {
             return;
         }
 
-        // TODO: Add checks to see if the node is accessible and online before adding it to the list.
-        ADD_RPC_NODE_BY_URL.next(this.urlFormControl.value);
+        ADD_SPYGLASS_API_SOURCE_BY_URL.next(this.urlFormControl.value.trim());
         this.close.emit();
     }
 }

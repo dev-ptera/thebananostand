@@ -32,4 +32,9 @@
 .offline {
     background-color: map-get(blui.$blui-red, 700);
     color: rgba(255, 255, 255, 0.92);
+    &.outline {
+        color: map-get(blui.$blui-red, 700);
+        border: solid 1px map-get(blui.$blui-red, 700);
+        background: rgba(255, 255, 255, 0.92);
+    }
 }

@@ -1,5 +1,15 @@
 # Change Log
 
+## v4.13.0 (March 13, 2024)
+
+### Added
+
+-  Added ability to provide custom Spyglass API datasources. 
+
+### Changed
+
+-  Style adjustments on datasource online/offline chips.
+
 ## v4.12.1 (March 13, 2024)
 
 ### Fixed
@@ -10,7 +20,7 @@
 
 ### Added
 
--  Added online/offline indicator for default Datasources on Settings page.
+-  Added online/offline indicator for default datasources on Settings page.
 
 ### Changed
 

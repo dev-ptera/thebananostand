@@ -41,7 +41,9 @@ export type AppStore = {
     /** Determines how the Dashboard page looks. Can either be table or card. */
     preferredDashboardView: 'card' | 'table';
     /** Custom RPC nodes **/
-    customRpcNodeURLs: string[];
+    customRpcNodeSources: string[];
+    /** Custom Spyglass API sources **/
+    customSpyglassApiSources: string[];
     /** User wants to receive funds automatically whenever wallet is opened. **/
     isEnableAutoReceiveFeature: boolean;
     /** User is actively receiving incoming transactions via the auto-receive feature. */
@@ -79,7 +81,8 @@ export class AppStateService {
         idleTimeoutMinutes: 15,
         isLoadingAccounts: true,
         preferredDashboardView: undefined,
-        customRpcNodeURLs: [],
+        customRpcNodeSources: [],
+        customSpyglassApiSources: [],
         isEnableAutoReceiveFeature: true,
         isAutoReceivingTransactions: false,
     });
@@ -92,7 +95,8 @@ export class AppStateService {
         localStorageWallets: LocalStorageWallet[];
         preferredDashboardView: string;
         idleTimeoutMinutes: number;
-        customRpcNodeURLs: string[];
+        customRpcNodeSources: string[];
+        customSpyglassApiSources: string[];
         isEnableAutoReceiveFeature: boolean;
     }>();
 
