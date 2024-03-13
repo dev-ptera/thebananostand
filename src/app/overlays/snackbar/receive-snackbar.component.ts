@@ -7,6 +7,7 @@ import {
     REFRESH_DASHBOARD_ACCOUNTS,
     SNACKBAR_CLOSE_ACTION_TEXT,
     SNACKBAR_DURATION,
+    USER_CANCEL_AUTO_RECEIVE,
 } from '@app/services/wallet-events.service';
 
 @Component({
@@ -78,8 +79,7 @@ export class ReceiveSnackbarComponent {
     }
 
     close(): void {
-        this._receiveService.stopReceive();
-        this._snackbar.dismiss();
+        USER_CANCEL_AUTO_RECEIVE.next();
     }
 
     get maxBlocks(): number {

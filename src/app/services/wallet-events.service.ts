@@ -15,6 +15,7 @@ import { AuthGuardService } from '../guards/auth-guard';
 import { Router } from '@angular/router';
 import { Datasource } from '@app/services/datasource.service';
 import { ReceiveSnackbarComponent } from '@app/overlays/snackbar/receive-snackbar.component';
+import { ReceiveService } from '@app/services/receive.service';
 
 export const SNACKBAR_DURATION = 4000;
 export const SNACKBAR_CLOSE_ACTION_TEXT = 'Dismiss';
@@ -128,6 +129,9 @@ export const UPDATE_ADDRESS_BOOK = new Subject<AddressBookEntry>();
 /** User has opted to auto-receive transactions (secret-only) when wallet is unlocked. */
 export const USER_TOGGLE_AUTO_RECEIVE = new Subject<boolean>();
 
+/** User has hit the cancel option from within the auto-receive bottomsheet. */
+export const USER_CANCEL_AUTO_RECEIVE = new Subject<void>();
+
 @Injectable({
     providedIn: 'root',
 })
@@ -150,6 +154,7 @@ export class WalletEventsService {
         private readonly _authGuard: AuthGuardService,
         private readonly _signerService: SignerService,
         private readonly _secretService: SecretService,
+        private readonly _receiveService: ReceiveService,
         private readonly _accountService: AccountService,
         private readonly _spyglassService: SpyglassService,
         private readonly _appStateService: AppStateService,
@@ -238,6 +243,9 @@ export class WalletEventsService {
                 return;
             }
             this._snackbar.openFromComponent(ReceiveSnackbarComponent);
+            this._dispatch({
+                isAutoReceivingTransactions: true,
+            });
         });
 
         BROWSER_SUPPORTS_USB.subscribe(() => {
@@ -462,6 +470,14 @@ export class WalletEventsService {
             if (isEnabled) {
                 AUTO_RECEIVE_ALL.next();
             }
+        });
+
+        USER_CANCEL_AUTO_RECEIVE.subscribe(() => {
+            this._receiveService.stopReceive();
+            this._snackbar.dismiss();
+            this._dispatch({
+                isAutoReceivingTransactions: false,
+            });
         });
     }
 

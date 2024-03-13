@@ -44,6 +44,8 @@ export type AppStore = {
     customRpcNodeURLs: string[];
     /** User wants to receive funds automatically whenever wallet is opened. **/
     isEnableAutoReceiveFeature: boolean;
+    /** User is actively receiving incoming transactions via the auto-receive feature. */
+    isAutoReceivingTransactions: boolean;
 };
 
 @Injectable({
@@ -79,6 +81,7 @@ export class AppStateService {
         preferredDashboardView: undefined,
         customRpcNodeURLs: [],
         isEnableAutoReceiveFeature: true,
+        isAutoReceivingTransactions: false,
     });
 
     appLocalStorage = new Subject<{
