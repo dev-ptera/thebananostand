@@ -5,6 +5,7 @@
 ### Added
 
 -  Added ability to provide custom Spyglass API datasources. 
+-  Added online/offline/loading indicators for all datasources, including custom-added ones.
 
 ### Changed
 
