@@ -4,7 +4,6 @@
 
 ### Added
 
--  Added option to link new Spyglass API datasource, similar to RPC source.
 -  Added online/offline indicator for default Datasources on Settings page.
 
 ### Changed
