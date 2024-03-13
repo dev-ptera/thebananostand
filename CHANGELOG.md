@@ -1,10 +1,20 @@
 # Change Log
 
-## v4.12.0 (February 16, 2024)
+## v4.12.0 (March 12, 2024)
+
+### Added
+
+-  Added option to link new Spyglass API datasource, similar to RPC source.
+-  Added online/offline indicator for default Datasources on Settings page.
+
+### Changed
+
+-  Changed default logic to use Custom datasources if online.
 
 ### Fixed
 
 -  Fixed expansion panel slow transition times.
+-  Fixed ledger-specific dashboard indexes being cleared after broadcasting transactions.
 
 ## v4.11.1 (February 14, 2024)
 

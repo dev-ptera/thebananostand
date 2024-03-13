@@ -13,8 +13,7 @@ import { SpyglassService } from '@app/services/spyglass.service';
 import { CurrencyConversionService } from '@app/services/currency-conversion.service';
 import { AuthGuardService } from '../guards/auth-guard';
 import { Router } from '@angular/router';
-import { Datasource } from '@app/services/datasource.service';
-import { ReceiveService } from '@app/services/receive.service';
+import { Datasource, DatasourceService } from '@app/services/datasource.service';
 import { ReceiveSnackbarComponent } from '@app/overlays/snackbar/receive-snackbar.component';
 
 export const SNACKBAR_DURATION = 4000;
@@ -24,17 +23,20 @@ const sortAccounts = (accounts): AccountOverview[] => accounts.sort((a, b) => (a
 /** User has request next sequential index be added to the dashboard. */
 export const ADD_NEXT_ACCOUNT_BY_INDEX = new Subject<void>();
 
-/** New addresses (index) has been added to the dashboard. */
-export const ADD_SPECIFIC_ACCOUNTS_BY_INDEX = new Subject<number[]>();
-
 /** New Banano Node (URL) has been added to the settings page. */
 export const ADD_RPC_NODE_BY_URL = new Subject<string>();
+
+/** New addresses (index) has been added to the dashboard. */
+export const ADD_SPECIFIC_ACCOUNTS_BY_INDEX = new Subject<number[]>();
 
 /** User has attempted to unlock an encrypted secret wallet using a password. */
 export const ATTEMPT_UNLOCK_WALLET_WITH_PASSWORD = new Subject<{ password: string }>();
 
 /** User wants to unlock the ledger device. */
 export const ATTEMPT_UNLOCK_LEDGER_WALLET = new Subject<void>();
+
+/** All accounts have been loaded. */
+export const AUTO_RECEIVE_ALL = new Subject<void>();
 
 /** Browser supports USB functionality and can be read by the ledger device. */
 export const BROWSER_SUPPORTS_USB = new Subject<void>();
@@ -75,20 +77,14 @@ export const IMPORT_NEW_WALLET_FROM_SECRET = new Subject<{ secret: string; passw
 /** A wallet (previously unlocked with a password) has been logged out. */
 export const LOCK_WALLET = new Subject<void>();
 
-/** An address (index) has been removed from the dashboard. */
-export const REMOVE_ACCOUNTS_BY_INDEX = new Subject<number[]>();
-
 /** User has requested a specific account be refreshed. */
 export const REFRESH_SPECIFIC_ACCOUNT_BY_INDEX = new Subject<number>();
 
 /** User has requested that all loaded indexes be refreshed, checking for receivable transactions and updating account balances. */
 export const REFRESH_DASHBOARD_ACCOUNTS = new Subject<void>();
 
-/** All accounts have been loaded. */
-export const AUTO_RECEIVE_ALL = new Subject<void>();
-
-/** The active wallet has been given an alias. */
-export const RENAME_ACTIVE_WALLET = new Subject<string>();
+/** An address (index) has been removed from the dashboard. */
+export const REMOVE_ACCOUNTS_BY_INDEX = new Subject<number[]>();
 
 /** The user wants to manually add an address to their address book. */
 export const REMOVE_ADDRESS_BOOK_ENTRY = new Subject<AddressBookEntry>();
@@ -99,8 +95,8 @@ export const REMOVE_ACTIVE_WALLET = new Subject<void>();
 /** User has opted to delete all locally stored info. */
 export const REMOVE_ALL_WALLET_DATA = new Subject<void>();
 
-/** User has opted to auto-receive transactions (secret-only) when wallet is unlocked. */
-export const USER_TOGGLE_AUTO_RECEIVE = new Subject<boolean>();
+/** The active wallet has been given an alias. */
+export const RENAME_ACTIVE_WALLET = new Subject<string>();
 
 /** A Banano Node (URL) has been removed from the settings page. The display order on the settings page matches the order in storage.  */
 export const REMOVE_CUSTOM_RPC_NODE_BY_INDEX = new Subject<number>();
@@ -129,6 +125,9 @@ export const UNLOCK_WALLET_WITH_PASSWORD_ERROR = new Subject<void>();
 /** The user wants to manually add an address to their address book. */
 export const UPDATE_ADDRESS_BOOK = new Subject<AddressBookEntry>();
 
+/** User has opted to auto-receive transactions (secret-only) when wallet is unlocked. */
+export const USER_TOGGLE_AUTO_RECEIVE = new Subject<boolean>();
+
 @Injectable({
     providedIn: 'root',
 })
@@ -151,7 +150,6 @@ export class WalletEventsService {
         private readonly _authGuard: AuthGuardService,
         private readonly _signerService: SignerService,
         private readonly _secretService: SecretService,
-        private readonly _receiveService: ReceiveService,
         private readonly _accountService: AccountService,
         private readonly _spyglassService: SpyglassService,
         private readonly _appStateService: AppStateService,
@@ -183,6 +181,10 @@ export class WalletEventsService {
             ADD_SPECIFIC_ACCOUNTS_BY_INDEX.next([nextIndex]);
         });
 
+        ADD_RPC_NODE_BY_URL.subscribe((url: string) => {
+            this._dispatch({ customRpcNodeURLs: this.store.customRpcNodeURLs.concat(url) });
+        });
+
         ADD_SPECIFIC_ACCOUNTS_BY_INDEX.subscribe(async (indexes: number[]) => {
             const accounts = this.store.accounts;
             this._dispatch({ isLoadingAccounts: true });
@@ -202,11 +204,6 @@ export class WalletEventsService {
                 accounts: sortAccounts(accounts),
             });
             AUTO_RECEIVE_ALL.next();
-        });
-
-        ADD_RPC_NODE_BY_URL.subscribe((url: string) => {
-            this.store.customRpcNodeURLs.push(url);
-            this._dispatch({ customRpcNodeURLs: this.store.customRpcNodeURLs });
         });
 
         ATTEMPT_UNLOCK_LEDGER_WALLET.subscribe(async () => {
@@ -230,6 +227,17 @@ export class WalletEventsService {
                 console.error(err);
                 UNLOCK_WALLET_WITH_PASSWORD_ERROR.next();
             }
+        });
+
+        AUTO_RECEIVE_ALL.subscribe(() => {
+            if (!this.store.isEnableAutoReceiveFeature && this.store.hasUnlockedSecret) {
+                return;
+            }
+            const blocks = this._appStateService.getAllReceivableBlocks();
+            if (blocks.length === 0) {
+                return;
+            }
+            this._snackbar.openFromComponent(ReceiveSnackbarComponent);
         });
 
         BROWSER_SUPPORTS_USB.subscribe(() => {
@@ -332,6 +340,9 @@ export class WalletEventsService {
 
         REFRESH_SPECIFIC_ACCOUNT_BY_INDEX.subscribe(async (index) => {
             const newAccount = await this._accountService.fetchAccount(index);
+            if (!newAccount) {
+                return;
+            }
             const accounts = this._accountService.removeAccounts([index]);
             accounts.push(newAccount);
             this._dispatch({
@@ -355,16 +366,6 @@ export class WalletEventsService {
         REMOVE_ADDRESS_BOOK_ENTRY.subscribe((entry: AddressBookEntry) => {
             const addressBook = this.store.addressBook;
             addressBook.delete(entry.account);
-            this._dispatch({ addressBook });
-        });
-
-        UPDATE_ADDRESS_BOOK.subscribe((entry: AddressBookEntry) => {
-            const addressBook = this.store.addressBook;
-            if (entry.account === entry.name) {
-                addressBook.delete(entry.account);
-            } else {
-                addressBook.set(entry.account, entry.name);
-            }
             this._dispatch({ addressBook });
         });
 
@@ -413,29 +414,21 @@ export class WalletEventsService {
             }
         });
 
-        SET_DASHBOARD_ACCOUNT_LOADING.subscribe((isLoadingAccounts) => {
-            this._dispatch({ isLoadingAccounts });
-        });
-
         SELECT_LOCALIZATION_CURRENCY.subscribe(async (localCurrencyCode: string) => {
             const priceDataUSD = await this._spyglassService.getBananoPriceRelativeToBitcoin();
             const localCurrencyConversionRate = this._currencyConversionService.convertToUSD(localCurrencyCode);
             this._dispatch({ localCurrencyCode, localCurrencyConversionRate, priceDataUSD });
         });
 
-        TRANSACTION_COMPLETED_SUCCESS.subscribe(() => {
-            REFRESH_DASHBOARD_ACCOUNTS.next();
+        SET_DASHBOARD_ACCOUNT_LOADING.subscribe((isLoadingAccounts) => {
+            this._dispatch({ isLoadingAccounts });
         });
 
-        AUTO_RECEIVE_ALL.subscribe(() => {
-            if (!this.store.isEnableAutoReceiveFeature && this.store.hasUnlockedSecret) {
-                return;
+        TRANSACTION_COMPLETED_SUCCESS.subscribe(() => {
+            if (this.store.hasUnlockedSecret) {
+                // Do not refresh for ledger devices; the signer is already in progress and subsequent calls will fail at this point.
+                REFRESH_DASHBOARD_ACCOUNTS.next();
             }
-            const blocks = this._appStateService.getAllReceivableBlocks();
-            if (blocks.length === 0) {
-                return;
-            }
-            this._snackbar.openFromComponent(ReceiveSnackbarComponent);
         });
 
         UNLOCK_WALLET.subscribe((data) => {
@@ -450,6 +443,16 @@ export class WalletEventsService {
                 walletPassword: data.password,
             });
             REFRESH_DASHBOARD_ACCOUNTS.next();
+        });
+
+        UPDATE_ADDRESS_BOOK.subscribe((entry: AddressBookEntry) => {
+            const addressBook = this.store.addressBook;
+            if (entry.account === entry.name) {
+                addressBook.delete(entry.account);
+            } else {
+                addressBook.set(entry.account, entry.name);
+            }
+            this._dispatch({ addressBook });
         });
 
         USER_TOGGLE_AUTO_RECEIVE.subscribe((isEnabled: boolean) => {

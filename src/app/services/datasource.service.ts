@@ -68,13 +68,16 @@ export class DatasourceService {
                 const newSource = {
                     isSelected: false,
                     isAccessible: true,
-                    alias: `Custom node #${index}`,
+                    isAddedByUser: true,
+                    alias: `Custom node #${index + 1}`,
                     url: customSourceUrl,
                 };
                 this.customRpcDataSources.push(newSource);
             });
 
-            /** When a custom datasource is added, we will set it as the selected RPC datasource. */
+            /** When a custom datasource is added, we will set it as the selected RPC datasource.
+             *  There is currently no check in place, within the component, to check to see if the datasource is online when adding it.
+             * */
             this.setRpcSource(
                 this.customRpcDataSources[this.customRpcDataSources.length - 1] || this.defaultRpcDataSource
             );
@@ -87,7 +90,7 @@ export class DatasourceService {
                 .then(() => {
                     source.isAccessible = true;
                     /** We want to default the RPC node to Kalium since it is configured to work with Boom-PoW. */
-                    if (!this.rpcSource || source.alias === 'Kalium') {
+                    if (!this.rpcSource || (source.alias === 'Kalium' && !this._isCustomSource(this.rpcSource))) {
                         // eslint-disable-next-line no-console
                         console.log(`Using ${source.alias} as RPC source.`);
                         this.setRpcSource(source);
@@ -113,6 +116,10 @@ export class DatasourceService {
                 })
                 .catch((err) => handleError(err, source.url));
         });
+    }
+
+    private _isCustomSource(source: Datasource): boolean {
+        return source && source.alias.includes('Custom');
     }
 
     setRpcSource(source: Datasource): void {
