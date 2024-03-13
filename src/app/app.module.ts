@@ -20,7 +20,7 @@ import { CreateWalletDialogComponent } from '@app/overlays/dialogs/create-wallet
 import { CreateWalletOverlayComponent } from '@app/overlays/actions/create-wallet/create-wallet.component';
 import { DashboardComponent } from '@app/pages/dashboard/dashboard.component';
 import { DashboardPipe } from '@app/pages/dashboard/dashboard.pipe';
-import { DatasourceAvailablePipe, SettingsPageComponent } from '@app/pages/settings/settings.component';
+import { SettingsPageComponent } from '@app/pages/settings/settings.component';
 import { EmptyStateModule } from '@app/components/empty-state/empty-state.module';
 import { EnterSecretBottomSheetComponent } from '@app/overlays/bottom-sheet/enter-secret/enter-secret-bottom-sheet.component';
 import { EnterSecretComponent } from '@app/overlays/actions/enter-secret/enter-secret.component';
@@ -100,6 +100,7 @@ import { AddRpcDialogComponent } from '@app/overlays/dialogs/add-rpc/add-rpc-dia
 import { AddRpcBottomSheetComponent } from '@app/overlays/bottom-sheet/add-rpc/add-rpc-bottom-sheet.component';
 import { initializeApp } from './app.initializer';
 import { ReceiveSnackbarComponent } from '@app/overlays/snackbar/receive-snackbar.component';
+import { AddSpyglassOverlayComponent } from '@app/overlays/actions/add-spyglass/add-spyglass.component';
 
 LOAD_WASM().subscribe((res: any) => console.log('WASM ngx-scanner-qrcode loaded', res));
 
@@ -133,7 +134,6 @@ LOAD_WASM().subscribe((res: any) => console.log('WASM ngx-scanner-qrcode loaded'
         CreateWalletOverlayComponent,
         DashboardComponent,
         DashboardPipe,
-        DatasourceAvailablePipe,
         EnterSecretBottomSheetComponent,
         EnterSecretComponent,
         EnterSecretDialogComponent,
@@ -166,6 +166,7 @@ LOAD_WASM().subscribe((res: any) => console.log('WASM ngx-scanner-qrcode loaded'
         AccountTableComponent,
         AccountActionsComponent,
         ReceiveSnackbarComponent,
+        AddSpyglassOverlayComponent,
     ],
     imports: [
         AppRoutingModule,

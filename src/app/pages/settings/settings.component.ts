@@ -1,4 +1,4 @@
-import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Datasource, DatasourceService } from '@app/services/datasource.service';
 import { ChangePasswordBottomSheetComponent } from '@app/overlays/bottom-sheet/change-password/change-password-bottom-sheet.component';
@@ -23,13 +23,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { AddRpcBottomSheetComponent } from '@app/overlays/bottom-sheet/add-rpc/add-rpc-bottom-sheet.component';
 import { AddRpcDialogComponent } from '@app/overlays/dialogs/add-rpc/add-rpc-dialog.component';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-
-@Pipe({ name: 'available' })
-export class DatasourceAvailablePipe implements PipeTransform {
-    transform(items: Datasource[]): Datasource[] {
-        return items.filter((item) => item.isAccessible === true);
-    }
-}
+import { BLUIColors } from '@brightlayer-ui/colors';
 
 @UntilDestroy()
 @Component({
@@ -39,7 +33,21 @@ export class DatasourceAvailablePipe implements PipeTransform {
             <div [class.primary]="source.isSelected" [style.fontWeight]="source.isSelected ? 600 : 400">
                 {{ source.alias }}
             </div>
-            <div class="mono">{{ source.url }}</div>
+            <div class="mono datasource-url">{{ source.url }}</div>
+            <div style="margin-top: 2px" *ngIf="!source.isAddedByUser">
+                <list-item-tag
+                    *ngIf="source.isAccessible"
+                    style="display: flex"
+                    label="Online"
+                    variant="online"
+                ></list-item-tag>
+                <list-item-tag
+                    *ngIf="!source.isAccessible"
+                    style="display: flex"
+                    label="Offline"
+                    variant="offline"
+                ></list-item-tag>
+            </div>
         </ng-template>
 
         <div class="app-root app-settings-page" responsive>
@@ -94,27 +102,6 @@ export class DatasourceAvailablePipe implements PipeTransform {
                             </button>
                         </div>
                     </mat-card>
-                    <!--
-                    <mat-card style="margin-bottom: 32px; padding-bottom: 24px">
-                        <div class="mat-title">Proof-of-Work</div>
-                        <mat-divider></mat-divider>
-                        <div class="mat-overline" style="margin-top: 16px">Use Client-Side POW</div>
-                        <div class="mat-body-1" style="margin-bottom: 8px">
-                            Your local computer will perform the computation required when sending or receiving
-                            transactions.
-                        </div>
-                        <mat-checkbox
-                            [checked]="powService.getUseClientSidePow()"
-                            (change)="powService.setUseClientSidePow($event.checked)"
-                        >
-                            Enable local proof-of-work
-                        </mat-checkbox>
-                        <div *ngIf="!powService.isWebGLAvailable" style="margin-top: 8px">
-                            <strong>Warning:</strong> This may be very slow on your browser; it is advised to disable
-                            this feature & offload this work to a remote server.
-                        </div>
-                    </mat-card>
-                    -->
                     <mat-card appearance="outlined" style="margin-bottom: 32px">
                         <div class="mat-headline-6">Data Sources</div>
                         <mat-divider></mat-divider>
@@ -143,9 +130,10 @@ export class DatasourceAvailablePipe implements PipeTransform {
                             (change)="selectRpc($event)"
                         >
                             <mat-radio-button
-                                *ngFor="let source of datasourceService.availableRpcDataSources | available"
+                                *ngFor="let source of datasourceService.availableRpcDataSources"
                                 [value]="source"
                                 [aria-label]="source.alias"
+                                [disabled]="!source.isAccessible"
                             >
                                 <ng-template *ngTemplateOutlet="radioData; context: { source }"></ng-template>
                             </mat-radio-button>
@@ -180,9 +168,10 @@ export class DatasourceAvailablePipe implements PipeTransform {
                             (change)="selectSpyglassApi($event)"
                         >
                             <mat-radio-button
-                                *ngFor="let source of datasourceService.availableSpyglassApiSources | available"
+                                *ngFor="let source of datasourceService.availableSpyglassApiSources"
                                 [value]="source"
                                 [aria-label]="source.alias"
+                                [disabled]="!source.isAccessible"
                             >
                                 <ng-template *ngTemplateOutlet="radioData; context: { source }"></ng-template>
                             </mat-radio-button>
@@ -252,6 +241,7 @@ export class SettingsPageComponent implements OnInit {
     selectedCurrencyCode: string;
     minimumThreshold: number;
     isEnableAutoReceiveFeature: boolean;
+    colors = BLUIColors;
 
     constructor(
         public vp: ViewportService,

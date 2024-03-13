@@ -1,15 +1,30 @@
 # Change Log
 
+## v4.12.0 (March 12, 2024)
+
+### Added
+
+-  Added online/offline indicator for default Datasources on Settings page.
+
+### Changed
+
+-  Changed default logic to use Custom datasources if online.
+
+### Fixed
+
+-  Fixed expansion panel slow transition times.
+-  Fixed ledger-specific dashboard indexes being cleared after broadcasting transactions.
+
 ## v4.11.1 (February 14, 2024)
 
 ### Changed
 
--  Changed new wallet styles and secure secret verbiage. 
+-  Changed new wallet styles and secure secret verbiage.
 -  Changed mobile dashboard's table-view styles.
 
 ### Fixed
 
--  Fixed excessive warn logging of missing TheBananoStand API query params. 
+-  Fixed excessive warn logging of missing TheBananoStand API query params.
 -  Fixed warn color palettes not applying since `4.11.0`.
 -  Fixed copy-icon button vertical alignment.
 -  Fixed expansion panel indicator icon alignment.
