@@ -20,12 +20,12 @@
 
 ### Changed
 
--  Changed new wallet styles and secure secret verbiage. 
+-  Changed new wallet styles and secure secret verbiage.
 -  Changed mobile dashboard's table-view styles.
 
 ### Fixed
 
--  Fixed excessive warn logging of missing TheBananoStand API query params. 
+-  Fixed excessive warn logging of missing TheBananoStand API query params.
 -  Fixed warn color palettes not applying since `4.11.0`.
 -  Fixed copy-icon button vertical alignment.
 -  Fixed expansion panel indicator icon alignment.
