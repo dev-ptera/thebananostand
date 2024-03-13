@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.12.1 (March 13, 2024)
+
+### Fixed
+
+-  Fixed bug where users could open the Receive dialog when also auto-receiving. 
+
 ## v4.12.0 (March 12, 2024)
 
 ### Added
