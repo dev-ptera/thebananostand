@@ -298,7 +298,10 @@ export class ChangeRepComponent implements OnInit {
                 this.txHash = hash;
                 this.hasSuccess = true;
                 this.isChangingRepresentative = false;
-                TRANSACTION_COMPLETED_SUCCESS.next(hash);
+                TRANSACTION_COMPLETED_SUCCESS.next({
+                    txHash: hash,
+                    accountIndex: this.data.index,
+                });
             })
             .catch((err) => {
                 console.error(err);

@@ -124,7 +124,11 @@ export const SELECTED_RPC_DATASOURCE_CHANGE = new Subject<Datasource>();
 export const SELECTED_SPYGLASS_API_DATASOURCE_CHANGE = new Subject<Datasource>();
 
 /** A transaction has been broadcast onto the network successfully. */
-export const TRANSACTION_COMPLETED_SUCCESS = new Subject<string | undefined>();
+export const TRANSACTION_COMPLETED_SUCCESS = new Subject<{
+    txHash?: string;
+    accountIndex: number;
+    recipient?: string;
+}>();
 
 /** A wallet (either secret or ledger) has been unlocked. */
 export const UNLOCK_WALLET = new Subject<{ isLedger: boolean; password: string }>();
@@ -258,6 +262,9 @@ export class WalletEventsService {
             if (!this.store.isEnableAutoReceiveFeature && this.store.hasUnlockedSecret) {
                 return;
             }
+            if (this.store.isAutoReceivingTransactions) {
+                return;
+            }
             const blocks = this._appStateService.getAllReceivableBlocks();
             if (blocks.length === 0) {
                 return;
@@ -377,6 +384,7 @@ export class WalletEventsService {
                 accounts: sortAccounts(accounts),
                 totalBalance: this._accountService.calculateLoadedAccountsTotalBalance(accounts),
             });
+            AUTO_RECEIVE_ALL.next();
         });
 
         REMOVE_ACCOUNTS_BY_INDEX.subscribe((indexes: number[]) => {
@@ -457,10 +465,15 @@ export class WalletEventsService {
             this._dispatch({ isLoadingAccounts });
         });
 
-        TRANSACTION_COMPLETED_SUCCESS.subscribe(() => {
+        TRANSACTION_COMPLETED_SUCCESS.subscribe((data) => {
             if (this.store.hasUnlockedSecret) {
                 // Do not refresh for ledger devices; the signer is already in progress and subsequent calls will fail at this point.
-                REFRESH_DASHBOARD_ACCOUNTS.next();
+                REFRESH_SPECIFIC_ACCOUNT_BY_INDEX.next(data.accountIndex);
+                this.store.accounts.map((account) => {
+                    if (account.fullAddress === data.recipient) {
+                        REFRESH_SPECIFIC_ACCOUNT_BY_INDEX.next(account.index);
+                    }
+                });
             }
         });
 

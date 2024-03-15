@@ -292,7 +292,11 @@ export class ApiRequestComponent {
                     this.txHash = hash;
                     this.hasSuccess = true;
                     this.isLoading = false;
-                    TRANSACTION_COMPLETED_SUCCESS.next(hash);
+                    TRANSACTION_COMPLETED_SUCCESS.next({
+                        txHash: hash,
+                        recipient: this.actionAddress,
+                        accountIndex: selectedAccount.index,
+                    });
                 })
                 .catch((err) => {
                     console.error(err);
@@ -306,7 +310,10 @@ export class ApiRequestComponent {
                     this.txHash = hash;
                     this.hasSuccess = true;
                     this.isLoading = false;
-                    TRANSACTION_COMPLETED_SUCCESS.next(hash);
+                    TRANSACTION_COMPLETED_SUCCESS.next({
+                        txHash: hash,
+                        accountIndex: selectedAccount.index,
+                    });
                 })
                 .catch((err) => {
                     console.error(err);

@@ -391,7 +391,11 @@ export class SendComponent implements OnInit, OnDestroy {
                 this.txHash = hash;
                 this.hasSuccess = true;
                 this.isProcessingTx = false;
-                TRANSACTION_COMPLETED_SUCCESS.next(hash);
+                TRANSACTION_COMPLETED_SUCCESS.next({
+                    txHash: hash,
+                    accountIndex: this.data.index,
+                    recipient: this.recipient,
+                });
             })
             .catch(() => {
                 this.hasSuccess = false;
