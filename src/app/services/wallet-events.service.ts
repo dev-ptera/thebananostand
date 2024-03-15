@@ -259,7 +259,10 @@ export class WalletEventsService {
         });
 
         AUTO_RECEIVE_ALL.subscribe(() => {
-            if (!this.store.isEnableAutoReceiveFeature && this.store.hasUnlockedSecret) {
+            if (!this.store.isEnableAutoReceiveFeature) {
+                return;
+            }
+            if (!this.store.hasUnlockedSecret) {
                 return;
             }
             if (this.store.isAutoReceivingTransactions) {

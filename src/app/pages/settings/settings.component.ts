@@ -273,16 +273,18 @@ import { AddSpyglassDialogComponent } from '@app/overlays/dialogs/add-spyglass/a
                                 type="number"
                             />
                         </mat-form-field>
-                        <mat-divider></mat-divider>
-                        <div class="mat-overline" style="margin-top: 16px">Auto-Receive Incoming Transactions</div>
-                        <div class="mat-body-2" style="margin-bottom: 24px">
-                            Incoming transactions will be automatically received when the wallet is unlocked.
-                        </div>
-                        <mat-slide-toggle
-                            (change)="toggleAutoReceiveIncomingTransactions($event)"
-                            [checked]="isEnableAutoReceiveFeature"
-                            >Enable</mat-slide-toggle
-                        >
+                        <ng-container *ngIf="showAutoReceiveToggle()">
+                            <mat-divider></mat-divider>
+                            <div class="mat-overline" style="margin-top: 16px">Auto-Receive Incoming Transactions</div>
+                            <div class="mat-body-2" style="margin-bottom: 24px">
+                                Incoming transactions will be automatically received when the wallet is unlocked.
+                            </div>
+                            <mat-slide-toggle
+                                (change)="toggleAutoReceiveIncomingTransactions($event)"
+                                [checked]="isEnableAutoReceiveFeature"
+                                >Enable</mat-slide-toggle
+                            >
+                        </ng-container>
                     </mat-card>
                 </div>
             </div>
@@ -326,6 +328,9 @@ export class SettingsPageComponent implements OnInit {
         this.minimumThreshold = this._appStateService.store.getValue().minimumBananoThreshold;
     }
 
+    showAutoReceiveToggle(): boolean {
+        return this._appStateService.store.getValue().hasUnlockedSecret;
+    }
     back(): void {
         this._location.back();
     }
