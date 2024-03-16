@@ -6,7 +6,6 @@ import { UtilService } from '@app/services/util.service';
 import { SpyglassService } from '@app/services/spyglass.service';
 import { AccountService } from '@app/services/account.service';
 import { AccountOverview } from '@app/types/AccountOverview';
-import { ThemeService } from '@app/services/theme.service';
 import { RpcService } from '@app/services/rpc.service';
 import { ViewportService } from '@app/services/viewport.service';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
@@ -72,7 +71,6 @@ export class AccountComponent implements OnInit, OnDestroy {
         private readonly _sheet: MatBottomSheet,
         private readonly _ref: ChangeDetectorRef,
         private readonly _rpcService: RpcService,
-        private readonly _themeService: ThemeService,
         private readonly _accountService: AccountService,
         private readonly _spyglassService: SpyglassService,
         private readonly _appStateService: AppStateService

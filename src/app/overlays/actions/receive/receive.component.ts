@@ -204,7 +204,9 @@ export class ReceiveComponent implements OnInit {
                 return;
             }
         }
-        TRANSACTION_COMPLETED_SUCCESS.next(undefined);
+        TRANSACTION_COMPLETED_SUCCESS.next({
+            accountIndex: this.data.blocks[0].accountIndex,
+        });
         if (this.data.refreshDashboard) {
             REFRESH_DASHBOARD_ACCOUNTS.next();
         }

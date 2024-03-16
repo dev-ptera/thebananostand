@@ -1,5 +1,12 @@
 # Change Log
 
+## v4.14.0 (March 16, 2024)
+
+### Changed
+
+-  Changed refresh logic post-transaction; only refresh the account which performed a receive, send, or change transaction rather than all loaded accounts.  If the active account sent a transaction to another account which is loaded on the dashboard, the recipient account is also updated.
+-  Disabled auto-receive for ledger users; hide from settings page and do not show overlay.
+
 ## v4.13.0 (March 13, 2024)
 
 ### Added
