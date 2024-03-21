@@ -8,6 +8,7 @@ import { AccountOverview } from '@app/types/AccountOverview';
 import { TransactionBlock } from '@app/types/TransactionBlock';
 import { ReceivableTx } from '@app/types/ReceivableTx';
 import { UtilService } from '@app/services/util.service';
+import BigNumber from 'bignumber.js';
 
 type BananoifiedWindow = {
     bananocoinBananojs: any;
@@ -180,9 +181,9 @@ export class TransactionService {
         const valueRaw = (BigInt(incoming.amountRaw) + BigInt(accountBalanceRaw)).toString();
         const isOpeningAccount = !accountInfo.representative;
 
-        const beforeTxBan = this._util.convertRawToBan(accountBalanceRaw);
-        const afterTxBan = this._util.convertRawToBan(valueRaw);
-        if (afterTxBan < beforeTxBan) {
+        const beforeTxBan = new BigNumber(this._util.convertRawToBan(accountBalanceRaw));
+        const afterTxBan = new BigNumber(this._util.convertRawToBan(valueRaw));
+        if (afterTxBan.isLessThan(beforeTxBan)) {
             console.error('Receivable block lowers account balance, rejecting block.', beforeTxBan, afterTxBan);
             return undefined;
         }
