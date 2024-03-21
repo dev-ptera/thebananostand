@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.14.2 (March 20, 2024)
+
+### Fixed
+
+-  Use BigNumber.js to enforce checks from `v4.14.1`.
+
 ## v4.14.1 (March 20, 2024)
 
 ### Fixed

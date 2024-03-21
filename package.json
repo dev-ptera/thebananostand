@@ -1,6 +1,6 @@
 {
   "name": "thebananostand",
-  "version": "4.14.1",
+  "version": "4.14.2",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --open --host 0.0.0.0",
@@ -42,6 +42,7 @@
     "@ledgerhq/hw-transport-webusb": "^6.27.17",
     "@ngneat/until-destroy": "^9.2.3",
     "angular-user-idle": "^4.0.0",
+    "bignumber.js": "^9.1.2",
     "buffer": "^6.0.3",
     "copy-to-clipboard": "^3.3.3",
     "file-saver": "^2.0.5",
