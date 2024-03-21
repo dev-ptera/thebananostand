@@ -7,6 +7,7 @@ import { PowService } from '@app/services/pow.service';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { TransactionBlock } from '@app/types/TransactionBlock';
 import { ReceivableTx } from '@app/types/ReceivableTx';
+import { UtilService } from '@app/services/util.service';
 
 type BananoifiedWindow = {
     bananocoinBananojs: any;
@@ -57,7 +58,8 @@ export class TransactionService {
         private readonly _signerService: SignerService,
         private readonly _datasource: DatasourceService,
         private readonly _appStateService: AppStateService,
-        private readonly _rpcService: RpcService
+        private readonly _rpcService: RpcService,
+        private readonly _util: UtilService
     ) {}
 
     private async _configApi(bananodeApi): Promise<void> {
@@ -177,6 +179,13 @@ export class TransactionService {
         const accountBalanceRaw = accountInfo.balanceRaw;
         const valueRaw = (BigInt(incoming.amountRaw) + BigInt(accountBalanceRaw)).toString();
         const isOpeningAccount = !accountInfo.representative;
+
+        const beforeTxBan = this._util.convertRawToBan(accountBalanceRaw);
+        const afterTxBan = this._util.convertRawToBan(valueRaw);
+        if (afterTxBan < beforeTxBan) {
+            console.error('Receivable block lowers account balance, rejecting block.', beforeTxBan, afterTxBan);
+            return undefined;
+        }
 
         // TODO - Get this from the rep list, top rep please.
         const representative = isOpeningAccount
