@@ -8,7 +8,7 @@ import { AccountOverview } from '@app/types/AccountOverview';
 import { TransactionBlock } from '@app/types/TransactionBlock';
 import { ReceivableTx } from '@app/types/ReceivableTx';
 import { UtilService } from '@app/services/util.service';
-import BigNumber from "bignumber.js";
+import BigNumber from 'bignumber.js';
 
 type BananoifiedWindow = {
     bananocoinBananojs: any;
