@@ -40,6 +40,7 @@ export class RpcService {
     }
 
     /** Returns array of receivable transactions, sorted by balance descending. */
+    // TODO: Use this instead of Spyglass API receivable call.
     async getReceivable(address: string): Promise<ReceivableHash[]> {
         const MAX_PENDING = 100;
         const threshold = this._util.convertBanToRaw(this._appStateService.store.getValue().minimumBananoThreshold);

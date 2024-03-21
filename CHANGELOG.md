@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.14.1 (March 20, 2024)
+
+### Fixed
+
+-  Adds a check when receiving transactions, enforce that balance increases.  
+
 ## v4.14.0 (March 16, 2024)
 
 ### Changed
