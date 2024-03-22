@@ -4,6 +4,7 @@ import { LocalStorageWallet } from '@app/services/wallet-storage.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { PriceData } from '@app/types/PriceData';
 import { ReceivableTx } from '@app/types/ReceivableTx';
+import { RepScore } from '@app/overlays/actions/change-rep/change-rep.component';
 
 export type AppStore = {
     /** Loaded ledger accounts, their rep, & respective balances.  */
@@ -59,6 +60,8 @@ export class AppStateService {
 
     /** Set of online representatives. */
     onlineRepresentatives: Set<string> = new Set();
+
+    repScores: RepScore[] = [];
 
     store: BehaviorSubject<AppStore> = new BehaviorSubject<AppStore>({
         accounts: [],

@@ -142,7 +142,10 @@ export const UPDATE_ADDRESS_BOOK = new Subject<AddressBookEntry>();
 /** User has opted to auto-receive transactions (secret-only) when wallet is unlocked. */
 export const USER_TOGGLE_AUTO_RECEIVE = new Subject<boolean>();
 
-/** User has hit the cancel option from within the auto-receive bottomsheet. */
+/** User received all incoming transactions via auto-receive overlay. */
+export const USER_COMPLETE_AUTO_RECEIVE = new Subject<void>();
+
+/** User has hit the cancel option from within the auto-receive overlay. */
 export const USER_CANCEL_AUTO_RECEIVE = new Subject<void>();
 
 @Injectable({
@@ -151,12 +154,15 @@ export const USER_CANCEL_AUTO_RECEIVE = new Subject<void>();
 export class WalletEventsService {
     store: AppStore;
 
-    private _loadOnlineRepsAndKnownAccounts(): void {
+    private _loadNetworkMetadata(): void {
         void this._accountService.fetchOnlineRepresentatives().then((onlineRepresentatives) => {
             this._appStateService.onlineRepresentatives = onlineRepresentatives;
         });
         void this._accountService.fetchKnownAccounts().then((knownAccounts) => {
             this._appStateService.knownAccounts = knownAccounts;
+        });
+        void this._spyglassService.getRepresentativeScores().then((repScores) => {
+            this._appStateService.repScores = repScores;
         });
     }
 
@@ -371,7 +377,7 @@ export class WalletEventsService {
             if (indexes.length === 0) {
                 indexes.push(0);
             }
-            this._loadOnlineRepsAndKnownAccounts();
+            this._loadNetworkMetadata();
             ADD_SPECIFIC_ACCOUNTS_BY_INDEX.next(indexes);
             SELECT_LOCALIZATION_CURRENCY.next(this.store.localCurrencyCode);
         });
@@ -511,6 +517,16 @@ export class WalletEventsService {
             if (isEnabled) {
                 AUTO_RECEIVE_ALL.next();
             }
+        });
+
+        USER_COMPLETE_AUTO_RECEIVE.subscribe(() => {
+            this._dispatch({
+                isAutoReceivingTransactions: false,
+            });
+            setTimeout(() => {
+                this._snackbar.dismiss();
+            }, SNACKBAR_DURATION);
+            REFRESH_DASHBOARD_ACCOUNTS.next();
         });
 
         USER_CANCEL_AUTO_RECEIVE.subscribe(() => {

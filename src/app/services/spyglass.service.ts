@@ -40,10 +40,10 @@ export class SpyglassService {
         return await lastValueFrom(req$);
     }
 
-    async getReceivableTransactions(address: string, size: number): Promise<ReceivableTx[]> {
+    async getReceivableTransactions(address: string, size: number, threshold: number): Promise<ReceivableTx[]> {
         const source = await this._datasource.getSpyglassApiSource();
         const url = `${source.url}/v1/account/receivable-transactions`;
-        const req$ = this._http.post<ReceivableTx[]>(url, { address, size }).pipe(take(1));
+        const req$ = this._http.post<ReceivableTx[]>(url, { address, size, threshold }).pipe(take(1));
         return await lastValueFrom(req$);
     }
 

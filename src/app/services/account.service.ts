@@ -72,7 +72,11 @@ export class AccountService {
         }
         try {
             const account = await this._rpcService.getAccountInfoFromIndex(index);
-            const pending = await this._spyglassApi.getReceivableTransactions(account.fullAddress, MAX_PENDING);
+            const pending = await this._spyglassApi.getReceivableTransactions(
+                account.fullAddress,
+                MAX_PENDING,
+                this.store.minimumBananoThreshold
+            );
             account.pending = pending;
             return account;
         } catch (err) {

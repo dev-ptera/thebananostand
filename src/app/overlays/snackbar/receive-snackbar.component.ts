@@ -4,10 +4,9 @@ import { scan, takeWhile, tap, timer } from 'rxjs';
 import { AppStateService } from '@app/services/app-state.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
-    REFRESH_DASHBOARD_ACCOUNTS,
     SNACKBAR_CLOSE_ACTION_TEXT,
-    SNACKBAR_DURATION,
     USER_CANCEL_AUTO_RECEIVE,
+    USER_COMPLETE_AUTO_RECEIVE,
 } from '@app/services/wallet-events.service';
 
 @Component({
@@ -107,10 +106,7 @@ export class ReceiveSnackbarComponent {
                     })
                     .finally(() => {
                         this.isCompleted = true;
-                        REFRESH_DASHBOARD_ACCOUNTS.next();
-                        setTimeout(() => {
-                            this._snackbar.dismiss();
-                        }, SNACKBAR_DURATION);
+                        USER_COMPLETE_AUTO_RECEIVE.next();
                     });
             }
         }),
