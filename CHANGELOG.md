@@ -1,6 +1,16 @@
 # Change Log
 
-## v4.14.2 (March 20, 2024)
+## v4.15.0 (March 21, 2024)
+
+### Added
+
+-  When opening new account, uses the highest scored representative as default rather than Batman representative.
+
+### Fixed
+
+-  Fixed minimum incoming BAN threshold not applying value from Settings page.
+
+## v4.14.2 (March 21, 2024)
 
 ### Fixed
 

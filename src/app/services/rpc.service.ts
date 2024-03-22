@@ -4,9 +4,7 @@ import { AccountInfoResponse } from '@dev-ptera/nano-node-rpc';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { DatasourceService } from '@app/services/datasource.service';
 import { SignerService } from '@app/services/signer.service';
-import { ReceivableHash } from '@app/types/ReceivableHash';
 import { TransactionBlock } from '@app/types/TransactionBlock';
-import { AppStateService } from '@app/services/app-state.service';
 
 const LOG_ERR = (err: any): any => {
     console.error(`ERROR: Issue fetching RPC data.  ${err}`);
@@ -27,7 +25,6 @@ type UnopenedAccountResponse = {
 export class RpcService {
     constructor(
         private readonly _util: UtilService,
-        private readonly _appStateService: AppStateService,
         private readonly _datasourceService: DatasourceService,
         private readonly _signerService: SignerService
     ) {}
@@ -37,33 +34,6 @@ export class RpcService {
         const client = await this._datasourceService.getRpcClient();
         const accountInfo = await client.account_info(address).catch((err) => Promise.reject(LOG_ERR(err)));
         return Number(accountInfo.confirmation_height);
-    }
-
-    /** Returns array of receivable transactions, sorted by balance descending. */
-    // TODO: Use this instead of Spyglass API receivable call.
-    async getReceivable(address: string): Promise<ReceivableHash[]> {
-        const MAX_PENDING = 100;
-        const threshold = this._util.convertBanToRaw(this._appStateService.store.getValue().minimumBananoThreshold);
-        const client = await this._datasourceService.getRpcClient();
-        const pendingRpcData = await client
-            .accounts_pending([address], MAX_PENDING, { sorting: true, threshold })
-            .catch((err) => {
-                LOG_ERR(err);
-                return Promise.resolve({
-                    blocks: '',
-                });
-            });
-        const pendingBlocks = pendingRpcData.blocks[address];
-        if (!pendingBlocks) {
-            return [];
-        }
-        const receivables = [];
-        const hashes = [...Object.keys(pendingBlocks)];
-        for (const hash of hashes) {
-            const receivableRaw = pendingBlocks[hash];
-            receivables.push({ hash, receivableRaw });
-        }
-        return receivables;
     }
 
     /** Returns a modified account info object, given an index. */

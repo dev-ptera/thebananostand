@@ -79,7 +79,7 @@ export type ReceiveOverlayData = {
                         <strong>{{ maxSteps - activeStep }}</strong> receivable transaction(s) remaining.
                     </div>
                     <mat-progress-bar
-                        *ngIf="maxSteps !== 1"
+                        *ngIf="maxSteps > 1"
                         mode="determinate"
                         [value]="bufferValue"
                         style="position: absolute; bottom: -1px; left: 0px;"

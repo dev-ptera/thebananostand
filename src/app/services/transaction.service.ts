@@ -188,9 +188,9 @@ export class TransactionService {
             return undefined;
         }
 
-        // TODO - Get this from the rep list, top rep please.
         const representative = isOpeningAccount
-            ? 'ban_3batmanuenphd7osrez9c45b3uqw9d9u81ne8xa6m43e1py56y9p48ap69zg'
+            ? this._appStateService.repScores[0]?.address ||
+              'ban_3batmanuenphd7osrez9c45b3uqw9d9u81ne8xa6m43e1py56y9p48ap69zg'
             : accountInfo.representative;
         const previous = isOpeningAccount
             ? '0000000000000000000000000000000000000000000000000000000000000000'
