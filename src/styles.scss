@@ -25,6 +25,80 @@ html,
 body {
     margin: 0;
     padding: 0;
+
+}
+
+.app-root-component {
+    &.isPranked {
+        .mat-mdc-card {
+            border: solid 8px pink!important;
+        }
+    }
+    .prank-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh; width: 100vw;
+        z-index:  - 1;
+        background-image: url('./assets/images/dancing-banana-banana.gif');
+    }
+    .prank-panel {
+        z-index: -1;
+        position: fixed;
+        background-size: auto;
+        padding:0;
+        margin:0;
+        border: solid yellow 10px;
+        &.panel-1 {
+            width: 50vw;
+            height: 50vh;
+            top: 0;
+            left: 0;
+            background-image: url('./assets/images/weird-banana.gif');
+        }
+        &.panel-2 {
+            width: 50vw;
+            height: 25vh;
+            top: 0;
+            left: 50vw;
+            background-image: url('./assets/images/bananas-in-pajamas-b1.gif');
+        }
+        &.panel-3 {
+            width: 40vw;
+            height: 33vh;
+            top: 25vh;
+            left: 50vw;
+            background-image: url('./assets/images/meteor-banana.gif');
+        }
+        &.panel-4 {
+            width: 33vw;
+            height: 50vh;
+            top: 50vh;
+            left: 0;
+            background-image: url('./assets/images/atg-capa.gif');
+        }
+        &.panel-5 {
+            width: 33vw;
+            height: 33vh;
+            top: 70vh;
+            left: 70vw;
+            background-image: url('./assets/images/donkey-kong-banana.gif');
+        }
+        &.panel-6 {
+            width: 40vw;
+            height: 33vh;
+            top: 70vh;
+            left: 30vw;
+            background-image: url('./assets/images/party-celebrate.gif');
+        }
+        &.panel-7 {
+            width: 33vw;
+            height: 50vh;
+            top: 25vh;
+            left: 85vw;
+            background-image: url('./assets/images/bday-birthday.gif');
+        }
+    }
 }
 
 html,
