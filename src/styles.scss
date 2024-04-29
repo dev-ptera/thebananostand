@@ -42,61 +42,91 @@ body {
         z-index:  - 1;
         background-image: url('./assets/images/dancing-banana-banana.gif');
     }
+    $prank-padding: 0px;
     .prank-panel {
-        z-index: -1;
+        z-index: -100;
         position: fixed;
-        background-size: auto;
+        background-size: contain;
         padding:0;
         margin:0;
         border: solid yellow 10px;
         &.panel-1 {
-            width: 50vw;
-            height: 50vh;
+            width: 40vw;
+            height: 40vh;
             top: 0;
             left: 0;
-            background-image: url('./assets/images/weird-banana.gif');
+            background-image: url('./assets/images/weird-banana.gif'); // DOLE Shoot Bananas from nose
         }
         &.panel-2 {
             width: 50vw;
-            height: 25vh;
-            top: 0;
-            left: 50vw;
-            background-image: url('./assets/images/bananas-in-pajamas-b1.gif');
+            height: 30vh;
+            top: -5vh;
+            left: calc(35vw + $prank-padding);
+            background-image: url('./assets/images/bananas-in-pajamas-b1.gif'); // Bananas in Pajamas, Babyyyy
         }
         &.panel-3 {
-            width: 40vw;
-            height: 33vh;
-            top: 25vh;
-            left: 50vw;
-            background-image: url('./assets/images/meteor-banana.gif');
+            width: 50vw;
+            height: 35vh;
+            top: 70vh;
+            left: -10vw;
+            background-image: url('./assets/images/meteor-banana.gif'); // Holy crap
         }
         &.panel-4 {
             width: 33vw;
             height: 50vh;
-            top: 50vh;
+            top: calc(30vh + $prank-padding);
             left: 0;
-            background-image: url('./assets/images/atg-capa.gif');
+            z-index: -9;
+            background-image: url('./assets/images/atg-capa.gif'); // SPARTA
         }
         &.panel-5 {
             width: 33vw;
             height: 33vh;
-            top: 70vh;
+            top: 40vh;
             left: 70vw;
-            background-image: url('./assets/images/donkey-kong-banana.gif');
+            background-image: url('./assets/images/donkey-kong-banana.gif'); // DK
         }
         &.panel-6 {
-            width: 40vw;
-            height: 33vh;
-            top: 70vh;
-            left: 30vw;
-            background-image: url('./assets/images/party-celebrate.gif');
+            width: 60vw;
+            height: 20vh;
+            top: 20vh;
+            left: 25vw;
+            background-image: url('./assets/images/party-celebrate.gif'); // PARTY TIME
         }
         &.panel-7 {
             width: 50vw;
             height: 45vh;
-            top: 25vh;
+            top: 0vh;
             left: 70vw;
-            background-image: url('./assets/images/its-my-birthday-happy-birthday-to-me.gif');
+            background-image: url('./assets/images/its-my-birthday-happy-birthday-to-me.gif'); // It is my Birthday.
+        }
+        &.panel-8 {
+            width: 30vw;
+            height: 40vh;
+            top: 65vh;
+            left: 70vw;
+            background-image: url('./assets/images/banana-intensifies.gif'); // It is my Birthday.
+        }
+        &.panel-9 {
+            width: 30vw;
+            height: 40vh;
+            top: 40vh;
+            left: 30vw;
+            background-image: url('./assets/images/monkey-phone.gif'); // It is my Birthday.
+        }
+        &.panel-10 {
+            width: 30vw;
+            height: 40vh;
+            top: 30vh;
+            left: 45vw;
+            background-image: url('./assets/images/banana-pajama-baby.gif'); // B stairwell
+        }
+        &.panel-11 {
+            width: 30vw;
+            height: 40vh;
+            top: 70vh;
+            left: 40vw;
+            background-image: url('./assets/images/go-banana-simpson.gif'); // Go BANANA simpson
         }
     }
 }

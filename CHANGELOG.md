@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.16.0 (April 28, 2024)
+
+### Changed
+
+-  Added logic to add Birthday gif theme every April 1st - April 2nd.
+
 ## v4.15.0 (March 21, 2024)
 
 ### Added
