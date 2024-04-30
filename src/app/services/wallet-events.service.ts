@@ -126,7 +126,7 @@ export const SELECTED_SPYGLASS_API_DATASOURCE_CHANGE = new Subject<Datasource>()
 /** A transaction has been broadcast onto the network successfully. */
 export const TRANSACTION_COMPLETED_SUCCESS = new Subject<{
     txHash?: string;
-    accountIndex: number;
+    accountIndex?: number;
     recipient?: string;
 }>();
 
@@ -475,7 +475,7 @@ export class WalletEventsService {
         });
 
         TRANSACTION_COMPLETED_SUCCESS.subscribe((data) => {
-            if (this.store.hasUnlockedSecret) {
+            if (this.store.hasUnlockedSecret && data.accountIndex !== undefined) {
                 // Do not refresh for ledger devices; the signer is already in progress and subsequent calls will fail at this point.
                 REFRESH_SPECIFIC_ACCOUNT_BY_INDEX.next(data.accountIndex);
                 this.store.accounts.map((account) => {
@@ -527,6 +527,7 @@ export class WalletEventsService {
                 this._snackbar.dismiss();
             }, SNACKBAR_DURATION);
             REFRESH_DASHBOARD_ACCOUNTS.next();
+            TRANSACTION_COMPLETED_SUCCESS.next({});
         });
 
         USER_CANCEL_AUTO_RECEIVE.subscribe(() => {

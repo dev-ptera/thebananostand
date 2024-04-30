@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.16.1 (April 28, 2024)
+
+### Fixed
+
+-  Fixed bug where active account would not update after auto-receiving.
+
 ## v4.16.0 (April 28, 2024)
 
 ### Changed
