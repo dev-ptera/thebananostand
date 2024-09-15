@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
+import { Location, KeyValuePipe } from '@angular/common';
 import { Datasource, DatasourceService } from '@app/services/datasource.service';
 import { ChangePasswordBottomSheetComponent } from '@app/overlays/bottom-sheet/change-password/change-password-bottom-sheet.component';
 import { ChangePasswordDialogComponent } from '@app/overlays/dialogs/change-password/change-password-dialog.component';
@@ -12,6 +12,7 @@ import {
     REMOVE_ALL_WALLET_DATA,
     REMOVE_CUSTOM_RPC_NODE_BY_INDEX,
     REMOVE_CUSTOM_SPYGLASS_API_BY_INDEX,
+    REMOVE_TLD_BY_NAME,
     SELECT_LOCALIZATION_CURRENCY,
     SELECTED_RPC_DATASOURCE_CHANGE,
     SELECTED_SPYGLASS_API_DATASOURCE_CHANGE,
@@ -28,6 +29,8 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { BLUIColors } from '@brightlayer-ui/colors';
 import { AddSpyglassBottomSheetComponent } from '@app/overlays/bottom-sheet/add-spyglass/add-spyglass-bottom-sheet.component';
 import { AddSpyglassDialogComponent } from '@app/overlays/dialogs/add-spyglass/add-spyglass-dialog.component';
+import { AddTldBottomSheetComponent } from '@app/overlays/bottom-sheet/add-tld/add-tld-bottom-sheet.component';
+import { AddTldDialogComponent } from '@app/overlays/dialogs/add-tld/add-tld-dialog.component';
 
 @UntilDestroy()
 @Component({
@@ -231,6 +234,43 @@ import { AddSpyglassDialogComponent } from '@app/overlays/dialogs/add-spyglass/a
                                 </button>
                             </div>
                         </mat-radio-group>
+                        <mat-divider></mat-divider>
+                        <div class="account-security-option" responsive style="margin-bottom: 0">
+                            <div style="padding-top: 16px; flex: 1">
+                                <div class="mat-overline">Banano TLDs</div>
+                                <div class="mat-body-2">
+                                    Which Banano domain TLDs to recognize and resolve
+                                </div>
+                            </div>
+                            <button
+                                mat-stroked-button
+                                blui-inline
+                                color="primary"
+                                (click)="openAddTldOverlay()"
+                                data-cy="add-new-tld-button"
+                            >
+                                <mat-icon>control_point</mat-icon>
+                                <span>Add New</span>
+                            </button>
+                        </div>
+                        <mat-list>
+                            <div
+                                *ngFor="let tld of tlds | keyvalue"
+                                style="display: flex; align-items: center; justify-content: space-between"
+                            >
+                                <mat-list-item>
+                                  {{ tld.key }}: {{ tld.value }}
+                                </mat-list-item>
+                                <button
+                                    mat-icon-button
+                                    [matTooltip]="'Remove ' + tld.key"
+                                    color="warn"
+                                    (click)="removeTld(tld.key)"
+                                >
+                                    <mat-icon color="warn">clear</mat-icon>
+                                </button>
+                            </div>
+                        </mat-list>
                     </mat-card>
 
                     <mat-card appearance="outlined" style="margin-bottom: 32px">
@@ -328,6 +368,10 @@ export class SettingsPageComponent implements OnInit {
         this.minimumThreshold = this._appStateService.store.getValue().minimumBananoThreshold;
     }
 
+    get tlds(): Record<string, string> {
+        return this._appStateService.store.getValue().tlds;
+    }
+
     showAutoReceiveToggle(): boolean {
         return this._appStateService.store.getValue().hasUnlockedSecret;
     }
@@ -359,12 +403,24 @@ export class SettingsPageComponent implements OnInit {
         }
     }
 
+    openAddTldOverlay(): void {
+        if (this.vp.sm) {
+            this._sheet.open(AddTldBottomSheetComponent);
+        } else {
+            this._dialog.open(AddTldDialogComponent);
+        }
+    }
+
     removeCustomRpcNode(index: number): void {
         REMOVE_CUSTOM_RPC_NODE_BY_INDEX.next(index);
     }
 
     removeSpyglassApiSource(index: number): void {
         REMOVE_CUSTOM_SPYGLASS_API_BY_INDEX.next(index);
+    }
+
+    removeTld(name: string): void {
+        REMOVE_TLD_BY_NAME.next(name);
     }
 
     toggleAutoReceiveIncomingTransactions(e: MatSlideToggleChange): void {
