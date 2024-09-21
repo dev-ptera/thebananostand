@@ -53,7 +53,7 @@ export class WalletStorageService {
             }
 
             if (walletData.tlds !== undefined) {
-                window.localStorage.setItem(TLDS, walletData.tlds.toString());
+                window.localStorage.setItem(TLDS, JSON.stringify(walletData.tlds));
             }
 
             if (walletData.minimumBananoThreshold !== undefined) {
@@ -252,17 +252,10 @@ export class WalletStorageService {
 
     readTlds(): Record<string, string> {
         const json = window.localStorage.getItem(TLDS);
-        const tldEntries = json ? JSON.parse(json) : [
-            {
-                name: "mictest",
-                account: "ban_1dzpfrgi8t4byzmdeidh57p14h5jwbursf1t3ztbmeqnqqdcbpgp9x8j3cw6",
-            },
-        ];
-        const obj: Record<string, string> = {};
-        tldEntries.forEach((entry: TldEntry) => {
-            obj[entry.name] = entry.account;
-        });
-        return obj;
+        const tldEntries = json ? JSON.parse(json) : {
+            mictest: "ban_1dzpfrgi8t4byzmdeidh57p14h5jwbursf1t3ztbmeqnqqdcbpgp9x8j3cw6",
+        };
+        return tldEntries;
     }
 
     /** Reads from local storage, defaults to USD. */
