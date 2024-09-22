@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { AddressBookEntry } from '@app/types/AddressBookEntry';
-import { TldEntry } from '@app/types/TldEntry';
 import { ViewportService } from '@app/services/viewport.service';
 
 export type LocalStorageWallet = {
@@ -252,9 +251,11 @@ export class WalletStorageService {
 
     readTlds(): Record<string, string> {
         const json = window.localStorage.getItem(TLDS);
-        const tldEntries = json ? JSON.parse(json) : {
-            mictest: "ban_1dzpfrgi8t4byzmdeidh57p14h5jwbursf1t3ztbmeqnqqdcbpgp9x8j3cw6",
-        };
+        const tldEntries = json
+            ? JSON.parse(json)
+            : {
+                  mictest: 'ban_1dzpfrgi8t4byzmdeidh57p14h5jwbursf1t3ztbmeqnqqdcbpgp9x8j3cw6',
+              };
         return tldEntries;
     }
 

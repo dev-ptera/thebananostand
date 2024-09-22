@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Location, KeyValuePipe } from '@angular/common';
+import { Location } from '@angular/common';
 import { Datasource, DatasourceService } from '@app/services/datasource.service';
 import { ChangePasswordBottomSheetComponent } from '@app/overlays/bottom-sheet/change-password/change-password-bottom-sheet.component';
 import { ChangePasswordDialogComponent } from '@app/overlays/dialogs/change-password/change-password-dialog.component';
@@ -238,9 +238,7 @@ import { AddTldDialogComponent } from '@app/overlays/dialogs/add-tld/add-tld-dia
                         <div class="account-security-option" responsive style="margin-bottom: 0">
                             <div style="padding-top: 16px; flex: 1">
                                 <div class="mat-overline">Banano TLDs</div>
-                                <div class="mat-body-2">
-                                    Which Banano domain TLDs to recognize and resolve
-                                </div>
+                                <div class="mat-body-2">Which Banano domain TLDs to recognize and resolve</div>
                             </div>
                             <button
                                 mat-stroked-button
@@ -258,9 +256,7 @@ import { AddTldDialogComponent } from '@app/overlays/dialogs/add-tld/add-tld-dia
                                 *ngFor="let tld of tlds | keyvalue"
                                 style="display: flex; align-items: center; justify-content: space-between"
                             >
-                                <mat-list-item>
-                                  {{ tld.key }}: {{ tld.value }}
-                                </mat-list-item>
+                                <mat-list-item> {{ tld.key }}: {{ tld.value }} </mat-list-item>
                                 <button
                                     mat-icon-button
                                     [matTooltip]="'Remove ' + tld.key"

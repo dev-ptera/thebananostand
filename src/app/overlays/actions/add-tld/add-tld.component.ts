@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
 import { ADD_TLD } from '@app/services/wallet-events.service';
 import { UtilService } from '@app/services/util.service';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
 @UntilDestroy()
 @Component({
@@ -16,7 +15,9 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
                 <div style="display: flex; align-items: center">
                     <mat-icon class="secondary-text" style="overflow: visible">info</mat-icon>
                     <span style="margin-left: 16px" class="mat-body-1"
-                        >Be wary of what name you give the TLD! If the TLD name is widely used by the community, make sure the Banano address for it is the widely agreed upon address. Otherwise, sends to that TLD might go to the wrong Banano address.</span
+                        >Be wary of what name you give the TLD! If the TLD name is widely used by the community, make
+                        sure the Banano address for it is the widely agreed upon address. Otherwise, sends to that TLD
+                        might go to the wrong Banano address.</span
                     >
                 </div>
                 <form style="margin-top: 32px">
@@ -33,12 +34,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
                     <mat-form-field style="width: 100%" appearance="fill">
                         <mat-label>TLD Banano Address</mat-label>
-                        <input
-                            matInput
-                            type = "text"
-                            [formControl]="tldAccountFormControl"
-                            data-cy="tld-address-input"
-                        />
+                        <input matInput type="text" [formControl]="tldAccountFormControl" data-cy="tld-address-input" />
                     </mat-form-field>
                 </form>
             </div>
@@ -64,12 +60,14 @@ export class AddTldOverlayComponent {
 
     @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
-    constructor(
-        public util: UtilService,
-    ) {}
+    constructor(public util: UtilService) {}
 
     isDisabled(): boolean {
-        return !this.tldNameFormControl.value || !this.util.isValidAddress(this.tldAccountFormControl.value) || this.tldNameFormControl.value.includes(".");
+        return (
+            !this.tldNameFormControl.value ||
+            !this.util.isValidAddress(this.tldAccountFormControl.value) ||
+            this.tldNameFormControl.value.includes('.')
+        );
     }
 
     addTld(): void {

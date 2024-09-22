@@ -6,9 +6,8 @@ import { TransactionService } from '@app/services/transaction.service';
 import { TRANSACTION_COMPLETED_SUCCESS } from '@app/services/wallet-events.service';
 import { CurrencyConversionService } from '@app/services/currency-conversion.service';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
-import { ViewportService } from '@app/services/viewport.service'
+import { ViewportService } from '@app/services/viewport.service';
 import { BnsService } from '@app/services/bns.service';
-
 
 export type SendOverlayData = {
     address: string;
@@ -176,6 +175,7 @@ export type SendOverlayData = {
                                         back-button
                                         color="primary"
                                         data-cy="bns-resolve-button"
+                                        style="margin-left: 4px"
                                     >
                                         Yes
                                     </button>
@@ -442,18 +442,17 @@ export class SendComponent implements OnInit, OnDestroy {
 
     isBns(domain_and_tld: string): boolean {
         if (!domain_and_tld) return false;
-        const domain_split = domain_and_tld.split(".");
-        if (domain_split.length == 2) {
-            const domain = domain_split[0];
+        const domain_split = domain_and_tld.split('.');
+        if (domain_split.length === 2) {
             const tld = domain_split[1];
             return this._appStoreService.store.getValue().tlds[tld] !== undefined;
         }
         return false;
     }
 
-    async getDomainResolvedAddress(domain_and_tld: string) {
-        const domain_split = domain_and_tld.split(".");
-        if (domain_split.length == 2) {
+    async getDomainResolvedAddress(domain_and_tld: string): Promise<void> {
+        const domain_split = domain_and_tld.split('.');
+        if (domain_split.length === 2) {
             const domain = domain_split[0];
             const tld = domain_split[1];
             //if tld is in mapping
