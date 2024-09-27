@@ -139,10 +139,10 @@ export type SendOverlayData = {
                     <ng-container *ngIf="activeStep === 2">
                         <ng-container *ngIf="!action.isStart">
                             <div class="mat-body-1" style="margin-bottom: 16px;">
-                                Please enter the recipient address.
+                                Please enter the recipient address or BNS domain.
                             </div>
                             <mat-form-field appearance="fill" class="address-input">
-                                <mat-label>Recipient Address</mat-label>
+                                <mat-label>Recipient Address or BNS domain</mat-label>
                                 <textarea
                                     matInput
                                     data-cy="send-recipient-input"

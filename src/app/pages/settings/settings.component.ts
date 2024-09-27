@@ -237,8 +237,11 @@ import { AddTldDialogComponent } from '@app/overlays/dialogs/add-tld/add-tld-dia
                         <mat-divider></mat-divider>
                         <div class="account-security-option" responsive style="margin-bottom: 0">
                             <div style="padding-top: 16px; flex: 1">
-                                <div class="mat-overline">Banano TLDs</div>
-                                <div class="mat-body-2">Which Banano domain TLDs to recognize and resolve</div>
+                                <div class="mat-overline">BNS TLDs</div>
+                                <div class="mat-body-2">
+                                    Which BNS domain TLDs to recognize and resolve. BNS is a protocol to turn human
+                                    readable names like "nishina247.mictest" into Banano addresses.
+                                </div>
                             </div>
                             <button
                                 mat-stroked-button
