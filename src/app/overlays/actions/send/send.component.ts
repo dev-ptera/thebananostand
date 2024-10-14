@@ -7,6 +7,7 @@ import { TRANSACTION_COMPLETED_SUCCESS } from '@app/services/wallet-events.servi
 import { CurrencyConversionService } from '@app/services/currency-conversion.service';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { ViewportService } from '@app/services/viewport.service';
+import { BnsService } from '@app/services/bns.service';
 
 export type SendOverlayData = {
     address: string;
@@ -138,10 +139,10 @@ export type SendOverlayData = {
                     <ng-container *ngIf="activeStep === 2">
                         <ng-container *ngIf="!action.isStart">
                             <div class="mat-body-1" style="margin-bottom: 16px;">
-                                Please enter the recipient address.
+                                Please enter the recipient address or BNS domain.
                             </div>
                             <mat-form-field appearance="fill" class="address-input">
-                                <mat-label>Recipient Address</mat-label>
+                                <mat-label>Recipient Address or BNS domain</mat-label>
                                 <textarea
                                     matInput
                                     data-cy="send-recipient-input"
@@ -163,6 +164,21 @@ export type SendOverlayData = {
                                     <mat-icon style="font-size: 14px; height: 14px; width: 14px; margin-left: 4px"
                                         >open_in_new</mat-icon
                                     >
+                                </div>
+                            </div>
+                            <div *ngIf="isBns(recipient)">
+                                <div style="display: flex; align-items: center" class="mat-body-1">
+                                    Is this a BNS domain?
+                                    <button
+                                        (click)="getDomainResolvedAddress(recipient)"
+                                        mat-mini-fab
+                                        back-button
+                                        color="primary"
+                                        data-cy="bns-resolve-button"
+                                        style="margin-left: 4px"
+                                    >
+                                        Yes
+                                    </button>
                                 </div>
                             </div>
                         </ng-container>
@@ -278,6 +294,7 @@ export class SendComponent implements OnInit, OnDestroy {
         private readonly _accountService: AccountService,
         private readonly _transactionService: TransactionService,
         private readonly _currencyConversionService: CurrencyConversionService,
+        private readonly _bnsService: BnsService,
         public vp: ViewportService,
         private readonly _appStoreService: AppStateService
     ) {
@@ -420,6 +437,31 @@ export class SendComponent implements OnInit, OnDestroy {
     getAccountAlias(address: string): string {
         if (address) {
             return this._appStoreService.knownAccounts.get(address);
+        }
+    }
+
+    isBns(domain_and_tld: string): boolean {
+        if (!domain_and_tld) return false;
+        const domain_split = domain_and_tld.split('.');
+        if (domain_split.length === 2) {
+            const tld = domain_split[1];
+            return this._appStoreService.store.getValue().tlds[tld] !== undefined;
+        }
+        return false;
+    }
+
+    async getDomainResolvedAddress(domain_and_tld: string): Promise<void> {
+        const domain_split = domain_and_tld.split('.');
+        if (domain_split.length === 2) {
+            const domain = domain_split[0];
+            const tld = domain_split[1];
+            //if tld is in mapping
+            if (this._appStoreService.store.getValue().tlds[tld]) {
+                const resolved = await this._bnsService.resolve(domain, tld);
+                if (resolved?.resolved_address) {
+                    this.recipient = resolved?.resolved_address;
+                }
+            }
         }
     }
 

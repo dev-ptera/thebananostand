@@ -23,6 +23,7 @@ const IDLE_TIMEOUT_MINUTES = 'bananostand_idleTimeoutMinutes';
 const MINIMUM_INCOMING_THRESHOLD_BAN = 'bananostand_minimumIncomingBananoThreshold';
 const CUSTOM_RPC_NODE_URLS = 'bananostand_customRpcNodeURLs';
 const CUSTOM_SPYGLASS_API_URLS = 'bananostand_customSpyglassApiURLs';
+const TLDS = 'bananostand_tlds';
 const USER_AUTO_RECEIVE_FUNDS = 'bananostand_userAutoReceiveTransactions';
 
 @Injectable({
@@ -48,6 +49,10 @@ export class WalletStorageService {
 
             if (walletData.customSpyglassApiSources !== undefined) {
                 window.localStorage.setItem(CUSTOM_SPYGLASS_API_URLS, walletData.customSpyglassApiSources.toString());
+            }
+
+            if (walletData.tlds !== undefined) {
+                window.localStorage.setItem(TLDS, JSON.stringify(walletData.tlds));
             }
 
             if (walletData.minimumBananoThreshold !== undefined) {
@@ -242,6 +247,16 @@ export class WalletStorageService {
             return [];
         }
         return urls.split(',');
+    }
+
+    readTlds(): Record<string, string> {
+        const json = window.localStorage.getItem(TLDS);
+        const tldEntries = json
+            ? JSON.parse(json)
+            : {
+                  mictest: 'ban_1dzpfrgi8t4byzmdeidh57p14h5jwbursf1t3ztbmeqnqqdcbpgp9x8j3cw6',
+              };
+        return tldEntries;
     }
 
     /** Reads from local storage, defaults to USD. */

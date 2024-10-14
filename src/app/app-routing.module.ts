@@ -30,6 +30,12 @@ const routes: Routes = [
         data: { animation: 'SignMessage' },
         canActivate: [(): boolean => inject(AuthGuard).canActivate()],
     },
+    {
+        path: 'sign-message',
+        component: SignMessageComponent,
+        data: { animation: 'SignMessage' },
+        canActivate: [AuthGuard],
+    },
 ];
 
 @NgModule({

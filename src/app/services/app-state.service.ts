@@ -45,6 +45,8 @@ export type AppStore = {
     customRpcNodeSources: string[];
     /** Custom Spyglass API sources **/
     customSpyglassApiSources: string[];
+    /** Banano TLDs **/
+    tlds: Record<string, string>;
     /** User wants to receive funds automatically whenever wallet is opened. **/
     isEnableAutoReceiveFeature: boolean;
     /** User is actively receiving incoming transactions via the auto-receive feature. */
@@ -88,6 +90,7 @@ export class AppStateService {
         customSpyglassApiSources: [],
         isEnableAutoReceiveFeature: true,
         isAutoReceivingTransactions: false,
+        tlds: {},
     });
 
     appLocalStorage = new Subject<{
@@ -101,6 +104,7 @@ export class AppStateService {
         customRpcNodeSources: string[];
         customSpyglassApiSources: string[];
         isEnableAutoReceiveFeature: boolean;
+        tlds: Record<string, string>;
     }>();
 
     getAllReceivableBlocks(): Array<ReceivableTx & { accountIndex: number }> {

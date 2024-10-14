@@ -9,6 +9,7 @@ import { AccountService } from '@app/services/account.service';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { SignerService } from '@app/services/signer.service';
 import { AddressBookEntry } from '@app/types/AddressBookEntry';
+import { TldEntry } from '@app/types/TldEntry';
 import { SpyglassService } from '@app/services/spyglass.service';
 import { CurrencyConversionService } from '@app/services/currency-conversion.service';
 import { AuthGuardService } from '../guards/auth-guard';
@@ -29,6 +30,9 @@ export const ADD_RPC_NODE_BY_URL = new Subject<string>();
 
 /** New Spyglass API source (URL) has been added to the settings page. */
 export const ADD_SPYGLASS_API_SOURCE_BY_URL = new Subject<string>();
+
+/** New Banano TLD has been added to the settings page. */
+export const ADD_TLD = new Subject<TldEntry>();
 
 /** New addresses (index) has been added to the dashboard. */
 export const ADD_SPECIFIC_ACCOUNTS_BY_INDEX = new Subject<number[]>();
@@ -107,6 +111,8 @@ export const REMOVE_CUSTOM_RPC_NODE_BY_INDEX = new Subject<number>();
 
 /** A Spyglass API datasource been removed from the settings page. The display order on the settings page matches the order in storage.  */
 export const REMOVE_CUSTOM_SPYGLASS_API_BY_INDEX = new Subject<number>();
+
+export const REMOVE_TLD_BY_NAME = new Subject<string>();
 
 /** User has requested a backup action */
 export const REQUEST_BACKUP_SECRET = new Subject<{ useMnemonic: boolean }>();
@@ -199,6 +205,7 @@ export class WalletEventsService {
             idleTimeoutMinutes: this._walletStorageService.readIdleTimeoutMinutes(),
             customRpcNodeSources: this._walletStorageService.readCustomRpcNodeUrls(),
             customSpyglassApiSources: this._walletStorageService.readCustomSpyglassUrls(),
+            tlds: this._walletStorageService.readTlds(),
         });
 
         this._appStateService.store.subscribe((store) => {
@@ -218,6 +225,11 @@ export class WalletEventsService {
         ADD_SPYGLASS_API_SOURCE_BY_URL.subscribe((url: string) => {
             this._datasourceService.addCustomDatasource('spyglass', url);
             this._dispatch({ customSpyglassApiSources: this.store.customSpyglassApiSources.concat(url) });
+        });
+
+        ADD_TLD.subscribe((tld: TldEntry) => {
+            this.store.tlds[tld.name] = tld.account;
+            this._dispatch({ tlds: this.store.tlds });
         });
 
         ADD_SPECIFIC_ACCOUNTS_BY_INDEX.subscribe(async (indexes: number[]) => {
@@ -454,6 +466,11 @@ export class WalletEventsService {
             });
         });
 
+        REMOVE_TLD_BY_NAME.subscribe((name) => {
+            delete this.store.tlds[name];
+            this._dispatch({ tlds: this.store.tlds });
+        });
+
         REQUEST_BACKUP_SECRET.subscribe(async (data) => {
             if (data.useMnemonic) {
                 const mnemonic = await this._secretService.getActiveWalletMnemonic();
@@ -552,6 +569,7 @@ export class WalletEventsService {
             newData.preferredDashboardView ||
             newData.customRpcNodeSources ||
             newData.customSpyglassApiSources ||
+            newData.tlds ||
             newData.isEnableAutoReceiveFeature !== undefined || // Boolean
             newData.minimumBananoThreshold !== undefined // Can be 0.
         ) {
@@ -566,6 +584,7 @@ export class WalletEventsService {
                 idleTimeoutMinutes: newData.idleTimeoutMinutes,
                 isEnableAutoReceiveFeature: newData.isEnableAutoReceiveFeature,
                 customSpyglassApiSources: newData.customSpyglassApiSources,
+                tlds: newData.tlds,
             });
         }
     }

@@ -1,5 +1,15 @@
 # Change Log
 
+## v4.17.0  (October 14, 2024)
+
+### Added
+
+-  Integrated Banano BNS system into Send BAN Dialog and Settings page.
+
+### Changed
+
+-  Made secret passwords required when adding new wallets.
+
 ## v4.16.1 (April 28, 2024)
 
 ### Fixed
@@ -221,6 +231,12 @@
 ### Fixed
 
 -  Fixed message signing not reading value from query parameter.
+
+## v4.1.0 (October 14, 2024)
+
+### Added
+
+-  Integrated Banano BNS into Send Dialog page and Settings page.
 
 ## v4.0.0 (July 28, 2023)
 

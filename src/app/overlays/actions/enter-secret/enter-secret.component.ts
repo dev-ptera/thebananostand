@@ -32,10 +32,11 @@ import { IMPORT_NEW_WALLET_FROM_SECRET } from '@app/services/wallet-events.servi
                     </div>
 
                     <mat-form-field style="width: 100%;" appearance="fill" (keyup.enter)="next()">
-                        <mat-label>Password (optional)</mat-label>
+                        <mat-label>Password</mat-label>
                         <input
                             #passwordInput
                             matInput
+                            required
                             [type]="passwordVisible ? 'text' : 'password'"
                             [(ngModel)]="password"
                             (keyup.enter)="next()"
@@ -64,7 +65,7 @@ import { IMPORT_NEW_WALLET_FROM_SECRET } from '@app/services/wallet-events.servi
                         color="primary"
                         (click)="next()"
                         class="loading-button"
-                        [disabled]="!isValidSecret()"
+                        [disabled]="!canContinue()"
                     >
                         <ng-container *ngIf="activeStep < lastStep">Next</ng-container>
                         <ng-container *ngIf="activeStep === lastStep">Load</ng-container>
@@ -99,7 +100,10 @@ export class EnterSecretComponent implements OnInit {
         this.close.emit();
     }
 
-    isValidSecret(): boolean {
+    canContinue(): boolean {
+        if (this.activeStep === this.lastStep) {
+            return Boolean(this.password);
+        }
         if (!this.secret) {
             return false;
         }
@@ -110,7 +114,7 @@ export class EnterSecretComponent implements OnInit {
         if (this.activeStep === this.lastStep) {
             void this.addSeed();
         } else {
-            if (this.isValidSecret()) {
+            if (this.canContinue()) {
                 this.activeStep++;
                 this._ref.detectChanges();
                 this.passwordInput.nativeElement.focus();
