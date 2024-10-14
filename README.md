@@ -20,7 +20,6 @@ This project was created to manage funds via the highly secure [Ledger hardware 
 - Chrome
 - Brave
 - Edge
-- Firefox
 
 > Note: Most Chromium-based browsers will work with this wallet.
 
