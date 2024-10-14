@@ -42,7 +42,7 @@ Cypress.Commands.add('setDashboardCardView' as any, () => {
 
 Cypress.Commands.add(
     'importAccount' as any,
-    (seed: string, password: string = '') => {
+    (seed: string, password: string = 'test') => {
         new HomeRobot().clickEnterSecret();
 
         new SecretRobot()
