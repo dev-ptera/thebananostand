@@ -5,8 +5,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ViewportService } from '@app/services/viewport.service';
 import { Router } from '@angular/router';
 import { UtilService } from '@app/services/util.service';
-import { MatDialog } from '@angular/material/dialog';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ThemeService } from '@app/services/theme.service';
 import { AccountService } from '@app/services/account.service';
 import { MatSort } from '@angular/material/sort';
@@ -50,7 +48,9 @@ import * as Colors from '@brightlayer-ui/colors';
             </th>
             <td mat-cell *matCellDef="let element">
                 <div style="display: flex; align-items: center; flex-wrap: wrap">
-                    <div style="margin-right: 16px">{{ element.formattedBalance }}</div>
+                    <div [style.marginRight.px]="vp.sm || element.balance === 0 ? 0 : 16">
+                        {{ element.balance | appComma }}
+                    </div>
                     <div
                         class="hint mat-caption"
                         *ngIf="!vp.sm && element.balance !== 0"
@@ -148,8 +148,6 @@ export class AccountTableComponent implements OnInit {
         public vp: ViewportService,
         private readonly _router: Router,
         private readonly _util: UtilService,
-        private readonly _dialog: MatDialog,
-        private readonly _sheet: MatBottomSheet,
         private readonly _themeService: ThemeService,
         private readonly _accountService: AccountService,
         private readonly _appStateService: AppStateService

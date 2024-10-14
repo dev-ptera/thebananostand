@@ -3,9 +3,9 @@ import * as Colors from '@brightlayer-ui/colors';
 import { FormControl } from '@angular/forms';
 import { TransactionService } from '@app/services/transaction.service';
 import { AccountService } from '@app/services/account.service';
-import { SpyglassService } from '@app/services/spyglass.service';
 import { UtilService } from '@app/services/util.service';
 import { TRANSACTION_COMPLETED_SUCCESS } from '@app/services/wallet-events.service';
+import { AppStateService } from '@app/services/app-state.service';
 
 export type RepScore = {
     address: string;
@@ -211,27 +211,21 @@ export class ChangeRepComponent implements OnInit {
 
     constructor(
         public util: UtilService,
-        private readonly _apiService: SpyglassService,
+        private readonly _appStateService: AppStateService,
         private readonly _transactionService: TransactionService,
         private readonly _accountService: AccountService
     ) {}
 
     ngOnInit(): void {
-        this._apiService
-            .getRepresentativeScores()
-            .then((data) => {
-                this.repScores = data;
-                this.selectFromList = true;
-                this.repScores.map((rep) => {
-                    if (rep.address === this.data.currentRep) {
-                        this.currentRepresentativeMetaData = rep;
-                    }
-                });
-            })
-            .catch((err) => {
-                console.error(err);
-            });
+        this.repScores = this._appStateService.repScores;
+        this.selectFromList = true;
+        this.repScores.map((rep) => {
+            if (rep.address === this.data.currentRep) {
+                this.currentRepresentativeMetaData = rep;
+            }
+        });
     }
+
     back(): void {
         if (this.activeStep === 0) {
             return this.closeOverlay();
@@ -298,7 +292,10 @@ export class ChangeRepComponent implements OnInit {
                 this.txHash = hash;
                 this.hasSuccess = true;
                 this.isChangingRepresentative = false;
-                TRANSACTION_COMPLETED_SUCCESS.next(hash);
+                TRANSACTION_COMPLETED_SUCCESS.next({
+                    txHash: hash,
+                    accountIndex: this.data.index,
+                });
             })
             .catch((err) => {
                 console.error(err);

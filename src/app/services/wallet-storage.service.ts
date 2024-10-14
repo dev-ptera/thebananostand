@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { UtilService } from '@app/services/util.service';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { AddressBookEntry } from '@app/types/AddressBookEntry';
@@ -22,6 +21,10 @@ const LEDGER_STORED_INDEXES = 'bananostand_ledgerIndexes';
 const PREFERRED_DASHBOARD_VIEW = 'bananostand_dashboardView';
 const IDLE_TIMEOUT_MINUTES = 'bananostand_idleTimeoutMinutes';
 const MINIMUM_INCOMING_THRESHOLD_BAN = 'bananostand_minimumIncomingBananoThreshold';
+const CUSTOM_RPC_NODE_URLS = 'bananostand_customRpcNodeURLs';
+const CUSTOM_SPYGLASS_API_URLS = 'bananostand_customSpyglassApiURLs';
+const TLDS = 'bananostand_tlds';
+const USER_AUTO_RECEIVE_FUNDS = 'bananostand_userAutoReceiveTransactions';
 
 @Injectable({
     providedIn: 'root',
@@ -32,11 +35,7 @@ const MINIMUM_INCOMING_THRESHOLD_BAN = 'bananostand_minimumIncomingBananoThresho
 export class WalletStorageService {
     store: AppStore;
 
-    constructor(
-        private readonly _util: UtilService,
-        private readonly _vp: ViewportService,
-        private readonly _appStateService: AppStateService
-    ) {
+    constructor(private readonly _vp: ViewportService, private readonly _appStateService: AppStateService) {
         this._appStateService.store.subscribe((store) => {
             this.store = store;
         });
@@ -44,6 +43,18 @@ export class WalletStorageService {
         // Listen for the updated store and write to localstorage accordingly.
         // `store` & `localStorage` will always match.
         this._appStateService.appLocalStorage.subscribe((walletData) => {
+            if (walletData.customRpcNodeSources !== undefined) {
+                window.localStorage.setItem(CUSTOM_RPC_NODE_URLS, walletData.customRpcNodeSources.toString());
+            }
+
+            if (walletData.customSpyglassApiSources !== undefined) {
+                window.localStorage.setItem(CUSTOM_SPYGLASS_API_URLS, walletData.customSpyglassApiSources.toString());
+            }
+
+            if (walletData.tlds !== undefined) {
+                window.localStorage.setItem(TLDS, JSON.stringify(walletData.tlds));
+            }
+
             if (walletData.minimumBananoThreshold !== undefined) {
                 window.localStorage.setItem(MINIMUM_INCOMING_THRESHOLD_BAN, String(walletData.minimumBananoThreshold));
             }
@@ -87,6 +98,13 @@ export class WalletStorageService {
                 } else {
                     window.localStorage.setItem(ACTIVE_WALLET_ID, String(walletData.activeWallet.walletId));
                 }
+            }
+
+            if (walletData.isEnableAutoReceiveFeature !== undefined) {
+                window.localStorage.setItem(
+                    USER_AUTO_RECEIVE_FUNDS,
+                    walletData.isEnableAutoReceiveFeature ? 'true' : 'false'
+                );
             }
         });
     }
@@ -215,9 +233,40 @@ export class WalletStorageService {
         return wallets[0];
     }
 
+    readCustomRpcNodeUrls(): string[] {
+        const urls = localStorage.getItem(CUSTOM_RPC_NODE_URLS);
+        if (!urls) {
+            return [];
+        }
+        return urls.split(',');
+    }
+
+    readCustomSpyglassUrls(): string[] {
+        const urls = localStorage.getItem(CUSTOM_SPYGLASS_API_URLS);
+        if (!urls) {
+            return [];
+        }
+        return urls.split(',');
+    }
+
+    readTlds(): Record<string, string> {
+        const json = window.localStorage.getItem(TLDS);
+        const tldEntries = json
+            ? JSON.parse(json)
+            : {
+                  mictest: 'ban_1dzpfrgi8t4byzmdeidh57p14h5jwbursf1t3ztbmeqnqqdcbpgp9x8j3cw6',
+              };
+        return tldEntries;
+    }
+
     /** Reads from local storage, defaults to USD. */
     readLocalizationCurrencyFromLocalStorage(): string {
         return window.localStorage.getItem(LOCALIZATION_CURRENCY_CODE) || 'USD';
+    }
+
+    /** Reads auto-receive toggle from local storage, defaults to true. */
+    readAutoReceiveFlag(): boolean {
+        return window.localStorage.getItem(USER_AUTO_RECEIVE_FUNDS) !== 'false';
     }
 
     /** Only applicable to secret-based wallets.  Returns the current-selected wallet's localstorage ID. */

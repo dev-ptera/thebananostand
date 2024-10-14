@@ -1,4 +1,4 @@
-<div class="app-root app-signing-page" responsive>
+<div class="app-root app-signing-page" responsive data-cy="signing-page">
     <mat-toolbar color="primary" class="app-toolbar" responsive [class.mat-elevation-z2]="!vp.sm">
         <div style="display: flex; align-items: center">
             <button mat-icon-button (click)="back()">
@@ -25,7 +25,7 @@
             <mat-card appearance="outlined">
                 <div class="expandable-header">
                     <div class="mat-headline-6">Message Signing</div>
-                    <button mat-button (click)="toggleMessageSignExpand()">
+                    <button mat-button (click)="toggleMessageSignExpand()" data-cy="message-signing-expand">
                         <mat-icon>expand</mat-icon>
                         <span>{{ messageSignExpand ? 'Shrink' : 'Expand' }}</span>
                     </button>
@@ -34,7 +34,11 @@
                     <div *ngIf="store.hasSecret">
                         <form>
                             <!--Choose address dropdown-->
-                            <mat-form-field style="width: 100%" appearance="fill">
+                            <mat-form-field
+                                style="width: 100%"
+                                appearance="fill"
+                                data-cy="message-signing-address-select"
+                            >
                                 <mat-label>Address</mat-label>
                                 <mat-select [formControl]="addressFormControl" required>
                                     <mat-option *ngFor="let account of store.accounts" [value]="account.index">
@@ -47,7 +51,11 @@
                             </mat-form-field>
                             <mat-form-field style="width: 100%" appearance="fill">
                                 <mat-label>Message</mat-label>
-                                <input
+                                <textarea
+                                    cdkTextareaAutosize
+                                    cdkAutosizeMinRows="1"
+                                    cdkAutosizeMaxRows="10"
+                                    data-cy="signing-input"
                                     matInput
                                     name="message"
                                     autocomplete="off"
@@ -55,14 +63,16 @@
                                     value=""
                                     [formControl]="messageFormControl"
                                     required
-                                />
+                                ></textarea>
                             </mat-form-field>
                         </form>
                         <button
                             mat-flat-button
                             color="primary"
+                            [disabled]="!messageFormControl.value"
                             matTooltip="Sign the message with the account's private key"
                             (click)="goSignMessage()"
+                            data-cy="message-signing-button"
                         >
                             Sign
                         </button>
@@ -78,7 +88,13 @@
                         >
                             <mat-form-field appearance="fill" class="signature-form" style="width: 100%">
                                 <mat-label>Signature</mat-label>
-                                <input matInput [value]="messageSignature" autocomplete="off" disabled />
+                                <input
+                                    matInput
+                                    [value]="messageSignature"
+                                    name="signature"
+                                    autocomplete="off"
+                                    disabled
+                                />
                             </mat-form-field>
                             <button
                                 mat-icon-button
@@ -105,7 +121,7 @@
             <mat-card appearance="outlined">
                 <div class="expandable-header">
                     <div class="mat-headline-6">Message Verification</div>
-                    <button mat-button (click)="toggleMessageVerifyExpand()">
+                    <button mat-button (click)="toggleMessageVerifyExpand()" data-cy="message-verification-expand">
                         <mat-icon>expand</mat-icon>
                         <span>{{ messageVerifyExpand ? 'Shrink' : 'Expand' }}</span>
                     </button>
@@ -120,6 +136,7 @@
                         <mat-form-field style="width: 100%" appearance="fill">
                             <mat-label>Signer Address</mat-label>
                             <input
+                                data-cy="verification-address-input"
                                 matInput
                                 name="signer-address"
                                 autocomplete="off"
@@ -131,19 +148,24 @@
                         <!--Message input-->
                         <mat-form-field style="width: 100%" appearance="fill">
                             <mat-label>Message</mat-label>
-                            <input
+                            <textarea
+                                cdkTextareaAutosize
+                                cdkAutosizeMinRows="1"
+                                cdkAutosizeMaxRows="10"
+                                data-cy="verification-message-input"
                                 matInput
                                 name="verify-message"
                                 autocomplete="off"
                                 type="text"
                                 [formControl]="verifyMessageFormControl"
                                 required
-                            />
+                            ></textarea>
                         </mat-form-field>
                         <!--Signature input-->
                         <mat-form-field style="width: 100%" appearance="fill">
                             <mat-label>Signature</mat-label>
                             <input
+                                data-cy="verification-signature-input"
                                 matInput
                                 name="verify-sign"
                                 autocomplete="off"
@@ -153,6 +175,7 @@
                             />
                         </mat-form-field>
                         <button
+                            data-cy="message-verification-button"
                             mat-flat-button
                             [color]="verifyButtonColor"
                             matTooltip="Verify that the signature is valid"

@@ -1,5 +1,18 @@
 @mixin mdc-overrides() {
 
+    .mat-expansion-panel-header.mat-expanded {
+        .mat-expansion-indicator {
+            margin-top: 12px;
+        }
+    }
+    .mat-expansion-panel-header {
+        .mat-expansion-indicator {
+            transition: all 50ms;
+            margin-top: 0px;
+            margin-bottom: 4px;
+        }
+    }
+
     .mat-mdc-menu-item .mat-icon-no-color, .mat-mdc-menu-submenu-icon {
         color: var(--icon-secondary);
     }
@@ -45,6 +58,7 @@
 
     .mat-mdc-card {
         --mdc-outlined-card-outline-color: var(--divider-border);
+        --mdc-outlined-card-container-shape: 1rem;
     }
 
     .mat-mdc-menu-item.mdc-list-item * {
@@ -59,5 +73,24 @@
 
     .mat-mdc-form-field-focus-overlay {
         background: var(--input-focus-bg);
+    }
+
+    .mat-mdc-snack-bar-container .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
+        color: var(--primary);
+    }
+
+    &.sm .mat-mdc-snack-bar-container .mdc-snackbar__surface {
+        $width: calc(100% - 16px);
+        max-width: $width;
+        width: $width;
+        min-width: $width;
+    }
+
+    .mat-mdc-snack-bar-container .mdc-snackbar__surface {
+        .mat-icon:not(.mat-primary), .mdc-circular-progress__determinate-circle-graphic, .mdc-circular-progress__indeterminate-circle-graphic {
+            color: var(--text-contrast);
+            stroke: var(--text-contrast);
+            opacity: .6;
+        }
     }
 }

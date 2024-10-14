@@ -45,7 +45,7 @@
         (click)="receive()"
         style="margin-right: 16px"
         [style.width.%]="vp.sm ? 100 : 'unset'"
-        [disabled]="account.pending.length === 0"
+        [disabled]="account.pending.length === 0 || store.isAutoReceivingTransactions"
     >
         <mat-icon>download</mat-icon>
         <span>Receive {{ vp.md || vp.sm ? '' : ' Incoming' }}</span>
@@ -191,7 +191,7 @@
                     color="primary"
                     mode="indeterminate"
                     data-cy="loading-indicator"
-                    style="left: 0"
+                    style="left: 0; z-index: 1000"
                     [style.position]="vp.sm ? 'fixed' : 'absolute'"
                     [style.top.px]="vp.sm ? 40 : 0"
                 >

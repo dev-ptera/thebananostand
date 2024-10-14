@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { UtilService } from '@app/services/util.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewportService } from '@app/services/viewport.service';
@@ -51,12 +51,9 @@ export class DashboardComponent {
 
     bottomSheetOpenDelayMs = 250;
 
-    totalBalance = '--';
-
     constructor(
         public vp: ViewportService,
         private readonly _route: ActivatedRoute,
-        private readonly _router: Router,
         private readonly _dialog: MatDialog,
         private readonly _util: UtilService,
         private readonly _sheet: MatBottomSheet,
@@ -65,23 +62,18 @@ export class DashboardComponent {
     ) {
         this._appStateService.store.pipe(untilDestroyed(this)).subscribe((store) => {
             this.store = store;
-            if (store.totalBalance === undefined) {
-                this.totalBalance = '--';
-            } else {
-                this.totalBalance = this._util.numberWithCommas(store.totalBalance);
-            }
         });
         this._route.queryParams.subscribe((params) => this._checkForApiRequestViaQueryParams(params));
     }
 
     private _checkForApiRequestViaQueryParams(params: Params): void {
-        if (!this._isValidParams(params)) {
-            if (params) {
-                console.warn('Invalid query parameters provided while creating a BananoStand API request.');
-                console.warn('Parameter Options: "request (send | change), address, amount (send only)');
-                console.warn('Parameters provided: ', params);
-            }
+        if (this._util.isEmpty(params)) {
             return;
+        }
+        if (!this._isValidParams(params)) {
+            console.warn('Invalid query parameters provided while creating a BananoStand API request.');
+            console.warn('Parameter Options: "request (send | change), address, amount (send only)');
+            console.warn('Parameters provided: ', params);
         }
         if (this.vp.sm) {
             setTimeout(() => {
@@ -170,16 +162,7 @@ export class DashboardComponent {
     }
 
     openReceiveAllOverlay(): void {
-        const blocks = [];
-        for (const account of this.store.accounts) {
-            for (const block of account.pending) {
-                blocks.push({
-                    index: account.index,
-                    hash: block.hash,
-                    receivableRaw: block.receivableRaw,
-                });
-            }
-        }
+        const blocks = this._appStateService.getAllReceivableBlocks();
         const data: ReceiveOverlayData = { blocks: blocks, refreshDashboard: true };
         if (this.vp.sm) {
             setTimeout(() => {

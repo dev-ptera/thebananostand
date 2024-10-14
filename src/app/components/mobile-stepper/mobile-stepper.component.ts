@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, ViewEncapsulation } from '@angular/core';
 
-export type MobileStepperVariant = 'dots' | 'text' | 'progress';
+export type MobileStepperVariant = 'dots' | 'text' | 'progress' | 'none';
 
 @Component({
     selector: 'mobile-stepper',

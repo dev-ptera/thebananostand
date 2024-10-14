@@ -1,4 +1,5 @@
-@mixin small-icon-button($icon-size, $button-size) {
+@mixin small-icon-button() {
+    $icon-size: 16px;
     mat-icon {
         font-size: $icon-size;
         width: $icon-size;
@@ -7,7 +8,7 @@
     }
     .mat-mdc-icon-button,
     .mat-mdc-icon-button .mat-mdc-button-touch-target {
-        --mdc-icon-button-state-layer-size: #{$button-size};
+        --mdc-icon-button-state-layer-size: 28px;
         padding: 0;
         height: var(--mdc-icon-button-state-layer-size);
         width: var(--mdc-icon-button-state-layer-size);

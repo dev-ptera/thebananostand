@@ -3,6 +3,8 @@ import { AccountOverview } from '@app/types/AccountOverview';
 import { LocalStorageWallet } from '@app/services/wallet-storage.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { PriceData } from '@app/types/PriceData';
+import { ReceivableTx } from '@app/types/ReceivableTx';
+import { RepScore } from '@app/overlays/actions/change-rep/change-rep.component';
 
 export type AppStore = {
     /** Loaded ledger accounts, their rep, & respective balances.  */
@@ -39,6 +41,16 @@ export type AppStore = {
     walletPassword: string;
     /** Determines how the Dashboard page looks. Can either be table or card. */
     preferredDashboardView: 'card' | 'table';
+    /** Custom RPC nodes **/
+    customRpcNodeSources: string[];
+    /** Custom Spyglass API sources **/
+    customSpyglassApiSources: string[];
+    /** Banano TLDs **/
+    tlds: Record<string, string>;
+    /** User wants to receive funds automatically whenever wallet is opened. **/
+    isEnableAutoReceiveFeature: boolean;
+    /** User is actively receiving incoming transactions via the auto-receive feature. */
+    isAutoReceivingTransactions: boolean;
 };
 
 @Injectable({
@@ -50,6 +62,8 @@ export class AppStateService {
 
     /** Set of online representatives. */
     onlineRepresentatives: Set<string> = new Set();
+
+    repScores: RepScore[] = [];
 
     store: BehaviorSubject<AppStore> = new BehaviorSubject<AppStore>({
         accounts: [],
@@ -72,6 +86,11 @@ export class AppStateService {
         idleTimeoutMinutes: 15,
         isLoadingAccounts: true,
         preferredDashboardView: undefined,
+        customRpcNodeSources: [],
+        customSpyglassApiSources: [],
+        isEnableAutoReceiveFeature: true,
+        isAutoReceivingTransactions: false,
+        tlds: {},
     });
 
     appLocalStorage = new Subject<{
@@ -82,5 +101,22 @@ export class AppStateService {
         localStorageWallets: LocalStorageWallet[];
         preferredDashboardView: string;
         idleTimeoutMinutes: number;
+        customRpcNodeSources: string[];
+        customSpyglassApiSources: string[];
+        isEnableAutoReceiveFeature: boolean;
+        tlds: Record<string, string>;
     }>();
+
+    getAllReceivableBlocks(): Array<ReceivableTx & { accountIndex: number }> {
+        const blocks = [];
+        for (const account of this.store.getValue().accounts) {
+            for (const block of account.pending) {
+                blocks.push({
+                    accountIndex: account.index,
+                    ...block,
+                });
+            }
+        }
+        return blocks;
+    }
 }

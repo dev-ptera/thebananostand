@@ -4,6 +4,9 @@ $card-horizontal-padding: 16px;
         width: 100%;
         padding: 24px $card-horizontal-padding;
     }
+    .datasource-url {
+        word-break: break-all;
+    }
     .mat-headline-6 {
         margin-bottom: 16px;
     }

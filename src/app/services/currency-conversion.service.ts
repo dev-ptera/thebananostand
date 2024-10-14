@@ -1,58 +1,41 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { DatasourceService } from '@app/services/datasource.service';
-
-type SymbolsResponse = {
-    symbols: {
-        [symbol: string]: Currency;
-    };
-};
-
-type Currency = {
-    description: string;
-    code: string;
-};
+import { ExchangeRate } from '@app/types/ExchangeRate';
+import { SpyglassService } from '@app/services/spyglass.service';
 
 @Injectable({
     providedIn: 'root',
 })
-
-/** Responsible for converting one currency to another.
- * Primarily uses this API for conversions: https://exchangerate.host/#/
- * */
+/** Responsible for converting one currency to another.  */
 export class CurrencyConversionService {
-    currencies: Currency[] = [];
+    exchangeRates: ExchangeRate[] = [];
 
-    constructor(private readonly _http: HttpClient, private readonly _datasource: DatasourceService) {
-        this.getSymbols();
+    constructor(private readonly _spyglassService: SpyglassService) {
+        void this._getExchangeRates();
     }
 
-    getSymbols(): void {
-        const url = 'https://api.exchangerate.host/symbols';
-        this._http.get<SymbolsResponse>(url).subscribe((data) => {
-            for (const key in data.symbols) {
-                this.currencies.push({
-                    description: data.symbols[key].description,
-                    code: data.symbols[key].code,
-                });
+    private async _getExchangeRates(): Promise<void> {
+        try {
+            this.exchangeRates = await this._spyglassService.getExchangeRates();
+        } catch (error) {
+            console.error('Unable to fetch exchange rate data from Spyglass API Data Source:');
+            console.error(error);
+        }
+    }
+
+    convertToUSD(symbol: string): number {
+        for (const exchangeRate of this.exchangeRates) {
+            if (exchangeRate.id === symbol) {
+                return exchangeRate.rate;
             }
-        });
-    }
-
-    convertToUSD(symbol: string): Promise<number> {
-        const url = `https://api.exchangerate.host/convert?from=${symbol}&to=USD`;
-        return new Promise((resolve) => {
-            this._http.get<{ info: { rate: number } }>(url).subscribe((data) => {
-                resolve(data.info.rate);
-            });
-        });
+        }
+        return 0;
     }
 
     convertBanAmountToLocalCurrency(bananoAmount: number, conversionRate: number, bananoPriceUSD: number): string {
         if (!bananoAmount || !bananoPriceUSD || !conversionRate) {
             return '0';
         }
-        return this._adjust((bananoPriceUSD / conversionRate) * bananoAmount);
+        return this._adjust(bananoPriceUSD * conversionRate * bananoAmount);
     }
 
     convertLocalCurrencyToBAN(localCurrencyAmount: number, conversionRate: number, bananoPriceUSD: number): string {

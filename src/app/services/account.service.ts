@@ -66,11 +66,19 @@ export class AccountService {
 
     /** Fetches RPC account_info and stores response in a list sorted by account number. */
     async fetchAccount(index: number): Promise<AccountOverview> {
+        const MAX_PENDING = 100;
         if (isNaN(index)) {
             return undefined;
         }
         try {
-            return await this._rpcService.getAccountInfoFromIndex(index);
+            const account = await this._rpcService.getAccountInfoFromIndex(index);
+            const pending = await this._spyglassApi.getReceivableTransactions(
+                account.fullAddress,
+                MAX_PENDING,
+                this.store.minimumBananoThreshold
+            );
+            account.pending = pending;
+            return account;
         } catch (err) {
             return undefined;
         }

@@ -76,6 +76,15 @@ export class UtilService {
         return address && address.length === 64 && address.startsWith('ban_');
     }
 
+    isEmpty(obj: object): boolean {
+        for (const prop in obj) {
+            if (Object.hasOwn(obj, prop)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     isValidHex(hex: string): boolean {
         const validHexChars: string[] = [
             '0',
@@ -98,11 +107,47 @@ export class UtilService {
         return hex.split('').every((value) => validHexChars.includes(value.toUpperCase()));
     }
 
-    matches(a: number, b: number): boolean {
-        return Number(a) === Number(b);
-    }
-
     clipboardCopy(text: string): void {
         copy(text);
+    }
+
+    /** Given a number of days, returns a string representation of time (e.g 3 weeks ago). */
+    getRelativeTime(timestamp: number): string {
+        const currentDate = new Date().getTime() / 1000;
+        const oneDay = 24 * 60 * 60; // hours*minutes*seconds*milliseconds
+        const days = timestamp ? (currentDate - timestamp) / oneDay : undefined;
+        if (!days) {
+            return '';
+        }
+
+        if (days > 365) {
+            const years = Math.round(days / 365);
+            return `${years} year${years > 1 ? 's' : ''} ago`;
+        }
+        if (days > 30) {
+            const months = Math.round(days / 30);
+            return `${months} month${months > 1 ? 's' : ''} ago`;
+        }
+        if (days > 7) {
+            const weeks = Math.round(days / 7);
+            return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
+        }
+        if (days >= 1) {
+            const rounded = Math.round(days);
+            return `${rounded} day${rounded > 1 ? 's' : ''} ago`;
+        }
+        if (days < 1) {
+            const hours = days * 24;
+            if (hours > 1) {
+                const roundedHours = Math.round(hours);
+                return `${roundedHours} hour${roundedHours > 1 ? 's' : ''} ago`;
+            }
+            const roundedMinutes = Math.round(hours * 60);
+            if (roundedMinutes >= 1) {
+                return `${roundedMinutes} min${roundedMinutes > 1 ? 's' : ''} ago`;
+            }
+            const seconds = Math.round(days * 24 * 60 * 60);
+            return `${seconds} sec ago`;
+        }
     }
 }

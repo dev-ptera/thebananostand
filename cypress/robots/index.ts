@@ -7,3 +7,4 @@ export * from './overlay.robot';
 export * from './login.robot';
 export * from './secret.robot';
 export * from './settings.robot';
+export * from './signing.robot';

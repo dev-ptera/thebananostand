@@ -16,7 +16,16 @@
         border-radius: 1rem;
         th,
         td {
-            padding: 0 8px !important;
+            font-size: 13px;
+            padding: 0 4px;
+        }
+        th:first-child,
+        td:first-child {
+            padding-left: 32px;
+        }
+        th:last-child,
+        td:last-child {
+            padding-right: 4px;
         }
     }
 }

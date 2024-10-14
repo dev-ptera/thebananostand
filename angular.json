@@ -36,8 +36,18 @@
                             },
                             {
                                 "glob": "**/*",
+                                "input": "node_modules/ngx-scanner-qrcode/wasm/",
+                                "output": "./assets/wasm/"
+                            },
+                            {
+                                "glob": "**/*",
                                 "input": "./node_modules/bip39",
                                 "output": "./assets/bip39"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "./node_modules/banani-bns",
+                                "output": "./assets/banani-bns"
                             }
                         ],
                         "styles": ["src/styles.scss"],
@@ -129,7 +139,6 @@
             }
         }
     },
-    "defaultProject": "thebananostand",
     "cli": {
       "analytics": false
     }

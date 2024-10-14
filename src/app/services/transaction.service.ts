@@ -4,9 +4,11 @@ import { AppStateService } from '@app/services/app-state.service';
 import { SignerService } from '@app/services/signer.service';
 import { RpcService } from '@app/services/rpc.service';
 import { PowService } from '@app/services/pow.service';
-import { ReceivableHash } from '@app/types/ReceivableHash';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { TransactionBlock } from '@app/types/TransactionBlock';
+import { ReceivableTx } from '@app/types/ReceivableTx';
+import { UtilService } from '@app/services/util.service';
+import BigNumber from 'bignumber.js';
 
 type BananoifiedWindow = {
     bananocoinBananojs: any;
@@ -57,7 +59,8 @@ export class TransactionService {
         private readonly _signerService: SignerService,
         private readonly _datasource: DatasourceService,
         private readonly _appStateService: AppStateService,
-        private readonly _rpcService: RpcService
+        private readonly _rpcService: RpcService,
+        private readonly _util: UtilService
     ) {}
 
     private async _configApi(bananodeApi): Promise<void> {
@@ -170,17 +173,24 @@ export class TransactionService {
     }
 
     /** Attempts to receive funds.  Returns the hash of the received block. */
-    async receive(accountIndex: number, incoming: ReceivableHash): Promise<string> {
+    async receive(accountIndex: number, incoming: ReceivableTx): Promise<string> {
         log('** Begin Receive Transaction **');
         await this._configApi(window.bananocoinBananojs.bananodeApi);
         const { privateKeyOrSigner, publicKey, accountInfo } = await this._getTransactionEssentials(accountIndex);
         const accountBalanceRaw = accountInfo.balanceRaw;
-        const valueRaw = (BigInt(incoming.receivableRaw) + BigInt(accountBalanceRaw)).toString();
+        const valueRaw = (BigInt(incoming.amountRaw) + BigInt(accountBalanceRaw)).toString();
         const isOpeningAccount = !accountInfo.representative;
 
-        // TODO - Get this from the rep list, top rep please.
+        const beforeTxBan = new BigNumber(this._util.convertRawToBan(accountBalanceRaw));
+        const afterTxBan = new BigNumber(this._util.convertRawToBan(valueRaw));
+        if (afterTxBan.isLessThan(beforeTxBan)) {
+            console.error('Receivable block lowers account balance, rejecting block.', beforeTxBan, afterTxBan);
+            return undefined;
+        }
+
         const representative = isOpeningAccount
-            ? 'ban_3batmanuenphd7osrez9c45b3uqw9d9u81ne8xa6m43e1py56y9p48ap69zg'
+            ? this._appStateService.repScores[0]?.address ||
+              'ban_3batmanuenphd7osrez9c45b3uqw9d9u81ne8xa6m43e1py56y9p48ap69zg'
             : accountInfo.representative;
         const previous = isOpeningAccount
             ? '0000000000000000000000000000000000000000000000000000000000000000'

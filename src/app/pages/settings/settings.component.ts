@@ -1,4 +1,4 @@
-import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Datasource, DatasourceService } from '@app/services/datasource.service';
 import { ChangePasswordBottomSheetComponent } from '@app/overlays/bottom-sheet/change-password/change-password-bottom-sheet.component';
@@ -10,20 +10,27 @@ import { Router } from '@angular/router';
 import {
     EDIT_MINIMUM_INCOMING_THRESHOLD,
     REMOVE_ALL_WALLET_DATA,
+    REMOVE_CUSTOM_RPC_NODE_BY_INDEX,
+    REMOVE_CUSTOM_SPYGLASS_API_BY_INDEX,
+    REMOVE_TLD_BY_NAME,
     SELECT_LOCALIZATION_CURRENCY,
+    SELECTED_RPC_DATASOURCE_CHANGE,
+    SELECTED_SPYGLASS_API_DATASOURCE_CHANGE,
+    USER_TOGGLE_AUTO_RECEIVE,
 } from '@app/services/wallet-events.service';
 import { MatRadioChange } from '@angular/material/radio';
 import { CurrencyConversionService } from '@app/services/currency-conversion.service';
 import { AppStateService } from '@app/services/app-state.service';
 import { MatSelectChange } from '@angular/material/select';
 import { UntilDestroy } from '@ngneat/until-destroy';
-
-@Pipe({ name: 'available' })
-export class DatasourceAvailablePipe implements PipeTransform {
-    transform(items: Datasource[]): Datasource[] {
-        return items.filter((item) => item.isAccessible === true);
-    }
-}
+import { AddRpcBottomSheetComponent } from '@app/overlays/bottom-sheet/add-rpc/add-rpc-bottom-sheet.component';
+import { AddRpcDialogComponent } from '@app/overlays/dialogs/add-rpc/add-rpc-dialog.component';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { BLUIColors } from '@brightlayer-ui/colors';
+import { AddSpyglassBottomSheetComponent } from '@app/overlays/bottom-sheet/add-spyglass/add-spyglass-bottom-sheet.component';
+import { AddSpyglassDialogComponent } from '@app/overlays/dialogs/add-spyglass/add-spyglass-dialog.component';
+import { AddTldBottomSheetComponent } from '@app/overlays/bottom-sheet/add-tld/add-tld-bottom-sheet.component';
+import { AddTldDialogComponent } from '@app/overlays/dialogs/add-tld/add-tld-dialog.component';
 
 @UntilDestroy()
 @Component({
@@ -33,7 +40,30 @@ export class DatasourceAvailablePipe implements PipeTransform {
             <div [class.primary]="source.isSelected" [style.fontWeight]="source.isSelected ? 600 : 400">
                 {{ source.alias }}
             </div>
-            <div class="mono">{{ source.url }}</div>
+            <div class="mono datasource-url" style="margin-top: 4px">{{ source.url }}</div>
+            <div style="margin-top: 4px">
+                <list-item-tag
+                    *ngIf="source.isAccessible === true"
+                    style="display: flex"
+                    label="Online"
+                    variant="online"
+                    [outline]="true"
+                ></list-item-tag>
+                <list-item-tag
+                    *ngIf="source.isAccessible === false"
+                    style="display: flex"
+                    label="Offline"
+                    variant="offline"
+                    [outline]="true"
+                ></list-item-tag>
+                <list-item-tag
+                    *ngIf="source.isAccessible === undefined"
+                    style="display: flex"
+                    label="Loading"
+                    variant="loading"
+                    [outline]="true"
+                ></list-item-tag>
+            </div>
         </ng-template>
 
         <div class="app-root app-settings-page" responsive>
@@ -60,7 +90,6 @@ export class DatasourceAvailablePipe implements PipeTransform {
                                 mat-stroked-button
                                 blui-inline
                                 color="primary"
-                                class="preserve-non-mobile"
                                 (click)="openChangePasswordOverlay()"
                                 data-cy="change-password-button"
                             >
@@ -80,7 +109,6 @@ export class DatasourceAvailablePipe implements PipeTransform {
                                 mat-stroked-button
                                 blui-inline
                                 color="warn"
-                                class="preserve-non-mobile"
                                 longPress
                                 (mouseLongPress)="clearStorage()"
                                 data-cy="clear-storage-button"
@@ -90,32 +118,27 @@ export class DatasourceAvailablePipe implements PipeTransform {
                             </button>
                         </div>
                     </mat-card>
-                    <!--
-                    <mat-card style="margin-bottom: 32px; padding-bottom: 24px">
-                        <div class="mat-title">Proof-of-Work</div>
-                        <mat-divider></mat-divider>
-                        <div class="mat-overline" style="margin-top: 16px">Use Client-Side POW</div>
-                        <div class="mat-body-1" style="margin-bottom: 8px">
-                            Your local computer will perform the computation required when sending or receiving
-                            transactions.
-                        </div>
-                        <mat-checkbox
-                            [checked]="powService.getUseClientSidePow()"
-                            (change)="powService.setUseClientSidePow($event.checked)"
-                        >
-                            Enable local proof-of-work
-                        </mat-checkbox>
-                        <div *ngIf="!powService.isWebGLAvailable" style="margin-top: 8px">
-                            <strong>Warning:</strong> This may be very slow on your browser; it is advised to disable
-                            this feature & offload this work to a remote server.
-                        </div>
-                    </mat-card>
-                    -->
                     <mat-card appearance="outlined" style="margin-bottom: 32px">
                         <div class="mat-headline-6">Data Sources</div>
                         <mat-divider></mat-divider>
-                        <div class="mat-overline" style="margin-top: 16px">Node RPC Datasource</div>
-                        <div class="mat-body-2">The node which broadcasts send, receive and change transactions.</div>
+                        <div class="account-security-option" responsive style="margin-bottom: 0">
+                            <div style="padding-top: 16px; flex: 1">
+                                <div class="mat-overline">Node RPC Datasource</div>
+                                <div class="mat-body-2">
+                                    The node which broadcasts send, receive and change transactions.
+                                </div>
+                            </div>
+                            <button
+                                mat-stroked-button
+                                blui-inline
+                                color="primary"
+                                (click)="openAddRpcOverlay()"
+                                data-cy="add-new-rpc-node-button"
+                            >
+                                <mat-icon>control_point</mat-icon>
+                                <span>Add New</span>
+                            </button>
+                        </div>
                         <mat-radio-group
                             style="margin-bottom: 8px; display: inline-block"
                             aria-label="Select a RPC source"
@@ -123,17 +146,56 @@ export class DatasourceAvailablePipe implements PipeTransform {
                             (change)="selectRpc($event)"
                         >
                             <mat-radio-button
-                                *ngFor="let source of datasourceService.availableRpcDataSources | available"
+                                *ngFor="let source of datasourceService.availableRpcDataSources"
                                 [value]="source"
                                 [aria-label]="source.alias"
+                                [disabled]="!source.isAccessible"
                             >
                                 <ng-template *ngTemplateOutlet="radioData; context: { source }"></ng-template>
                             </mat-radio-button>
+                            <div *ngIf="datasourceService.customRpcDataSources.length > 0" class="mat-overline">
+                                Custom Entries
+                            </div>
+                            <div
+                                *ngFor="let source of datasourceService.customRpcDataSources; let i = index"
+                                style="display: flex; align-items: center; justify-content: space-between"
+                            >
+                                <mat-radio-button
+                                    [value]="source"
+                                    [aria-label]="'Custom Source ' + i"
+                                    [disabled]="!source.isAccessible"
+                                >
+                                    <ng-template *ngTemplateOutlet="radioData; context: { source }"></ng-template>
+                                </mat-radio-button>
+                                <button
+                                    mat-icon-button
+                                    [matTooltip]="'Remove ' + source.alias"
+                                    color="warn"
+                                    (click)="removeCustomRpcNode(i)"
+                                >
+                                    <mat-icon color="warn">clear</mat-icon>
+                                </button>
+                            </div>
                         </mat-radio-group>
                         <mat-divider></mat-divider>
-                        <div class="mat-overline" style="margin-top: 16px">Spyglass API Datasource</div>
-                        <div class="mat-body-2" style="margin-bottom: 8px">
-                            Provides a filtered transaction history, fetches representative scores and account aliases.
+                        <div class="account-security-option" responsive style="margin-bottom: 0">
+                            <div style="padding-top: 16px; flex: 1">
+                                <div class="mat-overline" style="margin-top: 16px">Spyglass API Datasource</div>
+                                <div class="mat-body-2" style="margin-bottom: 8px">
+                                    Provides a filtered transaction history, fetches representative scores and account
+                                    aliases.
+                                </div>
+                            </div>
+                            <button
+                                mat-stroked-button
+                                blui-inline
+                                color="primary"
+                                (click)="openAddSpyglassOverlay()"
+                                data-cy="add-new-spyglass-node-button"
+                            >
+                                <mat-icon>control_point</mat-icon>
+                                <span>Add New</span>
+                            </button>
                         </div>
                         <mat-radio-group
                             aria-label="Select a Spyglass API source"
@@ -141,13 +203,73 @@ export class DatasourceAvailablePipe implements PipeTransform {
                             (change)="selectSpyglassApi($event)"
                         >
                             <mat-radio-button
-                                *ngFor="let source of datasourceService.availableSpyglassApiSources | available"
+                                *ngFor="let source of datasourceService.availableSpyglassApiSources"
                                 [value]="source"
                                 [aria-label]="source.alias"
+                                [disabled]="!source.isAccessible"
                             >
                                 <ng-template *ngTemplateOutlet="radioData; context: { source }"></ng-template>
                             </mat-radio-button>
+                            <div *ngIf="datasourceService.customSpyglassSources.length > 0" class="mat-overline">
+                                Custom Entries
+                            </div>
+                            <div
+                                *ngFor="let source of datasourceService.customSpyglassSources; let i = index"
+                                style="display: flex; align-items: center; justify-content: space-between"
+                            >
+                                <mat-radio-button
+                                    [value]="source"
+                                    [aria-label]="'Custom Source ' + i"
+                                    [disabled]="!source.isAccessible"
+                                >
+                                    <ng-template *ngTemplateOutlet="radioData; context: { source }"></ng-template>
+                                </mat-radio-button>
+                                <button
+                                    mat-icon-button
+                                    [matTooltip]="'Remove ' + source.alias"
+                                    color="warn"
+                                    (click)="removeSpyglassApiSource(i)"
+                                >
+                                    <mat-icon color="warn">clear</mat-icon>
+                                </button>
+                            </div>
                         </mat-radio-group>
+                        <mat-divider></mat-divider>
+                        <div class="account-security-option" responsive style="margin-bottom: 0">
+                            <div style="padding-top: 16px; flex: 1">
+                                <div class="mat-overline">BNS TLDs</div>
+                                <div class="mat-body-2">
+                                    Which BNS domain TLDs to recognize and resolve. BNS is a protocol to turn human
+                                    readable names like "nishina247.mictest" into Banano addresses.
+                                </div>
+                            </div>
+                            <button
+                                mat-stroked-button
+                                blui-inline
+                                color="primary"
+                                (click)="openAddTldOverlay()"
+                                data-cy="add-new-tld-button"
+                            >
+                                <mat-icon>control_point</mat-icon>
+                                <span>Add New</span>
+                            </button>
+                        </div>
+                        <mat-list>
+                            <div
+                                *ngFor="let tld of tlds | keyvalue"
+                                style="display: flex; align-items: center; justify-content: space-between"
+                            >
+                                <mat-list-item> {{ tld.key }}: {{ tld.value }} </mat-list-item>
+                                <button
+                                    mat-icon-button
+                                    [matTooltip]="'Remove ' + tld.key"
+                                    color="warn"
+                                    (click)="removeTld(tld.key)"
+                                >
+                                    <mat-icon color="warn">clear</mat-icon>
+                                </button>
+                            </div>
+                        </mat-list>
                     </mat-card>
 
                     <mat-card appearance="outlined" style="margin-bottom: 32px">
@@ -163,14 +285,14 @@ export class DatasourceAvailablePipe implements PipeTransform {
                             <mat-label>Currency</mat-label>
                             <mat-select [value]="selectedCurrencyCode" (selectionChange)="changeCurrencySelect($event)">
                                 <mat-option
-                                    *ngFor="let currency of currencyConversionService.currencies"
-                                    [value]="currency.code"
+                                    *ngFor="let currency of currencyConversionService.exchangeRates"
+                                    [value]="currency.id"
                                 >
                                     <div style="display: flex; justify-content: space-between; align-items: center">
                                         <div>
-                                            {{ currency.description }}
+                                            {{ currency.desc }}
                                         </div>
-                                        <div>{{ currency.code }}</div>
+                                        <div>{{ currency.id }}</div>
                                     </div>
                                 </mat-option>
                             </mat-select>
@@ -190,6 +312,18 @@ export class DatasourceAvailablePipe implements PipeTransform {
                                 type="number"
                             />
                         </mat-form-field>
+                        <ng-container *ngIf="showAutoReceiveToggle()">
+                            <mat-divider></mat-divider>
+                            <div class="mat-overline" style="margin-top: 16px">Auto-Receive Incoming Transactions</div>
+                            <div class="mat-body-2" style="margin-bottom: 24px">
+                                Incoming transactions will be automatically received when the wallet is unlocked.
+                            </div>
+                            <mat-slide-toggle
+                                (change)="toggleAutoReceiveIncomingTransactions($event)"
+                                [checked]="isEnableAutoReceiveFeature"
+                                >Enable</mat-slide-toggle
+                            >
+                        </ng-container>
                     </mat-card>
                 </div>
             </div>
@@ -198,10 +332,12 @@ export class DatasourceAvailablePipe implements PipeTransform {
     styleUrls: ['./settings.component.scss'],
 })
 export class SettingsPageComponent implements OnInit {
-    selectedRpcSource: any;
-    selectedSpyglassApi: any;
+    selectedRpcSource: Datasource;
+    selectedSpyglassApi: Datasource;
     selectedCurrencyCode: string;
     minimumThreshold: number;
+    isEnableAutoReceiveFeature: boolean;
+    colors = BLUIColors;
 
     constructor(
         public vp: ViewportService,
@@ -215,6 +351,13 @@ export class SettingsPageComponent implements OnInit {
     ) {
         this._appStateService.store.subscribe((data) => {
             this.selectedCurrencyCode = data.localCurrencyCode;
+            this.isEnableAutoReceiveFeature = data.isEnableAutoReceiveFeature;
+        });
+        SELECTED_RPC_DATASOURCE_CHANGE.subscribe((source) => {
+            this.selectedRpcSource = source;
+        });
+        SELECTED_SPYGLASS_API_DATASOURCE_CHANGE.subscribe((source) => {
+            this.selectedSpyglassApi = source;
         });
     }
 
@@ -224,6 +367,13 @@ export class SettingsPageComponent implements OnInit {
         this.minimumThreshold = this._appStateService.store.getValue().minimumBananoThreshold;
     }
 
+    get tlds(): Record<string, string> {
+        return this._appStateService.store.getValue().tlds;
+    }
+
+    showAutoReceiveToggle(): boolean {
+        return this._appStateService.store.getValue().hasUnlockedSecret;
+    }
     back(): void {
         this._location.back();
     }
@@ -234,6 +384,46 @@ export class SettingsPageComponent implements OnInit {
         } else {
             this._dialog.open(ChangePasswordDialogComponent);
         }
+    }
+
+    openAddRpcOverlay(): void {
+        if (this.vp.sm) {
+            this._sheet.open(AddRpcBottomSheetComponent);
+        } else {
+            this._dialog.open(AddRpcDialogComponent);
+        }
+    }
+
+    openAddSpyglassOverlay(): void {
+        if (this.vp.sm) {
+            this._sheet.open(AddSpyglassBottomSheetComponent);
+        } else {
+            this._dialog.open(AddSpyglassDialogComponent);
+        }
+    }
+
+    openAddTldOverlay(): void {
+        if (this.vp.sm) {
+            this._sheet.open(AddTldBottomSheetComponent);
+        } else {
+            this._dialog.open(AddTldDialogComponent);
+        }
+    }
+
+    removeCustomRpcNode(index: number): void {
+        REMOVE_CUSTOM_RPC_NODE_BY_INDEX.next(index);
+    }
+
+    removeSpyglassApiSource(index: number): void {
+        REMOVE_CUSTOM_SPYGLASS_API_BY_INDEX.next(index);
+    }
+
+    removeTld(name: string): void {
+        REMOVE_TLD_BY_NAME.next(name);
+    }
+
+    toggleAutoReceiveIncomingTransactions(e: MatSlideToggleChange): void {
+        USER_TOGGLE_AUTO_RECEIVE.next(e.checked);
     }
 
     clearStorage(): void {

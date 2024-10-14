@@ -1,3 +1,5 @@
+@use 'node_modules/@brightlayer-ui/colors/palette' as blui;
+
 .list-item-tag {
     display: inline-block;
 }
@@ -15,4 +17,34 @@
     margin-right: -1px;
     line-height: 1rem;
     font-size: 0.625rem;
+}
+
+.online {
+    background-color: #0d5d11;
+    color: rgba(255, 255, 255, 0.92);
+    &.outline {
+        color: #0d5d11;
+        border: solid 1px #0d5d11;
+        background: rgba(255, 255, 255, 0.92);
+    }
+}
+
+.loading {
+    background-color: #5e645e;
+    color: rgba(255, 255, 255, 0.92);
+    &.outline {
+        color: #5e645e;
+        border: solid 1px #5e645e;
+        background: rgba(255, 255, 255, 0.92);
+    }
+}
+
+.offline {
+    background-color: map-get(blui.$blui-red, 700);
+    color: rgba(255, 255, 255, 0.92);
+    &.outline {
+        color: map-get(blui.$blui-red, 700);
+        border: solid 1px map-get(blui.$blui-red, 700);
+        background: rgba(255, 255, 255, 0.92);
+    }
 }

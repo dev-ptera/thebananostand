@@ -1,5 +1,15 @@
 /// <reference types="cypress"/>
 export class OverlayRobot {
+    checkApiRequestOverlayExists(): OverlayRobot {
+        cy.get('.api-request-overlay').should('exist');
+        return this;
+    }
+
+    checkApiRequestOverlayNotExists(): OverlayRobot {
+        cy.get('.api-request-overlay').should('not.exist');
+        return this;
+    }
+
     checkFilterOverlayNotExists(): OverlayRobot {
         cy.get('.filter-overlay').should('not.exist');
         return this;
@@ -136,6 +146,37 @@ export class OverlayRobot {
 
     checkAddAccountOverlayNotExists(): OverlayRobot {
         cy.get('.add-index-overlay').should('not.exist');
+        return this;
+    }
+
+    checkApiRequestSendAmountEquals(amount: string): OverlayRobot {
+        cy.get('[data-cy=api-request-send-amount]').contains(`${amount} BAN`);
+        return this;
+    }
+
+    checkApiRequestActionAddressEquals(address: string): OverlayRobot {
+        cy.get('[data-cy=api-request-action-address]').contains(address);
+        return this;
+    }
+
+    clickApiRequestNextButton(): OverlayRobot {
+        cy.get('[data-cy=api-request-next-button]').click();
+        return this;
+    }
+
+    clickApiRequestBackButton(): OverlayRobot {
+        cy.get('[data-cy=api-request-back-button]').click();
+        return this;
+    }
+
+    selectApiRequestAccount(): OverlayRobot {
+        cy.wait(1000); // wait for address list to populate
+        cy.get('[data-cy=api-request-account-selection]')
+            .click()
+            .get('mat-option')
+            .contains('ban_1z7rx')
+            .click()
+            .wait(100);
         return this;
     }
 }

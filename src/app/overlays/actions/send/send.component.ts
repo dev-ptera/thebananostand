@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import * as Colors from '@brightlayer-ui/colors';
 import { UtilService } from '@app/services/util.service';
 import { AccountService } from '@app/services/account.service';
@@ -6,6 +6,8 @@ import { TransactionService } from '@app/services/transaction.service';
 import { TRANSACTION_COMPLETED_SUCCESS } from '@app/services/wallet-events.service';
 import { CurrencyConversionService } from '@app/services/currency-conversion.service';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
+import { ViewportService } from '@app/services/viewport.service';
+import { BnsService } from '@app/services/bns.service';
 
 export type SendOverlayData = {
     address: string;
@@ -19,15 +21,17 @@ export type SendOverlayData = {
     selector: 'app-send-overlay',
     styleUrls: ['send.component.scss'],
     template: `
-        <div class="send-overlay overlay-action-container">
+        <div
+            class="send-overlay overlay-action-container"
+            [style.height.vh]="scanner?.isStart || scanner?.isLoading ? 80 : 0"
+        >
             <div *ngIf="hasSuccess === true" class="overlay-body">
                 <app-empty-state data-cy="send-success-state">
                     <mat-icon empty-icon> check_circle</mat-icon>
                     <div title>Transaction Sent</div>
                     <div description>
                         Your transaction has been successfully sent and can be viewed
-                        <span class="link" [style.color]="colors.blue[500]" (click)="openLink()">here</span>. You can
-                        now close this window.
+                        <span class="link" (click)="openLink()">here</span>. You can now close this window.
                     </div>
                     <button mat-flat-button color="primary" (click)="closeDialog()">Close</button>
                 </app-empty-state>
@@ -43,7 +47,22 @@ export type SendOverlayData = {
             </div>
 
             <ng-container *ngIf="hasSuccess === undefined">
-                <div class="overlay-header">Send Transaction</div>
+                <div class="overlay-header" style="display: flex; justify-content: space-between; align-items: center">
+                    <div>Send Transaction</div>
+                    <!-- TODO: Replace with ng device detector -->
+                    <button
+                        *ngIf="vp.sm && activeStep === 2"
+                        (click)="scanner?.isStart ? scanner?.stop() : scanner?.start(); subscribeForScanData()"
+                        mat-mini-fab
+                        back-button
+                        color="primary"
+                        data-cy="send-close-button"
+                    >
+                        <mat-icon class="text-contrast">
+                            {{ scanner?.isStart ? 'videocam_off' : 'qr_code_scanner' }}
+                        </mat-icon>
+                    </button>
+                </div>
                 <div class="overlay-body">
                     <ng-container *ngIf="activeStep === 0">
                         <div class="mat-body-1" style="margin-bottom: 8px">
@@ -118,20 +137,80 @@ export type SendOverlayData = {
                     </ng-container>
 
                     <ng-container *ngIf="activeStep === 2">
-                        <div class="mat-body-1" style="margin-bottom: 16px">Please enter the recipient address.</div>
-                        <mat-form-field appearance="fill" class="address-input">
-                            <mat-label>Recipient Address</mat-label>
-                            <textarea
-                                matInput
-                                data-cy="send-recipient-input"
-                                type="value"
-                                [(ngModel)]="recipient"
-                            ></textarea>
-                        </mat-form-field>
+                        <ng-container *ngIf="!action.isStart">
+                            <div class="mat-body-1" style="margin-bottom: 16px;">
+                                Please enter the recipient address or BNS domain.
+                            </div>
+                            <mat-form-field appearance="fill" class="address-input">
+                                <mat-label>Recipient Address or BNS domain</mat-label>
+                                <textarea
+                                    matInput
+                                    data-cy="send-recipient-input"
+                                    type="value"
+                                    [(ngModel)]="recipient"
+                                ></textarea>
+                            </mat-form-field>
+                            <div *ngIf="getAccountAlias(recipient)">
+                                <div style="display: flex; align-items: center" class="mat-body-1">
+                                    Known as "{{ getAccountAlias(recipient) }}"
+                                    <a
+                                        class="link"
+                                        style="margin-left: 4px"
+                                        [href]="'https://creeper.banano.cc/known-accounts#' + recipient"
+                                        target="_blank"
+                                    >
+                                        on Creeper</a
+                                    >
+                                    <mat-icon style="font-size: 14px; height: 14px; width: 14px; margin-left: 4px"
+                                        >open_in_new</mat-icon
+                                    >
+                                </div>
+                            </div>
+                            <div *ngIf="isBns(recipient)">
+                                <div style="display: flex; align-items: center" class="mat-body-1">
+                                    Is this a BNS domain?
+                                    <button
+                                        (click)="getDomainResolvedAddress(recipient)"
+                                        mat-mini-fab
+                                        back-button
+                                        color="primary"
+                                        data-cy="bns-resolve-button"
+                                        style="margin-left: 4px"
+                                    >
+                                        Yes
+                                    </button>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <select
+                            #select1
+                            (change)="action.playDevice(select1.value)"
+                            class="form-select form-select-sm"
+                            style="margin-bottom: 8px"
+                            *ngIf="action.isStart"
+                        >
+                            <option [value]="null" selected>Select device</option>
+                            <option
+                                *ngFor="let c of action.devices.value; let i = index"
+                                [value]="c.deviceId"
+                                [selected]="i == action.deviceIndexActive"
+                            >
+                                {{ c.label }}
+                            </option>
+                        </select>
+
+                        <ngx-scanner-qrcode
+                            #action="scanner"
+                            style="margin-bottom: 16px"
+                            [style.display]="action.isStart ? 'flex' : 'none'"
+                        ></ngx-scanner-qrcode>
+
+                        <div *ngIf="action.isLoading" class="mat-body-1" style="margin-top: 8px">Loading camera...</div>
                     </ng-container>
 
                     <div *ngIf="activeStep === 3" class="mat-body-1">
-                        <div style="margin-bottom: 24px">Please confirm the transaction details below:</div>
+                        <div style="margin-bottom: 16px">Please confirm the transaction details below:</div>
                         <div style="font-weight: 600">Send</div>
                         <div style="margin-bottom: 16px;">{{ confirmedSendAmount | number }} BAN</div>
                         <div style="font-weight: 600">To</div>
@@ -139,6 +218,10 @@ export type SendOverlayData = {
                             style="word-break: break-all; font-family: monospace"
                             [innerHTML]="util.formatHtmlAddress(recipient)"
                         ></div>
+                        <ng-container *ngIf="getAccountAlias(recipient)">
+                            <div style="font-weight: 600; margin-top: 16px">Known as</div>
+                            <div style="margin-bottom: 16px;">{{ getAccountAlias(recipient) }}</div>
+                        </ng-container>
                     </div>
                 </div>
                 <div class="overlay-footer">
@@ -180,9 +263,11 @@ export type SendOverlayData = {
         </div>
     `,
 })
-export class SendComponent {
+export class SendComponent implements OnInit, OnDestroy {
     @Input() data: SendOverlayData;
     @Output() closeWithHash: EventEmitter<string> = new EventEmitter<string>();
+
+    @ViewChild('action') scanner;
 
     activeStep = 0;
     maxSteps = 4;
@@ -209,6 +294,8 @@ export class SendComponent {
         private readonly _accountService: AccountService,
         private readonly _transactionService: TransactionService,
         private readonly _currencyConversionService: CurrencyConversionService,
+        private readonly _bnsService: BnsService,
+        public vp: ViewportService,
         private readonly _appStoreService: AppStateService
     ) {
         this.store = this._appStoreService.store.getValue();
@@ -224,7 +311,16 @@ export class SendComponent {
         );
     }
 
+    ngOnDestroy(): void {
+        if (this.scanner?.isStart) {
+            this.scanner.stop();
+        }
+    }
+
     back(): void {
+        if (this.scanner?.isStart) {
+            this.scanner.stop();
+        }
         if (this.activeStep === 0) {
             return this.closeDialog();
         }
@@ -284,6 +380,22 @@ export class SendComponent {
         this._accountService.showBlockInExplorer(this.txHash);
     }
 
+    subscribeForScanData(): void {
+        this.scanner.isBeep = false;
+        this.scanner.devices.subscribe((devices) => {
+            for (const device of devices) {
+                if (device.label.toLowerCase().includes('back')) {
+                    this.scanner.playDevice(device.value);
+                    break;
+                }
+            }
+        });
+        this.scanner.data.subscribe((scannedData) => {
+            this.recipient = scannedData[0]?.value;
+            this.scanner.stop();
+        });
+    }
+
     withdraw(): void {
         if (this.isProcessingTx) {
             return;
@@ -296,7 +408,11 @@ export class SendComponent {
                 this.txHash = hash;
                 this.hasSuccess = true;
                 this.isProcessingTx = false;
-                TRANSACTION_COMPLETED_SUCCESS.next(hash);
+                TRANSACTION_COMPLETED_SUCCESS.next({
+                    txHash: hash,
+                    accountIndex: this.data.index,
+                    recipient: this.recipient,
+                });
             })
             .catch(() => {
                 this.hasSuccess = false;
@@ -315,6 +431,37 @@ export class SendComponent {
             this.isSendingAll = amount === this.maxSendLocalCurrency;
         } else {
             this.isSendingAll = amount === this.data.maxSendAmount;
+        }
+    }
+
+    getAccountAlias(address: string): string {
+        if (address) {
+            return this._appStoreService.knownAccounts.get(address);
+        }
+    }
+
+    isBns(domain_and_tld: string): boolean {
+        if (!domain_and_tld) return false;
+        const domain_split = domain_and_tld.split('.');
+        if (domain_split.length === 2) {
+            const tld = domain_split[1];
+            return this._appStoreService.store.getValue().tlds[tld] !== undefined;
+        }
+        return false;
+    }
+
+    async getDomainResolvedAddress(domain_and_tld: string): Promise<void> {
+        const domain_split = domain_and_tld.split('.');
+        if (domain_split.length === 2) {
+            const domain = domain_split[0];
+            const tld = domain_split[1];
+            //if tld is in mapping
+            if (this._appStoreService.store.getValue().tlds[tld]) {
+                const resolved = await this._bnsService.resolve(domain, tld);
+                if (resolved?.resolved_address) {
+                    this.recipient = resolved?.resolved_address;
+                }
+            }
         }
     }
 

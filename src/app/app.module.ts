@@ -1,5 +1,4 @@
 import { AccountComponent } from './pages/account/account.component';
-import { AccountListComponent } from '@app/pages/dashboard/components/account-list/account-list.component';
 import { AddIndexBottomSheetComponent } from '@app/overlays/bottom-sheet/add-index/add-index-bottom-sheet.component';
 import { AddIndexDialogComponent } from '@app/overlays/dialogs/add-index/add-index-dialog.component';
 import { AddIndexOverlayComponent } from '@app/overlays/actions/add-index/add-index.component';
@@ -21,7 +20,7 @@ import { CreateWalletDialogComponent } from '@app/overlays/dialogs/create-wallet
 import { CreateWalletOverlayComponent } from '@app/overlays/actions/create-wallet/create-wallet.component';
 import { DashboardComponent } from '@app/pages/dashboard/dashboard.component';
 import { DashboardPipe } from '@app/pages/dashboard/dashboard.pipe';
-import { DatasourceAvailablePipe, SettingsPageComponent } from '@app/pages/settings/settings.component';
+import { SettingsPageComponent } from '@app/pages/settings/settings.component';
 import { EmptyStateModule } from '@app/components/empty-state/empty-state.module';
 import { EnterSecretBottomSheetComponent } from '@app/overlays/bottom-sheet/enter-secret/enter-secret-bottom-sheet.component';
 import { EnterSecretComponent } from '@app/overlays/actions/enter-secret/enter-secret.component';
@@ -58,7 +57,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MobileStepperModule } from '@app/components/mobile-stepper/mobile-stepper.module';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { QrDialogComponent } from '@app/components/qr/qr.component';
 import { ReceiveBottomSheetComponent } from '@app/overlays/bottom-sheet/receive/receive-bottom-sheet.component';
 import { ReceiveComponent } from '@app/overlays/actions/receive/receive.component';
@@ -94,6 +93,21 @@ import { ApiRequestBottomSheetComponent } from '@app/overlays/bottom-sheet/api-r
 
 import { provideUserIdleConfig } from 'angular-user-idle';
 import { MatSliderModule } from '@angular/material/slider';
+import { LOAD_WASM, NgxScannerQrcodeModule } from 'ngx-scanner-qrcode';
+import { CommaPipe } from './pipes/comma.pipe';
+import { AddRpcOverlayComponent } from '@app/overlays/actions/add-rpc/add-rpc.component';
+import { AddRpcDialogComponent } from '@app/overlays/dialogs/add-rpc/add-rpc-dialog.component';
+import { AddRpcBottomSheetComponent } from '@app/overlays/bottom-sheet/add-rpc/add-rpc-bottom-sheet.component';
+import { AddTldOverlayComponent } from '@app/overlays/actions/add-tld/add-tld.component';
+import { AddTldDialogComponent } from '@app/overlays/dialogs/add-tld/add-tld-dialog.component';
+import { AddTldBottomSheetComponent } from '@app/overlays/bottom-sheet/add-tld/add-tld-bottom-sheet.component';
+import { initializeApp } from './app.initializer';
+import { ReceiveSnackbarComponent } from '@app/overlays/snackbar/receive-snackbar.component';
+import { AddSpyglassOverlayComponent } from '@app/overlays/actions/add-spyglass/add-spyglass.component';
+import { AddSpyglassBottomSheetComponent } from '@app/overlays/bottom-sheet/add-spyglass/add-spyglass-bottom-sheet.component';
+import { AddSpyglassDialogComponent } from '@app/overlays/dialogs/add-spyglass/add-spyglass-dialog.component';
+
+LOAD_WASM().subscribe((res: any) => console.log('WASM ngx-scanner-qrcode loaded', res));
 
 @NgModule({
     declarations: [
@@ -101,11 +115,16 @@ import { MatSliderModule } from '@angular/material/slider';
         ApiRequestDialogComponent,
         ApiRequestBottomSheetComponent,
         AccountComponent,
-        AccountListComponent,
         AccountCardComponent,
         AddIndexBottomSheetComponent,
         AddIndexDialogComponent,
         AddIndexOverlayComponent,
+        AddRpcOverlayComponent,
+        AddRpcDialogComponent,
+        AddRpcBottomSheetComponent,
+        AddTldOverlayComponent,
+        AddTldDialogComponent,
+        AddTldBottomSheetComponent,
         AddressBookComponent,
         AppAccountSettingsComponent,
         AppComponent,
@@ -115,6 +134,7 @@ import { MatSliderModule } from '@angular/material/slider';
         ChangeRepBottomSheetComponent,
         ChangeRepComponent,
         ChangeRepDialogComponent,
+        CommaPipe,
         ConversionFromBANPipe,
         ConversionToBANPipe,
         CreateWalletBottomSheetComponent,
@@ -122,7 +142,6 @@ import { MatSliderModule } from '@angular/material/slider';
         CreateWalletOverlayComponent,
         DashboardComponent,
         DashboardPipe,
-        DatasourceAvailablePipe,
         EnterSecretBottomSheetComponent,
         EnterSecretComponent,
         EnterSecretDialogComponent,
@@ -154,6 +173,10 @@ import { MatSliderModule } from '@angular/material/slider';
         TransactionComponent,
         AccountTableComponent,
         AccountActionsComponent,
+        ReceiveSnackbarComponent,
+        AddSpyglassOverlayComponent,
+        AddSpyglassBottomSheetComponent,
+        AddSpyglassDialogComponent,
     ],
     imports: [
         AppRoutingModule,
@@ -185,6 +208,7 @@ import { MatSliderModule } from '@angular/material/slider';
         MatToolbarModule,
         MatTooltipModule,
         MobileStepperModule,
+        NgxScannerQrcodeModule,
         ReactiveFormsModule,
         ResponsiveMenuModule,
         ScrollingModule,
@@ -195,7 +219,17 @@ import { MatSliderModule } from '@angular/material/slider';
         MatSortModule,
         MatSliderModule,
     ],
-    providers: [provideUserIdleConfig({ idle: 600, timeout: 60 })],
+    providers: [
+        provideUserIdleConfig({ idle: 600, timeout: 60 }),
+        {
+            provide: APP_INITIALIZER,
+            useFactory: (): any => {
+                initializeApp();
+                return () => Promise.resolve();
+            },
+            multi: true,
+        },
+    ],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

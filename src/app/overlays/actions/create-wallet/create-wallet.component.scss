@@ -15,6 +15,6 @@
         button {
             margin-left: 8px;
         }
-        @include common.small-icon-button(16px, 32px);
+        @include common.small-icon-button();
     }
 }

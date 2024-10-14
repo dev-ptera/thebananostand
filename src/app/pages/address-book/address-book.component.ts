@@ -5,7 +5,11 @@ import { WalletStorageService } from '@app/services/wallet-storage.service';
 import { AddressBookEntry } from '@app/types/AddressBookEntry';
 
 import { saveAs } from 'file-saver';
-import { REMOVE_ADDRESS_BOOK_ENTRY, UPDATE_ADDRESS_BOOK } from '@app/services/wallet-events.service';
+import {
+    COPY_ADDRESS_TO_CLIPBOARD,
+    REMOVE_ADDRESS_BOOK_ENTRY,
+    UPDATE_ADDRESS_BOOK,
+} from '@app/services/wallet-events.service';
 import { AppStateService } from '@app/services/app-state.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
@@ -104,16 +108,27 @@ import { UtilService } from '@app/services/util.service';
                                     <div *ngIf="!vp.sm" class="mat-body-1 hint" style="width: 56px">#{{ i + 1 }}</div>
                                     <div style="display: flex; flex-direction: column; padding: 16px 0">
                                         <div class="mat-body-1" style="font-weight: 600">{{ entry.name }}</div>
-                                        <div class="mono mat-body-2 hint">
+                                        <div
+                                            class="mono mat-body-2"
+                                            [class.hint]="entry.name"
+                                            [style.fontWeight]="entry.name ? 400 : 600"
+                                        >
                                             {{ vp.sm ? util.shortenAddress(entry.account) : entry.account }}
                                         </div>
                                     </div>
                                 </div>
                                 <div style="display: flex">
-                                    <button mat-icon-button (click)="openRenameWalletOverlay(entry)">
+                                    <button mat-icon-button (click)="copy(entry)" matTooltip="Copy address">
+                                        <mat-icon class="icon-secondary">content_copy</mat-icon>
+                                    </button>
+                                    <button
+                                        mat-icon-button
+                                        (click)="openRenameWalletOverlay(entry)"
+                                        matTooltip="Edit alias"
+                                    >
                                         <mat-icon class="icon-secondary">edit</mat-icon>
                                     </button>
-                                    <button mat-icon-button (click)="remove(entry)">
+                                    <button mat-icon-button (click)="remove(entry)" matTooltip="Remove entry">
                                         <mat-icon color="warn">close</mat-icon>
                                     </button>
                                 </div>
@@ -157,6 +172,10 @@ export class AddressBookComponent {
 
     back(): void {
         this._location.back();
+    }
+
+    copy(entry: AddressBookEntry): void {
+        COPY_ADDRESS_TO_CLIPBOARD.next({ address: entry.account });
     }
 
     remove(entry: AddressBookEntry): void {

@@ -1,4 +1,4 @@
-import { ReceivableHash } from '@app/types/ReceivableHash';
+import { ReceivableTx } from '@app/types/ReceivableTx';
 
 export type AccountOverview = {
     index: number;
@@ -10,7 +10,7 @@ export type AccountOverview = {
     representative: string;
     lastUpdatedTimestamp: string;
     blockCount: number;
-    pending: ReceivableHash[];
+    pending: ReceivableTx[];
     frontier: string;
     moreOptionsOpen?: boolean;
 };

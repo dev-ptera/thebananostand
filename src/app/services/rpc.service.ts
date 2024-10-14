@@ -4,9 +4,7 @@ import { AccountInfoResponse } from '@dev-ptera/nano-node-rpc';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { DatasourceService } from '@app/services/datasource.service';
 import { SignerService } from '@app/services/signer.service';
-import { ReceivableHash } from '@app/types/ReceivableHash';
 import { TransactionBlock } from '@app/types/TransactionBlock';
-import { AppStateService } from '@app/services/app-state.service';
 
 const LOG_ERR = (err: any): any => {
     console.error(`ERROR: Issue fetching RPC data.  ${err}`);
@@ -27,7 +25,6 @@ type UnopenedAccountResponse = {
 export class RpcService {
     constructor(
         private readonly _util: UtilService,
-        private readonly _appStateService: AppStateService,
         private readonly _datasourceService: DatasourceService,
         private readonly _signerService: SignerService
     ) {}
@@ -39,32 +36,6 @@ export class RpcService {
         return Number(accountInfo.confirmation_height);
     }
 
-    /** Returns array of receivable transactions, sorted by balance descending. */
-    async getReceivable(address: string): Promise<ReceivableHash[]> {
-        const MAX_PENDING = 100;
-        const threshold = this._util.convertBanToRaw(this._appStateService.store.getValue().minimumBananoThreshold);
-        const client = await this._datasourceService.getRpcClient();
-        const pendingRpcData = await client
-            .accounts_pending([address], MAX_PENDING, { sorting: true, threshold })
-            .catch((err) => {
-                LOG_ERR(err);
-                return Promise.resolve({
-                    blocks: '',
-                });
-            });
-        const pendingBlocks = pendingRpcData.blocks[address];
-        if (!pendingBlocks) {
-            return [];
-        }
-        const receivables = [];
-        const hashes = [...Object.keys(pendingBlocks)];
-        for (const hash of hashes) {
-            const receivableRaw = pendingBlocks[hash];
-            receivables.push({ hash, receivableRaw });
-        }
-        return receivables;
-    }
-
     /** Returns a modified account info object, given an index. */
     // Make this accept a public address, yeah? // TODO
     async getAccountInfoFromIndex(index: number, address?: string): Promise<AccountOverview> {
@@ -73,18 +44,15 @@ export class RpcService {
             publicAddress = await this._signerService.getAccountFromIndex(index);
         }
         const client = await this._datasourceService.getRpcClient();
-        const [pending, accountInfoRpc] = await Promise.all([
-            this.getReceivable(publicAddress),
-            client.account_info(publicAddress, { representative: true }).catch((err) => {
-                if (err.error === 'Account not found') {
-                    return Promise.resolve({
-                        unopenedAccount: true,
-                    } as UnopenedAccountResponse);
-                }
-                LOG_ERR(err);
-            }),
-        ]);
-        const accountOverview = this._formatAccountInfoResponse(index, publicAddress, pending, accountInfoRpc);
+        const accountInfoRpc = await client.account_info(publicAddress, { representative: true }).catch((err) => {
+            if (err.error === 'Account not found') {
+                return Promise.resolve({
+                    unopenedAccount: true,
+                } as UnopenedAccountResponse);
+            }
+            LOG_ERR(err);
+        });
+        const accountOverview = this._formatAccountInfoResponse(index, publicAddress, accountInfoRpc);
         return accountOverview;
     }
 
@@ -92,7 +60,6 @@ export class RpcService {
     private _formatAccountInfoResponse(
         index: number,
         address: string,
-        pending: ReceivableHash[],
         rpcData: AccountInfoResponse | UnopenedAccountResponse
     ): AccountOverview {
         // If account is not opened, return a placeholder account.
@@ -108,7 +75,7 @@ export class RpcService {
                 balanceRaw: '0',
                 frontier: undefined,
                 representative: undefined,
-                pending,
+                pending: [],
             };
         }
 
@@ -117,7 +84,7 @@ export class RpcService {
 
         return {
             index,
-            pending,
+            pending: [],
             balance: Number(balance),
             balanceRaw: accountInfo.balance,
             fullAddress: address,

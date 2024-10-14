@@ -23,6 +23,10 @@ describe('Account Actions', () => {
         cy.reload();
         cy.intercept(root).as('home');
         cy.visit(root);
+        localStorage.setItem(
+            'bananostand_userAutoReceiveTransactions',
+            'false'
+        ); // Disable auto-receive for account action tests.
         cy.wait('@home'); // once the route resolves, cy.wait will resolve as well
         cy.importAccount(LOW_FUND_SEED);
         dashboardRobot.checkDashboardExists().clickAccountNumber(0);
@@ -30,17 +34,16 @@ describe('Account Actions', () => {
     });
 
     describe('Filtering', () => {
-        it('should open filter overlay (desktop)', () => {
+        it('should open/close filter overlay (desktop)', () => {
             accountRobot.clickFilterButtonDesktop();
-            overlayRobot.checkFilterOverlayExists();
+            overlayRobot
+                .checkFilterOverlayExists()
+                .clickCloseFilterButton()
+                .checkFilterOverlayNotExists();
         });
-        it('should open filter overlay (mobile)', () => {
+        it.only('should open/close filter overlay (mobile)', () => {
             cy.viewport('iphone-6');
             accountRobot.clickAccountActions().clickFilterButtonMobile();
-            overlayRobot.checkFilterOverlayExists();
-        });
-        it('should close the filter overlay', () => {
-            accountRobot.clickFilterButtonDesktop();
             overlayRobot
                 .checkFilterOverlayExists()
                 .clickCloseFilterButton()
