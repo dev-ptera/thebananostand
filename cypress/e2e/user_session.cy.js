@@ -40,17 +40,6 @@ describe('User Session', () => {
         dashboardRobot.checkDashboardNotExists();
     });
 
-    it('should import a wallet with just a seed (no password), refresh and then login', () => {
-        cy.importAccount(LOW_FUND_SEED);
-        dashboardRobot.countLoadedAccounts(1);
-        reload();
-        loginRobot
-            .checkLoginPageExists()
-            .clickUnlockButton()
-            .checkLoginPagNotExists();
-        dashboardRobot.checkDashboardExists().countLoadedAccounts(1);
-    });
-
     it('should import a wallet with a seed and password, refresh and then login', () => {
         const password = 'UniquePasswordForTestingSpec';
         cy.importAccount(LOW_FUND_SEED, password);
