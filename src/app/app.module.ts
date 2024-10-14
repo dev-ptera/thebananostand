@@ -98,6 +98,9 @@ import { CommaPipe } from './pipes/comma.pipe';
 import { AddRpcOverlayComponent } from '@app/overlays/actions/add-rpc/add-rpc.component';
 import { AddRpcDialogComponent } from '@app/overlays/dialogs/add-rpc/add-rpc-dialog.component';
 import { AddRpcBottomSheetComponent } from '@app/overlays/bottom-sheet/add-rpc/add-rpc-bottom-sheet.component';
+import { AddTldOverlayComponent } from '@app/overlays/actions/add-tld/add-tld.component';
+import { AddTldDialogComponent } from '@app/overlays/dialogs/add-tld/add-tld-dialog.component';
+import { AddTldBottomSheetComponent } from '@app/overlays/bottom-sheet/add-tld/add-tld-bottom-sheet.component';
 import { initializeApp } from './app.initializer';
 import { ReceiveSnackbarComponent } from '@app/overlays/snackbar/receive-snackbar.component';
 import { AddSpyglassOverlayComponent } from '@app/overlays/actions/add-spyglass/add-spyglass.component';
@@ -119,6 +122,9 @@ LOAD_WASM().subscribe((res: any) => console.log('WASM ngx-scanner-qrcode loaded'
         AddRpcOverlayComponent,
         AddRpcDialogComponent,
         AddRpcBottomSheetComponent,
+        AddTldOverlayComponent,
+        AddTldDialogComponent,
+        AddTldBottomSheetComponent,
         AddressBookComponent,
         AppAccountSettingsComponent,
         AppComponent,

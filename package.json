@@ -42,6 +42,7 @@
     "@ledgerhq/hw-transport-webusb": "^6.27.17",
     "@ngneat/until-destroy": "^9.2.3",
     "angular-user-idle": "^4.0.0",
+    "banani-bns": "^0.0.5",
     "bignumber.js": "^9.1.2",
     "buffer": "^6.0.3",
     "copy-to-clipboard": "^3.3.3",
