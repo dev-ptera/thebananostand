@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.17.1  (November 3, 2024)
+
+### Added
+
+-  Added two BNS TLDs to the default mapping BNS.
+
 ## v4.17.0  (October 14, 2024)
 
 ### Added
