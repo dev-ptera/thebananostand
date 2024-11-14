@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.17.2  (November 14, 2024)
+
+### Changed
+
+- Changed message signing contract from POST to PUT request.
+
 ## v4.17.1  (November 3, 2024)
 
 ### Added
