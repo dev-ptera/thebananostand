@@ -130,7 +130,7 @@ export class SignMessageComponent {
         }
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         this.submitRequested = true;
-        this._http.put(submitUrl, params, { headers: headers }).subscribe(
+        this._http.post(submitUrl, params, { headers: headers }).subscribe(
             (data) => {
                 if (typeof data !== 'object') {
                     this.successfulSubmit = false;
