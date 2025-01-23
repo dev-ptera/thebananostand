@@ -166,7 +166,7 @@ export type SendOverlayData = {
                                     >
                                 </div>
                             </div>
-                            <div *ngIf="isBns(recipient)">
+                            <div *ngIf="_bnsService.isBns(recipient)">
                                 <div style="display: flex; align-items: center" class="mat-body-1">
                                     Is this a BNS domain?
                                     <button
@@ -296,9 +296,9 @@ export class SendComponent implements OnInit, OnDestroy {
         private readonly _currencyConversionService: CurrencyConversionService,
         private readonly _bnsService: BnsService,
         public vp: ViewportService,
-        private readonly _appStoreService: AppStateService
+        private readonly _appStateService: AppStateService
     ) {
-        this.store = this._appStoreService.store.getValue();
+        this.store = this._appStateService.store.getValue();
     }
 
     ngOnInit(): void {
@@ -436,27 +436,16 @@ export class SendComponent implements OnInit, OnDestroy {
 
     getAccountAlias(address: string): string {
         if (address) {
-            return this._appStoreService.knownAccounts.get(address);
+            return this._appStateService.knownAccounts.get(address);
         }
-    }
-
-    isBns(domain_and_tld: string): boolean {
-        if (!domain_and_tld) return false;
-        const domain_split = domain_and_tld.split('.');
-        if (domain_split.length === 2) {
-            const tld = domain_split[1];
-            return this._appStoreService.store.getValue().tlds[tld] !== undefined;
-        }
-        return false;
     }
 
     async getDomainResolvedAddress(domain_and_tld: string): Promise<void> {
-        const domain_split = domain_and_tld.split('.');
-        if (domain_split.length === 2) {
-            const domain = domain_split[0];
-            const tld = domain_split[1];
+        const components = this._bnsService.getDomainComponents(domain_and_tld);
+        if (components) {
+            const [domain, tld] = components;
             //if tld is in mapping
-            if (this._appStoreService.store.getValue().tlds[tld]) {
+            if (this._appStateService.store.getValue().tlds[tld]) {
                 const resolved = await this._bnsService.resolve(domain, tld);
                 if (resolved?.resolved_address) {
                     this.recipient = resolved?.resolved_address;
