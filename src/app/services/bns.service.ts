@@ -41,14 +41,12 @@ export class BnsService {
         return false;
     }
 
-    getDomainComponents(domain_and_tld: string): [string, string] | null {
+    getDomainComponents(domain_and_tld: string): [string, string] | undefined {
         const domain_split = domain_and_tld.split('.');
         if (domain_split.length === 2) {
             const domain = domain_split[0];
             const tld = domain_split[1];
             return [domain, tld];
-        } else {
-            return null;
         }
     }
 }
