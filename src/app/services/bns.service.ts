@@ -30,4 +30,23 @@ export class BnsService {
             return;
         }
     }
+
+    isBns(domain_and_tld: string): boolean {
+        if (!domain_and_tld) return false;
+        const domain_split = domain_and_tld.split('.');
+        if (domain_split.length === 2) {
+            const tld = domain_split[1];
+            return this._appStateService.store.getValue().tlds[tld] !== undefined;
+        }
+        return false;
+    }
+
+    getDomainComponents(domain_and_tld: string): [string, string] | undefined {
+        const domain_split = domain_and_tld.split('.');
+        if (domain_split.length === 2) {
+            const domain = domain_split[0];
+            const tld = domain_split[1];
+            return [domain, tld];
+        }
+    }
 }

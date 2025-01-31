@@ -6,6 +6,7 @@ import { AccountService } from '@app/services/account.service';
 import { UtilService } from '@app/services/util.service';
 import { TRANSACTION_COMPLETED_SUCCESS } from '@app/services/wallet-events.service';
 import { AppStateService } from '@app/services/app-state.service';
+import { BnsService } from '@app/services/bns.service';
 
 export type RepScore = {
     address: string;
@@ -105,11 +106,27 @@ export type ChangeRepOverlayData = {
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
-
-                        <mat-form-field appearance="fill" class="address-input" *ngIf="!selectFromList">
-                            <mat-label>Representative Address</mat-label>
-                            <textarea matInput type="value" [(ngModel)]="manualEnteredNewRepresentative"></textarea>
-                        </mat-form-field>
+                        <div *ngIf="!selectFromList">
+                            <mat-form-field appearance="fill" class="address-input">
+                                <mat-label>Representative Address</mat-label>
+                                <textarea matInput type="value" [(ngModel)]="manualEnteredNewRepresentative"></textarea>
+                            </mat-form-field>
+                            <div *ngIf="_bnsService.isBns(manualEnteredNewRepresentative)">
+                                <div style="display: flex; align-items: center" class="mat-body-1">
+                                    Is this a BNS domain?
+                                    <button
+                                        (click)="getDomainResolvedAddress(manualEnteredNewRepresentative)"
+                                        mat-mini-fab
+                                        back-button
+                                        color="primary"
+                                        data-cy="bns-resolve-button"
+                                        style="margin-left: 4px"
+                                    >
+                                        Yes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </ng-container>
 
                     <ng-container *ngIf="activeStep === 2">
@@ -213,7 +230,8 @@ export class ChangeRepComponent implements OnInit {
         public util: UtilService,
         private readonly _appStateService: AppStateService,
         private readonly _transactionService: TransactionService,
-        private readonly _accountService: AccountService
+        private readonly _accountService: AccountService,
+        private readonly _bnsService: BnsService
     ) {}
 
     ngOnInit(): void {
@@ -302,5 +320,19 @@ export class ChangeRepComponent implements OnInit {
                 this.hasSuccess = false;
                 this.isChangingRepresentative = false;
             });
+    }
+
+    async getDomainResolvedAddress(domain_and_tld: string): Promise<void> {
+        const components = this._bnsService.getDomainComponents(domain_and_tld);
+        if (components) {
+            const [domain, tld] = components;
+            //if tld is in mapping
+            if (this._appStateService.store.getValue().tlds[tld]) {
+                const resolved = await this._bnsService.resolve(domain, tld);
+                if (resolved?.resolved_address) {
+                    this.manualEnteredNewRepresentative = resolved?.resolved_address;
+                }
+            }
+        }
     }
 }
