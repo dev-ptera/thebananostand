@@ -21,6 +21,7 @@ import {
 import { MatRadioChange } from '@angular/material/radio';
 import { CurrencyConversionService } from '@app/services/currency-conversion.service';
 import { AppStateService } from '@app/services/app-state.service';
+import { BnsService } from '@app/services/bns.service';
 import { MatSelectChange } from '@angular/material/select';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { AddRpcBottomSheetComponent } from '@app/overlays/bottom-sheet/add-rpc/add-rpc-bottom-sheet.component';
@@ -265,6 +266,7 @@ import { AddTldDialogComponent } from '@app/overlays/dialogs/add-tld/add-tld-dia
                                     [matTooltip]="'Remove ' + tld.key"
                                     color="warn"
                                     (click)="removeTld(tld.key)"
+                                    *ngIf="isNotDefaultBnsTld(tld.key)"
                                 >
                                     <mat-icon color="warn">clear</mat-icon>
                                 </button>
@@ -346,6 +348,7 @@ export class SettingsPageComponent implements OnInit {
         private readonly _location: Location,
         private readonly _sheet: MatBottomSheet,
         private readonly _appStateService: AppStateService,
+        private readonly _bnsService: BnsService,
         public datasourceService: DatasourceService,
         public currencyConversionService: CurrencyConversionService
     ) {
@@ -376,6 +379,10 @@ export class SettingsPageComponent implements OnInit {
     }
     back(): void {
         this._location.back();
+    }
+
+    isNotDefaultBnsTld(tld: string): boolean {
+        return this._bnsService.getDefaultTlds()[tld] === undefined;
     }
 
     openChangePasswordOverlay(): void {
