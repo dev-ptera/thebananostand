@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AppStateService, AppStore } from '@app/services/app-state.service';
 import { AccountOverview } from '@app/types/AccountOverview';
 import { AddressBookEntry } from '@app/types/AddressBookEntry';
+import { BnsService } from '@app/services/bns.service';
 import { ViewportService } from '@app/services/viewport.service';
 
 export type LocalStorageWallet = {
@@ -35,7 +36,11 @@ const USER_AUTO_RECEIVE_FUNDS = 'bananostand_userAutoReceiveTransactions';
 export class WalletStorageService {
     store: AppStore;
 
-    constructor(private readonly _vp: ViewportService, private readonly _appStateService: AppStateService) {
+    constructor(
+        private readonly _vp: ViewportService,
+        private readonly _appStateService: AppStateService,
+        private readonly _bnsService: BnsService
+    ) {
         this._appStateService.store.subscribe((store) => {
             this.store = store;
         });
@@ -250,15 +255,10 @@ export class WalletStorageService {
     }
 
     readTlds(): Record<string, string> {
-        const json = window.localStorage.getItem(TLDS);
-        const tldEntries = json
-            ? JSON.parse(json)
-            : {
-                  mictest: 'ban_1dzpfrgi8t4byzmdeidh57p14h5jwbursf1t3ztbmeqnqqdcbpgp9x8j3cw6',
-                  jtv: 'ban_3gipeswotbnyemcc1dejyhy5a1zfgj35kw356dommbx4rdochiteajcsay56',
-                  ban: 'ban_1fdo6b4bqm6pp1w55duuqw5ebz455975o4qcp8of85fjcdw9qhuzxsd3tjb9',
-              };
-        return tldEntries;
+        const defaultTldEntries = this._bnsService.getDefaultTlds();
+        const json = JSON.parse(window.localStorage.getItem(TLDS)) ?? {};
+        //ie, default tlds cannot be overwritten or deleted
+        return { ...json, ...defaultTldEntries };
     }
 
     /** Reads from local storage, defaults to USD. */
