@@ -30,6 +30,12 @@ export class DatasourceService {
             isSelected: false,
         },
         {
+            alias: 'Prussia Node',
+            url: 'https://spyglass-api.prussia.dev/banano',
+            isAccessible: undefined,
+            isSelected: false,
+        },
+        {
             alias: 'Creeper',
             url: 'https://api.creeper.banano.cc/banano',
             isAccessible: undefined,
