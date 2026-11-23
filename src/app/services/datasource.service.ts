@@ -47,6 +47,7 @@ export class DatasourceService {
         /* { alias: 'Vault', url: 'https://vault.banano.cc/api/node-api', isAccessible: false, isSelected: false }, */ // CORS error
         /* { alias: 'Jungle TV', url: 'https://public.node.jungletv.live/rpc', isAccessible: false, isSelected: false }, */ // Can't do work_generate
         { alias: 'Booster', url: 'https://booster.dev-ptera.com/banano-rpc', isAccessible: false, isSelected: false },
+        { alias: 'Twister32', url: 'https://twister32.ddns.info/proxy', isAccessible: false, isSelected: false },
         { alias: 'Kalium', url: 'https://kaliumapi.appditto.com/api', isAccessible: false, isSelected: false },
         // { alias: 'Rain City', url: 'https://rainstorm.city/api', isAccessible: false, isSelected: false } // Nano node, but can generate work (?)
     ];
